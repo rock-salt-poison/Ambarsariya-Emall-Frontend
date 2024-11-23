@@ -38,6 +38,11 @@ const EshopForm = () => {
     try{
       const resp = await otherShops(token);
       const shopUsersData = (await getShopUserData(token))[0];
+      if(resp){
+        const shops = resp.map((shop)=>shop.business_name);
+        setSimilarOptions(shops);
+        setKeyPlayers(shops);
+      }
       if(shopUsersData){
         const domain_id = shopUsersData.domain_id;
         const sector_id = shopUsersData.sector_id;
@@ -70,11 +75,8 @@ const EshopForm = () => {
         setFormData(initialFormData)
 
       }
-      if(resp){
-        const shops = resp.map((shop)=>shop.business_name);
-        setSimilarOptions(shops);
-        setKeyPlayers(shops);
-      }
+      
+      
     }catch(e){
       console.log("Error while fetching : ", e);
     }
@@ -82,8 +84,8 @@ const EshopForm = () => {
 
   useEffect(()=>{
     if(shop_access_token){
-      
       fetchOtherShops(shop_access_token);
+      console.log(similarOptions);
 
     }
   }, [shop_access_token])
@@ -179,6 +181,7 @@ const EshopForm = () => {
         return category ? category.id : null;
       })
 
+      console.log(selectedCategoryIds)
       // Prepare the updated post data
       const updatedPostData = {
         business_name: formData.business_name,
@@ -193,6 +196,8 @@ const EshopForm = () => {
         advt_video: "link", // Placeholder, replace as needed
         key_players: formData.key_players
       };
+
+      console.log(updatedPostData);
   
       // Get the shopAccessToken (either from localStorage or wherever it's stored)
       const shopAccessToken = localStorage.getItem('shopAccessToken');
@@ -200,7 +205,7 @@ const EshopForm = () => {
       if (shopAccessToken) {
         try {
           // Call the function to update e-shop data
-         const response = await updateEshopData(updatedPostData, shopAccessToken);
+         const response = await updateEshopData(updatedPostData, shop_access_token);
           console.log("response : ", response.data);
           console.log('Form Data:', formData);
   
