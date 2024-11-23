@@ -1,0 +1,218 @@
+// variables.scss
+
+// Images
+$hall-gate-bg : '../Utils/images/hall-gate-bg.webp';
+$home-shadow : '../Utils/images/bg-shadow.webp';
+$time-table-bg : '../Utils/images/timetable-button-bg.png';
+$aqi-bg : '../Utils/images/aqi-button-bg.png';
+$radio : '../Utils/images/radio.webp';
+$min-needle : '../Utils/images/minutes-needle.png';
+$timetablebg : '../Utils/images/timetablebg.webp';
+$aqibg1 : '../Utils/images/aqi-bg2.webp';
+$aqibg2 : '../Utils/images/aqi-bg.webp';
+$busBgImg : '../Utils/images/busbg.webp';
+$trainBgImg : '../Utils/images/trainbg.webp';
+$flightBgImg : '../Utils/images/flightbg.webp';
+$compassBgImg : '../Utils/images/compassBgImg.webp';
+$visionBgImg : '../Utils/images/visionBgImg.jpg';
+$whoweareBgImg :'../Utils/images/whoweareBgImg.webp';
+$aboutUsBgImg: '../Utils/images/aboutusBgImg.webp';
+$logoBgImg: '../Utils/images/logo_bg.webp'; 
+
+//Sell
+$sellBgImg: '../Utils/images/Sell/sell_bg.webp';
+$supportBgImg: '../Utils/images/Sell/support/support_page_bg.webp';
+$couponOfferingBgImg: '../Utils/images/Sell/coupon_offering_page/coupon_offering_bg.webp';
+$buyEshopBg: '../Utils/images/Sell/buy_eshop/buy_eshop_page_bg.webp';
+$login_bg:'../Utils/images/Sell/login/login_bg.webp';
+$eshop_bg:'../Utils/images/Sell/eshop/eshop_page_bg.webp';
+$shop_bg: '../Utils/images/Sell/shop_details/shop-bg_img.webp';
+$image_frame : '../Utils/images/Sell/merchant_details/image_frame.png';
+$shop_detail_book_img: '../Utils/images/Sell/merchant_details/books.webp';
+$productBgImg : '../Utils/images/Sell/products/products_page_bg.webp';
+$thead_vector : '../Utils/images/Sell/products/thead_vector.svg';
+$alphaOneBgImg : '../Utils/images/Sell/cart/alpha_one_bg_img.webp';
+$orderDetailsBgImg : '../Utils/images/Sell/order_details/order_details_bg.webp';
+$likeShareBgImg : '../Utils/images/Sell/like_share/khalsa_college_amritsar.webp';
+$subscribeBgImg : '../Utils/gifs/subscribe_bg.gif';
+$esaleBgImg : '../Utils/images/Sell/esale/esaleBgImg.webp';
+$shopSearchBgImg : '../Utils/images/Sell/shop_search/shopSearchBg.webp';
+$budgetBgImg : '../Utils/images/Sell/budget/budget_bg_img.webp';
+$budgetPopupBgImg : '../Utils/images/Sell/budget/budget_popup_bg_img.webp';
+$clip : '../Utils/images/Sell/coupon_offering_page/clip.png';
+$confirmationBgImg :'../Utils/images/Sell/shop_search/shopSearchBg.webp';
+$esaleEmotionalBgImg :'../Utils/images/Sell/esale/emotional/emotional_bg_img.webp';
+$esalePersonalBgImg :'../Utils/images/Sell/esale/personal/personal_bg_img.webp';
+$esaleProfessionalBgImg :'../Utils/images/Sell/esale/professional/professional_bg_img.webp';
+$icon_6 : '../Utils/images/Serve/emotional/campaign/community/icon_6.webp';
+$lifeBgImg : '../Utils/images/Sell/esale/life/life_bg_img.webp';
+$memberRelationsBgImg : '../Utils/images/Sell/esale/relations/member_relations_bg_img.webp';
+$specialOfferBgImg : '../Utils/images/Sell/cart/special_offers/special_offer_bg_img.webp';
+$prepaidPostpaidBgImg : '../Utils/images/Sell/cart/prepaid_postpaid/prepaid_postpaid_bg_img.webp';
+$prepaidBgImg : '../Utils/images/Sell/cart/prepaid_postpaid/prepaid_bg.webp';
+$postpaidBgImg : '../Utils/images/Sell/cart/prepaid_postpaid/postpaid_bg.webp';
+$purchaseCouponBgImg : '../Utils/images/Sell/cart/purchase_coupon/purchase_coupon_bg_img.webp';
+$purchaseCouponOverlay : '../Utils/images/Sell/cart/purchase_coupon/purchase_coupon_overlay.png';
+$coHelperBgImg : '../Utils/images/Sell/cart/co_helper/co_helper_bg_img.webp';
+$coHelperIcon : '../Utils/images/Sell/cart/co_helper/icon.webp';
+$radioIcon : '../Utils/images/Sell/cart/special_offers/radio_icon.webp';
+$serviceTypeBgImg : '../Utils/images/Sell/cart/service_type/pickup_bg_img.webp';
+$deliveryBgImg : '../Utils/images/Sell/cart/service_type/delivery_bg_img.webp';
+$homeVisitBgImg : '../Utils/images/Sell/cart/service_type/visit_bg_img.webp';
+$mouBgImg : '../Utils/images/Sell/mou/mouBgImg.webp';
+$mouPopupBgImg : '../Utils/images/Sell/mou/mouPopupBgImg.webp';
+$element : '../Utils/images/Sell/mou/element.webp';
+$tabBg : '../Utils/images/Sell/esale/life/tab_bg.png';
+$activeTabBg : '../Utils/images/Sell/esale/life/active_tab_bg.png';
+
+//Serve
+$serveBgImg : '../Utils/images/Serve/serve_bg.webp';
+$emotionalBgImg : '../Utils/images/Serve/emotional/emotional_bg.webp';
+$emotionalMemberBgImg : '../Utils/images/Serve/emotional/emotional_member_bg_img.webp';
+$emotionalFrame : '../Utils/images/Serve/emotional/frame.webp';
+$campaignBgImg : '../Utils/images/Serve/emotional/campaign/campaign_bg_img.webp';
+$merchantCampaignBgImg : '../Utils/images/Serve/emotional/merchant_campaign/campaign_bg_img.webp';
+$jobBgImg : '../Utils/images/Serve/emotional/campaign/job/jobs_bg.webp';
+$communityBgImg : '../Utils/images/Serve/emotional/campaign/community/community_bg_img.webp';
+$discussionBgImg : '../Utils/images/Serve/emotional/campaign/community/create_community/start_community_bg_img.webp';
+$votesBgImg : '../Utils/images/Serve/emotional/campaign/community/votes/votes_bg_img.webp';
+$serveEshopBgImg : '../Utils/images/Serve/emotional/eshop/serve_eshop_bg_img.webp';
+$serveEshopMemberBgImg : '../Utils/images/Serve/emotional/eshop_member/serve_eshop_member_bg_img.webp';
+$hrManagementBgImg : '../Utils/images/Serve/emotional/eshop/hr_management/hr_management_bg_img.png';
+$supplierForShopBgImg : '../Utils/images/Serve/emotional/eshop/suppliers_for_shop/suppliers_for_shop_bg_img.webp';
+$supplyChainManagementBgImg : '../Utils/images/Serve/emotional/eshop/supply_chain_management/supply_chain_management_bg_img.webp';
+$analyticsBgImg : '../Utils/images/Serve/emotional/analytics/analytics_bg_img.webp';
+$stockManagementBgImg : '../Utils/images/Serve/emotional/eshop/stock_management/stock_management_bg_img.webp';
+$crmBgImg :'../Utils/images/Serve/emotional/crm/crm_bg_img.webp';
+$crmBgImg2 :'../Utils/images/Serve/emotional/crm/crm_bg_img2.webp';
+$unexpectedBgImg :'../Utils/images/Serve/unexpected/unexpected_bg_img.webp';
+$leadGenerationBgImg :'../Utils/images/Serve/unexpected/lead_generation/lead_generation_bg_img.webp';
+$captureBgImg :'../Utils/images/Serve/unexpected/capture/capture_bg_img.webp';
+$suggestionsBgImg :'../Utils/images/Sell/support/trilium_mall_amritsar.webp';
+$financialManagementBgImg :'../Utils/images/Serve/emotional/eshop/financial_management/financial_management_bg_img.webp';
+$generalLedgerBgImg :'../Utils/images/Serve/emotional/eshop/financial_management/general_ledger/general_ledger_bg_img.webp';
+$accountsPayableBgImg :'../Utils/images/Serve/emotional/eshop/financial_management/accounts_payable/accounts_payable_bg_img.webp';
+$accountsReceivableBgImg :'../Utils/images/Serve/emotional/eshop/financial_management/accounts_receivable/accounts_receivable_bg_img.webp';
+$bugdgetingAndForecastingBgImg :'../Utils/images/Serve/emotional/eshop/financial_management/budgeting_and_forecasting/budgeting_and_forecasting_bg_img.webp';
+$jobsOfferedBgImg :'../Utils/images/Serve/emotional/eshop/jobs_offered/jobs_offered_bg_img.webp';
+$overheadsBgImg : '../Utils/images/Serve/emotional/analytics/overheads/overheads_bg_img.webp';
+$marketPriceBgImg : '../Utils/images/Serve/emotional/analytics/market_price/market_price_bg_img.webp';
+$stockAlarmsBgImg : '../Utils/images/Serve/emotional/analytics/stock_alarms/stock_alarms_bg_img.webp';
+$forecastMarketPriceBgImg : '../Utils/images/Serve/emotional/analytics/forecast_market_price/forecast_market_price_bg_img.webp';
+$dietPlanBgImg : '../Utils/images/Serve/emotional/eshop_member/diet_plan/diet_plan_bg_img.webp';
+$merchantDashboardBgImg: '../Utils/images/Sell/dashboard/merchant_dashboard/merchant_dashboard_bg.webp';
+$editPreviewBgImg: '../Utils/images/Sell/dashboard/merchant_dashboard/previewBg.webp';
+
+// Colors
+$white : #ffffff;
+$black : #000000;
+$light-yellow : #FFFBF4;
+$yellow : #F9DEB1;
+$dark-yellow : #D49832;
+$dark-yellow2 : #b67d1c;
+$pink : #EDBECD;
+$purple : #7C217F;
+$light-purple-bg : #EEDDEF;
+$red : #FF5055;
+$golden: #BB7E17;
+$light-blue-bg :  #EFF8FF;
+$blue :  #003B66;
+$blue-3 :  #224d8a;
+$green : #00D54F;
+$green-2: #40DFAF;
+$green-3: #28FF0D;
+$red2 : #CD1018;
+$maroon : #98020B;
+$gray :  #ABB5BD;
+$gray2: #555555;
+$brown : #994B1D;
+$blue-2 : #013B6A;
+$brown-2 : #9B643D;
+$brown-3 : #76513D; 
+$brown-4 : #6B4336;
+$brown-6 : #B26D3E;
+$orange : #ff6822;
+$error : #FB5D33;
+$brown-5: #543c1fb3;
+
+// fonts
+
+$font-EFCO : '../Utils/fonts/EFCO-Brookshire-Regular.ttf';
+$font-Gladiola : '../Utils/fonts/Gladiola.ttf';
+$font-Metropolis : '../Utils/fonts/Metropolis.ttf';
+$font-LedNotice : '../Utils/fonts/LcdPhone.ttf';
+$font-Bobby-Jones-Soft : '../Utils/fonts/Bobby-Jones-Soft.otf';
+$font-digital : '../Utils/fonts/digital-7.ttf';
+
+@font-face {
+    font-family: 'EFCO';
+    src: url(#{$font-EFCO}) format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Gladiola';
+    src: url(#{$font-Gladiola}) format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Metropolis';
+    src: url(#{$font-Metropolis}) format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'LedNotice';
+    src: url(#{$font-LedNotice}) format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Bobby-Jones-Soft';
+    src: url(#{$font-Bobby-Jones-Soft}) format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Digital';
+    src: url(#{$font-digital}) format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+:root {
+    --pink1: #E0B5A8;
+    --pink2: #ffe8d8;
+    --yellow : #{$yellow};
+    --lightYellow :#{$light-yellow};
+    --light-yellow : #{$dark-yellow2};
+    --brown : #{$brown};
+    --brown-2 : #{$brown-2};
+    --autocomplete-bg-color: #{$light-yellow};
+    --Bobby-Jones-Soft: 'Bobby-Jones-Soft';
+    --text-color: #{$brown-4};
+    --brown-4: #{$brown-4};
+    --brown-6: #{$brown-6};
+    --text-color-light: #{$light-yellow};
+    --selected-bg-color: #6d433733;
+    --autocomplete-search-selected-bg-color: #b67d1c33;
+    --autocomplete-search-hover-bg-color: #b67d1c33;
+    --shop_detail_book_img : #{$shop_detail_book_img};
+    --tooltipBgColor : #{$light-yellow};
+    --rs-bg-active: #{$brown-6} !important;
+    --icon1: url('../Utils/images/Serve/emotional/campaign/community/icon_1.webp');
+    --icon2: url('../Utils/images/Serve/emotional/campaign/community/icon_2.webp');
+    --icon3: url('../Utils/images/Serve/emotional/campaign/community/icon_3.png');
+    --icon4: url('../Utils/images/Serve/emotional/campaign/community/icon_4.webp');
+    --icon5: url('../Utils/images/Serve/emotional/campaign/community/icon_5.webp');
+    --icon6: url('../Utils/images/Serve/emotional/campaign/community/icon_6.webp');
+
+    //font
+    
+    --Bobby-Jones : #{$font-Bobby-Jones-Soft};
+
+  }

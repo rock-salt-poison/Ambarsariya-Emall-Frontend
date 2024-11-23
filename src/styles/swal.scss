@@ -1,0 +1,39 @@
+@import 'variables.scss';
+
+@mixin hover-scale($scale: 1.1, $duration: 0.4s) {
+    transition: all $duration;
+
+    &:hover {
+        transform: scale($scale);
+    }
+}
+
+@mixin homepage-buttons($font: 'Gladiola', $size: 30px, $color: $yellow) {
+    font-size: $size !important;
+    font-family: $font, sans-serif;
+    color: $color;
+}
+
+
+
+.swal2-icon {
+    margin: 20px auto 0;
+    // width: 60px;
+    // height: 60px;
+
+    .swal2-icon-content {
+        // font-size: 50px;
+    }
+
+}
+
+.swal2-title {
+    @include homepage-buttons('EFCO', 26px, $black );
+
+}
+
+.swal2-html-container {
+    @include homepage-buttons('EFCO', 22px, $black );
+    margin: 10px auto 0 !important;
+
+}
