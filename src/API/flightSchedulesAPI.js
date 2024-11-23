@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 export const fetchFlightSchedulesData = async (city, type) => {
-    const API_KEY = import.meta.env.REACT_APP_FLIGHT_SCHEDULES_API_KEY;
+    const API_KEY = process.env.REACT_APP_FLIGHT_SCHEDULES_API_KEY;
 
   try {
     const response = await axios.get('http://localhost:3001/api/flight-schedule', {
