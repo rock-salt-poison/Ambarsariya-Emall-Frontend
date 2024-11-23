@@ -145,7 +145,7 @@ const EshopForm = () => {
       'date_of_establishment',
       'usp_values',
       'product_samples',
-      'similar_options',
+      // 'similar_options',
       'cost_sensitivity',
       'daily_walkin',
       'parking_availability',
