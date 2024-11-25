@@ -5,6 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { getAllCategories, getCategories, getShopUserData, otherShops, updateEshopData } from '../../API/fetchExpressAPI'
 import { useSelector, useDispatch } from 'react-redux';
 import { setUpdatedField } from '../../store/editedEshopFieldsSlice';
+import CustomSnackbar from '../CustomSnackbar';
 
 const EshopForm = () => {
   const initialFormData = {
@@ -12,14 +13,14 @@ const EshopForm = () => {
     date_of_establishment: '',
     usp_values: '',
     product_samples: '',
-    similar_options: '',
+    similar_options: [],
     cost_sensitivity: 0,
     daily_walkin: 0,
     parking_availability: 0,
     category: [],
     products: '',
     advt_video:'', 
-    key_players:'',
+    key_players:[],
   };
   const [formData, setFormData] = useState(initialFormData);
   const [errors, setErrors] = useState({});
@@ -32,6 +33,9 @@ const EshopForm = () => {
   const updatedFields = useSelector((state) => state.updatedFields); 
   const dispatch = useDispatch();
 
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+
+
   const {edit} = useParams();
 
   const fetchOtherShops = async (token) => {
@@ -39,10 +43,10 @@ const EshopForm = () => {
       const resp = await otherShops(token);
       const shopUsersData = (await getShopUserData(token))[0];
       if(resp){
-        const shops = resp.map((shop)=>shop.business_name);
-        setSimilarOptions(shops);
-        setKeyPlayers(shops);
+        setSimilarOptions(resp);
+        setKeyPlayers(resp);
       }
+
       if(shopUsersData){
         const domain_id = shopUsersData.domain_id;
         const sector_id = shopUsersData.sector_id;
@@ -55,6 +59,18 @@ const EshopForm = () => {
           return resp[0].name;
         })
 
+        const selected_key_players = shopUsersData.key_players.map((shop_no)=> (
+          resp.filter((othershops)=> othershops.shop_no === shop_no)
+        )).map((key_players)=> key_players[0].business_name);
+
+        const selected_similar_options = shopUsersData.similar_options.map((shop_no)=> (
+          resp.filter((othershops)=> othershops.shop_no === shop_no)
+        )).map((options)=> options[0].business_name);
+
+        // const selected_key_players = selected_key_players_array.map((key_players)=>(key_players[0].business_name))
+
+        // const selected_key_players = selected_key_players_array.map((key_players)=>(key_players[0].business_name))
+
         const establishment_date_only = (shopUsersData.establishment_date).split('T')[0];
 
         const initialFormData = {
@@ -62,14 +78,14 @@ const EshopForm = () => {
           date_of_establishment: establishment_date_only || '',
           usp_values: shopUsersData.usp_values_url || '',
           product_samples: shopUsersData.product_sample_url || '',
-          similar_options: shopUsersData.similar_options || '',
+          similar_options: selected_similar_options || [],
           cost_sensitivity: shopUsersData.cost_sensitivity || 0,
           daily_walkin: shopUsersData.daily_walkin || 0,
           parking_availability: shopUsersData.parking_availability || 0,
           category: selectedCategories || [],
           products: '',
           advt_video: shopUsersData.advertisement_video_url || '', 
-          key_players:shopUsersData.key_players || '',
+          key_players:selected_key_players || [],
         };
 
         setFormData(initialFormData)
@@ -168,8 +184,6 @@ const EshopForm = () => {
     return valid;
   };
 
-  
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -180,6 +194,16 @@ const EshopForm = () => {
         const category = categories.find((cat) => cat.name === categoryName);
         return category ? category.id : null;
       })
+  
+      const selectedSimilarOptions = formData.similar_options ? formData.similar_options.map((options)=>{
+        const similarOption = similarOptions.find((option)=>option.business_name===options);
+        return similarOption.shop_no
+      }) : []
+
+      const selectedKeyPlayers = formData.key_players ? formData.key_players.map((options)=>{
+        const keyPlayer = keyPlayers.find((option)=>option.business_name===options);
+        return keyPlayer.shop_no
+      }):[];
 
       console.log(selectedCategoryIds)
       // Prepare the updated post data
@@ -188,16 +212,14 @@ const EshopForm = () => {
         date_of_establishment: formData.date_of_establishment,
         usp_values: "link", // Placeholder link, make sure to replace with actual URL if needed
         product_samples: formData.product_samples,
-        similar_options: formData.similar_options,
+        similar_options: selectedSimilarOptions,
         cost_sensitivity: formData.cost_sensitivity,
         daily_walkin: formData.daily_walkin,
         parking_availability: formData.parking_availability,
         category: selectedCategoryIds, // Hardcoded category, make sure to replace if needed
         advt_video: "link", // Placeholder, replace as needed
-        key_players: formData.key_players
+        key_players: selectedKeyPlayers
       };
-
-      console.log(updatedPostData);
   
       // Get the shopAccessToken (either from localStorage or wherever it's stored)
       const shopAccessToken = localStorage.getItem('shopAccessToken');
@@ -206,25 +228,34 @@ const EshopForm = () => {
         try {
           // Call the function to update e-shop data
          const response = await updateEshopData(updatedPostData, shop_access_token);
-          console.log("response : ", response.data);
-          console.log('Form Data:', formData);
-  
+
+          setSnackbar({
+            open: true,
+            message: response.message,
+            severity: 'success',
+          });
           // Navigate to the shop page after a successful submission
           setTimeout(() => {
             navigate('../shop');
-          }, 1000);
+          }, 2500);
         } catch (error) {
           console.error("Error updating e-shop data:", error);
+          setSnackbar({
+            open: true,
+            message: error.error,
+            severity: 'error',
+          });
         }
       } else {
-        console.error("Shop access token not found.");
+        setSnackbar({
+          open: true,
+          message: "Shop access token not found.",
+          severity: 'error',
+        });
       }
     }
   };
   
-
-  const categoryOptions = ['Option 1', 'Option 2', 'Option 3', 'Option 4'];
-
   const getSliderMarks = (name) => {
     switch (name) {
       case 'cost_sensitivity':
@@ -304,8 +335,8 @@ const EshopForm = () => {
         {renderFormField('USP Values (PDF) :', 'usp_values', 'file')}
         {renderFormField('Product Sample :', 'product_samples', 'url', '', 'Add gmeet link')}
         <Box className="form-group2">
-        {renderFormField('Similar Options :', 'similar_options', 'select-check', similarOptions, 'Select')}
-        {renderFormField('Key players :', 'key_players', 'select-check', keyPlayers, 'Select')}
+        {renderFormField('Similar Options :', 'similar_options', 'select-check', similarOptions.map((option)=>option.business_name), 'Select')}
+        {renderFormField('Key players :', 'key_players', 'select-check', keyPlayers.map((option)=>option.business_name), 'Select')}
 
 
         </Box>
@@ -323,7 +354,7 @@ const EshopForm = () => {
 
         {renderFormField('Category :', 'category', 'select-check', categories.map((cat) => cat.name), 'Select categories')}
         {renderFormField('Products (CSV) :', 'products', 'file')}
-        {renderFormField('Advertisement Video :', 'advt_video', 'file')}
+        {renderFormField('Advertisement Video :', 'advt_video', 'url', '', 'Add youtube video link')}
       </Box>
       {!edit ? <Box className="submit_button_container">
         <Button type="submit" variant="contained" className="submit_button">
@@ -333,7 +364,12 @@ const EshopForm = () => {
           Form Preview
         </Button>
       </Box> :''}
-      
+      <CustomSnackbar
+        open={snackbar.open}
+        handleClose={() => setSnackbar({ ...snackbar, open: false })}
+        message={snackbar.message}
+        severity={snackbar.severity}
+      />
     </Box>
   );
 };

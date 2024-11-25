@@ -5,13 +5,15 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import lock_icon from '../../Utils/images/Sell/login/lock_icon.svg';
 import tag_chain_icon from '../../Utils/images/Sell/login/tag_chain_icon.svg';
 import input_img from '../../Utils/images/Sell/login/input_bg.svg';
-import { authenticateUser } from '../../API/fetchExpressAPI';
-import { setShopToken, setUserToken, setShopTokenValid, setUserTokenValid } from '../../store/authSlice'; 
+import { authenticateUser, getUser } from '../../API/fetchExpressAPI';
+import { setShopToken, setUserToken, setShopTokenValid, setUserTokenValid, setMemberTokenValid, setMemberToken } from '../../store/authSlice'; 
 import { useDispatch } from 'react-redux';
+import CustomSnackbar from '../CustomSnackbar';
 
 const LoginForm = ({redirectTo}) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
   const [formData, setFormData] = useState({
     username: '',
@@ -92,17 +94,37 @@ const LoginForm = ({redirectTo}) => {
     if (e) e.preventDefault();
     if (validate()) {
       try {
-        // Call the API function to authenticate user
-        const data = await authenticateUser(formData);
-        
-        // If login is successful, dispatch the user access token to Redux
-        dispatch(setUserToken(data.user_access_token));
-        dispatch(setShopToken(localStorage.getItem('shopAccessToken')));
-        
-        localStorage.setItem('userAccessToken', data.user_access_token);
 
-        // Store token validity in Redux
-        dispatch(setUserTokenValid(true));
+        const formattedData = {
+          ...formData,
+          username: formData.username.toLowerCase(),
+        };
+        // Call the API function to authenticate user
+        const data = await authenticateUser(formattedData);
+        
+        if(data.user_access_token){
+          const user = await getUser(data.user_access_token);
+          const userType = user.map((user)=>user);
+          if(userType[0].user_type==='member'){
+            dispatch(setMemberToken(data.user_access_token));
+        
+            localStorage.setItem('memberAccessToken', data.user_access_token);
+
+            // Store token validity in Redux
+            dispatch(setMemberTokenValid(true));
+          }else if(userType[0].user_type==='shop' ){
+            dispatch(setUserToken(data.user_access_token));
+            dispatch(setShopToken(userType[0].shop_access_token));
+            
+            localStorage.setItem('userAccessToken', data.user_access_token);
+
+            localStorage.setItem('shopAccessToken', userType[0].shop_access_token);
+            // Store token validity in Redux
+            dispatch(setUserTokenValid(true));
+          }
+        }
+
+        // If login is successful, dispatch the user access token to Redux
 
         // Redirect based on the user type
         // if (data.user_type === 'member') {
@@ -112,11 +134,23 @@ const LoginForm = ({redirectTo}) => {
         // } else {
         //   alert('Unknown user type.');
         // }
-
-        navigate(redirectTo);
+        setSnackbar({
+          open: true,
+          message: 'Login Successful',
+          severity: 'success',
+        });
+        setTimeout(()=>{navigate(redirectTo)},2500);
+        
       } catch (error) {
-        console.error('Error logging in:', error);
-        alert('An error occurred while logging in.');
+        console.error('Error logging in:', error.response.data.message);
+        setSnackbar({
+          open: true,
+          message: error.response.data.message,
+          severity: 'error',
+        });
+        if(!(error.response.data.message === "Incorrect Password.")){
+          setStep(0);
+        }
       }
     }
   };
@@ -180,6 +214,13 @@ const LoginForm = ({redirectTo}) => {
         <Box component="img" src={lock_icon} className="lock_icon" alt="forgot_password" />
         <Box component="img" src={tag_chain_icon} className="tag_chain_icon" alt="tag_chain_icon" />
       </Box>
+
+      <CustomSnackbar
+        open={snackbar.open}
+        handleClose={() => setSnackbar({ ...snackbar, open: false })}
+        message={snackbar.message}
+        severity={snackbar.severity}
+      />
     </Box>
   );
 };

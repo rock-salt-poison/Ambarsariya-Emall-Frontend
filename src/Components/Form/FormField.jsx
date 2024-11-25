@@ -25,7 +25,8 @@ const FormField = ({
   className,
   handleFocus,
   handleBlur, 
-  adornmentValue, accept,rows,radioItems
+  adornmentValue, accept,rows,radioItems,
+  additionalProps
 }) => {
 
   const marks = getSliderMarks ? getSliderMarks(name) : [];
@@ -223,7 +224,9 @@ const FormField = ({
                   onBlur={handleBlur}
                   autoCorrect="off"
                   autoCapitalize="none"
+                  autoComplete="false"
                   spellCheck="false"
+                  {...additionalProps}
                 />
               )}
             </Box>

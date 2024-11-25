@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Box, Typography } from '@mui/material';
 import FormField from './FormField'; 
 import { useNavigate } from 'react-router-dom';
+import { getMemberData, postMemberData } from '../../API/fetchExpressAPI';
+import CustomSnackbar from '../CustomSnackbar';
+import { useDispatch, useSelector } from 'react-redux';
+import { setMemberToken, setMemberTokenValid } from '../../store/authSlice';
 
 const UserPortfolioForm = () => {
   const initialFormData = {
@@ -17,18 +21,45 @@ const UserPortfolioForm = () => {
     backgroundPicture: null,
   };
 
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState(initialFormData);
   const [errors, setErrors] = useState({});
   const [errorMessages, setErrorMessages] = useState({});
   const [selectedDisplayFileName, setSelectedDisplayFileName] = useState(''); 
   const [selectedBackgroundFileName, setSelectedBackgroundFileName] = useState('');
   const navigate = useNavigate();
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+
+  const token = useSelector((state) => state.auth.memberAccessToken);
+
+  const fetchMemberData = async (memberToken) => {
+      const user = await getMemberData(memberToken);
+      if(user){
+        console.log(user)
+        setFormData({
+          ...formData,
+          name: user[0].full_name,
+          phoneNumber: user[0].phone_no_1,
+          gender: user[0].gender,
+          age: user[0].age,
+          address: user[0].address,
+          username: user[0].username
+        })
+      }
+  }
+
+  useEffect(()=>{
+    if(token){
+      fetchMemberData(token);
+    }
+  }, [token])
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === 'phoneNumber' && !/^\d{0,10}$/.test(value)) {
-      return; // Only allow up to 10 digits
-    }
+    // if (name === 'phoneNumber' && !/^\d{0,10}$/.test(value)) {
+    //   return; // Only allow up to 10 digits
+    // }
 
     setFormData((prev) => ({ ...prev, [name]: value }));
 
@@ -65,9 +96,17 @@ const UserPortfolioForm = () => {
       }
     });
 
-    if (!/^\d{10}$/.test(formData.phoneNumber)) {
+    const passwordPattern = /^(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+    if (!passwordPattern.test(formData.password)) {
+      newErrors.password = true;
+      newErrorMessages.password = 'Password must be at least 8 characters long and include a special character';
+      valid = false;
+    }
+
+    const phonePattern = /^\+91\s\d{5}-\d{5}$/;
+    if (!phonePattern.test(formData.phoneNumber)) {
       newErrors.phoneNumber = true;
-      newErrorMessages.phoneNumber = 'Phone number must be 10 digits.';
+      newErrorMessages.phoneNumber = 'Phone No. must be +91 followed by 10 digits';
       valid = false;
     }
 
@@ -87,15 +126,47 @@ const UserPortfolioForm = () => {
     setErrorMessages(newErrorMessages);
     return valid;
   };
-
-  const handleSubmit = (e) => {
+console.log(formData.phoneNumber)
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
-      console.log('Form Data:', formData);
-      console.log('Uploaded Display Picture:', formData.displayPicture);
-      console.log('Uploaded Background Picture:', formData.backgroundPicture);
 
-      navigate('../esale'); // Navigate to the appropriate page
+      try{
+        const userData = {
+          name:formData.name,
+          username:(formData.username).toLowerCase(),
+          password:formData.password,
+          address:formData.address,
+          phone:formData.phoneNumber,
+          gender:formData.gender,
+          age:formData.age
+        }
+  
+        const response = await postMemberData(userData);
+        if(response){
+
+          dispatch(setMemberToken(response.user_access_token));
+        
+        localStorage.setItem('memberAccessToken', response.user_access_token);
+
+        // Store token validity in Redux
+        dispatch(setMemberTokenValid(true));
+
+          setSnackbar({
+            open: true,
+            message: response.message,
+            severity: 'success',
+          });
+        }
+        setTimeout(()=>{navigate('../esale')}, 2500);
+      }catch(e){
+        setSnackbar({
+          open: true,
+          message: e.error,
+          severity: 'error',
+        });
+      }
+       // Navigate to the appropriate page
     }
   };
 
@@ -119,7 +190,7 @@ const UserPortfolioForm = () => {
       <Box className="form-group">
         <Box className="form-group-2">
           {renderFormField('name', 'text', [], 'Enter your name')}
-          {renderFormField('phoneNumber', 'tel', [], 'Enter your phone number', { maxLength: 10 })}
+          {renderFormField('phoneNumber', 'phone_number', [], 'Enter your phone number')}
         </Box>
 
         <Box className="form-group-2">
@@ -179,6 +250,13 @@ const UserPortfolioForm = () => {
           Submit
         </Button>
       </Box>
+
+      <CustomSnackbar
+        open={snackbar.open}
+        handleClose={() => setSnackbar({ ...snackbar, open: false })}
+        message={snackbar.message}
+        severity={snackbar.severity}
+      />
     </Box>
   );
 };

@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import {postEshop, fetchDomains, fetchDomainSectors, fetchSectors, getShopUserData} from '../../API/fetchExpressAPI'
 import { useDispatch, useSelector } from 'react-redux';
 import { setShopToken, setShopTokenValid } from '../../store/authSlice';
+import CustomSnackbar from '../CustomSnackbar';
 
 
 const BookEshopForm = () => {
@@ -47,9 +48,12 @@ const BookEshopForm = () => {
   const [showPhoneOtp, setShowPhoneOtp] = useState(false);
   const [showMemberOtp, setShowMemberOtp] = useState(false);
   const [user_type, set_user_type] = useState('shop');
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+  const [submitBtnDisable, setSubmitBtnDisable] = useState(!!formData);
+  
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.shopAccessToken);
-
+  
   const navigate = useNavigate();
 
   // Simulated OTP for demonstration purposes
@@ -123,7 +127,7 @@ const BookEshopForm = () => {
   const handleChange = async (e) => {
     if (!e.target) return;
     const { name, value, type, checked } = e.target;
-  
+    setSubmitBtnDisable(false);
     if (name === 'domain') {
       try {
         // Fetch domains and find the selected domain
@@ -336,7 +340,7 @@ const BookEshopForm = () => {
             const postData = {
               title: formData.title,
               fullName: formData.fullName,
-              username: formData.username,
+              username: (formData.username).toLowerCase(),
               password: formData.password,
               address: formData.address,
               phone1: formData.phone1,
@@ -380,21 +384,42 @@ const BookEshopForm = () => {
 
               localStorage.setItem('shopAccessToken', shop_access_token);
               
-
+              
             }
-  
+            
+            setSnackbar({ open: true, message: 'Form submitted successfully!', severity: 'success' });
             console.log('Form Data:', formData);
             if (formData.premiumVersion) {
               setTimeout(() => {
                 loggedIn ? navigate('../eshop') : navigate('../login');
-              }, 100);
+              }, 2500);
             } else {
               setTimeout(() => {
                 loggedIn ? navigate('../eshop') : navigate('../login');
-              }, 100);
+              }, 2500);
             }
           } catch (error) {
-            console.error("Error submitting form:", error);
+            if (error.response.data.error === 'duplicate key value violates unique constraint "users_phone_no_1_key"') {
+              setSnackbar({
+                open: true,
+                message: 'The phone number you entered already exists. Please use a different phone number.',
+                severity: 'error',
+              });
+            }else if (error.response.data.error.includes('Username') &&  error.response.data.error.includes('already exists')) {
+              setSnackbar({
+                open: true,
+                message: 'Username already exists.',
+                severity: 'error',
+              });
+            }else{
+              setSnackbar({
+                open: true,
+                message: 'Error while submitting the form. Please try again.',
+                severity: 'error',
+              });
+            }
+            
+            console.error("Error submitting form:", error.response.data.error);
           }
         }
       }
@@ -431,8 +456,9 @@ const BookEshopForm = () => {
           </Box>
         )}
         <Box className="form-group2">
-          {renderFormField('Password :', 'password', 'password')}
-          {renderFormField('Confirm Password :', 'confirm_password', 'password')}
+          {renderFormField('Password :', 'password', 'password', [], '', { autoComplete: "new-password" })}
+          {renderFormField('Confirm Password :', 'confirm_password', 'password',[], '', { autoComplete: "new-password" })}
+          
         </Box>
         <Box className="form-group3">
           {renderFormField('Full Name :', 'title', 'select', titleOptions)}
@@ -500,10 +526,17 @@ const BookEshopForm = () => {
         </Box>
       </Box>
       <Box className="submit_button_container">
-        <Button type="submit" variant="contained" className="submit_button" disabled={token ? true :false}>
+        <Button type="submit" variant="contained" className="submit_button" disabled={submitBtnDisable}>
           Submit
         </Button>
       </Box>
+
+      <CustomSnackbar
+        open={snackbar.open}
+        handleClose={() => setSnackbar({ ...snackbar, open: false })}
+        message={snackbar.message}
+        severity={snackbar.severity}
+      />
     </Box>
   );
 };

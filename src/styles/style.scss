@@ -18346,3 +18346,19 @@ input[readonly] {
     }
   }
 }
+
+.MuiAlert-message{
+  padding: 0px !important;
+  align-self: center !important;
+
+  .MuiTypography-root.snackbar{
+    @include homepage-buttons(
+      "Bobby-Jones-Soft",
+      17px,
+      $light-yellow,
+      "none"
+    );
+    @include hover-scale(1, 0s);
+    text-align: center;
+  }
+}
