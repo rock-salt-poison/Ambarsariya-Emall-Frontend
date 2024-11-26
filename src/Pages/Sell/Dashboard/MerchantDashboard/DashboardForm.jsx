@@ -3,7 +3,7 @@ import { Box, Button } from "@mui/material";
 import GeneralLedgerForm from "../../../../Components/Form/GeneralLedgerForm";
 import ribbon from "../../../../Utils/images/Sell/dashboard/merchant_dashboard/ribbon.svg";
 import { useSelector } from "react-redux";
-import { getCategories, getShopUserData } from "../../../../API/fetchExpressAPI";
+import { getCategories, getShopUserData, getUser } from "../../../../API/fetchExpressAPI";
 
 function DashboardForm(props) {
 
@@ -38,7 +38,7 @@ function DashboardForm(props) {
   const [formData, setFormData] = useState(initialData);
   const [errors, setErrors] = useState({});
   const [categories, setCategories] = useState([]);
-  const shop_access_token = useSelector((state) => state.auth.shopAccessToken);
+  const user_access_token = useSelector((state) => state.auth.userAccessToken);
 
   const fetchData = async (token) => {
     try{
@@ -56,8 +56,16 @@ function DashboardForm(props) {
   }
 
   useEffect(()=>{
-    fetchData(shop_access_token);
-  }, [shop_access_token])
+    const fetchShopToken = async () => {
+      const shop_token = (await getUser(user_access_token))[0].shop_access_token;
+
+      if(shop_token){
+        fetchData(shop_token);
+      }
+
+    }
+    fetchShopToken();
+  }, [user_access_token])
 
   // Form fields configuration (for each form)
   const formFields = {

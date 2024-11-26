@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import Serve from '../Pages/Serve';
 import Emotional from '../Pages/Serve/Emotional';
 import Campaign from '../Pages/Serve/Campaign';
@@ -36,7 +36,7 @@ import CustomerRecords from '../Pages/Serve/CustomerRecords';
 import MemberGroupCreation from '../Pages/Serve/MemberGroupCreation';
 import SalesPipeline from '../Pages/Serve/SalesPipeline';
 import MarketingCampaigns from '../Pages/Serve/MarketingCampaigns';
-import Login from '../Pages/Sell/Login';
+import Login from '../Pages/Serve/Login';
 import Overheads from '../Pages/Serve/Analytics_Merchant/Overheads';
 import MarketPrice from '../Pages/Serve/Analytics_Merchant/MarketPrice';
 import StockAlarm from '../Pages/Serve/Analytics_Merchant/StockAlarm';
@@ -46,42 +46,40 @@ import EshopMember from '../Pages/Serve/Member/EshopMember';
 import Budget from '../Pages/Sell/Budget';
 import MemberRelations from '../Pages/Sell/MemberRelations';
 import DietPlan from '../Pages/Serve/Member/DietPlan';
+import { useSelector } from 'react-redux';
+import { getUser } from '../API/fetchExpressAPI';
 
 
 export default function ServeRoutes() {
 
-   const [checkUser, setCheckUser] = useState(localStorage.getItem('access_token'));
-
-   // Effect to listen to storage changes
+   const token = useSelector((state) => state.auth.userAccessToken);
+   const [checkUser , setCheckUser] = useState();
+   
    useEffect(() => {
-      // Define the function that updates state when localStorage changes
-      const handleStorageChange = (e) => {
-         if (e.key === 'access_token') {
-            setCheckUser(e.newValue);
+      const fetchUserType = async () => {
+         if(token){
+            const user_type = (await getUser(token))[0].user_type;
+   
+            if(user_type){
+               setCheckUser(user_type);
+            }
          }
-      };
-
-      // Listen to the storage event
-      window.addEventListener('storage', handleStorageChange);
-
-      // Clean up the event listener when the component unmounts
-      return () => {
-         window.removeEventListener('storage', handleStorageChange);
-      };
-   }, []);
+      }
+      fetchUserType();
+   }, [token]);
 
    return (
       <Routes>
-         <Route path="/" element={<Serve />} />
+         <Route path="/" element={token ? <Serve /> : <Navigate to="login" />} />
          <Route path="login" element={<Login />} />
-         <Route path="/emotional" element={checkUser === 'merchant' ? <Emotional /> : <EmotionalMember/>} />
+         <Route path="/emotional" element={checkUser === 'shop' ? <Emotional /> : <EmotionalMember/>} />
          <Route path="/unexpected" element={<Unexpected />} />
-         <Route path="/emotional/campaign" element={checkUser === 'merchant' ? <MerchantCampaign /> : <Campaign />} />
+         <Route path="/emotional/campaign" element={checkUser === 'shop' ? <MerchantCampaign /> : <Campaign />} />
          <Route path="/emotional/campaign/job" element={<Job />} />
          <Route path="/emotional/eshop/soul" element={<Community />} />
          <Route path="/emotional/eshop/soul/discussion" element={<Discussion />} />
          <Route path="/emotional/eshop/soul/votes" element={<Votes />} />
-         <Route path="/emotional/eshop" element={checkUser === 'merchant' ? <Eshop /> : <EshopMember />} />
+         <Route path="/emotional/eshop" element={checkUser === 'shop' ? <Eshop /> : <EshopMember />} />
          <Route path="/emotional/eshop/financial-management" element={<Financial_management />} />
          <Route path="/emotional/eshop/financial-management/general-ledger" element={<General_ledger />} />
          <Route path="/emotional/eshop/financial-management/accounts-payable" element={<Accounts_payable />} />
@@ -97,12 +95,12 @@ export default function ServeRoutes() {
          <Route path="/emotional/eshop/stock-management" element={<Stock_management />} />
          <Route path="/emotional/eshop/stock-level" element={<Stock_level />} />
          <Route path="/emotional/eshop/stock-reports" element={<Stock_reports />} />
-         <Route path="/emotional/analytics" element={checkUser === 'merchant' ? <Analytics /> : <Budget />} />
+         <Route path="/emotional/analytics" element={checkUser === 'shop' ? <Analytics /> : <Budget />} />
          <Route path="/emotional/analytics/overheads" element={<Overheads/>} />
          <Route path="/emotional/analytics/market-price" element={<MarketPrice/>} />
          <Route path="/emotional/analytics/stock-alarm" element={<StockAlarm/>} />
          <Route path="/emotional/analytics/forecast-market-price" element={<ForecastMarketPrice/>} />
-         <Route path="/emotional/crm" element={checkUser === 'merchant' ? <CRM /> : <MemberRelations />} />
+         <Route path="/emotional/crm" element={checkUser === 'shop' ? <CRM /> : <MemberRelations />} />
          <Route path="/emotional/crm/customer-records" element={<CustomerRecords />} />
          <Route path="/emotional/crm/member-group-creation" element={<MemberGroupCreation />} />
          <Route path="/emotional/crm/sales-pipeline" element={<SalesPipeline />} />

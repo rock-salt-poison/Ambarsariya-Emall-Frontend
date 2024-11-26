@@ -9554,7 +9554,9 @@ a {
     width: 100%;
 
     .back-button-wrapper {
-      align-self: baseline;
+      align-self: stretch; 
+      @include flex-center(row,space-between);
+
       @include backButton(
         linear-gradient(to bottom, #8a803fb3, #48605ab3),
         $yellow,

@@ -14,16 +14,18 @@ import eshopBtnBg from '../Utils/images/Sell/eshopBtn.png';
 import esaleBtnBg from '../Utils/images/Sell/esaleBtn.png';
 import hornSound from '../Utils/audio/horn-sound.mp3';
 import Logo from '../Components/Logo';
+import { useSelector } from 'react-redux';
+import { useLogout } from '../customHooks/useLogout';
 
 function Sell() {
   const navigate = useNavigate();
+  const token = useSelector((state) => state.auth.userAccessToken);
+  const handleLogout = useLogout();
   const [audio] = useState(new Audio(hornSound));
 
   const handleClick = (e) => {
     const btns = e.target.closest('.btn');
     const sell_buy_button = e.target.closest('.title_container');
-    // const [loggedIn, setLoggedIn] = useState(!!localStorage.getItem('access_token'));
-    const loggedIn = !!localStorage.getItem('access_token');
 
     if (sell_buy_button) {
       sell_buy_button.classList.add('reduceSize3');
@@ -51,9 +53,9 @@ function Sell() {
       } else if (btns.classList.contains('Grow')) {
         destination = 'grow';
       }else if (btns.classList.contains('E-shop')) {
-        destination =loggedIn ? 'eshop':'login';
+        destination =token ? 'eshop':'login';
       }else if (btns.classList.contains('E-sale')) {
-        destination =loggedIn ? 'esale':'login';
+        destination =token ? 'esale':'login';
       }
 
       setTimeout(() => {
@@ -86,7 +88,10 @@ function Sell() {
               <Box component="img" src={icon} className="person_on_call" alt="person on call" />
             </Link>
           </Box>
-          <Box></Box>
+          <Box className="back-button-wrapper">
+          {token && <Button2 text="Logout" onClick={() => handleLogout('../sell')}/>}
+
+          </Box>
         </Box>
         <Box className="content">
           {[0, 1].map(rowIndex => (

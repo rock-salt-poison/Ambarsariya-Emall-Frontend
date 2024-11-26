@@ -1,26 +1,33 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Box } from '@mui/material';
-import FormField from './FormField'; 
-import { useNavigate, useParams } from 'react-router-dom';
-import { getAllCategories, getCategories, getShopUserData, otherShops, updateEshopData } from '../../API/fetchExpressAPI'
-import { useSelector, useDispatch } from 'react-redux';
-import { setUpdatedField } from '../../store/editedEshopFieldsSlice';
-import CustomSnackbar from '../CustomSnackbar';
+import React, { useEffect, useState } from "react";
+import { Button, Box } from "@mui/material";
+import FormField from "./FormField";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  getAllCategories,
+  getCategories,
+  getShopUserData,
+  getUser,
+  otherShops,
+  updateEshopData,
+} from "../../API/fetchExpressAPI";
+import { useSelector, useDispatch } from "react-redux";
+import { setUpdatedField } from "../../store/editedEshopFieldsSlice";
+import CustomSnackbar from "../CustomSnackbar";
 
 const EshopForm = () => {
   const initialFormData = {
-    business_name: '',
-    date_of_establishment: '',
-    usp_values: '',
-    product_samples: '',
+    business_name: "",
+    date_of_establishment: "",
+    usp_values: "",
+    product_samples: "",
     similar_options: [],
     cost_sensitivity: 0,
     daily_walkin: 0,
     parking_availability: 0,
     category: [],
-    products: '',
-    advt_video:'', 
-    key_players:[],
+    products: "",
+    advt_video: "",
+    key_players: [],
   };
   const [formData, setFormData] = useState(initialFormData);
   const [errors, setErrors] = useState({});
@@ -29,105 +36,120 @@ const EshopForm = () => {
   const [similarOptions, setSimilarOptions] = useState([]);
   const [keyPlayers, setKeyPlayers] = useState([]);
   const [categories, setCategories] = useState([]);
-  const shop_access_token = useSelector((state) => state.auth.shopAccessToken);
-  const updatedFields = useSelector((state) => state.updatedFields); 
+  const user_access_token = useSelector((state) => state.auth.userAccessToken);
+  const updatedFields = useSelector((state) => state.updatedFields);
   const dispatch = useDispatch();
 
-  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
 
-
-  const {edit} = useParams();
+  const { edit } = useParams();
 
   const fetchOtherShops = async (token) => {
-    try{
+    try {
       const resp = await otherShops(token);
       const shopUsersData = (await getShopUserData(token))[0];
-      if(resp){
+      if (resp) {
         setSimilarOptions(resp);
         setKeyPlayers(resp);
       }
 
-      if(shopUsersData){
+      if (shopUsersData) {
         const domain_id = shopUsersData.domain_id;
         const sector_id = shopUsersData.sector_id;
-        const categories_result = await getCategories({domain_id, sector_id});
-        const formattedCategories  = categories_result.map((data)=>({ id: data.category_id, name: data.category_name }));
-        setCategories(formattedCategories); 
-        
+        const categories_result = await getCategories({ domain_id, sector_id });
+        const formattedCategories = categories_result.map((data) => ({
+          id: data.category_id,
+          name: data.category_name,
+        }));
+        setCategories(formattedCategories);
+
         const selectedCategories = shopUsersData.category.map((category_id) => {
-          const resp = formattedCategories.filter((category)=> category.id === category_id);
+          const resp = formattedCategories.filter(
+            (category) => category.id === category_id
+          );
           return resp[0].name;
-        })
+        });
 
-        const selected_key_players = shopUsersData.key_players.map((shop_no)=> (
-          resp.filter((othershops)=> othershops.shop_no === shop_no)
-        )).map((key_players)=> key_players[0].business_name);
+        const selected_key_players = shopUsersData.key_players
+          .map((shop_no) =>
+            resp.filter((othershops) => othershops.shop_no === shop_no)
+          )
+          .map((key_players) => key_players[0].business_name);
 
-        const selected_similar_options = shopUsersData.similar_options.map((shop_no)=> (
-          resp.filter((othershops)=> othershops.shop_no === shop_no)
-        )).map((options)=> options[0].business_name);
+        const selected_similar_options = shopUsersData.similar_options
+          .map((shop_no) =>
+            resp.filter((othershops) => othershops.shop_no === shop_no)
+          )
+          .map((options) => options[0].business_name);
 
         // const selected_key_players = selected_key_players_array.map((key_players)=>(key_players[0].business_name))
 
         // const selected_key_players = selected_key_players_array.map((key_players)=>(key_players[0].business_name))
 
-        const establishment_date_only = (shopUsersData.establishment_date).split('T')[0];
+        const establishment_date_only =
+          shopUsersData.establishment_date.split("T")[0];
 
         const initialFormData = {
-          business_name: shopUsersData.business_name || '',
-          date_of_establishment: establishment_date_only || '',
-          usp_values: shopUsersData.usp_values_url || '',
-          product_samples: shopUsersData.product_sample_url || '',
+          business_name: shopUsersData.business_name || "",
+          date_of_establishment: establishment_date_only || "",
+          usp_values: shopUsersData.usp_values_url || "",
+          product_samples: shopUsersData.product_sample_url || "",
           similar_options: selected_similar_options || [],
           cost_sensitivity: shopUsersData.cost_sensitivity || 0,
           daily_walkin: shopUsersData.daily_walkin || 0,
           parking_availability: shopUsersData.parking_availability || 0,
           category: selectedCategories || [],
-          products: '',
-          advt_video: shopUsersData.advertisement_video_url || '', 
-          key_players:selected_key_players || [],
+          products: "",
+          advt_video: shopUsersData.advertisement_video_url || "",
+          key_players: selected_key_players || [],
         };
 
-        setFormData(initialFormData)
-
+        setFormData(initialFormData);
       }
-      
-      
-    }catch(e){
+    } catch (e) {
       console.log("Error while fetching : ", e);
     }
-  }
+  };
 
-  useEffect(()=>{
-    if(shop_access_token){
-      fetchOtherShops(shop_access_token);
-      console.log(similarOptions);
-
-    }
-  }, [shop_access_token])
+  useEffect(() => {
+    const fetchData = async () => {
+      if (user_access_token) {
+        let shop_token = (await getUser(user_access_token))[0]
+          .shop_access_token;
+        if (shop_token) {
+          fetchOtherShops(shop_token);
+        }
+      }
+    };
+    fetchData();
+  }, [user_access_token]);
 
   const handleChange = async (e) => {
     const { name, type, files, value } = e.target;
-    let fieldValue = type === 'file' ? files[0] : value;
+    let fieldValue = type === "file" ? files[0] : value;
 
     // Handle file validation and store the file in formData
-    if (type === 'file') {
+    if (type === "file") {
       const file = files[0];
-      
+
       // Check file type based on the field name
-      if (name === 'usp_values' && file.type !== 'application/pdf') {
-        console.log('Please upload a PDF file');
+      if (name === "usp_values" && file.type !== "application/pdf") {
+        console.log("Please upload a PDF file");
         return;
       }
-      if (name === 'products' && file.type !== 'text/csv') {
-        console.log('Please upload a CSV file');
+      if (name === "products" && file.type !== "text/csv") {
+        console.log("Please upload a CSV file");
         return;
       }
-      if (name === 'advt_video' && file.type !== 'video/mp4') {
-        console.log('Please upload an MP4 video file');
+      if (name === "advt_video" && file.type !== "video/mp4") {
+        console.log("Please upload an MP4 video file");
         return;
       }
-      
+
       fieldValue = file;
     }
 
@@ -139,7 +161,7 @@ const EshopForm = () => {
     dispatch(setUpdatedField({ name, value: fieldValue }));
 
     setErrors((prevErrors) => ({ ...prevErrors, [name]: false }));
-    setErrorMessages((prevMessages) => ({ ...prevMessages, [name]: '' }));
+    setErrorMessages((prevMessages) => ({ ...prevMessages, [name]: "" }));
   };
 
   console.log(updatedFields);
@@ -150,7 +172,7 @@ const EshopForm = () => {
     });
 
     setErrors((prevErrors) => ({ ...prevErrors, [name]: false }));
-    setErrorMessages((prevMessages) => ({ ...prevMessages, [name]: '' }));
+    setErrorMessages((prevMessages) => ({ ...prevMessages, [name]: "" }));
   };
 
   const validate = () => {
@@ -159,22 +181,22 @@ const EshopForm = () => {
     const newErrorMessages = {};
 
     const requiredFields = [
-      'business_name',
-      'date_of_establishment',
-      'usp_values',
-      'product_samples',
+      "business_name",
+      "date_of_establishment",
+      "usp_values",
+      "product_samples",
       // 'similar_options',
-      'cost_sensitivity',
-      'daily_walkin',
-      'parking_availability',
-      'category',
-      'products',
+      "cost_sensitivity",
+      "daily_walkin",
+      "parking_availability",
+      "category",
+      "products",
     ];
 
     requiredFields.forEach((field) => {
       if (!formData[field]) {
         newErrors[field] = true;
-        newErrorMessages[field] = `${field.replace(/_/g, ' ')} is required`;
+        newErrorMessages[field] = `${field.replace(/_/g, " ")} is required`;
         valid = false;
       }
     });
@@ -184,28 +206,35 @@ const EshopForm = () => {
     return valid;
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Validate the form
     if (validate()) {
       const selectedCategoryIds = formData.category.map((categoryName) => {
         const category = categories.find((cat) => cat.name === categoryName);
         return category ? category.id : null;
-      })
-  
-      const selectedSimilarOptions = formData.similar_options ? formData.similar_options.map((options)=>{
-        const similarOption = similarOptions.find((option)=>option.business_name===options);
-        return similarOption.shop_no
-      }) : []
+      });
 
-      const selectedKeyPlayers = formData.key_players ? formData.key_players.map((options)=>{
-        const keyPlayer = keyPlayers.find((option)=>option.business_name===options);
-        return keyPlayer.shop_no
-      }):[];
+      const selectedSimilarOptions = formData.similar_options
+        ? formData.similar_options.map((options) => {
+            const similarOption = similarOptions.find(
+              (option) => option.business_name === options
+            );
+            return similarOption.shop_no;
+          })
+        : [];
 
-      console.log(selectedCategoryIds)
+      const selectedKeyPlayers = formData.key_players
+        ? formData.key_players.map((options) => {
+            const keyPlayer = keyPlayers.find(
+              (option) => option.business_name === options
+            );
+            return keyPlayer.shop_no;
+          })
+        : [];
+
+      console.log(selectedCategoryIds);
       // Prepare the updated post data
       const updatedPostData = {
         business_name: formData.business_name,
@@ -218,94 +247,105 @@ const EshopForm = () => {
         parking_availability: formData.parking_availability,
         category: selectedCategoryIds, // Hardcoded category, make sure to replace if needed
         advt_video: "link", // Placeholder, replace as needed
-        key_players: selectedKeyPlayers
+        key_players: selectedKeyPlayers,
       };
-  
-      // Get the shopAccessToken (either from localStorage or wherever it's stored)
-      const shopAccessToken = localStorage.getItem('shopAccessToken');
-      
-      if (shopAccessToken) {
+
+      // Get the userAcessToken (either from localStorage or wherever it's stored)
+      const userAccessToken = localStorage.getItem("accessToken");
+
+      if (userAccessToken) {
         try {
           // Call the function to update e-shop data
-         const response = await updateEshopData(updatedPostData, shop_access_token);
+          const shop_token = (await getUser(userAccessToken))[0].shop_access_token;
+          if (shop_token) {
+            const response = await updateEshopData(updatedPostData, shop_token);
 
-          setSnackbar({
-            open: true,
-            message: response.message,
-            severity: 'success',
-          });
-          // Navigate to the shop page after a successful submission
-          setTimeout(() => {
-            navigate('../shop');
-          }, 2500);
+            setSnackbar({
+              open: true,
+              message: response.message,
+              severity: "success",
+            });
+            
+            // Navigate to the shop page after a successful submission
+            setTimeout(() => {
+              navigate("../shop");
+            }, 2500);
+          }
         } catch (error) {
           console.error("Error updating e-shop data:", error);
           setSnackbar({
             open: true,
             message: error.error,
-            severity: 'error',
+            severity: "error",
           });
         }
       } else {
         setSnackbar({
           open: true,
           message: "Shop access token not found.",
-          severity: 'error',
+          severity: "error",
         });
       }
     }
   };
-  
+
   const getSliderMarks = (name) => {
     switch (name) {
-      case 'cost_sensitivity':
+      case "cost_sensitivity":
         return [
-          { value: 0, label: 'Easy' },
-          { value: 1, label: 'Moderate' },
-          { value: 2, label: 'Effective' },
-          { value: 3, label: 'Luxury' },
+          { value: 0, label: "Easy" },
+          { value: 1, label: "Moderate" },
+          { value: 2, label: "Effective" },
+          { value: 3, label: "Luxury" },
         ];
-      case 'daily_walkin':
+      case "daily_walkin":
         return [
-          { value: 0, label: 'Low' },
-          { value: 1, label: 'Medium' },
-          { value: 2, label: 'High' },
-          { value: 3, label: 'Dense' },
+          { value: 0, label: "Low" },
+          { value: 1, label: "Medium" },
+          { value: 2, label: "High" },
+          { value: 3, label: "Dense" },
         ];
-      case 'parking_availability':
+      case "parking_availability":
         return [
-          { value: 0, label: 'Morning' },
-          { value: 1, label: 'Afternoon' },
-          { value: 2, label: 'Evening' },
+          { value: 0, label: "Morning" },
+          { value: 1, label: "Afternoon" },
+          { value: 2, label: "Evening" },
         ];
       default:
         return [];
     }
   };
 
-  const renderFormField = (label, name, type, options = [], placeholder = '', additionalProps = {}) => {
-    let additionalClass = '';
-    let accept = ''; // Initialize accept based on field
-    
+  const renderFormField = (
+    label,
+    name,
+    type,
+    options = [],
+    placeholder = "",
+    additionalProps = {}
+  ) => {
+    let additionalClass = "";
+    let accept = ""; // Initialize accept based on field
+
     // Define accept types based on field name
-    if (name === 'usp_values') {
-      accept = 'application/pdf';
-    } else if (name === 'products') {
-      accept = '.csv';
-    } else if (name === 'advt_video') {
-      accept = 'video/mp4';
+    if (name === "usp_values") {
+      accept = "application/pdf";
+    } else if (name === "products") {
+      accept = ".csv";
+    } else if (name === "advt_video") {
+      accept = "video/mp4";
     }
 
-    if (name === 'parking_availability') {
-      additionalClass = 'parking-availability-slider';
-    } else if (name === 'cost_sensitivity') {
-      additionalClass = 'cost-sensitivity-slider';
-    } else if (name === 'daily_walkin') {
-      additionalClass = 'daily-walkin-slider';
+    if (name === "parking_availability") {
+      additionalClass = "parking-availability-slider";
+    } else if (name === "cost_sensitivity") {
+      additionalClass = "cost-sensitivity-slider";
+    } else if (name === "daily_walkin") {
+      additionalClass = "daily-walkin-slider";
     }
 
     const isUpdated = updatedFields[name] !== undefined;
-    const updatedFieldClass = isUpdated ? 'updated-field' : '';
+    const updatedFieldClass = isUpdated ? "updated-field" : "";
 
     return (
       <FormField
@@ -321,7 +361,7 @@ const EshopForm = () => {
         placeholder={placeholder}
         getSliderMarks={getSliderMarks}
         className={`${additionalClass} ${updatedFieldClass}`}
-        accept={accept} 
+        accept={accept}
         {...additionalProps}
       />
     );
@@ -330,40 +370,84 @@ const EshopForm = () => {
   return (
     <Box component="form" noValidate autoComplete="off" onSubmit={handleSubmit}>
       <Box className="form-group">
-        {renderFormField('Name of the business :', 'business_name', 'text')}
-        {renderFormField('Date of establishment :', 'date_of_establishment', 'date')}
-        {renderFormField('USP Values (PDF) :', 'usp_values', 'file')}
-        {renderFormField('Product Sample :', 'product_samples', 'url', '', 'Add gmeet link')}
+        {renderFormField("Name of the business :", "business_name", "text")}
+        {renderFormField(
+          "Date of establishment :",
+          "date_of_establishment",
+          "date"
+        )}
+        {renderFormField("USP Values (PDF) :", "usp_values", "file")}
+        {renderFormField(
+          "Product Sample :",
+          "product_samples",
+          "url",
+          "",
+          "Add gmeet link"
+        )}
         <Box className="form-group2">
-        {renderFormField('Similar Options :', 'similar_options', 'select-check', similarOptions.map((option)=>option.business_name), 'Select')}
-        {renderFormField('Key players :', 'key_players', 'select-check', keyPlayers.map((option)=>option.business_name), 'Select')}
-
-
+          {renderFormField(
+            "Similar Options :",
+            "similar_options",
+            "select-check",
+            similarOptions.map((option) => option.business_name),
+            "Select"
+          )}
+          {renderFormField(
+            "Key players :",
+            "key_players",
+            "select-check",
+            keyPlayers.map((option) => option.business_name),
+            "Select"
+          )}
         </Box>
-        {renderFormField('Cost sensitivity :', 'cost_sensitivity', 'range')}
-        
+        {renderFormField("Cost sensitivity :", "cost_sensitivity", "range")}
+
         <Box className="form-group2">
           <Box className="form-subgroup">
-            {renderFormField('Daily Walkin :', 'daily_walkin', 'range')}
+            {renderFormField("Daily Walkin :", "daily_walkin", "range")}
           </Box>
 
           <Box className="form-subgroup">
-            {renderFormField('Parking Availability :', 'parking_availability', 'range')}
+            {renderFormField(
+              "Parking Availability :",
+              "parking_availability",
+              "range"
+            )}
           </Box>
         </Box>
 
-        {renderFormField('Category :', 'category', 'select-check', categories.map((cat) => cat.name), 'Select categories')}
-        {renderFormField('Products (CSV) :', 'products', 'file')}
-        {renderFormField('Advertisement Video :', 'advt_video', 'url', '', 'Add youtube video link')}
+        {renderFormField(
+          "Category :",
+          "category",
+          "select-check",
+          categories.map((cat) => cat.name),
+          "Select categories"
+        )}
+        {renderFormField("Products (CSV) :", "products", "file")}
+        {renderFormField(
+          "Advertisement Video :",
+          "advt_video",
+          "url",
+          "",
+          "Add youtube video link"
+        )}
       </Box>
-      {!edit ? <Box className="submit_button_container">
-        <Button type="submit" variant="contained" className="submit_button">
-          Submit
-        </Button>
-        <Button variant="contained" className="submit_button" onClick={()=>navigate('../shop/dashboard/edit/preview')}>
-          Form Preview
-        </Button>
-      </Box> :''}
+      {!edit ? (
+        <Box className="submit_button_container">
+          <Button type="submit" variant="contained" className="submit_button">
+            Submit
+          </Button>
+          <Button
+            variant="contained"
+            className="submit_button"
+            onClick={() => navigate("../shop/dashboard/edit/preview")}
+          >
+            Form Preview
+          </Button>
+        </Box>
+      ) : (
+        ""
+      )}
       <CustomSnackbar
         open={snackbar.open}
         handleClose={() => setSnackbar({ ...snackbar, open: false })}

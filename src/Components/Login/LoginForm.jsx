@@ -103,37 +103,14 @@ const LoginForm = ({redirectTo}) => {
         const data = await authenticateUser(formattedData);
         
         if(data.user_access_token){
-          const user = await getUser(data.user_access_token);
-          const userType = user.map((user)=>user);
-          if(userType[0].user_type==='member'){
-            dispatch(setMemberToken(data.user_access_token));
-        
-            localStorage.setItem('memberAccessToken', data.user_access_token);
-
-            // Store token validity in Redux
-            dispatch(setMemberTokenValid(true));
-          }else if(userType[0].user_type==='shop' ){
             dispatch(setUserToken(data.user_access_token));
-            dispatch(setShopToken(userType[0].shop_access_token));
             
-            localStorage.setItem('userAccessToken', data.user_access_token);
+            localStorage.setItem('accessToken', data.user_access_token);
 
-            localStorage.setItem('shopAccessToken', userType[0].shop_access_token);
             // Store token validity in Redux
             dispatch(setUserTokenValid(true));
-          }
         }
 
-        // If login is successful, dispatch the user access token to Redux
-
-        // Redirect based on the user type
-        // if (data.user_type === 'member') {
-        //   navigate(redirectTo);
-        // } else if (data.user_type === 'merchant') {
-        //   navigate(redirectTo);
-        // } else {
-        //   alert('Unknown user type.');
-        // }
         setSnackbar({
           open: true,
           message: 'Login Successful',
@@ -142,7 +119,7 @@ const LoginForm = ({redirectTo}) => {
         setTimeout(()=>{navigate(redirectTo)},2500);
         
       } catch (error) {
-        console.error('Error logging in:', error.response.data.message);
+        console.error('Error logging in:', error);
         setSnackbar({
           open: true,
           message: error.response.data.message,

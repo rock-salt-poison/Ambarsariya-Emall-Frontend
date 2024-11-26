@@ -19,7 +19,7 @@ function App() {
         <Route path="/AmbarsariyaMall/clock" element={<ClockPage />} />
         <Route path="/AmbarsariyaMall/sell/*" element={<SellRoutes />} />
         <Route
-          path="/serve/*"
+          path="/AmbarsariyaMall/serve/*"
           element={<ServeRoutes /> }
         />
       </Routes>

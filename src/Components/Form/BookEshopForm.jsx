@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Button, Box, Typography } from '@mui/material';
 import FormField from '../Form/FormField'; 
 import { useNavigate } from 'react-router-dom';
-import {postEshop, fetchDomains, fetchDomainSectors, fetchSectors, getShopUserData} from '../../API/fetchExpressAPI'
+import {postEshop, fetchDomains, fetchDomainSectors, fetchSectors, getShopUserData, getUser} from '../../API/fetchExpressAPI'
 import { useDispatch, useSelector } from 'react-redux';
-import { setShopToken, setShopTokenValid } from '../../store/authSlice';
+import { setShopToken, setShopTokenValid, setUserToken } from '../../store/authSlice';
 import CustomSnackbar from '../CustomSnackbar';
 
 
@@ -52,7 +52,7 @@ const BookEshopForm = () => {
   const [submitBtnDisable, setSubmitBtnDisable] = useState(!!formData);
   
   const dispatch = useDispatch();
-  const token = useSelector((state) => state.auth.shopAccessToken);
+  const token = useSelector((state) => state.auth.userAccessToken);
   
   const navigate = useNavigate();
 
@@ -65,7 +65,6 @@ const BookEshopForm = () => {
     const response = await getShopUserData(shop_access_token);
     if (response) {
       const data = response[0];
-      
       // Fetch sectors to get the sector name based on sector_id
       const sectors = await fetchSectors();
       const selectedSector = sectors.find((sector) => sector.sector_name === data.sector_name);
@@ -112,7 +111,10 @@ const BookEshopForm = () => {
   
         // Fetch data if token exists
         if (token) {
-          await fetchUserAndShopData(token);
+          let shop_token = (await getUser(token))[0].shop_access_token;
+          if(shop_token){
+            await fetchUserAndShopData(shop_token);
+          }
         }
       } catch (error) {
         console.error('Error initializing form:', error);
@@ -377,12 +379,12 @@ const BookEshopForm = () => {
   
             const response = await postEshop(postData);
   
-            // Store the shopAccessToken in localStorage
+            // Store the userAccessToken in localStorage
             if (response) {
-              const shop_access_token = response.shop_access_token;
-              dispatch(setShopToken(shop_access_token));
+              const user_access_token = response.user_access_token;
+              dispatch(setUserToken(user_access_token));
 
-              localStorage.setItem('shopAccessToken', shop_access_token);
+              localStorage.setItem('accessToken', user_access_token);
               
               
             }

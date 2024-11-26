@@ -19,20 +19,22 @@ import { useNavigate } from 'react-router-dom';
 import LogoPopup from '../Components/Home/Popups/LogoPopup';
 import { useLoadingContext } from '../contexts/LoadingContext'; // Import the loading context
 import LoadingIndicator from '../Components/LoadingIndicator';
+import { useSelector } from 'react-redux';
 
 export default function Home() {
     const navigate = useNavigate();
     const { startLoading, stopLoading } = useLoadingContext(); // Use loading context functions
     const [audio] = useState(new Audio(hornSound));
     const [openPopup, setOpenPopup] = useState(null);
+    const token = useSelector((state) => state.auth.userAccessToken);
 
     const handleClose = () => {
         setOpenPopup(null);
     };
 
     const handleClick = (e, popupType) => {
-        e.preventDefault();
-        const loggedIn = !!localStorage.getItem('access_token');
+        e.preventDefault(); 
+
         const timeTableOrAqiElement = e.target.closest('.timeTable, .aqi');
         const logoParentElement = e.target.closest('.logoParent');
         const btnsParentElement = e.target.closest('.sell, .serve, .socialize');
@@ -71,7 +73,7 @@ export default function Home() {
                     navigate('/AmbarsariyaMall/sell');
                 }
                 else if (btnsParentElement.classList.contains('serve')) {
-                    navigate(loggedIn ? '/AmbarsariyaMall/serve':'/AmbarsariyaMall/serve/login');
+                    navigate(token ? '/AmbarsariyaMall/serve':'/AmbarsariyaMall/serve/login');
                 }
             }, 1000);
         } else if (clockParentElement) {

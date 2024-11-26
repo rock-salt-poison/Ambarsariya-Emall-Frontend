@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Button, Box, Typography } from '@mui/material';
 import FormField from './FormField'; 
 import { useNavigate } from 'react-router-dom';
-import { getMemberData, postMemberData } from '../../API/fetchExpressAPI';
+import { getMemberData, getUser, postMemberData } from '../../API/fetchExpressAPI';
 import CustomSnackbar from '../CustomSnackbar';
 import { useDispatch, useSelector } from 'react-redux';
-import { setMemberToken, setMemberTokenValid } from '../../store/authSlice';
+import { setMemberToken, setMemberTokenValid, setUserToken, setUserTokenValid } from '../../store/authSlice';
 
 const UserPortfolioForm = () => {
   const initialFormData = {
@@ -30,7 +30,7 @@ const UserPortfolioForm = () => {
   const navigate = useNavigate();
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
-  const token = useSelector((state) => state.auth.memberAccessToken);
+  const token = useSelector((state) => state.auth.userAccessToken);
 
   const fetchMemberData = async (memberToken) => {
       const user = await getMemberData(memberToken);
@@ -49,9 +49,15 @@ const UserPortfolioForm = () => {
   }
 
   useEffect(()=>{
-    if(token){
-      fetchMemberData(token);
+    const fetchData = async () => {
+      if(token){
+        const user = (await getUser(token))[0];
+        if(user.user_type === "member"){
+          fetchMemberData(user.user_access_token);
+        }
+      }
     }
+    fetchData();
   }, [token])
 
 
@@ -126,7 +132,7 @@ const UserPortfolioForm = () => {
     setErrorMessages(newErrorMessages);
     return valid;
   };
-console.log(formData.phoneNumber)
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
@@ -145,12 +151,12 @@ console.log(formData.phoneNumber)
         const response = await postMemberData(userData);
         if(response){
 
-          dispatch(setMemberToken(response.user_access_token));
+          dispatch(setUserToken(response.user_access_token));
         
-        localStorage.setItem('memberAccessToken', response.user_access_token);
+        localStorage.setItem('accessToken', response.user_access_token);
 
         // Store token validity in Redux
-        dispatch(setMemberTokenValid(true));
+        dispatch(setUserTokenValid(true));
 
           setSnackbar({
             open: true,
@@ -159,12 +165,26 @@ console.log(formData.phoneNumber)
           });
         }
         setTimeout(()=>{navigate('../esale')}, 2500);
-      }catch(e){
-        setSnackbar({
-          open: true,
-          message: e.error,
-          severity: 'error',
-        });
+      }catch(error){
+        if (error.response.data.error === 'duplicate key value violates unique constraint "users_phone_no_1_key"') {
+          setSnackbar({
+            open: true,
+            message: 'The phone number you entered already exists. Please use a different phone number.',
+            severity: 'error',
+          });
+        }else if (error.response.data.error.includes('Username') &&  error.response.data.error.includes('already exists')) {
+          setSnackbar({
+            open: true,
+            message: 'Username already exists.',
+            severity: 'error',
+          });
+        }else{
+          setSnackbar({
+            open: true,
+            message: 'Error while submitting the form. Please try again.',
+            severity: 'error',
+          });
+        }
       }
        // Navigate to the appropriate page
     }
