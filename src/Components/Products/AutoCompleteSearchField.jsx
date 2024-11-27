@@ -21,13 +21,16 @@ function AutoCompleteSearchField(props) {
                 props.onFilter(props.data);
                 return;
             }
-
+        
             const filtered = props.data.filter(row => {
-                const values = Object.values(row).map(value => value.toString().toLowerCase());
+                const values = Object.values(row).map(value => 
+                    value != null ? value.toString().toLowerCase() : ''  // Handle null/undefined values
+                );
                 return values.some(value => value.includes(searchTerm.toLowerCase()));
             });
             props.onFilter(filtered);
         };
+        
 
         filterData(debouncedInputValue);
     }, [debouncedInputValue, props]);

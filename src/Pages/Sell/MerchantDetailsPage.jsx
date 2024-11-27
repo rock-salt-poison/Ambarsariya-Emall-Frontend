@@ -40,14 +40,15 @@ const MerchantDetailsPage = () => {
   const [loading, setLoading] = useState(true);
 
   const suggestions = ['Stationary', 'Textbook', 'Healthcare'];
-
+console.log(shopData);
+console.log(filteredData)
   useEffect(() => {
     const fetchShops = async () => {
       try {
         const resp = await allShops();
         if (resp && Array.isArray(resp)) {
           setShopData(resp);
-          setFilteredData(resp);  // Initially set filtered data to all shops
+          setFilteredData(resp);  
         } else {
           console.error('Failed to fetch shops data');
         }
