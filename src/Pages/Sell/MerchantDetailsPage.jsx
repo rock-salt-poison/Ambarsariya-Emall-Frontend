@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Box, Typography } from '@mui/material';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Box, CircularProgress, Typography } from '@mui/material';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import stationary_bg_img from '../../Utils/images/Sell/merchant_details/stationary.webp';
 import Button2 from '../../Components/Home/Button2';
 import ShopDetails from '../../Components/Shop/ShopDetails';
@@ -10,126 +10,113 @@ import trilium_mall_amritsar from '../../Utils/images/Sell/support/trilium_mall_
 import mall_road_amritsar from '../../Utils/images/Sell/support/mall_road_amritsar.webp';
 import hall_gate_amritsar from '../../Utils/images/Sell/support/hall_gate_amritsar.webp';
 import AutoCompleteSearchField from '../../Components/Products/AutoCompleteSearchField';
+import { allShops } from '../../API/fetchExpressAPI';
 
 const MerchantDetailsPage = () => {
-  const { id } = useParams();
+  const [searchParams] = useSearchParams();
+  const id = searchParams.get("q");
   const navigate = useNavigate();
 
-  const columns = [
-    {
-      shopName: 'Madhav',
-      discount: '10',
-      coupon: 'amall10',
-      products: 'pens, textbooks, books, pencils, charts, toffees, paint and brush',
-      domain: 'Retailer',
-      sector: 'Stationary',
-      supply: 'School & Office',
-      shopType: 'Class C',
-      costSensitivity: 'Moderate'
-    },
-    {
-      shopName: 'Neelam',
-      discount: '15',
-      coupon: 'amall15',
-      products: 'notebooks, erasers, sharpeners, crayons, rulers',
-      domain: 'Wholesaler',
-      sector: 'Books',
-      supply: 'School',
-      shopType: 'Class B',
-      costSensitivity: 'High'
-    },
-    {
-      shopName: 'Arjun',
-      discount: '20',
-      coupon: 'amall20',
-      products: 'binders, markers, folders, glue, scissors',
-      domain: 'Retailer',
-      sector: 'Office Supplies',
-      supply: 'Office',
-      shopType: 'Class A',
-      costSensitivity: 'Low'
-    }
-  ];
-
-  // const handleClick = (e) => {
-  //   navigate('../AmbarsariyaMall/support/stationary')
-  // }
-
-  const imgSrc = () =>{
-    if(id==='Wagah Border'){
+  const imgSrc = () => {
+    if (id === 'Wagah Border') {
       return wagah_border_amritsar;
     }
-    else if(id==='Nehru Shopping Complex'){
+    else if (id === 'Nehru Shopping Complex') {
       return nehru_shoppping_complex_amritsar;
     }
-    else if(id==='Trilium Mall'){
+    else if (id === 'Trilium Mall') {
       return trilium_mall_amritsar;
     }
-    else if(id==='Mall Road'){
+    else if (id === 'Mall Road') {
       return mall_road_amritsar;
     }
-    else if(id==='Hall Gate'){
+    else if (id === 'Hall Gate') {
       return hall_gate_amritsar;
     }
-  }
+  };
 
-  const [filteredData , setFilteredData] = useState(columns);
+  const [shopData, setShopData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleFilter = (data) =>{
+  const suggestions = ['Stationary', 'Textbook', 'Healthcare'];
+
+  useEffect(() => {
+    const fetchShops = async () => {
+      try {
+        const resp = await allShops();
+        if (resp && Array.isArray(resp)) {
+          setShopData(resp);
+          setFilteredData(resp);  // Initially set filtered data to all shops
+        } else {
+          console.error('Failed to fetch shops data');
+        }
+      } catch (error) {
+        console.error('Error fetching shops:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchShops();
+  }, [id]);
+
+  const handleFilter = (data) => {
     setFilteredData(data);
-  }
+  };
 
-  const data = filteredData ? filteredData : columns;
-
-  const suggestions=['Stationary','Textbook', 'Healthcare'];
+  const data = filteredData.length > 0 ? filteredData : [];
 
   return (
-    <Box 
-      className="merchant_wrapper" 
-      // sx={{
-      //   backgroundImage: id === 'Mall Road' ? `url(${stationary_bg_img})` : 'none',
-      // }}
-    >
+    <Box className="merchant_wrapper">
       <Box component="img" src={imgSrc()} className='sector_bg_img'/>
+      {loading && <Box className="loading">
+        <CircularProgress />
+      </Box>}
       <Box className="row">
         <Box className="col-1">
           <Button2 text="Back" redirectTo="../support" />
         </Box>
         <Box className="container">
-          <AutoCompleteSearchField data={columns} onFilter={handleFilter} placeholder="Products, Shops, Nearby Me..." suggestions={suggestions}/>
+          <AutoCompleteSearchField
+            data={shopData}
+            onFilter={handleFilter}
+            placeholder="Products, Shops, Nearby Me..."
+            suggestions={suggestions}
+          />
 
-          {data.map((column, index) => (
-            <Link key={index} className="col-2" to={`../support/stationary`}>
-              <Box className="sub_col_1">
-                <Box className="shop_details" >
-                  <Box className="category">
-                    <Typography className='sector_type'>{id}</Typography>
-                    <Typography className='shop_name'>{column.shopName}</Typography>
-                  </Box>
-                  <Box className="discount_percentage">
-                    <Typography className='percent'>{column.discount}</Typography>
-                    <Box className="discount_details">
-                      <Typography className='text_1'>%</Typography>
-                      <Typography className='text_2'>off</Typography>
-                      <Typography className='text_3'>min purchase 1000</Typography>
+          {data.map((shop, index) => (
+              <Link key={index} className="col-2" to={`../support/shop?id=${shop.shop_access_token}`}>
+                <Box className="sub_col_1">
+                  <Box className="shop_details">
+                    <Box className="category">
+                      <Typography className='sector_type'>{id}</Typography>
+                      <Typography className='shop_name'>{shop.business_name}</Typography>
+                    </Box>
+                    <Box className="discount_percentage">
+                      <Typography className='percent'>20</Typography>
+                      <Box className="discount_details">
+                        <Typography className='text_1'>%</Typography>
+                        <Typography className='text_2'>off</Typography>
+                        <Typography className='text_3'>min purchase 1000</Typography>
+                      </Box>
+                    </Box>
+                    <Box className="discount_coupon">
+                      <Typography className='coupon'>coupon</Typography>
+                      <Typography className='coupon_value'>Amall10</Typography>
                     </Box>
                   </Box>
-                  <Box className="discount_coupon">
-                    <Typography className='coupon'>coupon</Typography>
-                    <Typography className='coupon_value'>{column.coupon}</Typography>
+                  <Box className="product_details">
+                    <Typography variant="h3">Category:
+                      <Typography variant="span">{shop.category_name.join(', ')}</Typography>
+                    </Typography>
                   </Box>
                 </Box>
-                <Box className="product_details">
-                  <Typography variant="h3">Category: 
-                    <Typography variant="span">{column.products}</Typography>
-                  </Typography>
+                <Box className="sub_col_2">
+                  <ShopDetails column={shop} />
                 </Box>
-              </Box>
-              <Box className="sub_col_2">
-                <ShopDetails column={column}/>
-              </Box>
-            </Link>
-          ))}
+              </Link>
+            ))
+          }
         </Box>
         <Box className="col-3"></Box>
       </Box>

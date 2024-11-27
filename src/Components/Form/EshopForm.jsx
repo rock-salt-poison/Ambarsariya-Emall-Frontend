@@ -268,7 +268,7 @@ const EshopForm = () => {
             
             // Navigate to the shop page after a successful submission
             setTimeout(() => {
-              navigate("../shop");
+              navigate(`../shop?token=${shop_token}`);
             }, 2500);
           }
         } catch (error) {

@@ -5,7 +5,7 @@ import CardBoardPopup from '../CardBoardPopupComponents/CardBoardPopup';
 import { Link } from 'react-router-dom';
 import ShopClassComponent from './ShopClassComponent';
 
-function ShopDetails2() {
+function ShopDetails2({data}) {
   // Define the slider marks
   const marks = [
     { value: 0, label: 'A' },
@@ -50,7 +50,7 @@ function ShopDetails2() {
       <Box className="shop_details">
         <Box component="img" src={cost_sensitivity_icon} alt="cost_sensitivity" className='cost_sensitivity_icon'/>
         <Slider
-          value={0} // Default value (optional)
+          value={data.cost_sensitivity} // Default value (optional)
           step={1} // Step between marks
           min={0} // Minimum value
           max={3} // Maximum value

@@ -13,15 +13,17 @@ function Button2({ redirectTo, text, optionalcName, handleClose, onClick }) {
     setTimeout(() => {
       e.target.parentElement.classList.remove('reduceSize3');
       if (handleClose) handleClose(); // Close the popup
-      if (onClick) onClick(); // Additional actions
-      navigate(redirectTo); // Navigate to the redirectTo route
     }, 300);
+    setTimeout(()=>{
+      if (onClick) onClick(); // Additional actions
+      // navigate(redirectTo); // Navigate to the redirectTo route
+    }, 400)
     audio.play();
   };
 
   return (
     <Box className={`backButton ${optionalcName ? optionalcName : ''}`}>
-      <Link onClick={(e) => { handleClick(e) }}>
+      <Link to={redirectTo} onClick={(e) => { handleClick(e) }}>
         <Typography>
           {text}
         </Typography>

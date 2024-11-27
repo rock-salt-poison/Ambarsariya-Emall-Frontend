@@ -4078,6 +4078,9 @@ a {
           border-left: 1px solid #fffbf58c;
           flex: 1;
           @include flex-center(column, center);
+
+          
+
         }
       }
     }
@@ -4178,6 +4181,7 @@ a {
             .category {
               @include flex-center(column, flex-start);
               flex: 0.5;
+              gap: 15px;
 
               .sector_type {
                 @include homepage-buttons("EFCO", 28px, $brown, "none");
@@ -4186,7 +4190,8 @@ a {
                 overflow: visible;
                 background-color: $light-yellow;
                 border-radius: 8px;
-                padding: 0px 15px;
+                padding: 8px 15px;
+                line-height: 27px;
               }
 
               .shop_name {
@@ -4195,6 +4200,8 @@ a {
                 text-shadow: -3px 0px 2px $yellow, -6px 0px 2px $dark-yellow2;
                 transform: skew(12deg, 1deg);
                 @include hover-scale(1, 0s);
+                text-align: center;
+                line-height: 30px;
 
                 &:hover {
                   transform: skew(12deg, 1deg);
@@ -4349,12 +4356,24 @@ a {
             border: none;
 
             .shop_details {
+
               p {
                 color: $yellow;
                 text-shadow: 0px 4px 4px #00000040;
 
                 &:first-child{
                   color: $light-yellow;
+                }
+              }
+
+              .options{
+                @include flex-center(row,flex-start);
+                gap: 5px;
+                flex-basis: 50%;
+                flex-wrap: wrap;
+               p{
+                  color: $yellow;
+                  text-transform: capitalize;
                 }
               }
             }
@@ -4398,6 +4417,9 @@ a {
               .shop_details {
                 justify-content: flex-start;
                 p {
+                  flex-basis: auto;
+                }
+                .options{
                   flex-basis: auto;
                 }
               }
@@ -6680,10 +6702,14 @@ a {
         img.shop {
           width: 400px;
         }
+        .shop_name_container{
+          @include full-absolute(5px, 95px, 81%, 85px);
+          @include flex-center(row, center);
+        }
         .shop_name {
           @include homepage-buttons("Bobby-Jones-Soft", 25px, $green-3, "none");
           @include hover-scale(1, 0s);
-          @include full-absolute(5px, 95px, auto, 85px);
+          position: relative;
           text-align: center;
           // -webkit-text-stroke: 0.8px #0057ff;
           background: linear-gradient(
@@ -6796,6 +6822,7 @@ a {
             border-color: #f2eadc;
             width: 120px;
             height: 100px;
+            padding: 10px 0 0;
 
             .vectors {
               left: 15px;
@@ -6827,6 +6854,7 @@ a {
             background-color: #f2eadc;
             position: relative;
             bottom: -5px;
+            flex: .8;
             p {
               @include homepage-buttons(
                 "Bobby-Jones-Soft",
@@ -7119,14 +7147,15 @@ a {
           //0
           .shop_container {
             order: 0;
+
+            .shop_name_container{
+              @include full-absolute(5px, 51px, 81%, 55px);
+            }
             img.shop {
               width: 260px !important;
             }
             .shop_name {
               font-size: 1.1em;
-              top: 3px;
-              right: 19%;
-              left: 17%;
             }
 
             .domain_container {
@@ -14172,6 +14201,10 @@ body .MuiBackdrop-root {
     border-left: 0px;
     // border-top: 1px solid #fffbf58c;
     width: 100%;
+
+    .options{
+      flex-basis: auto !important;
+    }
   }
 
   .shop_details {
@@ -14190,11 +14223,17 @@ body .MuiBackdrop-root {
       );
       @include hover-scale(1, 0s);
       flex-basis: 50%;
-
+      text-transform: capitalize;
       &:first-child {
         text-align: end;
         white-space: nowrap;
       }
+    }
+    .options{
+      @include flex-center(row,flex-start);
+      gap: 5px;
+      flex-basis: 50%;
+      flex-wrap: wrap;
     }
 
     &:last-child {
@@ -18362,5 +18401,22 @@ input[readonly] {
     );
     @include hover-scale(1, 0s);
     text-align: center;
+  }
+}
+
+
+.loading{
+  @include full-absolute(0px, 0px, 0px, 0px);
+  position: fixed;
+  z-index: 9999;
+  @include flex-center(row,center);
+  width: 100%;
+  height: 100%;
+  background-color: #9B643D80;
+
+  .MuiCircularProgress-root{
+    svg{
+      color: $light-yellow;
+    }
   }
 }

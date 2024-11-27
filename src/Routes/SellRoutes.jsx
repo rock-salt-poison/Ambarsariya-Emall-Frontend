@@ -48,14 +48,14 @@ function SellRoutes() {
       <Route path="grow" element={<GrowConversationPage />} />
       <Route path="grab" element={<GrabConversationPage />} />
       <Route path="support" element={<Support />} />
-      <Route path="support/:id" element={<SingleShopPage />} />
-      <Route path="shops/:id" element={<MerchantDetailsPage />} />
+      <Route path="support/shop" element={<SingleShopPage />} />
+      <Route path="support/shops-near" element={<MerchantDetailsPage />} />
       <Route path="coupon-offering" element={<CouponOfferingPage />} />
       <Route path="book-eshop" element={<BuyEshop />} />
       <Route path="login" element={<Login />} />
       <Route path="eshop" element={<Eshop />} />
       <Route path="user" element={<User_Portfolio />} />
-      <Route path="shop" element={<Shop />} />
+      <Route path="support/shop/shop-detail" element={<Shop />} />
       <Route path="shop/dashboard" element={<MerchantDashboard />} />
       <Route path="shop/dashboard/:edit" element={<MerchantDashboard />} />
       <Route path="shop/dashboard/:edit/preview" element={<Preview />} />

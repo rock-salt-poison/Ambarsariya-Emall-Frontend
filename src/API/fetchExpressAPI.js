@@ -57,10 +57,19 @@ export const authenticateUser = async (data) => {
       throw error;
     }
 }
+
+export const allShops = async () => {
+  try{
+    const response = await axios.get(`${link}/api/ambarsariya/sell/shops`);
+    return response.data;
+  }catch(error){
+    throw error;
+  }
+}
   
 export const otherShops = async (shopAccessToken) => {
   try{
-    const response = await axios.get(`${link}/api/ambarsariya/sell/shops?shopAccessToken=${shopAccessToken}`);
+    const response = await axios.get(`${link}/api/ambarsariya/sell/other-shops?shopAccessToken=${shopAccessToken}`);
     return response.data;
   }catch(error){
     throw error;

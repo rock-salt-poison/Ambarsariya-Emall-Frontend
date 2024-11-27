@@ -27,7 +27,7 @@ export default function Cards() {
   const navigate = useNavigate();
   const handleClick = (e, id) => {
     e.preventDefault();
-    navigate(`../shops/${id}`);
+    navigate(`../support/shops-near?q=${id}`);
   }
 
   return (
