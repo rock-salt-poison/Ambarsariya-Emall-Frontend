@@ -1,27 +1,25 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import Button2 from '../Components/Home/Button2';
 import { Link, useNavigate } from 'react-router-dom';
 import icon from '../Utils/images/Sell/person_on_call.svg';
 import sellButtonBg from '../Utils/images/Sell/sell_button_bg2.png';
-// import growButtonBg from '../Utils/images/Sell/grow_bg.png';
 import growButtonBg from '../Utils/images/Sell/growBtn.png';
-// import grabButtonBg from '../Utils/images/Sell/grab_bg.png';
 import grabButtonBg from '../Utils/images/Sell/grabBtn.png';
-// import eshopBtnBg from '../Utils/images/Sell/eshop_btn_bg.svg';
 import eshopBtnBg from '../Utils/images/Sell/eshopBtn.png';
-// import esaleBtnBg from '../Utils/images/Sell/esale_btn_bg.svg';
 import esaleBtnBg from '../Utils/images/Sell/esaleBtn.png';
 import hornSound from '../Utils/audio/horn-sound.mp3';
 import Logo from '../Components/Logo';
 import { useSelector } from 'react-redux';
 import { useLogout } from '../customHooks/useLogout';
+import { fetchUserType } from '../Components/userBadge';
 
 function Sell() {
   const navigate = useNavigate();
   const token = useSelector((state) => state.auth.userAccessToken);
   const handleLogout = useLogout();
   const [audio] = useState(new Audio(hornSound));
+  const [userIcon, setUserIcon] = useState(null);
 
   const handleClick = (e) => {
     const btns = e.target.closest('.btn');
@@ -73,6 +71,10 @@ function Sell() {
     { src: esaleBtnBg, text: 'E-sale', handleClick }
   ];
 
+  useEffect(()=> {
+    fetchUserType(token, setUserIcon);
+  }, [token]);
+
   return (
     <Box className="sell_wrapper">
       <Box className="row_wrapper">
@@ -89,7 +91,7 @@ function Sell() {
             </Link>
           </Box>
           <Box className="back-button-wrapper">
-          {token && <Button2 text="Logout" onClick={() => handleLogout('../sell')}/>}
+          {userIcon && <Box component="img" src={userIcon} className="badge"/>}
 
           </Box>
         </Box>

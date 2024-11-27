@@ -7,15 +7,16 @@ import card_connector3 from '../Utils/images/Serve/card_connector3.png';
 import Button2 from '../Components/Home/Button2';
 import { Link, useNavigate } from 'react-router-dom';
 import hornSound from '../Utils/audio/horn-sound.mp3';
-import { useLogout } from '../customHooks/useLogout';
 import { useSelector } from 'react-redux';
+import { fetchUserType } from '../Components/userBadge';
 
 function Serve() {
   const [connectorSrc, setConnectorSrc] = useState(card_connector);
   const [audio] = useState(new Audio(hornSound));
   const navigate = useNavigate();
-  const handleLogout = useLogout();
   const token = useSelector((state) => state.auth.userAccessToken);
+  const [userIcon, setUserIcon] = useState(null);
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -33,6 +34,10 @@ function Serve() {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+  useEffect(()=> {
+    fetchUserType(token, setUserIcon);
+  }, [token]);
 
   const handleClick = (e) =>{
         const target = e.target.closest(".emotional, .unexpected, .simple");
@@ -61,7 +66,8 @@ function Serve() {
       <Box className="row">
         <Box className="back-button-wrapper">
             <Button2 text="Back" redirectTo='../../AmbarsariyaMall'/>
-            {token && <Button2 text="Logout" onClick={() => handleLogout('../serve')}/>}
+          {userIcon && <Box component="img" src={userIcon} className="badge"/>}
+
         </Box>
         <Box className="container">
           <Box className="col">

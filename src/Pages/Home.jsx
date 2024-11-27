@@ -20,6 +20,8 @@ import LogoPopup from '../Components/Home/Popups/LogoPopup';
 import { useLoadingContext } from '../contexts/LoadingContext'; // Import the loading context
 import LoadingIndicator from '../Components/LoadingIndicator';
 import { useSelector } from 'react-redux';
+import Button2 from '../Components/Home/Button2';
+import { useLogout } from '../customHooks/useLogout';
 
 export default function Home() {
     const navigate = useNavigate();
@@ -27,6 +29,7 @@ export default function Home() {
     const [audio] = useState(new Audio(hornSound));
     const [openPopup, setOpenPopup] = useState(null);
     const token = useSelector((state) => state.auth.userAccessToken);
+    const handleLogout = useLogout();
 
     const handleClose = () => {
         setOpenPopup(null);
@@ -149,7 +152,10 @@ export default function Home() {
                         <LEDNotice />
                     </Box>
                 </Box>
+            {token && <Button2 optionalcName='logoutBtn' text="Logout" onClick={() => handleLogout('../AmbarsariyaMall')}/>}
             </Box>
+            
+
 
             {openPopup === 'logo' && <LogoPopup open={true} handleClose={handleClose} />}
             {openPopup === 'TimeTable' && <TimeTablePopup open={true} handleClose={handleClose} />}

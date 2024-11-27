@@ -557,7 +557,20 @@ a {
         }
       }
     }
-
+    .logoutBtn{
+      @include full-absolute(40px,40px,auto,auto);
+      z-index: 9999;
+    }
+    @include backButton(
+      linear-gradient(to left, $brown-4, #a96945),
+      $yellow,
+      6px,
+      "none",
+      0px,
+      flex-start,
+      18px,
+      7px 16px
+    );
     .row2 {
       @include full-absolute(auto, 0px, 7%, 0px);
       flex-direction: column;
@@ -18419,4 +18432,8 @@ input[readonly] {
       color: $light-yellow;
     }
   }
+}
+
+.badge{
+  width: 90px;
 }
