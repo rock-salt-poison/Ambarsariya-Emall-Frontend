@@ -440,7 +440,7 @@ const EshopForm = () => {
           <Button
             variant="contained"
             className="submit_button"
-            onClick={() => navigate("../shop/dashboard/edit/preview")}
+            onClick={() => navigate("../support/shop/shop-detail/dashboard/edit/preview")}
           >
             Form Preview
           </Button>

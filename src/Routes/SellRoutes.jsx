@@ -56,9 +56,9 @@ function SellRoutes() {
       <Route path="eshop" element={<Eshop />} />
       <Route path="user" element={<User_Portfolio />} />
       <Route path="support/shop/shop-detail" element={<Shop />} />
-      <Route path="shop/dashboard" element={<MerchantDashboard />} />
-      <Route path="shop/dashboard/:edit" element={<MerchantDashboard />} />
-      <Route path="shop/dashboard/:edit/preview" element={<Preview />} />
+      <Route path="support/shop/shop-detail/dashboard" element={<MerchantDashboard />} />
+      <Route path="support/shop/shop-detail/dashboard/:edit" element={<MerchantDashboard />} />
+      <Route path="support/shop/shop-detail/dashboard/:edit/preview" element={<Preview />} />
       <Route path="shop/products" element={<Products />} />
       <Route path="shop/:owner/products/:id" element={<ProductDetails />} />
       <Route path="shop/:owner/cart" element={<Cart />} />
