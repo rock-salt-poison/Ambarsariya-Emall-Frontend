@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Typography } from '@mui/material';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import Button2 from '../../Components/Home/Button2';
 import AutoCompleteSearchField from '../../Components/Products/AutoCompleteSearchField';
 import ProductsTable from '../../Components/Products/ProductsTable';
@@ -8,7 +8,8 @@ import rows from '../../API/productsRowData';
 
 function Products() {
     
-    const { owner } = useParams();
+    const [searchParams] = useSearchParams();
+    const token = searchParams.get('token');
     const [filteredRows, setFilteredRows] = useState(rows);
 
     const handleFilter = (filteredData) => {
@@ -26,7 +27,7 @@ function Products() {
             <Box className="row">
                 <Box className="col">
                     <Box className="sub_col">
-                        <Button2 text={"Back"} redirectTo={'../support/stationary'} />
+                        <Button2 text={"Back"} redirectTo={`../support/shop?id=${token}`} />
                     </Box>
                     <Box className="sub_col">
                         <Typography variant='h2' className='heading'>
@@ -40,7 +41,7 @@ function Products() {
                     <AutoCompleteSearchField data={rows} onFilter={handleFilter} placeholder="Item, Category, Product, Brand" suggestions={suggestions}/>
                 </Box>
                 <Box className="col">
-                    <ProductsTable rows={filteredRows} />
+                    <ProductsTable rows={filteredRows} token={token} />
                 </Box>
             </Box>
         </Box>

@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 function ShopDesign({ data }) {
 
   return (
-    <Link className="shop_container" to={`../id/products`}>
+    <Link className="shop_container" to={`../shop/products?token=${data.shop_access_token}`}>
       <Box component="img" src={shop} className="shop" alt="shop" />
       <Box className="shop_name_container">
         <Typography

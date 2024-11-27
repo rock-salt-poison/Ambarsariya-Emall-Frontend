@@ -49,7 +49,7 @@ export default function Order_Return_Review_Component() {
 
   const redirectBackPageTo = () =>{
     if(action==="order"){
-      return `../${owner}/products`
+      return `../shop/products?token=${owner}`
     }else if(action === "return"){
       return `../${owner}/order`
     }else if(action === "review"){

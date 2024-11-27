@@ -8,7 +8,7 @@ import Button2 from '../../Components/Home/Button2';
 import pickup from '../../Utils/images/Sell/shop_details/pickup.svg';
 import delivery from '../../Utils/images/Sell/shop_details/delivery.webp';
 import home_visit from '../../Utils/images/Sell/shop_details/home_visit.svg';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import CardBoardPopup from '../../Components/CardBoardPopupComponents/CardBoardPopup';
 import SpecialOffer from '../../Components/Cart/SpecialOffer/SpecialOffer';
@@ -23,6 +23,7 @@ function Cart() {
     const sampleRows = useSelector((state) => state.cart.selectedProducts);
     const [openPopup, setOpenPopup] = useState(null);
     const navigate = useNavigate();
+    const { owner } = useParams();
 
     const handleClose = () => {
         setOpenPopup(false);
@@ -72,8 +73,8 @@ function Cart() {
         <Box className="cart_wrapper">
             <Box className="row">
                 <Box className="col">
-                    <Button2 text={"Back"} redirectTo={'id/products'} />
-                    <Link to="../id/return">
+                    <Button2 text={"Back"} redirectTo={-1} />
+                    <Link to={`../${owner}/return`}>
                         <Box component="img" src={po_stamp} alt="p.o" className='po_stamp' />
                     </Link>
                     <Typography variant='h2' className='heading'>
@@ -84,7 +85,7 @@ function Cart() {
                         </Typography>
                     </Typography>
 
-                    <Link to="../id/order">
+                    <Link to={`../${owner}/order`}>
                         <Box component="img" src={qr_code} alt="qr_code" className='qr_code' />
                     </Link>
                 </Box>
@@ -94,7 +95,7 @@ function Cart() {
                     <Box className="sub_col"></Box>
                 </Box>
                 <Box className="col">
-                    <Button2 text={"Back"} redirectTo={'../id/products'} />
+                    <Button2 text={"Back"} redirectTo={-1} />
                     <Box className="offers">
                         {offers.map((item) => (
                             <React.Fragment key={item.id}>

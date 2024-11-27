@@ -22,7 +22,7 @@ const columns = [
   { id: 'sample', label_1: 'Sample' },
 ];
 
-export default function CustomPaginationTable({ rows }) {
+export default function CustomPaginationTable({ rows, token }) {
   const [page, setPage] = useState(0);
   const [selectAll, setSelectAll] = useState(false); // Track the state of the header checkbox
   const { owner } = useParams();
@@ -51,7 +51,7 @@ export default function CustomPaginationTable({ rows }) {
   const isSelected = (id) => selectedProducts.some((product) => product.id === id);
 
   const handleClick = (e, id) => {
-    navigate(`${id}`);
+    navigate(`../shop/${token}/products/${id}`);
   };
 
   const handleSelectAllClick = (event) => {
@@ -166,7 +166,7 @@ export default function CustomPaginationTable({ rows }) {
       <Box className="pagination">
         <Button2 text="Prev" onClick={handlePrevPage} disabled={page === 0} />
         <Button2 text="Next" onClick={handleNextPage} disabled={page >= totalPages - 1} />
-        <Button2 text="Buy" redirectTo={`../${owner}/cart`} />
+        <Button2 text="Buy" redirectTo={`../shop/${token}/cart`} />
       </Box>
     </Box>
   );

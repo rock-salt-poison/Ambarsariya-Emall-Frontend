@@ -51,7 +51,7 @@ function ProductDetails() {
             <Box className="row">
                 <Box className="col">
                     <Box className="sub_col">
-                        <Button2 text={"Back"} redirectTo={`../${owner}/products`} />
+                        <Button2 text={"Back"} redirectTo={`../shop/products?token=${owner}`} />
                     </Box>
                     <Box className="sub_col">
                         <Typography variant='h2' className='heading'>
