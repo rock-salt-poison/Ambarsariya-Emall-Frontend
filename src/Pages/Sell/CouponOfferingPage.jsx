@@ -82,6 +82,27 @@ function CouponOfferingPage(props) {
 
   };
 
+
+  const handleGraphClick = (e, type) => {
+    if(e){
+      setGraphHeights((prevHeights) => {
+        const newHeight = prevHeights[type] - 25; // Increase height by 25px
+        const updatedHeight = newHeight <= MAX_HEIGHT ? newHeight : MAX_HEIGHT;
+        
+        const updatedHeights = {
+          ...prevHeights,
+          [type]: updatedHeight,
+        };
+        
+        // Calculate the new total height
+        const newTotal = Object.values(updatedHeights).reduce((acc, height) => acc + height, 0);
+        
+        setTotal(newTotal);
+        return updatedHeights;
+      });
+    }
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <Box className="coupon_offering_wrapper">
@@ -116,6 +137,7 @@ function CouponOfferingPage(props) {
                   key={type}
                   className={`${type}_graph`}
                   style={{ height: `${graphHeights[type]}px`, maxHeight:'100%' }}
+                  onClick={(e)=>handleGraphClick(e, type)}
                 >
                   <Typography className="percentage">{graphHeights[type]}</Typography>
                 </Box>
