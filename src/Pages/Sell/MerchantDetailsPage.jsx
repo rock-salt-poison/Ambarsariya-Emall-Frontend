@@ -86,7 +86,7 @@ console.log(filteredData)
           />
 
           {data.map((shop, index) => (
-              <Link key={index} className="col-2" to={`../support/shop?id=${shop.shop_access_token}`}>
+              <Link key={index} className="col-2" to={`../support/shop?token=${shop.shop_access_token}`}>
                 <Box className="sub_col_1">
                   <Box className="shop_details">
                     <Box className="category">

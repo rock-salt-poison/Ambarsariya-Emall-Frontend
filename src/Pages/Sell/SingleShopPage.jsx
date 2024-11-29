@@ -24,7 +24,7 @@ const SingleShopPage = ({ showBackButton = true, shopData }) => {
     severity: "success",
   });
   
-  const id = searchParams.get('id');
+  const token = searchParams.get('token');
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState(shopData || []);
   const navigate = useNavigate();
@@ -50,13 +50,13 @@ const SingleShopPage = ({ showBackButton = true, shopData }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (id) {
+      if (token) {
         try {
           setLoading(true);
           const shops = await allShops();
-          const validShop = shops.find((shop) => shop.shop_access_token === id);
+          const validShop = shops.find((shop) => shop.shop_access_token === token);
           if (validShop) {
-            const resp = await getShopUserData(id);
+            const resp = await getShopUserData(token);
             if (resp?.length > 0) {
               setData(resp);
             } else {
@@ -90,7 +90,7 @@ const SingleShopPage = ({ showBackButton = true, shopData }) => {
         
     };
     fetchData();
-  }, [id]);
+  }, [token]);
 
   return (
     <>
@@ -99,7 +99,7 @@ const SingleShopPage = ({ showBackButton = true, shopData }) => {
           </Box>}
       {data.length>0 && data.map((column, index) => (
         <Box key={index} className="single_shop_wrapper">
-          <Box component="img" src={getImageSrc(id)} className='sector_bg_img' />
+          <Box component="img" src={getImageSrc(token)} className='sector_bg_img' />
           <Box className="row">
             {showBackButton && (
               <Box className="col-1">
@@ -118,9 +118,9 @@ const SingleShopPage = ({ showBackButton = true, shopData }) => {
                     <CouponsSlider />
                     
                   </Box>
-                  <ServicesTypeCard />
+                  <ServicesTypeCard token={token}/>
                   <Box className="product_details">
-                    <Link to={`../1234/products`}>
+                    <Link to={`../shop/${token}/products`}>
                       <Typography variant="h3">Category :
                         <Typography variant="span">{Array.isArray(column.category_name) ? column.category_name.join(', ') : column.category_name}</Typography>
 

@@ -8,8 +8,8 @@ import rows from '../../API/productsRowData';
 
 function Products() {
     
-    const [searchParams] = useSearchParams();
-    const token = searchParams.get('token');
+    const {token} = useParams();
+    
     const [filteredRows, setFilteredRows] = useState(rows);
 
     const handleFilter = (filteredData) => {
@@ -27,7 +27,7 @@ function Products() {
             <Box className="row">
                 <Box className="col">
                     <Box className="sub_col">
-                        <Button2 text={"Back"} redirectTo={`../support/shop?id=${token}`} />
+                        <Button2 text={"Back"} redirectTo={`../support/shop?token=${token}`} />
                     </Box>
                     <Box className="sub_col">
                         <Typography variant='h2' className='heading'>

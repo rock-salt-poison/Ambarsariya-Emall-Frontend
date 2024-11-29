@@ -7531,6 +7531,19 @@ a {
             18px,
             5px 20px
           );
+
+          .disabled_button{
+            a{
+              background-color: #f7ecd9;
+              pointer-events: none;
+
+              p{
+                &:hover{
+                  transform: scale(1);
+                }
+              }
+            }
+          }
         }
       }
 

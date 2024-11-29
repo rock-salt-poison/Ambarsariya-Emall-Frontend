@@ -3,13 +3,15 @@ import { Box, Typography } from '@mui/material'
 import pickup_truck_gif from '../../../Utils/gifs/pickup_truck.gif';
 import pickup from '../../../Utils/images/Sell/shop_details/pickup.svg';
 import takeaway from '../../../Utils/images/Sell/shop_details/takeaway.webp';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import Pickup from './Pickup';
 import CardBoardPopup from '../../CardBoardPopupComponents/CardBoardPopup';
 import TakeAway from './TakeAway';
 
 function ServiceType() {
     const [openPopup, setOpenPopup] = useState(null);
+    const location = useLocation();
+
 
     const handleClose = () => {
         setOpenPopup(false);
@@ -29,6 +31,12 @@ function ServiceType() {
         {id:2, imgSrc:takeaway, popupContent:<TakeAway title="Take Away"/>, cName:'service_type_popup pickup' }
     ]
 
+    const getCurrentUrlWithToken = () => {
+        const searchParams = new URLSearchParams(location.search);
+        const token = searchParams.get('token');
+        return `${location.pathname}?${searchParams.toString()}`;
+      };
+
   return (
     <>
         <Box className="col"></Box>
@@ -38,7 +46,7 @@ function ServiceType() {
                 <Box className="service_types">
                     {services.map((service)=>{
                         return <React.Fragment key={service.id}>
-                            <Link onClick={(e)=>handleClick(e, service.id)}>
+                            <Link to={getCurrentUrlWithToken()} onClick={(e)=>handleClick(e, service.id)}>
                                 <Box component="img" alt="service_type" src={service.imgSrc} className='service'/>
                             </Link>
                             <CardBoardPopup open={openPopup===service.id} handleClose={handleClose} customPopup={true} body_content={service.popupContent} optionalCName={service.cName}/> 

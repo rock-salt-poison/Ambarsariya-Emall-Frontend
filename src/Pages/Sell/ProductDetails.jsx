@@ -12,8 +12,8 @@ import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 
 function ProductDetails() {
 
-    const { id, owner } = useParams();
-    console.log(owner, id)
+    const { id, token } = useParams();
+
     const row = {
         id: id,
         variations: 'Color',
@@ -51,7 +51,7 @@ function ProductDetails() {
             <Box className="row">
                 <Box className="col">
                     <Box className="sub_col">
-                        <Button2 text={"Back"} redirectTo={`../shop/products?token=${owner}`} />
+                        <Button2 text={"Back"} redirectTo={`../shop/${token}/products`} />
                     </Box>
                     <Box className="sub_col">
                         <Typography variant='h2' className='heading'>

@@ -43,7 +43,7 @@ function BusinessHours({ data }) {
 
   return (
     <Box className="business_hours_container">
-      <Button2 text="Back" redirectTo={`../support/shop?id=${data.shop_access_token}`} />
+      <Button2 text="Back" redirectTo={`../support/shop?token=${data.shop_access_token}`} />
       <Box className="business_hours_wrapper">
         <CircularText text="Business Hours" />
         <Box className="h_line"></Box>
