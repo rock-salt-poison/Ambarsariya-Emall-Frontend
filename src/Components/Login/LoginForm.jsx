@@ -10,7 +10,7 @@ import { setShopToken, setUserToken, setShopTokenValid, setUserTokenValid, setMe
 import { useDispatch } from 'react-redux';
 import CustomSnackbar from '../CustomSnackbar';
 
-const LoginForm = ({redirectTo}) => {
+const LoginForm = ({redirectTo, title}) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
@@ -92,12 +92,13 @@ const LoginForm = ({redirectTo}) => {
 
   const handleSubmit = async (e) => {
     if (e) e.preventDefault();
+    console.log(title)
     if (validate()) {
       try {
-
         const formattedData = {
           ...formData,
           username: formData.username.toLowerCase(),
+          type: title.toLowerCase(),
         };
         // Call the API function to authenticate user
         const data = await authenticateUser(formattedData);
@@ -125,7 +126,7 @@ const LoginForm = ({redirectTo}) => {
           message: error.response.data.message,
           severity: 'error',
         });
-        if(!(error.response.data.message === "Incorrect Password.")){
+        if(!(error.response.data.message === "Incorrect password.")){
           setStep(0);
         }
       }

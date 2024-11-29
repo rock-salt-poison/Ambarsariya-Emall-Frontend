@@ -19,7 +19,7 @@ function LoginPageCard({title, imgSrc, backButton, redirectTo}) {
           <Link onClick={()=>handleClick}>
             <Box component="img" src={imgSrc} className="icon" alt="icon" />
           </Link>
-            <LoginForm redirectTo={redirectTo}/>
+            <LoginForm redirectTo={redirectTo} title={title}/>
         </Box>
     </Box>
   )
