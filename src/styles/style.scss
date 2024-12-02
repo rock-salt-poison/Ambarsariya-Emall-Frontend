@@ -3991,6 +3991,7 @@ a {
             .category {
               @include flex-center(column, flex-start);
               flex: 1;
+              gap: 15px;
 
               .sector_type {
                 @include homepage-buttons("EFCO", 28px, $brown, "none");
@@ -3999,8 +4000,9 @@ a {
                 overflow: visible;
                 background-color: $light-yellow;
                 border-radius: 8px;
-                padding: 0px 15px;
+                padding: 8px 15px;
                 text-align: center;
+                line-height: 27px;
               }
 
               .shop_name {
@@ -4009,6 +4011,8 @@ a {
                 text-shadow: -3px 0px 2px $yellow, -6px 0px 2px $dark-yellow2;
                 transform: skew(12deg, 1deg);
                 @include hover-scale(1, 0s);
+                text-align: center;
+                line-height: 30px;
 
                 &:hover {
                   transform: skew(12deg, 1deg);
@@ -4095,9 +4099,6 @@ a {
           border-left: 1px solid #fffbf58c;
           flex: 1;
           @include flex-center(column, center);
-
-          
-
         }
       }
     }
@@ -4217,8 +4218,6 @@ a {
                 text-shadow: -3px 0px 2px $yellow, -6px 0px 2px $dark-yellow2;
                 transform: skew(12deg, 1deg);
                 @include hover-scale(1, 0s);
-                text-align: center;
-                line-height: 30px;
 
                 &:hover {
                   transform: skew(12deg, 1deg);
