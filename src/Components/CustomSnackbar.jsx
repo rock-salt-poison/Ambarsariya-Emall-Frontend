@@ -10,7 +10,6 @@ export default function CustomSnackbar({
   handleClose,
 }) {
   return (
-    <div>
       <Snackbar
         open={open}
         autoHideDuration={2000}
@@ -21,6 +20,5 @@ export default function CustomSnackbar({
           <Typography className="snackbar">{message}</Typography>
         </Alert>
       </Snackbar>
-    </div>
   );
 }

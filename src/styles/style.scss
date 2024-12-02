@@ -3468,6 +3468,7 @@ a {
             18px
           );
           flex: 1;
+          z-index: 1;
 
           form {
             width: max-content;
@@ -3483,11 +3484,13 @@ a {
                 padding-top: 4px;
                 background-color: #ffb842;
                 border: 1px solid $black;
+                width: max-content;
+                margin: 0 auto;
                 border-radius: 10px;
                 @include flex-center(column, flex-start);
               }
 
-              .input_field {
+              .input_field, .MuiTextField-root {
                 background-color: #ffffffcc;
                 border: 1px solid $black;
                 border-radius: 8px;
@@ -3518,7 +3521,7 @@ a {
                 @include homepage-buttons(
                   "Bobby-Jones-Soft",
                   15px,
-                  #610505,
+                  $light-yellow,
                   "none"
                 );
                 @include hover-scale(1, 0s);
@@ -3602,6 +3605,7 @@ a {
           @include flex-center(column, flex-start);
           flex: 1.2;
           width: 100%;
+          z-index: 0;
 
           .MuiList-root {
             max-width: 260px;

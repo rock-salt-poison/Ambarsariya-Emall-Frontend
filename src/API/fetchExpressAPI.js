@@ -117,3 +117,30 @@ export const getMemberData = async (memberAccessToken) => {
     throw error;
   }
 }
+
+export const post_support_name_password = async(data)=> {
+  try{
+    const response = await axios.post(`${link}/api/ambarsariya/sell/support`, data);
+    return response.data;
+  }catch(error){
+    throw error;
+  }
+}
+
+export const get_visitorData = async (access_token) => {
+  try{
+    const response = await axios.get(`${link}/api/ambarsariya/sell/support/${access_token}`);
+    return response.data;
+  }catch(e){
+    throw e;
+  }
+}
+
+export const put_visitorData = async (data) => {
+    try{
+      const response = await axios.put(`${link}/api/ambarsariya/sell/support`, data);
+      return response.data;
+    }catch(e){
+      throw e;
+    }
+}

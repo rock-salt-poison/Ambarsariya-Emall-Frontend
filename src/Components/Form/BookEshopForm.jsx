@@ -385,8 +385,6 @@ const BookEshopForm = () => {
               dispatch(setUserToken(user_access_token));
 
               localStorage.setItem('accessToken', user_access_token);
-              
-              
             }
             
             setSnackbar({ open: true, message: 'Form submitted successfully!', severity: 'success' });
