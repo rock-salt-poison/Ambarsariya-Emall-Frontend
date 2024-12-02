@@ -15,6 +15,7 @@ import DiscountPercentageSlider from '../../Components/Shop/DiscountPercentageSl
 import CouponsSlider from '../../Components/Shop/CouponsSlider';
 import { allShops, getShopUserData } from '../../API/fetchExpressAPI';
 import CustomSnackbar from '../../Components/CustomSnackbar';
+import { getSectorImage } from '../../Utils/sector_images';
 
 const SingleShopPage = ({ showBackButton = true, shopData }) => {
   const [searchParams] = useSearchParams();
@@ -99,7 +100,7 @@ const SingleShopPage = ({ showBackButton = true, shopData }) => {
           </Box>}
       {data.length>0 && data.map((column, index) => (
         <Box key={index} className="single_shop_wrapper">
-          <Box component="img" src={getImageSrc(token)} className='sector_bg_img' />
+          <Box component="img" src={getSectorImage(column.sector_name)} className='sector_bg_img' />
           <Box className="row">
             {showBackButton && (
               <Box className="col-1">
