@@ -8,7 +8,7 @@ import DashboardForm from './DashboardForm';
 import createCustomTheme from '../../../../styles/CustomSelectDropdownTheme';
 
 function MerchantDashboard(props) {
-    const {edit} = useParams();
+    const {token, edit} = useParams();
 
     const themeProps = {
         popoverBackgroundColor: props.popoverBackgroundColor || "var(--yellow)",

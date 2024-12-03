@@ -9,7 +9,7 @@ import CardBoardPopup from '../../../../Components/CardBoardPopupComponents/Card
 import EditShopForm_PopupContent from './EditShopForm_PopupContent';
 
 function DashboardHeader() {
-    const { edit } = useParams();
+    const { token, edit } = useParams();
     const [ openPopup, setOpenPopup ] = useState(false);
 
     const handleClose = () => {
@@ -23,7 +23,7 @@ function DashboardHeader() {
   return (
     <Box className="col">
     <Box className="sub-col">
-        <Link to='../shop'>
+        <Link to={`../support/shop/shop-detail?token=${token}`}>
             <Box component="img" src={shop_icon} alt="shop" className='icon' />
         </Link>
     </Box>

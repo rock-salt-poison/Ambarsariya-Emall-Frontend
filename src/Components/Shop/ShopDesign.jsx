@@ -19,7 +19,7 @@ function ShopDesign({ data }) {
       </Box>
 
       <Box className="domain_container">
-        <Link to="dashboard">
+        <Link to={`../support/shop/${data.shop_access_token}/dashboard`}>
           <Typography className="domain" variant="h3">
             {data.domain_name}
           </Typography>
