@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Box, Typography } from '@mui/material';
+import { Button, Box, Typography, CircularProgress } from '@mui/material';
 import FormField from '../Form/FormField';
 import { useNavigate, useParams } from 'react-router-dom';
 import { postEshop, fetchDomains, fetchDomainSectors, fetchSectors, getShopUserData, getUser } from '../../API/fetchExpressAPI'
@@ -51,6 +51,7 @@ const BookEshopForm = () => {
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
   const [submitBtnDisable, setSubmitBtnDisable] = useState(!!formData);
   const { edit } = useParams();
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.userAccessToken);
@@ -112,9 +113,11 @@ const BookEshopForm = () => {
 
         // Fetch data if token exists
         if (token) {
+          setLoading(true);
           let shop_token = (await getUser(token))[0].shop_access_token;
           if (shop_token) {
             await fetchUserAndShopData(shop_token);
+            setLoading(false);
           }
         }
       } catch (error) {
@@ -450,6 +453,9 @@ const BookEshopForm = () => {
 
   return (
     <Box component="form" noValidate autoComplete="off" onSubmit={handleSubmit}>
+      {loading && <Box className="loading">
+                <CircularProgress />
+              </Box>}
       <Box className="form-group">
         {renderFormField('Username / email id :', 'username', 'email')}
         {showUsernameOtp && (
