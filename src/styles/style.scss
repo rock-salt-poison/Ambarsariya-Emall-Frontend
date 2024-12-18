@@ -18406,7 +18406,7 @@ input[readonly] {
     form{
       .form-group{
 
-        .label{
+        .label, .MuiTypography-root{
           @include homepage-buttons(
           "Bobby-Jones-Soft",
           17px,
@@ -18414,6 +18414,9 @@ input[readonly] {
           "none"
         );
           @include hover-scale(1, 0s);
+        }
+
+        .label{
           min-width: 175px;
         }
 

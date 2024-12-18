@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Box } from "@mui/material";
+import { Button, Box, CircularProgress } from "@mui/material";
 import FormField from "./FormField";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -47,6 +47,7 @@ const EshopForm = () => {
   });
 
   const { edit } = useParams();
+  const [loading, setLoading] = useState(false);
 
   const fetchOtherShops = async (token) => {
     try {
@@ -118,10 +119,12 @@ const EshopForm = () => {
   useEffect(() => {
     const fetchData = async () => {
       if (user_access_token) {
+        setLoading(true);
         let shop_token = (await getUser(user_access_token))[0]
-          .shop_access_token;
+        .shop_access_token;
         if (shop_token) {
           fetchOtherShops(shop_token);
+          setLoading(false);
         }
       }
     };
@@ -369,6 +372,9 @@ const EshopForm = () => {
 
   return (
     <Box component="form" noValidate autoComplete="off" onSubmit={handleSubmit}>
+      {loading && <Box className="loading">
+                <CircularProgress />
+              </Box>}
       <Box className="form-group">
         {renderFormField("Name of the business :", "business_name", "text")}
         {renderFormField(
