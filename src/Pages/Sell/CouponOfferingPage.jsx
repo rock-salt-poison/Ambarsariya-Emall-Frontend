@@ -10,12 +10,14 @@ import RetailerPopupContent from '../../Components/CouponOffering/RetailerPopupC
 import LoyaltyPopupContent from '../../Components/CouponOffering/LoyaltyPopupContent';
 import SubscriptionPopupContent from '../../Components/CouponOffering/SubscriptionPopupContent';
 import CustomizablePopupContent from '../../Components/CouponOffering/CustomizablePopupContent';
+import RsTenPerDayContent from '../../Components/CouponOffering/RsTenPerDayContent';
 
 const OFFER_TYPES = [
   { type: 'retailer', popup: true, popup_body_content: <RetailerPopupContent /> },
   { type: 'subscription', popup: true, popup_body_content: <SubscriptionPopupContent /> },
   { type: 'loyalty', popup: true, popup_body_content: <LoyaltyPopupContent /> },
-  { type: 'customizable', popup: true, popup_body_content: <CustomizablePopupContent /> }
+  { type: 'customizable', popup: true, popup_body_content: <CustomizablePopupContent /> },
+  { type: 'Rs 10/per day', popup: true, popup_body_content: <RsTenPerDayContent />, optionalCName:'rs_per_day' }
 ];
 
 // Define a max height as a numeric value, e.g., in pixels or percentage points (100%)
@@ -84,24 +86,32 @@ function CouponOfferingPage(props) {
 
 
   const handleGraphClick = (e, type) => {
-    if(e){
-      setGraphHeights((prevHeights) => {
-        const newHeight = prevHeights[type] - 25; // Increase height by 25px
-        const updatedHeight = newHeight <= MAX_HEIGHT ? newHeight : MAX_HEIGHT;
+    setGraphHeights((prevHeights) => {
+      // Ensure the 'type' exists and its current height is greater than 0
+      if (prevHeights[type] && prevHeights[type] > 0) {
+        const newHeight = prevHeights[type] - 25; // Decrease height by 25px
+        const updatedHeight = newHeight > 0 ? newHeight : 0; // Prevent going below 0
         
         const updatedHeights = {
           ...prevHeights,
-          [type]: updatedHeight,
+          [type]: updatedHeight, // Set the new height
         };
-        
-        // Calculate the new total height
-        const newTotal = Object.values(updatedHeights).reduce((acc, height) => acc + height, 0);
-        
+  
+        // Recalculate the total height
+        const newTotal = Object.values(updatedHeights).reduce(
+          (acc, height) => acc + height,
+          0
+        );
+  
         setTotal(newTotal);
         return updatedHeights;
-      });
-    }
-  }
+      }
+  
+      // If no updates are made, return previous heights
+      return prevHeights;
+    });
+  };
+  
 
   return (
     <ThemeProvider theme={theme}>
@@ -118,21 +128,21 @@ function CouponOfferingPage(props) {
           </Box>
 
           <Box className="col">
-            {OFFER_TYPES.map(({ type, popup, popup_body_content }) => (
+            {OFFER_TYPES.map(({ type, popup, popup_body_content, optionalCName }) => (
               <Offers
                 key={type}
                 text={type}
                 popup={popup}
                 popup_body_content={popup_body_content}
                 onClick={(e) => handleClick(e, type)}
+                optionalCname={optionalCName}
               />
             ))}
-            <Offers text="Rs 10/per day" onClick={(e) => handleClick(e)} optionalCname={"rs_per_day"} />
           </Box>
 
           <Box className="col">
             <Box className="graph_container">
-              {OFFER_TYPES.map(({ type }) => (
+              {OFFER_TYPES.slice(0,-1).map(({ type }) => (
                 <Box
                   key={type}
                   className={`${type}_graph`}

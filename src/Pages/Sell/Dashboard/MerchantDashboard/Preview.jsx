@@ -6,6 +6,8 @@ import EshopForm from '../../../../Components/Form/EshopForm';
 import createCustomTheme from '../../../../styles/CustomSelectDropdownTheme';
 import BookEshopForm from '../../../../Components/Form/BookEshopForm';
 import PaginationControlled from './PaginationControlled';
+import SubscriptionsPreview from './SubscriptionsPreview';
+import CouponsPreview from './CouponsPreview';
 
 function Preview() {
 
@@ -19,8 +21,8 @@ function Preview() {
   const tabsData = [
     // {id:1, name:'E-shop', content:<BookEshopForm editable={false}/>},
     {id:1, name:'E-shop', content:<PaginationControlled pageLabels = {[<BookEshopForm editable={false}/>, <EshopForm editable={false}/>, 'DiscountCoupons']}/>},
-    {id:2, name:'Subscriptions', content:''},
-    {id:3, name:'Coupons', content:''},
+    {id:2, name:'Subscriptions', content:<SubscriptionsPreview/>},
+    {id:3, name:'Coupons', content:<CouponsPreview />},
     {id:4, name:'Last stock update', content:''},
   ];
 

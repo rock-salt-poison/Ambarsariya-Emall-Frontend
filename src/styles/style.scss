@@ -18404,7 +18404,7 @@ input[readonly] {
     }
 
     form{
-      .form-group{
+  
 
         .label, .MuiTypography-root{
           @include homepage-buttons(
@@ -18421,14 +18421,42 @@ input[readonly] {
         }
 
         .field_container{
+          flex: 1;
 
-          .MuiInputBase-input.Mui-disabled{
-            -webkit-text-fill-color: #000;
+          .MuiInputBase-input{
+            padding: 0px;
+            
+            &.Mui-disabled{
+              -webkit-text-fill-color: #000;
+            }
           }
-
-          .MuiInputBase-root.MuiOutlinedInput-root{
+          
+          .input_field{
+            width: 100% ;
+            border-radius: 8px;
+          }
+          
+          .MuiSelect-select, .MuiInputBase-input{
+            padding: 3px 10px 3px 0px;
+            border: 0px;
+            @include homepage-buttons(
+              "Bobby-Jones-Soft",
+              17px,
+              $black,
+              "none"
+              );
+              @include hover-scale(1, 0s);
+            }
+            
+            .MuiOutlinedInput-notchedOutline{
+              border: 0px;
+            }
+            
+            .MuiInputBase-root.MuiOutlinedInput-root{
+            border-radius: 8px;
             color: $black !important;
             background: #90a4bd !important;
+            padding: 0px 0px 0px 10px;
           }
 
           .updated-field{
@@ -18442,46 +18470,106 @@ input[readonly] {
             .MuiInputBase-input{
               color: $light-yellow !important; 
             }
+
+           
           }
         }
 
-        .form-control{
-          @include flex-center(column, flex-start);
-            align-self: stretch;
+      
+      .form-control{
+        @include flex-center(column, flex-start);
+          align-self: stretch;
+          place-items: normal;
+          .form-row{
+            @include flex-center(row, flex-start);
             place-items: normal;
-            .form-row{
-              @include flex-center(row, flex-start);
-              place-items: normal;
-              gap: 10px;
-              .label{
-                width: 155px;
-                text-align: end;
-                align-self: center;
+            gap: 10px;
+
+            .label{
+              text-align: end;
+              align-self: center;
+            }
+
+            .MuiCheckbox-root{
+              svg{
+                fill: $blue;
               }
+            }
 
-              .MuiCheckbox-root{
-                svg{
-                  fill: $blue;
-                }
-              }
+            .MuiSwitch-root{
 
-              .MuiSwitch-root{
-
-                .MuiSwitch-track{
-                  background-color: #90a4bd !important;
-                }
+              .MuiSwitch-track{
+                background-color: #90a4bd !important;
               }
             }
           }
-
-          
-        
-      }
+        }
     }
 
     &:last-child{
       width: 95% !important;
       flex-wrap: nowrap !important;
+
+      .container{
+        background:  transparent !important;
+        padding: 0px;
+        width: 100% ;
+      }
+    }
+
+    .coupons_preview {
+      @include flex-center(column, flex-start);
+
+      .tabs_container{
+        margin: 0 auto;
+
+        .tabs{
+          .MuiTab-root{
+            background-color: #90a4bd !important;
+
+            &.Mui-selected{
+              background-color: $white !important;
+            }
+          }
+        }
+      }
+
+      .MuiButtonBase-root{
+        padding: 6px 20px 4px 20px !important;
+        clip-path: none !important;
+        border-radius: 6px;
+        box-shadow: none;
+        font-size: 18px !important;
+      }
+      
+      
+
+      .tab_panel{
+        background: transparent !important;
+        width: auto !important;
+
+        .container{
+          @include flex-center(column, flex-start);
+          gap: 10px;
+          place-items: normal;
+        }
+
+        .row{
+          @include flex-center(row, space-between);
+          gap: 20px;
+          padding: 0px;
+
+          .heading, .items{
+            @include homepage-buttons(
+              "Bobby-Jones-Soft",
+              18px,
+              $light-yellow,
+              "none"
+            );
+            @include hover-scale(1, 0s);
+          }
+        }
+      }
     }
   }
 }
