@@ -61,7 +61,7 @@ const FormField = ({
               <Checkbox
                 name={name}
                 checked={value}
-                onChange={onChange}
+                onChange={!readOnly ? onChange : undefined}
                 className="checkbox"
               />
             }
@@ -75,7 +75,7 @@ const FormField = ({
                 <Switch
                   name={name}
                   checked={value}
-                  onChange={onChange}
+                  onChange={!readOnly ? onChange : undefined}
                 />
               }
               label={value ? 'On' : 'Off'}
@@ -91,10 +91,10 @@ const FormField = ({
                 id={name}
                 type="file"
                 name={name}
-                onChange={onChange}
+                onChange={!readOnly ? onChange : undefined}
               />
               <label htmlFor={name} className='file_label'>
-                <Button variant="contained" color="primary" component="span" className={`file_button ${className}`}>
+                <Button variant="contained" color="primary" component="span" className={`file_button ${className}`}  disabled={readOnly}>
                   {icon ? uploadFileText : uploadFileIcon ?
                     <Box component="img" src={uploadFileIcon} alt="upload_file" className='upload_file' />
                     : placeholder ? placeholder : "Choose File"}
@@ -120,6 +120,7 @@ const FormField = ({
                 step={0.1}
                 marks={marks}
                 size={"large"}
+                disabled={readOnly}
                 className={`input_field ${className}`} // Apply the custom className
               />
             </Box>
@@ -134,7 +135,7 @@ const FormField = ({
                 <Select
                   name={name}
                   value={value || ''}
-                  onChange={handleSelectChange2}
+                  onChange={!readOnly ? handleSelectChange2 : undefined}
                   displayEmpty
                   className={`input_field ${className}`}
                   {...(error && { error: true })}
@@ -153,7 +154,7 @@ const FormField = ({
                   multiple
                   name={name}
                   value={Array.isArray(value) ? value : []}
-                  onChange={handleSelectChange}
+                  onChange={!readOnly ? handleSelectChange : undefined}
                   renderValue={(selected) => (
                     <Box>
                       {selected.length > 0 ? selected.join(', ') : placeholder}
@@ -188,9 +189,10 @@ const FormField = ({
               ) : type === "phone_number" ? 
                     <MuiPhoneNumber defaultCountry={'in'} name={name}
                     value={value}
-                    onChange={(value) => onChange({ target: { name, value } })}
+                    onChange={!readOnly ? (value) => onChange({ target: { name, value } }) : undefined}
                     variant="outlined"
                     error={error}
+                    disabled={readOnly}
                     />
               : type==="radio" ? (
                 <RadioGroup

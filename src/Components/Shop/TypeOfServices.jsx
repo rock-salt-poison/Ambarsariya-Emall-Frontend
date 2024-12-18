@@ -4,60 +4,69 @@ import pickup from '../../Utils/images/Sell/shop_details/pickup.svg';
 import delivery from '../../Utils/images/Sell/shop_details/delivery.webp';
 import home_visit from '../../Utils/images/Sell/shop_details/home_visit.svg';
 import { Link } from 'react-router-dom'
+import CardBoardPopup from '../CardBoardPopupComponents/CardBoardPopup';
+import ServiceType from '../Cart/ServiceType/ServiceType';
+import Delivery from '../Cart/ServiceType/Delivery';
+import Pickup from '../Cart/ServiceType/Pickup';
+import Visit from '../Cart/ServiceType/Visit';
 
 const services = [
-    {id: 1, type:'Pickup', icon:pickup},
-    {id: 2, type:'Delivery', icon:delivery},
-    {id: 3, type:'Home Visit', icon:home_visit},
+    {id: 1, type:'Pickup', icon:pickup, popupContent: <ServiceType />,
+        cName: "service_type_popup"},
+    {id: 2, type:'Delivery', icon:delivery, popupContent: <Delivery />,
+        cName: "service_type_popup delivery",},
+    {id: 3, type:'Home Visit', icon:home_visit, popupContent: <Visit />,
+        cName: "service_type_popup delivery visit",},
 ]
 
 function TypeOfServices() {
     const [selectedServices, setSelectedServices] = useState(new Set());
 
-    const handleServiceTypeClick = (e, serviceId) => {
+    const handleServiceTypeClick = (e, service) => {
         const target = e.target.closest(".col");
         setSelectedServices((prevSelectedServices) => {
             const newSelectedServices = new Set(prevSelectedServices);
-            if (newSelectedServices.has(serviceId)) {
-                newSelectedServices.delete(serviceId);
+            if (newSelectedServices.has(service.id)) {
+                newSelectedServices.delete(service.id);
             } else {
-                newSelectedServices.add(serviceId);
+                newSelectedServices.add(service.id);
             }
             console.log('Selected Services:', Array.from(newSelectedServices));
             return newSelectedServices;
         });
-        target.classList.toggle("active");
+        setOpenServicePopup((prev) => (prev === service.id ? null : service.id));
+        // target.classList.toggle("increase_scale");
     };
+
+    const [openServicePopup, setOpenServicePopup] = useState(null);
 
 
   return (
     <Box className="services_wrapper">
         <Typography variant="h2">Type of services</Typography>
         <Box className="services_container">
-            {/* {
-                services.map((service)=>{
-                    return  <Link className="col" key={service.id}>
-                                <Box component="img" src={service.icon} className='service_icon'/>
-                                <Typography className='service_type'> {service.type}</Typography>
-                            </Link>
-                })
-            }        */}
-
-                        {services.map((item) => (
-                            <Link
-                                key={item.id}
-                                onClick={(e) => handleServiceTypeClick(e, item.id)}
-                                className={`col`}
-                            >
-                                <Box
-                                    component="img"
-                                    src={item.icon}
-                                    alt={item.type}
-                                    className={`service_icon`}
-                                />
-                                 <Typography className='service_type'> {item.type}</Typography>
-                            </Link>
-                        ))}    
+            {services.map((item) => (
+                <Link
+                    key={item.id}
+                    onClick={(e) => handleServiceTypeClick(e, item)}
+                    className={`col`}
+                >
+                    <Box
+                        component="img"
+                        src={item.icon}
+                        alt={item.type}
+                        className={`service_icon`}
+                    />
+                        <Typography className='service_type'> {item.type}</Typography>
+                </Link>
+            ))}    
+            <CardBoardPopup
+                customPopup={true}
+                open={openServicePopup !== null}
+                handleClose={() => setOpenServicePopup(null)}
+                body_content={services.find(s => s.id === openServicePopup)?.popupContent}
+                optionalCName={services.find(s => s.id === openServicePopup)?.cName}
+            />
         </Box>
     </Box>
   )

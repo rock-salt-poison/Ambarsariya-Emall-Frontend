@@ -5,13 +5,13 @@ function DashboardComponents() {
 
     const card_data = [
         { id: 1, heading: 'Today\'s Sale Orders', value: '1249' },
-        { id: 1, heading: 'Today\s Subscriptions Orders', value: '1249' },
-        { id: 1, heading: 'Today\'s Counter Orders', value: '1249' },
-        { id: 1, heading: 'Today\'s Completed Orders', value: '1249' },
-        { id: 1, heading: 'Today\'s Pending Orders', value: '1249' },
-        { id: 1, heading: 'Today\'s Total Sale', value: '1249' },
-        { id: 1, heading: 'P.O. Number', value: '1249' },
-        { id: 1, heading: 'S.O. Number', value: '1249' },
+        { id: 2, heading: 'Today\s Subscriptions Orders', value: '1249' },
+        { id: 3, heading: 'Today\'s Counter Orders', value: '1249' },
+        { id: 4, heading: 'Today\'s Completed Orders', value: '1249' },
+        { id: 5, heading: 'Today\'s Pending Orders', value: '1249' },
+        { id: 6, heading: 'Today\'s Total Sale', value: '1249' },
+        { id: 7, heading: 'P.O. Number', value: '1249' },
+        { id: 8, heading: 'S.O. Number', value: '1249' },
     ];
 
     function createData(id, products, qty, cost_price, selling_price, price_after_coupons, offer_price, services_applied, final_so, payment_status, final_status) {

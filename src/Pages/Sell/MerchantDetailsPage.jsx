@@ -40,8 +40,7 @@ const MerchantDetailsPage = () => {
   const [loading, setLoading] = useState(true);
 
   const suggestions = ['Stationary', 'Textbook', 'Healthcare'];
-console.log(shopData);
-console.log(filteredData)
+
   useEffect(() => {
     const fetchShops = async () => {
       try {

@@ -5064,7 +5064,7 @@ a {
                       "none"
                     );
                     @include hover-scale(1, 0s);
-                    width: 155px;
+                    width: 155px !important;
                     text-align: end;
                   }
                 }
@@ -5374,12 +5374,23 @@ a {
           border-radius: 30px;
           background-color: #563d208c;
           @include flex-center(column, center);
-          // align-self: stretch;
-          // min-height: 100%;
+          
+          .heading{
+            @include homepage-buttons(
+              "Bobby-Jones-Soft",
+              20px,
+              $yellow,
+              "yellow-blur-shadow"
+            );
+            @include hover-scale(1, 0s);
+            line-height: 1.2em;
+            margin-bottom: -10px;
+          }
 
           img.icon {
             width: 160px;
           }
+
           form {
             @include flex-center(column, center);
             gap: 0px;
@@ -18394,7 +18405,29 @@ input[readonly] {
 
     form{
       .form-group{
+
+        .label{
+          @include homepage-buttons(
+          "Bobby-Jones-Soft",
+          17px,
+          $light-yellow,
+          "none"
+        );
+          @include hover-scale(1, 0s);
+          min-width: 175px;
+        }
+
         .field_container{
+
+          .MuiInputBase-input.Mui-disabled{
+            -webkit-text-fill-color: #000;
+          }
+
+          .MuiInputBase-root.MuiOutlinedInput-root{
+            color: $black !important;
+            background: #90a4bd !important;
+          }
+
           .updated-field{
             background-color: $blue !important;
             color: $light-yellow !important;  
@@ -18402,11 +18435,44 @@ input[readonly] {
             .MuiInputBase-root.MuiOutlinedInput-root{
               background-color: $blue !important;
             }
+
             .MuiInputBase-input{
               color: $light-yellow !important; 
             }
           }
         }
+
+        .form-control{
+          @include flex-center(column, flex-start);
+            align-self: stretch;
+            place-items: normal;
+            .form-row{
+              @include flex-center(row, flex-start);
+              place-items: normal;
+              gap: 10px;
+              .label{
+                width: 155px;
+                text-align: end;
+                align-self: center;
+              }
+
+              .MuiCheckbox-root{
+                svg{
+                  fill: $blue;
+                }
+              }
+
+              .MuiSwitch-root{
+
+                .MuiSwitch-track{
+                  background-color: #90a4bd !important;
+                }
+              }
+            }
+          }
+
+          
+        
       }
     }
 

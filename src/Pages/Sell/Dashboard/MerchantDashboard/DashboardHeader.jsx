@@ -23,7 +23,7 @@ function DashboardHeader() {
   return (
     <Box className="col">
     <Box className="sub-col">
-        <Link to={`../support/shop/shop-detail?token=${token}`}>
+        <Link to={`../support/shop/shop-detail/${token}`}>
             <Box component="img" src={shop_icon} alt="shop" className='icon' />
         </Link>
     </Box>

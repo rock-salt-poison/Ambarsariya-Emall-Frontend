@@ -44,7 +44,7 @@ const SingleShopPage = ({ showBackButton = true, shopData }) => {
     }
   };
 
-  const handleClick = (e, shop_token) => navigate(`../support/shop/shop-detail?token=${shop_token}`);
+  const handleClick = (e, shop_token) => navigate(`../support/shop/shop-detail/${shop_token}`);
 
   const [openPopup, setOpenPopup] = useState(false);
   const handleClose = () => setOpenPopup(false);

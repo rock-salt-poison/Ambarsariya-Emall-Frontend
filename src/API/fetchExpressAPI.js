@@ -144,3 +144,13 @@ export const put_visitorData = async (data) => {
       throw e;
     }
 }
+
+
+export const put_otp = async (data) => {
+  try{
+    const response = await axios.put(`${link}/api/ambarsariya/sell/send-otp`, data);
+    return response.data; 
+  }catch(e){
+    throw e;
+  }
+}

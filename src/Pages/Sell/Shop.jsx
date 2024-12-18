@@ -8,15 +8,17 @@ import GetInTouch from "../../Components/Shop/GetInTouch";
 import ShopDetails2 from "../../Components/Shop/ShopDetails2";
 import Button2 from "../../Components/Home/Button2";
 import { useSelector } from "react-redux";
-import { useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { allShops, getShopUserData } from "../../API/fetchExpressAPI";
 import CustomSnackbar from "../../Components/CustomSnackbar";
 
 
 function Shop() {
     // const token = useSelector((state) => state.auth.userAccessToken);
-    const [searchParams] = useSearchParams();
-    const shopId = searchParams.get("token");
+    // const [searchParams] = useSearchParams();
+    // const shopId = searchParams.get("token");
+
+    const { token } = useParams();
   
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState(null);
@@ -29,12 +31,12 @@ function Shop() {
   
     useEffect(() => {
       const fetchData = async () => {
-        if (shopId) {
+        if (token) {
           try {
             const shops = await allShops();
-            const validShop = shops.find((shop) => shop.shop_access_token === shopId);
+            const validShop = shops.find((shop) => shop.shop_access_token === token);
             if (validShop) {
-              const resp = await getShopUserData(shopId);
+              const resp = await getShopUserData(token);
               console.log(resp?.length)
               if (resp?.length > 0) {
                 setData(resp[0]);
@@ -73,7 +75,7 @@ function Shop() {
         }
       };
       fetchData();
-    }, [shopId]);
+    }, [token]);
   
     return (
       <Box className="shop_wrapper">
@@ -88,7 +90,7 @@ function Shop() {
             <Box className="row">
               <Box className="col">
                 <Box className="visible_on_small_screen">
-                  <Button2 text="Back" redirectTo={`../support/shop?token=${shopId}`} />
+                  <Button2 text="Back" redirectTo={`../support/shop?token=${token}`} />
                 </Box>
                 {data && <ShopDesign data={data} />}
                 {data && <WomanPointingShopName />}

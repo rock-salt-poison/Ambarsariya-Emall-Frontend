@@ -4,6 +4,8 @@ import Button2 from '../../../../Components/Home/Button2'
 import ScrollableTabsButton from '../../../../Components/ScrollableTabsButton'
 import EshopForm from '../../../../Components/Form/EshopForm';
 import createCustomTheme from '../../../../styles/CustomSelectDropdownTheme';
+import BookEshopForm from '../../../../Components/Form/BookEshopForm';
+import PaginationControlled from './PaginationControlled';
 
 function Preview() {
 
@@ -15,7 +17,8 @@ function Preview() {
   const theme = createCustomTheme(themeProps);
 
   const tabsData = [
-    {id:1, name:'E-shop', content:<EshopForm/>},
+    // {id:1, name:'E-shop', content:<BookEshopForm editable={false}/>},
+    {id:1, name:'E-shop', content:<PaginationControlled pageLabels = {[<BookEshopForm editable={false}/>, <EshopForm editable={false}/>, 'DiscountCoupons']}/>},
     {id:2, name:'Subscriptions', content:''},
     {id:3, name:'Coupons', content:''},
     {id:4, name:'Last stock update', content:''},

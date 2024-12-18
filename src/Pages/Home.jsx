@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, LinearProgress } from '@mui/material';
 import Logo from '../Components/Home/Logo';
 import Clock from '../Components/Home/Clock';
@@ -22,6 +22,7 @@ import LoadingIndicator from '../Components/LoadingIndicator';
 import { useSelector } from 'react-redux';
 import Button2 from '../Components/Home/Button2';
 import { useLogout } from '../customHooks/useLogout';
+import { getUser } from '../API/fetchExpressAPI';
 
 export default function Home() {
     const navigate = useNavigate();
@@ -29,6 +30,7 @@ export default function Home() {
     const [audio] = useState(new Audio(hornSound));
     const [openPopup, setOpenPopup] = useState(null);
     const token = useSelector((state) => state.auth.userAccessToken);
+    const [userType, setUserType] = useState('');
     const handleLogout = useLogout();
 
     const handleClose = () => {
@@ -96,6 +98,16 @@ export default function Home() {
         setTimeout(() => setOpenPopup(popupType), 1200);
     };
 
+    useEffect(()=> {
+        if(token){
+            const fetch_user_type = async () => {
+                const user = (await getUser(token))[0];
+                setUserType(user.user_type);
+            } 
+            fetch_user_type();
+        }
+    }, [token]);
+
     const buttonsData = [
         { id: 1, text: "Time Table", cName: 'timeTable', imgSrc: timeTableButtonImg, alt: "time-table", handleClickFunction: (e) => handleClick(e, 'TimeTable') },
         { id: 2, text: "AQI", cName: 'aqi', imgSrc: AQIButtonImg, alt: "air-quality-index", handleClickFunction: (e) => handleClick(e, 'AQI') },
@@ -152,7 +164,7 @@ export default function Home() {
                         <LEDNotice />
                     </Box>
                 </Box>
-            {token && <Button2 optionalcName='logoutBtn' text="Logout" onClick={() => handleLogout('../AmbarsariyaMall')}/>}
+            {token ? <Button2 optionalcName='logoutBtn' text={`Logged in as ${userType}`} onClick={() => handleLogout('../AmbarsariyaMall')}/>:<Button2 optionalcName='logoutBtn' text={`Login`} redirectTo='sell/login'/>}
             </Box>
             
 

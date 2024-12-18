@@ -53,9 +53,10 @@ function SellRoutes() {
       <Route path="coupon-offering" element={<CouponOfferingPage />} />
       <Route path="book-eshop" element={<BuyEshop />} />
       <Route path="login" element={<Login />} />
+      <Route path="/forgot-password" element={<Login />} />
       <Route path="eshop" element={<Eshop />} />
       <Route path="user" element={<User_Portfolio />} />
-      <Route path="support/shop/shop-detail" element={<Shop />} />
+      <Route path="support/shop/shop-detail/:token" element={<Shop />} />
       <Route path="support/shop/:token/dashboard" element={<MerchantDashboard />} />
       <Route path="support/shop/:token/dashboard/:edit" element={<MerchantDashboard />} />
       <Route path="support/shop/:token/dashboard/:edit/preview" element={<Preview />} />

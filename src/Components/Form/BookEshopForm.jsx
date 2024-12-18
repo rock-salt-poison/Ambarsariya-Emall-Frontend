@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Box, Typography } from '@mui/material';
-import FormField from '../Form/FormField'; 
-import { useNavigate } from 'react-router-dom';
-import {postEshop, fetchDomains, fetchDomainSectors, fetchSectors, getShopUserData, getUser} from '../../API/fetchExpressAPI'
+import FormField from '../Form/FormField';
+import { useNavigate, useParams } from 'react-router-dom';
+import { postEshop, fetchDomains, fetchDomainSectors, fetchSectors, getShopUserData, getUser } from '../../API/fetchExpressAPI'
 import { useDispatch, useSelector } from 'react-redux';
 import { setShopToken, setShopTokenValid, setUserToken } from '../../store/authSlice';
 import CustomSnackbar from '../CustomSnackbar';
@@ -20,9 +20,9 @@ const BookEshopForm = () => {
     phone1_otp: '',
     phone2: '',
     phone2_otp: '',
-    domain:0,
+    domain: 0,
     domain_create: '',
-    sector:0,
+    sector: 0,
     sector_create: '',
     onTime: '',
     offTime: '',
@@ -36,8 +36,8 @@ const BookEshopForm = () => {
     paidVersion: false,
     premiumVersion: false,
     username_otp: '',
-    merchant:false,
-    member_detail:'',
+    merchant: false,
+    member_detail: '',
     member_otp: '',
   };
 
@@ -50,10 +50,11 @@ const BookEshopForm = () => {
   const [user_type, set_user_type] = useState('shop');
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
   const [submitBtnDisable, setSubmitBtnDisable] = useState(!!formData);
-  
+  const { edit } = useParams();
+
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.userAccessToken);
-  
+
   const navigate = useNavigate();
 
   // Simulated OTP for demonstration purposes
@@ -69,7 +70,7 @@ const BookEshopForm = () => {
       const sectors = await fetchSectors();
       const selectedSector = sectors.find((sector) => sector.sector_name === data.sector_name);
       console.log(selectedSector)
-  
+
       setFormData({
         ...formData,
         username: data.username || '',
@@ -100,7 +101,7 @@ const BookEshopForm = () => {
       });
     }
   };
-  
+
   useEffect(() => {
     const initializeForm = async () => {
       try {
@@ -108,11 +109,11 @@ const BookEshopForm = () => {
         const domainsResp = await fetchDomains();
         const domainNames = domainsResp.map((data) => data.domain_name);
         setDomains(domainNames);
-  
+
         // Fetch data if token exists
         if (token) {
           let shop_token = (await getUser(token))[0].shop_access_token;
-          if(shop_token){
+          if (shop_token) {
             await fetchUserAndShopData(shop_token);
           }
         }
@@ -120,11 +121,11 @@ const BookEshopForm = () => {
         console.error('Error initializing form:', error);
       }
     };
-  
+
     initializeForm();
   }, [token]);
-  
-  
+
+
 
   const handleChange = async (e) => {
     if (!e.target) return;
@@ -135,7 +136,7 @@ const BookEshopForm = () => {
         // Fetch domains and find the selected domain
         const domains = await fetchDomains();
         const selectedDomain = domains.find((val) => val.domain_name === value);
-  
+
         // Prepare the sectors list based on the selected domain
         let sectors = [];
         if (selectedDomain) {
@@ -146,20 +147,20 @@ const BookEshopForm = () => {
             sector: 0, // Reset sector field to default value
           }));
         }
-  
+
         // Add 'Create' to the list of sectors and update the formData state
         setSectors(sectors);
-  
+
       } catch (error) {
         console.error('Error fetching sectors:', error);
       }
     }
-  
+
     // Handle sector change
     if (name === 'sector') {
       try {
         const selectedSector = (await fetchSectors()).find((val) => val.sector_name === value);
-  
+
         if (selectedSector) {
           setFormData((prevData) => ({
             ...prevData,
@@ -170,23 +171,23 @@ const BookEshopForm = () => {
         console.error('Error fetching sectors:', error);
       }
     }
-  
+
     // Validate OTP fields
     if ((name === 'phone1_otp' || name === 'phone2_otp' || name === 'username_otp' || name === 'member_otp') && !/^\d{0,6}$/.test(value)) {
       return;
     }
-  
+
     setFormData({
       ...formData,
       [name]: type === 'checkbox' ? !!checked : value,
     });
-  
+
     // Reset errors and error messages
     setErrors((prevErrors) => ({ ...prevErrors, [name]: false }));
     setErrorMessages((prevMessages) => ({ ...prevMessages, [name]: '' }));
   };
-  
-  
+
+
   // console.log((formData.phone2).length)
 
   const validateInitialForm = () => {
@@ -250,14 +251,14 @@ const BookEshopForm = () => {
       valid = false;
     }
 
-    if((formData.phone2).length>3){
+    if ((formData.phone2).length > 3) {
       if (formData.phone1 === formData.phone2) {
         newErrors.phone2 = true;
         newErrorMessages.phone2 = 'Phone No. 2 must be unique';
         valid = false;
       }
     }
-  
+
     // if (!phonePattern.test(formData.phone2)) {
     //   newErrors.phone2 = true;
     //   newErrorMessages.phone2 = 'Phone No. 2 must be +91 followed by 10 digits';
@@ -294,7 +295,7 @@ const BookEshopForm = () => {
       valid = false;
     }
 
-    if(formData.phone2){
+    if (formData.phone2) {
       if (formData.phone2_otp !== validPhoneOtp) {
         newErrors.phone2_otp = true;
         newErrorMessages.phone2_otp = 'Invalid OTP for Phone No. 2';
@@ -303,13 +304,13 @@ const BookEshopForm = () => {
     }
 
 
-    if(formData.merchant){
+    if (formData.merchant) {
       if (formData.member_otp !== validMemberOtp) {
         newErrors.member_otp = true;
         newErrorMessages.member_otp = 'Invalid OTP';
         valid = false;
       }
-      if(formData.member_otp == validMemberOtp){
+      if (formData.member_otp == validMemberOtp) {
         set_user_type('shop');
       }
     }
@@ -322,7 +323,7 @@ const BookEshopForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const loggedIn = !!localStorage.getItem('access_token');
-  
+
     if (!showUsernameOtp) {
       // Validate initial form fields
       if (validateInitialForm()) {
@@ -338,7 +339,7 @@ const BookEshopForm = () => {
           try {
             const selectedDomain = (await fetchDomains()).find(domain => domain.domain_name === formData.domain);
             const selectedSector = (await fetchSectors()).find(sector => sector.sector_name === formData.sector);
-  
+
             const postData = {
               title: formData.title,
               fullName: formData.fullName,
@@ -348,8 +349,8 @@ const BookEshopForm = () => {
               phone1: formData.phone1,
               domain: selectedDomain?.domain_id,
               sector: selectedSector?.sector_id,
-              domain_create: formData.domain_create ? formData.domain_create :'',
-              sector_create: formData.sector_create ? formData.sector_create:'',
+              domain_create: formData.domain_create ? formData.domain_create : '',
+              sector_create: formData.sector_create ? formData.sector_create : '',
               onTime: formData.onTime,
               offTime: formData.offTime,
               paidVersion: formData.paidVersion,
@@ -359,10 +360,10 @@ const BookEshopForm = () => {
               delivery: formData.delivery,
               user_type: user_type,
               premiumVersion: formData.premiumVersion,
-  
+
               // Add phone2 if present
               ...(formData.phone2 && { phone2: formData.phone2 }),
-  
+
               // Add paid version details if applicable
               ...(formData.paidVersion && {
                 gst: formData.gst,
@@ -370,15 +371,15 @@ const BookEshopForm = () => {
                 cin_no: formData.cin_no,
                 ...(formData.msme && { msme: formData.msme }),
               }),
-  
+
               // Add member detail if paid version and merchant are true
               ...(formData.paidVersion && formData.merchant && {
                 member_detail: formData.member_detail,
               }),
             };
-  
+
             const response = await postEshop(postData);
-  
+
             // Store the userAccessToken in localStorage
             if (response) {
               const user_access_token = response.user_access_token;
@@ -386,7 +387,7 @@ const BookEshopForm = () => {
 
               localStorage.setItem('accessToken', user_access_token);
             }
-            
+
             setSnackbar({ open: true, message: 'Form submitted successfully!', severity: 'success' });
             console.log('Form Data:', formData);
             if (formData.premiumVersion) {
@@ -405,29 +406,29 @@ const BookEshopForm = () => {
                 message: 'The phone number you entered already exists. Please use a different phone number.',
                 severity: 'error',
               });
-            }else if (error.response.data.error.includes('Username') &&  error.response.data.error.includes('already exists')) {
+            } else if (error.response.data.error.includes('Username') && error.response.data.error.includes('already exists')) {
               setSnackbar({
                 open: true,
                 message: 'Username already exists.',
                 severity: 'error',
               });
-            }else{
+            } else {
               setSnackbar({
                 open: true,
                 message: 'Error while submitting the form. Please try again.',
                 severity: 'error',
               });
             }
-            
+
             console.error("Error submitting form:", error.response.data.error);
           }
         }
       }
     }
   };
-  
 
-  const [domains, setDomains] = useState([]); 
+
+  const [domains, setDomains] = useState([]);
   const [sectors, setSectors] = useState([]);
   const titleOptions = ['Mr.', 'Ms.', 'Mrs.'];
 
@@ -442,6 +443,7 @@ const BookEshopForm = () => {
       errorMessage={errorMessages[name]}
       options={options}
       placeholder={placeholder}
+      readOnly={edit ? true : false}
       {...additionalProps}
     />
   );
@@ -457,14 +459,14 @@ const BookEshopForm = () => {
         )}
         <Box className="form-group2">
           {renderFormField('Password :', 'password', 'password', [], '', { autoComplete: "new-password" })}
-          {renderFormField('Confirm Password :', 'confirm_password', 'password',[], '', { autoComplete: "new-password" })}
-          
+          {renderFormField('Confirm Password :', 'confirm_password', 'password', [], '', { autoComplete: "new-password" })}
+
         </Box>
         <Box className="form-group3">
           {renderFormField('Full Name :', 'title', 'select', titleOptions)}
           {renderFormField('Full Name :', 'fullName', 'text')}
         </Box>
-        {renderFormField('Address :', 'address', 'text')} 
+        {renderFormField('Address :', 'address', 'text')}
         <Box className="form-group2">
           <Box className="form-subgroup">
             {renderFormField('Phone No. 1:', 'phone1', 'phone_number', [], '', { maxLength: 10 })}
@@ -498,38 +500,43 @@ const BookEshopForm = () => {
           </Box>
         </Box>
         <Box className="form-group-switch">
-        {renderFormField('Do you want paid version', 'paidVersion', 'switch')}
+          {renderFormField('Do you want paid version', 'paidVersion', 'switch')}
         </Box>
-        {formData.paidVersion &&  <><Box className="form-group2">
+        {formData.paidVersion && <><Box className="form-group2">
           {renderFormField('GST :', 'gst', 'text')}
           {renderFormField('MSME :', 'msme', 'text')}
         </Box>
-        <Box className="form-group2">
-          {renderFormField('Pan No.', 'pan_no', 'text')}
-          {renderFormField('CIN No.', 'cin_no', 'text')}
-        </Box>
+          <Box className="form-group2">
+            {renderFormField('Pan No.', 'pan_no', 'text')}
+            {renderFormField('CIN No.', 'cin_no', 'text')}
+          </Box>
 
-        <Box className="form-group-switch">
-          {renderFormField('Be a merchant', 'merchant', 'switch')}
-        </Box>
-          {formData.merchant && 
-          renderFormField('', 'member_detail', 'text', '', 'Member username or Phone no.')}
+          <Box className="form-group-switch">
+            {renderFormField('Be a merchant', 'merchant', 'switch')}
+          </Box>
+          {formData.merchant &&
+            renderFormField('', 'member_detail', 'text', '', 'Member username or Phone no.')}
           {formData.merchant && showMemberOtp && renderFormField('Member OTP:', 'member_otp', 'text')}
         </>
         }
-        
-       
-        
-       
+
+
+
+
         <Box className="form-group-switch">
-        {renderFormField('Do you want premium version', 'premiumVersion', 'switch')}
+          {renderFormField('Do you want premium version', 'premiumVersion', 'switch')}
         </Box>
       </Box>
-      <Box className="submit_button_container">
-        <Button type="submit" variant="contained" className="submit_button" disabled={submitBtnDisable}>
-          Submit
-        </Button>
-      </Box>
+      {
+        !edit ? (
+          <Box className="submit_button_container">
+            <Button type="submit" variant="contained" className="submit_button" disabled={submitBtnDisable}>
+              Submit
+            </Button>
+          </Box>
+        ) : ("")
+      }
+
 
       <CustomSnackbar
         open={snackbar.open}

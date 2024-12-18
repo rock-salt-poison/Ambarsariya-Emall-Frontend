@@ -185,7 +185,6 @@ const EshopForm = () => {
       "date_of_establishment",
       "usp_values",
       "product_samples",
-      // 'similar_options',
       "cost_sensitivity",
       "daily_walkin",
       "parking_availability",
@@ -268,7 +267,7 @@ const EshopForm = () => {
             
             // Navigate to the shop page after a successful submission
             setTimeout(() => {
-              navigate(`../support/shop/shop-detail?token=${shop_token}`);
+              navigate(`../support/shop/shop-detail/${shop_token}`);
             }, 2500);
           }
         } catch (error) {
@@ -362,6 +361,7 @@ const EshopForm = () => {
         getSliderMarks={getSliderMarks}
         className={`${additionalClass} ${updatedFieldClass}`}
         accept={accept}
+        readOnly={edit ? true : false}
         {...additionalProps}
       />
     );

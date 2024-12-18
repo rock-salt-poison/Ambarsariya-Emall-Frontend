@@ -1,14 +1,39 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import shop from "../../Utils/images/Sell/shop_details/shop.svg";
 import { Box, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { getUser } from "../../API/fetchExpressAPI";
 
 function ShopDesign({ data }) {
+
+  const openPdf = (e) => {
+    if(e) e.preventDefault();
+    window.open('https://pdfobject.com/pdf/sample.pdf', '_target');
+  }
+
+  const token = useSelector((state) => state.auth.userAccessToken);
+  const [openDashboard, setOpenDashboard] = useState(false);
+
+  useEffect(()=> {
+    if(token){
+      fetch_user(token);
+    }
+  },[token]);
+
+  const fetch_user = async (token) => {
+    const res = await getUser(token);
+    if(data.shop_access_token === res[0].shop_access_token){
+      setOpenDashboard(true);
+    }else {
+      setOpenDashboard(false);
+    }
+  }
 
   return (
     <Link className="shop_container" to={`../shop/${data.shop_access_token}/products`}>
       <Box component="img" src={shop} className="shop" alt="shop" />
-      <Box className="shop_name_container">
+      <Box className="shop_name_container" onClick={(e)=>openPdf(e)}>
         <Typography
           className="shop_name"
           variant="h2"
@@ -19,7 +44,7 @@ function ShopDesign({ data }) {
       </Box>
 
       <Box className="domain_container">
-        <Link to={`../support/shop/${data.shop_access_token}/dashboard`}>
+        <Link to={openDashboard ? `../support/shop/${data.shop_access_token}/dashboard`: '../login'}>
           <Typography className="domain" variant="h3">
             {data.domain_name}
           </Typography>
@@ -30,9 +55,11 @@ function ShopDesign({ data }) {
           {data.sector_name}
         </Typography>
       </Box>
-      <Typography className="shop_no" variant="h3">
-        Shop No. {data && data.shop_no ? (data.shop_no).split('_')[1] : null}
-      </Typography>
+      <Link to={'../../AmbarsariyaMall/serve'}>
+        <Typography className="shop_no" variant="h3">
+          Shop No. {data && data.shop_no ? (data.shop_no).split('_')[1] : null}
+        </Typography>
+      </Link>
     </Link>
   );
 }
