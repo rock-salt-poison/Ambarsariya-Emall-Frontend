@@ -1,70 +1,116 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Button, Typography } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
 import DiscountField from '../Form/DiscountField';
 import PercentIcon from '@mui/icons-material/Percent';
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
+import { addCoupon } from '../../store/couponsSlice';
 
 function RetailerPopupContent() {
+  const dispatch = useDispatch();
 
-    const handleOnChange = (event) => {
-        // Handle input changes here
+  // Get retailer coupon data from Redux store
+  const retailerCoupon = useSelector((state) => state.coupon.retailer); 
+
+  // Initialize local state for discounts
+  const [discounts, setDiscounts] = useState({
+    retailer_upto: { value_1: '', value_2: '' },
+    retailer_flat: { value_1: '', value_2: '' },
+    retailer_freebies: { value_1: '', value_2: '' }
+  });
+
+  // Sync local state with Redux when retailerCoupon data changes
+  useEffect(() => {
+    if (retailerCoupon && retailerCoupon.discounts) {
+      // If coupon data exists in Redux, pre-fill the form
+      setDiscounts(retailerCoupon.discounts);
+      console.log(retailerCoupon)
     }
+  }, [retailerCoupon]); // This will run when retailerCoupon changes
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        // Handle form submit logic here
-    }
+  // Handle form input changes
+  const handleOnChange = (event, field) => {
+    const { name, value } = event.target;
+    setDiscounts((prevState) => ({
+      ...prevState,
+      [field]: {
+        ...prevState[field],
+        [name]: value
+      }
+    }));
+  };
 
-    return (
-        <Box component="form" noValidate autoComplete="off" className="offerings_popup_form" onSubmit={handleSubmit}>
-            <Box className="checkbox-group">
-                <DiscountField
-                    name="discount_1"
-                    label="Percentage"
-                    handleOnChange={handleOnChange}
-                    percentagePlaceholder="10"
-                    minOrderPlaceholder="1000"
-                    additionalText={
-                        <>
-                          <PercentIcon className="icon_2" /> Off on minimum order of <CurrencyRupeeIcon className="icon_2" />
-                        </>
-                      }
-                      
-                />
-                <DiscountField
-                    name="discount_2"
-                    label="Flat"
-                    handleOnChange={handleOnChange}
-                    percentagePlaceholder="10"
-                    minOrderPlaceholder="1000"
-                    additionalText={
-                        <>
-                          <PercentIcon className="icon_2" /> Off on minimum order of <CurrencyRupeeIcon className="icon_2" />
-                        </>
-                      }
-                      />
-                <DiscountField
-                    name="discount_3"
-                    label="Buy"
-                    handleOnChange={handleOnChange}
-                    percentagePlaceholder="10"
-                    minOrderPlaceholder="1000"
-                    additionalText="Get"
-                    additionalText2="Free"
-                />
-            </Box>
+  const handleCheckboxChange = (event, field) => {
+    const { checked } = event.target;
+    setDiscounts((prevState) => ({
+      ...prevState,
+      [field]: {
+        ...prevState[field],
+        checked,
+      },
+    }));
+  };
 
-            <Typography className="description">
-                Coupons expire after 1 year. The discount will apply on top of the total.
-            </Typography>
+  // Handle form submission
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    console.log(discounts);
 
-            <Box className="submit_button_container">
-                <Button type="submit" variant="contained" className="submit_button">
-                    Submit
-                </Button>
-            </Box>
-        </Box>
-    );
+    // Dispatch the coupon details to Redux store
+    dispatch(addCoupon({ type: 'retailer', coupon: { id: Date.now(), discounts } }));
+  };
+
+  return (
+    <Box component="form" noValidate autoComplete="off" className="offerings_popup_form" onSubmit={handleSubmit}>
+      <Box className="checkbox-group">
+      <DiscountField
+    name="percentage"
+    value={retailerCoupon?.discounts?.retailer_upto || discounts.retailer_upto}
+    label="Percentage"
+    checked={discounts.retailer_upto.checked}
+    handleOnChange={(e) => handleOnChange(e, 'retailer_upto')}
+    handleCheckboxChange={(e) => handleCheckboxChange(e, 'retailer_upto')}
+    percentagePlaceholder="10"
+    minOrderPlaceholder="1000"
+    additionalText={<><PercentIcon className="icon_2" /> Off on minimum order of <CurrencyRupeeIcon className="icon_2" /></>}
+/>
+<DiscountField
+    name="percentage"
+    value={retailerCoupon?.discounts?.retailer_flat || discounts.retailer_flat}
+    label="Flat"
+    checked={discounts.retailer_flat.checked}
+    handleOnChange={(e) => handleOnChange(e, 'retailer_flat')}
+    handleCheckboxChange={(e) => handleCheckboxChange(e, 'retailer_flat')}
+    percentagePlaceholder="10"
+    minOrderPlaceholder="1000"
+    additionalText={<><PercentIcon className="icon_2" /> Off on minimum order of <CurrencyRupeeIcon className="icon_2" /></>}
+/>
+<DiscountField
+    name="buy"
+    value={retailerCoupon?.discounts?.retailer_freebies || discounts.retailer_freebies}
+    label="Buy"
+    checked={discounts.retailer_freebies.checked}
+    handleOnChange={(e) => handleOnChange(e, 'retailer_freebies')}
+    handleCheckboxChange={(e) => handleCheckboxChange(e, 'retailer_freebies')}
+    percentagePlaceholder="2"
+    minOrderPlaceholder="1"
+    additionalText="Get"
+    additionalText2="Free"
+/>
+
+      </Box>
+
+      <Typography className="description">
+        Coupons expire after 1 year. The discount will apply on top of the total.
+      </Typography>
+
+      <Box className="submit_button_container">
+        <Button type="submit" variant="contained" className="submit_button">
+          Submit
+        </Button>
+      </Box>
+    </Box>
+  );
 }
 
 export default RetailerPopupContent;

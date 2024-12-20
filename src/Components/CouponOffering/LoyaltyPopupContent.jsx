@@ -1,27 +1,76 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import DiscountField from '../Form/DiscountField';
 import PercentIcon from '@mui/icons-material/Percent';
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
+import { useDispatch, useSelector } from 'react-redux';
+import { addCoupon } from '../../store/couponsSlice';
 
 function LoyaltyPopupContent() {
 
-    const handleOnChange = (event) => {
-        // Handle input changes here
-    }
+    const dispatch = useDispatch();
 
+    // Get retailer coupon data from Redux store
+    const loyaltyCoupon = useSelector((state) => state.coupon.loyalty); 
+  
+    // Initialize local state for discounts
+    const [discounts, setDiscounts] = useState({
+      loyalty_unlock: { value_1: '', value_2: '' },
+      loyalty_bonus: { value_1: '' },
+      loyalty_prepaid: { value_1: '', value_2: '' },
+      loyalty_by_customer: { value_1: '' }
+    });
+  
+    // Sync local state with Redux when retailerCoupon data changes
+    useEffect(() => {
+      if (loyaltyCoupon && loyaltyCoupon.discounts) {
+        // If coupon data exists in Redux, pre-fill the form
+        setDiscounts(loyaltyCoupon.discounts);
+        console.log(loyaltyCoupon)
+      }
+    }, [loyaltyCoupon]); // This will run when retailerCoupon changes
+  
+    // Handle form input changes
+    const handleOnChange = (event, field) => {
+      const { name, value } = event.target;
+      setDiscounts((prevState) => ({
+        ...prevState,
+        [field]: {
+          ...prevState[field],
+          [name]: value
+        }
+      }));
+    };
+  
+    const handleCheckboxChange = (event, field) => {
+      const { checked } = event.target;
+      setDiscounts((prevState) => ({
+        ...prevState,
+        [field]: {
+          ...prevState[field],
+          checked,
+        },
+      }));
+    };
+  
+    // Handle form submission
     const handleSubmit = (event) => {
-        event.preventDefault();
-        // Handle form submit logic here
-    }
-
+      event.preventDefault();
+      console.log(discounts);
+  
+      // Dispatch the coupon details to Redux store
+      dispatch(addCoupon({ type: 'loyalty', coupon: { id: Date.now(), discounts } }));
+    };
     return (
         <Box component="form" noValidate autoComplete="off" className="offerings_popup_form" onSubmit={handleSubmit}>
             <Box className="checkbox-group">
                 <DiscountField
-                    name="discount_1"
+                    name="value_1"
                     label="Unlock"
-                    handleOnChange={handleOnChange}
+                    value={discounts.loyalty_unlock}
+                    handleOnChange={(e) => handleOnChange(e, 'loyalty_unlock')}
+                    checked={discounts.loyalty_unlock.checked}
+                    handleCheckboxChange={(e) => handleCheckboxChange(e, 'loyalty_unlock')}
                     percentagePlaceholder="10"
                     minOrderPlaceholder="1000"
                     additionalText={
@@ -34,7 +83,10 @@ function LoyaltyPopupContent() {
                 <DiscountField
                     name="discount_2"
                     label="Loyalty bonus flat"
-                    handleOnChange={handleOnChange}
+                    value={discounts.loyalty_bonus}
+                    checked={discounts.loyalty_bonus.checked}
+                    handleCheckboxChange={(e) => handleCheckboxChange(e, 'loyalty_bonus')}
+                    handleOnChange={(e) => handleOnChange(e, 'loyalty_bonus')}
                     percentagePlaceholder="10"
                     field2={false}
                     additionalText={
@@ -48,7 +100,10 @@ function LoyaltyPopupContent() {
                     label={<>
                          Pre-Paid Coupons: Pay <CurrencyRupeeIcon className="icon_2" />
                     </>}
-                    handleOnChange={handleOnChange}
+                    handleOnChange={(e) => handleOnChange(e, 'loyalty_prepaid')}
+                    value={discounts.loyalty_prepaid}
+                    checked={discounts.loyalty_prepaid.checked}
+                    handleCheckboxChange={(e) => handleCheckboxChange(e, 'loyalty_prepaid')}
                     percentagePlaceholder="10"
                     minOrderPlaceholder="1000"
                     additionalText={<>
@@ -59,7 +114,10 @@ function LoyaltyPopupContent() {
                 <DiscountField
                     name="discount_4"
                     label="Referred by a Loyal Customer? Save"
-                    handleOnChange={handleOnChange}
+                    handleOnChange={(e) => handleOnChange(e, 'loyalty_by_customer')}
+                    value={discounts.loyalty_by_customer}
+                    checked={discounts.loyalty_by_customer.checked}
+                    handleCheckboxChange={(e) => handleCheckboxChange(e, 'loyalty_by_customer')}
                     field2={false}
                     percentagePlaceholder="10"
                     additionalText={<>
