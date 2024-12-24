@@ -35,7 +35,6 @@ function CouponOfferingPage(props) {
   const subscriptionCoupon = useSelector((state) => state.coupon.subscription);
   const customizableCoupon = useSelector((state) => state.coupon.customizable);
 
-  console.log(useSelector((state) => state.coupon))
   // Map checked coupons to increase height
   const calculateHeights = () => {
     let updatedHeights = { ...graphHeights };
@@ -65,16 +64,11 @@ function CouponOfferingPage(props) {
     if (customizableCoupon) {
       const discountsValues = Object.values(customizableCoupon.discounts || {});
       
-      // Log the length of the discounts object values
-      console.log('Length of discounts values:', discountsValues.length);
-    
       // If needed, calculate the count of valid discounts
       const validDiscounts = discountsValues.filter(
         discount => discount.checked 
       );
-      
-      console.log('Valid discounts count:', validDiscounts.length);
-    
+          
       // Update heights
       updatedHeights['customizable'] = Math.min(validDiscounts.length * 20, MAX_HEIGHT);
       console.log('Updated Heights:', updatedHeights);

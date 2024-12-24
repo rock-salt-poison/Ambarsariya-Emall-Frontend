@@ -12,7 +12,8 @@ import 'swiper/css/pagination';
 // import required modules
 import { Autoplay, EffectCube, Pagination } from 'swiper/modules';
 
-function CouponsSlider() {
+function CouponsSlider({data}) {
+
   return (
     <Swiper
         effect={'cube'}
@@ -33,18 +34,16 @@ function CouponsSlider() {
           }}
         speed={2000}
       >
-        <SwiperSlide>
-          <Box className="discount_coupon">
-            <Typography className='coupon'>coupon</Typography>
-            <Typography className='coupon_value'>Retailer</Typography>
-          </Box>
-        </SwiperSlide>
-        <SwiperSlide>
-        <Box className="discount_coupon">
-            <Typography className='coupon'>coupon</Typography>
-            <Typography className='coupon_value'>Loyalty</Typography>
-          </Box>
-        </SwiperSlide>
+        {
+          data.map((coupon, index)=> {
+            return <SwiperSlide key={index}>
+            <Box className="discount_coupon">
+                <Typography className='coupon'>coupon</Typography>
+                <Typography className='coupon_value'>{coupon.discount_category}</Typography>
+              </Box>
+            </SwiperSlide>
+          })
+        }
       </Swiper>
   
   )

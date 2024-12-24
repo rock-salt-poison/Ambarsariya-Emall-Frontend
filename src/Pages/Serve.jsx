@@ -56,6 +56,9 @@ function Serve() {
                 else if(target.classList.contains('unexpected')){
                     navigate('../unexpected')
                 }
+                else if(target.classList.contains('simple')){
+                    navigate('../simple')
+                }
             }, 600)
         }
   }

@@ -154,3 +154,22 @@ export const put_otp = async (data) => {
     throw e;
   }
 }
+
+export const post_discount_coupons = async (data, shopNo) => {
+  try{
+    const response = await axios.post(`${link}/api/ambarsariya/sell/coupons/${shopNo}`, data);
+    return response.data;
+  }catch(e){
+    throw e;
+  }
+}
+
+
+export const get_discount_coupons = async (shop_no) => {
+  try{
+    const response = await axios.get(`${link}/api/ambarsariya/sell/discount-coupons/${shop_no}`);
+    return response.data;
+  }catch(e){
+    throw e;
+  }
+}

@@ -48,6 +48,7 @@ import MemberRelations from '../Pages/Sell/MemberRelations';
 import DietPlan from '../Pages/Serve/Member/DietPlan';
 import { useSelector } from 'react-redux';
 import { getUser } from '../API/fetchExpressAPI';
+import Simple from '../Pages/Serve/Simple';
 
 
 export default function ServeRoutes() {
@@ -74,6 +75,7 @@ export default function ServeRoutes() {
          <Route path="login" element={<Login />} />
          <Route path="/emotional" element={checkUser === 'shop' ? <Emotional /> : <EmotionalMember/>} />
          <Route path="/unexpected" element={<Unexpected />} />
+         <Route path="/simple" element={<Simple />} />
          <Route path="/emotional/campaign" element={checkUser === 'shop' ? <MerchantCampaign /> : <Campaign />} />
          <Route path="/emotional/campaign/job" element={<Job />} />
          <Route path="/emotional/eshop/soul" element={<Community />} />

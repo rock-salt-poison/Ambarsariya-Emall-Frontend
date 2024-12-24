@@ -13,7 +13,7 @@ import CardBoardPopup from '../../Components/CardBoardPopupComponents/CardBoardP
 import PurchaseCoupon from '../../Components/Cart/PurchaseCoupon/PurchaseCoupon';
 import DiscountPercentageSlider from '../../Components/Shop/DiscountPercentageSlider';
 import CouponsSlider from '../../Components/Shop/CouponsSlider';
-import { allShops, getShopUserData } from '../../API/fetchExpressAPI';
+import { allShops, get_discount_coupons, getShopUserData } from '../../API/fetchExpressAPI';
 import CustomSnackbar from '../../Components/CustomSnackbar';
 import { getSectorImage } from '../../Utils/sector_images';
 
@@ -29,20 +29,12 @@ const SingleShopPage = ({ showBackButton = true, shopData }) => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState(shopData || []);
   const navigate = useNavigate();
+  const [discountCoupons, setDiscountCoupons] = useState([]);
   
   // Video URL for the video player
   const videoUrl = 'https://www.youtube.com/embed/m701WKQMeYQ?controls=0&modestbranding=1';
 
-  const getImageSrc = (sector) => {
-    switch (sector) {
-      case 'stationary':
-        return stationary_bg_img;
-      case 'healthcare':
-        return healthcare_bg_img;
-      default:
-        return stationary_bg_img; // Default image if sector doesn't match
-    }
-  };
+  
 
   const handleClick = (e, shop_token) => navigate(`../support/shop/shop-detail/${shop_token}`);
 
@@ -60,6 +52,10 @@ const SingleShopPage = ({ showBackButton = true, shopData }) => {
             const resp = await getShopUserData(token);
             if (resp?.length > 0) {
               setData(resp);
+
+              const fetch_discounts = await get_discount_coupons(resp[0].shop_no);
+              
+              setDiscountCoupons(fetch_discounts.data);
             } else {
               setSnackbar({
                 open: true,
@@ -115,8 +111,8 @@ const SingleShopPage = ({ showBackButton = true, shopData }) => {
                       <Typography className='sector_type'>{column.sector_name}</Typography>
                       <Typography className='shop_name'>{column.business_name}</Typography>
                     </Box>
-                    <DiscountPercentageSlider setOpenPopup={setOpenPopup}/>
-                    <CouponsSlider />
+                    <DiscountPercentageSlider setOpenPopup={setOpenPopup} data = {discountCoupons}/>
+                    <CouponsSlider data = {discountCoupons}/>
                     
                   </Box>
                   <ServicesTypeCard token={token}/>

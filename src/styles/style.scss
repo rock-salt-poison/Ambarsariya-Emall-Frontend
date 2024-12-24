@@ -4068,7 +4068,7 @@ a {
 
               .coupon_value {
                 color: $yellow;
-                font-size: 50px;
+                font-size: 38px;
               }
             }
           }
@@ -4281,7 +4281,7 @@ a {
 
               .coupon_value {
                 color: $yellow;
-                font-size: 50px;
+                font-size: 38px;
               }
             }
           }
@@ -13947,6 +13947,16 @@ a {
   @extend .general_ledger_wrapper;
   background-image: url("#{$bugdgetingAndForecastingBgImg}");
 }
+
+.simple_wrapper{
+  min-height: 100vh;
+  @include flex-center(row, center);
+  
+  .player-wrapper{
+    height: 98vh;
+  }
+}
+
 
 ::-webkit-scrollbar-thumb {
   background: $yellow;

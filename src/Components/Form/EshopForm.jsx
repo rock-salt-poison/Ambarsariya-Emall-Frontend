@@ -8,6 +8,7 @@ import {
   getShopUserData,
   getUser,
   otherShops,
+  post_discount_coupons,
   updateEshopData,
 } from "../../API/fetchExpressAPI";
 import { useSelector, useDispatch } from "react-redux";
@@ -40,6 +41,7 @@ const EshopForm = () => {
   const updatedFields = useSelector((state) => state.updatedFields);
   const dispatch = useDispatch();
 
+  const coupons = useSelector((state) => state.coupon);
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -258,9 +260,36 @@ const EshopForm = () => {
       if (userAccessToken) {
         try {
           // Call the function to update e-shop data
-          const shop_token = (await getUser(userAccessToken))[0].shop_access_token;
-          if (shop_token) {
-            const response = await updateEshopData(updatedPostData, shop_token);
+          const data = (await getUser(userAccessToken))[0];
+          console.log(data)
+          if (data.shop_access_token) {
+            const response = await updateEshopData(updatedPostData, data.shop_access_token);
+
+            if (response.message) {
+              const validityStart = new Date();
+              
+              // Format validity_start as 'YYYY-MM-DD'
+              const formattedValidityStart = validityStart.toLocaleString().split('T')[0];
+              
+              // Calculate validity_end as one year after validity_start
+              const validityEnd = new Date(validityStart);
+              validityEnd.setFullYear(validityStart.getFullYear() + 1);
+            
+              // Format validity_end as 'YYYY-MM-DD'
+              const formattedValidityEnd = validityEnd.toLocaleString().split('T')[0];
+            
+              const coupons_data = {
+                validity_start: formattedValidityStart,
+                validity_end: formattedValidityEnd,
+                data: coupons 
+              };
+            
+              console.log(coupons_data)
+              const discount_coupons = await post_discount_coupons(coupons_data, data.shop_no);
+
+              console.log(discount_coupons)
+            }
+            
 
             setSnackbar({
               open: true,
@@ -270,7 +299,7 @@ const EshopForm = () => {
             
             // Navigate to the shop page after a successful submission
             setTimeout(() => {
-              navigate(`../support/shop/shop-detail/${shop_token}`);
+              navigate(`../support/shop/shop-detail/${data.shop_access_token}`);
             }, 2500);
           }
         } catch (error) {
