@@ -11,34 +11,34 @@ function Offers({ text, onClick, optionalCname, popup, popup_body_content }) {
   const handlePopoverOpen = (event) => {
     if (popup) {
       setAnchorEl(event.currentTarget)
-}
+    }
   };
 
-// Close popover when mouse leaves
-const handlePopoverClose = () => {
-  setAnchorEl(null);
-};
+  // Close popover when mouse leaves
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
 
-const open = Boolean(anchorEl);
+  const open = Boolean(anchorEl);
 
-return (
-  <Box
-    className={`offer_box ${optionalCname ? optionalCname : ''}`}
+  return (
+    <Box
+      className={`offer_box ${optionalCname ? optionalCname : ''}`}
 
-  >
-    <Link onClick={onClick}>
-      <Box className="title_container" onMouseEnter={handlePopoverOpen}
-      >
-        <Typography className="offer_name" >{text}</Typography>
-      </Box>
-      <Box component="img" src={plus_icon} className="plus_icon" alt="icon" />
-    </Link>
+    >
+      <Link onClick={onClick}>
+        <Box className="title_container" onMouseEnter={handlePopoverOpen}
+        >
+          <Typography className="offer_name" >{text}</Typography>
+        </Box>
+        <Box component="img" src={plus_icon} className="plus_icon" alt="icon" />
+      </Link>
 
-    {/* Use the separate Popover component */}
+      {/* Use the separate Popover component */}
 
-    <CardBoardPopup open={open} handleClose={handlePopoverClose} title={text} body_content={popup_body_content} />
-  </Box>
-);
+      <CardBoardPopup open={open} handleClose={handlePopoverClose} title={text} body_content={popup_body_content} />
+    </Box>
+  );
 }
 
 export default Offers;

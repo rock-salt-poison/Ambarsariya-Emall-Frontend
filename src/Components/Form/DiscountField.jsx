@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Checkbox, FormControlLabel, TextField, Typography } from '@mui/material';
 
 const DiscountField = ({
-  name,
+  name1,name2,
   label,
   handleOnChange,
   handleCheckboxChange,
@@ -20,7 +20,7 @@ const DiscountField = ({
         <FormControlLabel
           control={
             <Checkbox
-              name={name}
+              name={name1}
               checked={checked} // Controlled checkbox state
               onChange={handleCheckboxChange} // Separate handler for checkbox
               className="checkbox"
@@ -33,13 +33,13 @@ const DiscountField = ({
                 <TextField
                   hiddenLabel
                   variant="outlined"
-                  name="value_1"
+                  name={name1}
                   type="text"
                   onChange={handleOnChange}
                   required
                   className="input_field"
                   placeholder={percentagePlaceholder}
-                  value={value.value_1 || ''}
+                  value={value[name1] || ''}
                   inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                 />
                 <Typography variant="span" className="label2">
@@ -50,13 +50,13 @@ const DiscountField = ({
                     <TextField
                       hiddenLabel
                       variant="outlined"
-                      name="value_2"
+                      name={name2}
                       type="text"
                       onChange={handleOnChange}
                       required
                       className="input_field"
                       placeholder={minOrderPlaceholder}
-                      value={value.value_2 || ''}
+                      value={value[name2] || ''}
                       inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                     />
                     <Typography variant="span" className="label2">

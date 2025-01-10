@@ -15,10 +15,10 @@ function LoyaltyPopupContent() {
   
     // Initialize local state for discounts
     const [discounts, setDiscounts] = useState({
-      loyalty_unlock: { value_1: '', value_2: '' },
-      loyalty_bonus: { value_1: '' },
-      loyalty_prepaid: { value_1: '', value_2: '' },
-      loyalty_by_customer: { value_1: '' }
+      loyalty_unlock: { percentage: '', minimum_order: '' },
+      loyalty_bonus: { flat_percent: '' },
+      loyalty_prepaid: { pay: '', get: '' },
+      loyalty_by_customer: { save_percent: '' }
     });
   
     // Sync local state with Redux when retailerCoupon data changes
@@ -65,7 +65,8 @@ function LoyaltyPopupContent() {
         <Box component="form" noValidate autoComplete="off" className="offerings_popup_form" onSubmit={handleSubmit}>
             <Box className="checkbox-group">
                 <DiscountField
-                    name="value_1"
+                    name1="percentage"
+                    name2="minimum_order"
                     label="Unlock"
                     value={discounts.loyalty_unlock}
                     handleOnChange={(e) => handleOnChange(e, 'loyalty_unlock')}
@@ -81,7 +82,7 @@ function LoyaltyPopupContent() {
                       
                 />
                 <DiscountField
-                    name="discount_2"
+                    name1="flat_percent"
                     label="Loyalty bonus flat"
                     value={discounts.loyalty_bonus}
                     checked={discounts.loyalty_bonus.checked}
@@ -96,7 +97,8 @@ function LoyaltyPopupContent() {
                       }
                       />
                 <DiscountField
-                    name="discount_3"
+                    name1="pay"
+                    name2="get"
                     label={<>
                          Pre-Paid Coupons: Pay <CurrencyRupeeIcon className="icon_2" />
                     </>}
@@ -112,7 +114,7 @@ function LoyaltyPopupContent() {
                     additionalText2="value"
                 />
                 <DiscountField
-                    name="discount_4"
+                    name1="save_percent"
                     label="Referred by a Loyal Customer? Save"
                     handleOnChange={(e) => handleOnChange(e, 'loyalty_by_customer')}
                     value={discounts.loyalty_by_customer}

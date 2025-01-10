@@ -173,3 +173,12 @@ export const get_discount_coupons = async (shop_no) => {
     throw e;
   }
 }
+
+export const get_travel_time = async (data) => {
+  try{
+      const response = await axios.get(`${link}/api/ambarsariya/admin/travel-time/${data.mode}/${data.travel_type}`);
+      return response.data;
+  }catch(e){
+      throw e;
+  }
+}

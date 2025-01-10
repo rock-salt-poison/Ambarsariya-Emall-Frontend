@@ -10,13 +10,13 @@ function RetailerPopupContent() {
   const dispatch = useDispatch();
 
   // Get retailer coupon data from Redux store
-  const retailerCoupon = useSelector((state) => state.coupon.retailer); 
+  const retailerCoupon = useSelector((state) => state.coupon.retailer);
 
   // Initialize local state for discounts
   const [discounts, setDiscounts] = useState({
-    retailer_upto: { value_1: '', value_2: '' },
-    retailer_flat: { value_1: '', value_2: '' },
-    retailer_freebies: { value_1: '', value_2: '' }
+    retailer_upto: { percentage: '', minimum_order: '' },
+    retailer_flat: { percentage: '', minimum_order: '' },
+    retailer_freebies: { buy: '', get: '' }
   });
 
   // Sync local state with Redux when retailerCoupon data changes
@@ -63,40 +63,43 @@ function RetailerPopupContent() {
   return (
     <Box component="form" noValidate autoComplete="off" className="offerings_popup_form" onSubmit={handleSubmit}>
       <Box className="checkbox-group">
-      <DiscountField
-    name="percentage"
-    value={retailerCoupon?.discounts?.retailer_upto || discounts.retailer_upto}
-    label="Percentage"
-    checked={discounts.retailer_upto.checked}
-    handleOnChange={(e) => handleOnChange(e, 'retailer_upto')}
-    handleCheckboxChange={(e) => handleCheckboxChange(e, 'retailer_upto')}
-    percentagePlaceholder="10"
-    minOrderPlaceholder="1000"
-    additionalText={<><PercentIcon className="icon_2" /> Off on minimum order of <CurrencyRupeeIcon className="icon_2" /></>}
-/>
-<DiscountField
-    name="percentage"
-    value={retailerCoupon?.discounts?.retailer_flat || discounts.retailer_flat}
-    label="Flat"
-    checked={discounts.retailer_flat.checked}
-    handleOnChange={(e) => handleOnChange(e, 'retailer_flat')}
-    handleCheckboxChange={(e) => handleCheckboxChange(e, 'retailer_flat')}
-    percentagePlaceholder="10"
-    minOrderPlaceholder="1000"
-    additionalText={<><PercentIcon className="icon_2" /> Off on minimum order of <CurrencyRupeeIcon className="icon_2" /></>}
-/>
-<DiscountField
-    name="buy"
-    value={retailerCoupon?.discounts?.retailer_freebies || discounts.retailer_freebies}
-    label="Buy"
-    checked={discounts.retailer_freebies.checked}
-    handleOnChange={(e) => handleOnChange(e, 'retailer_freebies')}
-    handleCheckboxChange={(e) => handleCheckboxChange(e, 'retailer_freebies')}
-    percentagePlaceholder="2"
-    minOrderPlaceholder="1"
-    additionalText="Get"
-    additionalText2="Free"
-/>
+        <DiscountField
+          name1="percentage"
+          name2="minimum_order"
+          value={retailerCoupon?.discounts?.retailer_upto || discounts.retailer_upto}
+          label="Percentage"
+          checked={discounts.retailer_upto.checked}
+          handleOnChange={(e) => handleOnChange(e, 'retailer_upto')}
+          handleCheckboxChange={(e) => handleCheckboxChange(e, 'retailer_upto')}
+          percentagePlaceholder="10"
+          minOrderPlaceholder="1000"
+          additionalText={<><PercentIcon className="icon_2" /> Off on minimum order of <CurrencyRupeeIcon className="icon_2" /></>}
+        />
+        <DiscountField
+          name1="percentage"
+          name2="minimum_order"
+          value={retailerCoupon?.discounts?.retailer_flat || discounts.retailer_flat}
+          label="Flat"
+          checked={discounts.retailer_flat.checked}
+          handleOnChange={(e) => handleOnChange(e, 'retailer_flat')}
+          handleCheckboxChange={(e) => handleCheckboxChange(e, 'retailer_flat')}
+          percentagePlaceholder="10"
+          minOrderPlaceholder="1000"
+          additionalText={<><PercentIcon className="icon_2" /> Off on minimum order of <CurrencyRupeeIcon className="icon_2" /></>}
+        />
+        <DiscountField
+          name1="buy"
+          name2="get"
+          value={retailerCoupon?.discounts?.retailer_freebies || discounts.retailer_freebies}
+          label="Buy"
+          checked={discounts.retailer_freebies.checked}
+          handleOnChange={(e) => handleOnChange(e, 'retailer_freebies')}
+          handleCheckboxChange={(e) => handleCheckboxChange(e, 'retailer_freebies')}
+          percentagePlaceholder="2"
+          minOrderPlaceholder="1"
+          additionalText="Get"
+          additionalText2="Free"
+        />
 
       </Box>
 

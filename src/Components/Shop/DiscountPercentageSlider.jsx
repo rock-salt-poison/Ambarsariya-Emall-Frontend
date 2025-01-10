@@ -12,7 +12,9 @@ import 'swiper/css/pagination';
 // import required modules
 import { Autoplay, EffectCube, Pagination } from 'swiper/modules';
 
-function DiscountPercentageSlider({setOpenPopup}) {
+function DiscountPercentageSlider({setOpenPopup, data}) {
+
+  console.log(data,'DiscountPercentage')
   return (
     <Swiper
         effect={'cube'}
@@ -33,6 +35,7 @@ function DiscountPercentageSlider({setOpenPopup}) {
           }}
         speed={2000}
       >
+        
         <SwiperSlide>
             <Link className="discount_percentage" onClick={(e)=>{setOpenPopup(true)}}>
                 <Typography className='percent'>11</Typography>

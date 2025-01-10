@@ -12,10 +12,10 @@ function SubscriptionPopupContent() {
   const subscriptionCoupon = useSelector((state) => state.coupon.subscription);
 
   const [discounts, setDiscounts] = useState({
-    subscription_daily: { checked: false, value_1: '' },
-    subscription_weekly: { checked: false, value_1: '' },
-    subscription_monthly: { checked: false, value_1: '' },
-    subscription_edit: { checked: false, value_1: '', value_2: '', dateRange: null },
+    subscription_daily: { checked: false, percent_off: '' },
+    subscription_weekly: { checked: false, percent_off: '' },
+    subscription_monthly: { checked: false, percent_off: '' },
+    subscription_edit: { checked: false, percent_off: '', dateRange: null },
   });
 
   useEffect(() => {
@@ -73,7 +73,7 @@ function SubscriptionPopupContent() {
     >
       <Box className="checkbox-group">
       <DiscountField
-        name="value_1"
+        name1="percent_off"
         label="Daily"
         checked={discounts.subscription_daily.checked}
         value={discounts.subscription_daily}
@@ -84,7 +84,7 @@ function SubscriptionPopupContent() {
         field2={false}
       />
       <DiscountField
-        name="value_1"
+        name1="percent_off"
         label="Weekly"
         checked={discounts.subscription_weekly.checked}
         value={discounts.subscription_weekly}
@@ -95,7 +95,7 @@ function SubscriptionPopupContent() {
         field2={false}
       />
       <DiscountField
-        name="value_1"
+        name1="percent_off"
         label="Monthly"
         checked={discounts.subscription_monthly.checked}
         value={discounts.subscription_monthly}
@@ -106,7 +106,7 @@ function SubscriptionPopupContent() {
         field2={false}
       />
         <DiscountField
-          name="value_1"
+          name1="percent_off"
           label={
             <>
               <DateRangePicker />

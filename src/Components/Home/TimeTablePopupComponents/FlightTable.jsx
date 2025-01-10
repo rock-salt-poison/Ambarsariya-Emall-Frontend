@@ -13,10 +13,11 @@ const flightData = [
 
 ];
 
-const FlightTable = (id) => {
+const FlightTable = ({id, data}) => {
 
     const city = 'ATQ'
     const [flightSchedule, setFlightSchedule] = useState([]);
+    console.log(data);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -38,17 +39,17 @@ const FlightTable = (id) => {
     return (
         <Box className="flightDataContainer">
             {
-                flightData.map((flight, index) => (
+                data.map((flight, index) => (
                     <Box key={index} className="row">
                         <Box className="col">
                             <Typography>
-                                <Typography variant="span">{flight.destination}</Typography>
+                                <Typography variant="span">{flight.travel_from} to {flight.travel_to}</Typography>
                                 <Typography variant="span">-</Typography>
-                                <Typography variant="span">{flight.time}</Typography>
+                                <Typography variant="span">{flight.arrival_time}</Typography>
                             </Typography>
                         </Box>
                         <Box className="col">
-                            <Box component="img" src={flight.baggageImg} alt="baggage" className="baggageImg" />
+                            <Box component="img" src={baggageImg} alt="baggage" className="baggageImg" />
                         </Box>
                     </Box>
                 ))
