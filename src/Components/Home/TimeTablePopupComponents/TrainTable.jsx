@@ -20,6 +20,15 @@ function TrainTable({ id, data }) {
     }
   }, []);
 
+  const convertTo12HourFormat = (time) => {
+    if (!time) return "";
+    const [hours, minutes] = time.split(":");
+    const hour = parseInt(hours, 10);
+    const period = hour >= 12 ? "PM" : "AM";
+    const adjustedHour = hour % 12 || 12; // Convert 0 to 12 for 12-hour format
+    return `${adjustedHour}:${minutes} ${period}`;
+  };
+
   return (
     <Table className="table">
       <TableHead className="thead">
@@ -47,12 +56,12 @@ function TrainTable({ id, data }) {
             </TableCell>
             <TableCell align="center" className="tableCell1">
               <Typography className="expectedTime">
-                {id === "Arrival" ? row.arrival_time : row.departure_time}
+                {id === "Arrival" ? convertTo12HourFormat(row.arrival_time) : convertTo12HourFormat(row.departure_time)}
               </Typography>
             </TableCell>
             <TableCell align="right" className="tableCell1">
               <Typography className="finalTime">
-                {id === "Arrival" ? row.arrived_at : row.departed_at}
+                {id === "Arrival" ? convertTo12HourFormat(row.arrived_at) : convertTo12HourFormat(row.departed_at)}
               </Typography>
             </TableCell>
           </TableRow>

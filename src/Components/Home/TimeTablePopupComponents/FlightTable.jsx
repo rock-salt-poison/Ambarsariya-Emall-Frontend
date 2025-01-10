@@ -4,14 +4,6 @@ import baggageImg from '../../../Utils/images/baggageVectorImg.png'
 import waitImg from '../../../Utils/images/waitImg.png'
 import { fetchFlightSchedulesData } from '../../../API/flightSchedulesAPI'
 
-const flightData = [
-    { destination: 'ATR Singapore to ASR', time: '05:30 PM', baggageImg: baggageImg },
-    { destination: 'ATR Singapore to ASR', time: '05:30 PM', baggageImg: waitImg },
-    { destination: 'ATR Singapore to ASR', time: '05:30 PM', baggageImg: baggageImg },
-    { destination: 'ATR Singapore to ASR', time: '05:30 PM', baggageImg: baggageImg },
-    { destination: 'ATR Singapore to ASR', time: '05:30 PM', baggageImg: baggageImg },
-
-];
 
 const FlightTable = ({id, data}) => {
 
@@ -36,16 +28,26 @@ const FlightTable = ({id, data}) => {
     });
 
 
+    const convertTo12HourFormat = (time) => {
+        if (!time) return "";
+        const [hours, minutes] = time.split(":");
+        const hour = parseInt(hours, 10);
+        const period = hour >= 12 ? "PM" : "AM";
+        const adjustedHour = hour % 12 || 12; // Convert 0 to 12 for 12-hour format
+        return `${adjustedHour}:${minutes} ${period}`;
+      };
+
     return (
         <Box className="flightDataContainer">
             {
-                data.map((flight, index) => (
+                data?.map((flight, index) => (
                     <Box key={index} className="row">
                         <Box className="col">
                             <Typography>
                                 <Typography variant="span">{flight.travel_from} to {flight.travel_to}</Typography>
-                                <Typography variant="span">-</Typography>
-                                <Typography variant="span">{flight.arrival_time}</Typography>
+                                <Typography variant="span"> -</Typography>
+                                <Typography variant="span">{id === "Arrival"? convertTo12HourFormat(flight.arrival_time) : convertTo12HourFormat(flight.departure_time)}
+                                </Typography>
                             </Typography>
                         </Box>
                         <Box className="col">

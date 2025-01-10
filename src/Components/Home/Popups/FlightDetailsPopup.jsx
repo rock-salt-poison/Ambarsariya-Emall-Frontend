@@ -53,7 +53,7 @@ function FlightDetailsPopup({ open, handleClose, id }) {
             {/* Left Column */}
             <Box className="col-1">
               <Typography variant="h2">{heading}</Typography>
-              <FlightTable id={id} data={data} />
+              <FlightTable id={heading} data={data} />
             </Box>
 
             {/* Right Column */}

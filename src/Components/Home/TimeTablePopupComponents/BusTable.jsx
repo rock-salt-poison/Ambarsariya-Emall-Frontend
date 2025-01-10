@@ -2,22 +2,16 @@ import React, { useState, useEffect} from 'react';
 import { Box, Table, TableBody, TableCell, TableRow, Typography } from '@mui/material'
 
 
-function createData(id, route, arrival, arrivedAt) {
-    return { id, route, arrival, arrivedAt };
-}
-
-const rows = [
-    createData('1', 'Pathankot to amritsar', 'Arrival : 05:30 AM', 'Arrived at : 06:30 AM'),
-    createData('2', 'Pathankot to amritsar', 'Arrival : 05:30 AM', 'Arrived at : 06:30 AM'),
-    createData('3', 'Pathankot to amritsar', 'Arrival : 05:30 AM', 'Arrived at : 06:30 AM'),
-    createData('4', 'Pathankot to amritsar', 'Arrival : 05:30 AM', 'Arrived at : 06:30 AM'),
-    createData('5', 'Pathankot to amritsar', 'Arrival : 05:30 AM', 'Arrived at : 06:30 AM'),
-];
-
-
-
-
 function BusTable({id, data}) {
+
+    const convertTo12HourFormat = (time) => {
+        if (!time) return "";
+        const [hours, minutes] = time.split(":");
+        const hour = parseInt(hours, 10);
+        const period = hour >= 12 ? "PM" : "AM";
+        const adjustedHour = hour % 12 || 12; // Convert 0 to 12 for 12-hour format
+        return `${adjustedHour}:${minutes} ${period}`;
+      };
 
   return (
     <Table className='table'>
@@ -34,10 +28,10 @@ function BusTable({id, data}) {
                 </TableCell>
                 <TableCell align="right" className='tableCell2'>
                     <Typography className='expectedTime'>
-                        {id} : {id === "Arrival"? row.arrival_time : row.departure_time}
+                        {id} : {id === "Arrival"? convertTo12HourFormat(row.arrival_time) : convertTo12HourFormat(row.departure_time)}
                     </Typography>
                     <Typography className='finalTime'>
-                        {id === "Arrival"? ("Arrived at: " +row.arrived_at) : ("Departed at: " + row.departed_at) }
+                        {id === "Arrival"? ("Arrived at: " +convertTo12HourFormat(row.arrived_at)) : ("Departed at: " + convertTo12HourFormat(row.departed_at)) }
                     </Typography>
                 </TableCell>
             </TableRow>
