@@ -26,6 +26,15 @@ function FlightDetailsPopup({ open, handleClose, id }) {
     }
   };
 
+  const convertTo12HourFormat = (time) => {
+    if (!time) return "";
+    const [hours, minutes] = time.split(":");
+    const hour = parseInt(hours, 10);
+    const period = hour >= 12 ? "PM" : "AM";
+    const adjustedHour = hour % 12 || 12; // Convert 0 to 12 for 12-hour format
+    return `${adjustedHour}:${minutes} ${period}`;
+  };
+
   return (
     <Dialog
       open={open}
@@ -49,15 +58,22 @@ function FlightDetailsPopup({ open, handleClose, id }) {
 
             {/* Right Column */}
             <Box className="col-2">
-              <Box component="img" src={flightImg} alt="Flight background" className="img1" />
+              <Box
+                component="img"
+                src={flightImg}
+                alt="Flight background"
+                className="img1"
+              />
               <Box className="content">
                 <Typography>
                   Date: {data[0]?.date ? data[0].date.split("T")[0] : "N/A"}
                 </Typography>
                 <Typography>
-                  {data[0]?.time_from && data[0]?.time_to
-                    ? `From ${data[0].time_from} to ${data[0].time_to}`
-                    : "Time not available"}
+                {data[0]?.time_from && data[0]?.time_to
+                  ? `Time : ${convertTo12HourFormat(
+                      data[0].time_from
+                    )} - ${convertTo12HourFormat(data[0].time_to)}`
+                  : "Time not available"}
                 </Typography>
               </Box>
             </Box>

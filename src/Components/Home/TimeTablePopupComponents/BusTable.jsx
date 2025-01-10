@@ -17,27 +17,27 @@ const rows = [
 
 
 
-function BusTable({id}) {
+function BusTable({id, data}) {
 
   return (
     <Table className='table'>
     <TableBody>
-        {rows.map((row) => (
+        {data?.map((row) => (
             <TableRow
                 key={row.id}
                 className='tableRow'
             >
                 <TableCell className='tableCell1'>
                     <Typography className='route'>
-                        {row.route}
+                        {row.travel_from} to {row.travel_to}
                     </Typography>
                 </TableCell>
                 <TableCell align="right" className='tableCell2'>
                     <Typography className='expectedTime'>
-                        {row.arrival}
+                        {id} : {id === "Arrival"? row.arrival_time : row.departure_time}
                     </Typography>
                     <Typography className='finalTime'>
-                        {row.arrivedAt}
+                        {id === "Arrival"? ("Arrived at: " +row.arrived_at) : ("Departed at: " + row.departed_at) }
                     </Typography>
                 </TableCell>
             </TableRow>
