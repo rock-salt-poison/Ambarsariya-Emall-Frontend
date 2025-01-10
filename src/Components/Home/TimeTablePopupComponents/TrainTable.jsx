@@ -11,14 +11,14 @@ import {
 
 function TrainTable({ id, data }) {
   const [status, setStatus] = useState("");
-
+  
   useEffect(() => {
     if (id === "Departure") {
       setStatus("Departed");
-    } else if (id == "Arrival") {
+    } else if (id === "Arrival") {
       setStatus("Arrived");
     }
-  }, []);
+  }, [id]);
 
   const convertTo12HourFormat = (time) => {
     if (!time) return "";
@@ -41,7 +41,7 @@ function TrainTable({ id, data }) {
             Time
           </TableCell>
           <TableCell className="th" align="right">
-            {status}
+            {status && status}
           </TableCell>
         </TableRow>
       </TableHead>

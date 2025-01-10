@@ -25,7 +25,9 @@ function TimeTablePopup({ open, handleClose }) {
   const handleLinkClick = (e, type) => {
     e.preventDefault();
     setOpenDetails(type);
+    console.log(type)
   };
+  console.log(openDetails)
 
   const handleCloseDetails = () => {
     setOpenDetails(null);
