@@ -183,3 +183,12 @@ export const get_travel_time = async (data) => {
       throw e;
   }
 }
+
+export const get_countries = async () => {
+  try{
+      const response = await axios.get(`${admin_link}/countries`);
+      return response.data;
+  }catch(e){
+      throw e;
+  }
+}
