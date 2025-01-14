@@ -19036,8 +19036,9 @@ input[readonly] {
       }
 
       &:last-child {
-        flex: 1;
+        // flex: 1;
         justify-content: center;
+        place-items: normal;
       }
 
       @include backButton(linear-gradient(to left, #af7b23, #8f6e3d),
@@ -19067,7 +19068,7 @@ input[readonly] {
       .cards {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        grid-template-rows: auto;
+        grid-template-rows: auto auto;
         gap: 20px;
         flex-wrap: wrap;
         max-width: 75%;
@@ -19102,7 +19103,7 @@ input[readonly] {
           .frame {
             @include flex-center(column, flex-start);
             align-self: stretch;
-            flex: 1;
+            flex: auto;
 
             .top_border,
             .bottom_border {
@@ -19172,7 +19173,7 @@ input[readonly] {
       .board{
         max-width: 60%;
         padding: 15px;
-        background: repeating-linear-gradient(303deg, rgba(120, 79, 14, 0.65) 50%, #b3813794, rgba(120, 79, 14, 0.65));
+        background: repeating-linear-gradient(303deg, #4c3724b3 50%, #7e5a39b3, #4c3724b3);
         border-radius: 10px;
         @include flex-center(column, flex-start);
         gap: 10px;
