@@ -1,0 +1,56 @@
+import React from "react";
+import { Box } from "@mui/material";
+import Header from "../Components/Serve/SupplyChain/Header";
+import NoticeBoard from "../Components/Home/NoticeComponents/NoticeBoard";
+import { useParams } from "react-router-dom";
+import NoticeDetail from "../Components/Home/NoticeComponents/NoticeDetail";
+
+function Notice() {
+  const { title } = useParams();
+
+  const convert_case_to_capitalize = (title) => {
+    if (title) {
+      const title_array = title.split("-");
+      const resp = title_array.map(
+        (word) => word.charAt(0).toUpperCase() + word.slice(1)
+      );
+      const heading = resp.join(" ");
+      return heading;
+    }
+  };
+
+  const data=[
+        {id:1, title:'District Administration', desc:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique dolores quod praesentium voluptatibus sit possimus accusamus soluta doloribus quasi consequuntur.', date:'01/01/2025'},
+        {id:2, title:'City Events', desc:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique dolores quod praesentium voluptatibus sit possimus accusamus soluta doloribus quasi consequuntur.', date:'01/10/2025'},
+        {id:3, title:'Ambarsariya Mall Events', desc:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique dolores quod praesentium voluptatibus sit possimus accusamus soluta doloribus quasi consequuntur.', date:'01/21/2025'},
+        {id:4, title:'Thought Of The Day', desc:'Lorem ipsum dolor sit amet consectetur adipisicing elit.', date:'01/01/2025'},
+    ]
+
+  return (
+    <Box className="notice_wrapper">
+      <Box className="row">
+        <Header
+          back_btn_link={
+            title ? "../AmbarsariyaMall/notice" : "../AmbarsariyaMall"
+          }
+          nextBtn={false}
+          title_container={true}
+          title={title ? convert_case_to_capitalize(title) : "Notice"}
+          redirectTo={title ? -1 : "../AmbarsariyaMall"}
+        />
+        <Box className="col">
+          {title ? (
+            <NoticeDetail
+              title={convert_case_to_capitalize(title)}
+              data={data}
+            />
+          ) : (
+            <NoticeBoard data={data} />
+          )}
+        </Box>
+      </Box>
+    </Box>
+  );
+}
+
+export default Notice;

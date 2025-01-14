@@ -18,6 +18,7 @@ $visionBgImg : '../Utils/images/visionBgImg.jpg';
 $whoweareBgImg :'../Utils/images/whoweareBgImg.webp';
 $aboutUsBgImg: '../Utils/images/aboutusBgImg.webp';
 $logoBgImg: '../Utils/images/logo_bg.webp'; 
+$noticeBgImg : '../Utils/images/notice_bg.webp';
 
 //Sell
 $sellBgImg: '../Utils/images/Sell/sell_bg.webp';
@@ -143,6 +144,7 @@ $font-Metropolis : '../Utils/fonts/Metropolis.ttf';
 $font-LedNotice : '../Utils/fonts/LcdPhone.ttf';
 $font-Bobby-Jones-Soft : '../Utils/fonts/Bobby-Jones-Soft.otf';
 $font-digital : '../Utils/fonts/digital-7.ttf';
+$fontProxima : '../Utils/fonts/ProximaNovaFont.otf';
 
 @font-face {
     font-family: 'EFCO';
@@ -170,6 +172,7 @@ $font-digital : '../Utils/fonts/digital-7.ttf';
     font-weight: normal;
     font-style: normal;
 }
+
 @font-face {
     font-family: 'Bobby-Jones-Soft';
     src: url(#{$font-Bobby-Jones-Soft}) format('opentype');
@@ -180,6 +183,13 @@ $font-digital : '../Utils/fonts/digital-7.ttf';
 @font-face {
     font-family: 'Digital';
     src: url(#{$font-digital}) format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Proxima';
+    src: url(#{$fontProxima}) format('opentype');
     font-weight: normal;
     font-style: normal;
 }

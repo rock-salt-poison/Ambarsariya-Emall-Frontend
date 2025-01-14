@@ -44,6 +44,7 @@ export default function Home() {
         const logoParentElement = e.target.closest('.logoParent');
         const btnsParentElement = e.target.closest('.sell, .serve, .socialize');
         const clockParentElement = e.target.closest('.sub-wrapper');
+        const noticeParentElement = e.target.closest('.noticeBoardParent');
 
 
         if (timeTableOrAqiElement) {
@@ -92,6 +93,15 @@ export default function Home() {
                 stopLoading();
                 navigate('/AmbarsariyaMall/clock');
             }, 800);
+            audio.play();
+        }else if (noticeParentElement){
+            e.target.parentElement.classList.add('reduceSize3');
+            setTimeout(() => {
+                e.target.parentElement.classList.remove('reduceSize3');
+            }, 500);
+            setTimeout(() => {
+                navigate('notice');
+            }, 1000);
             audio.play();
         }
 
@@ -142,7 +152,7 @@ export default function Home() {
 
                 {/* Fourth Row Notice & Radio Board */}
                 <Box>
-                    <Boards parentClassName="noticeBoardParent" text="Notice" imgClassName="noticeBoardImg" imgSrc={noticeBoardImg} alt="notice-board" />
+                    <Boards parentClassName="noticeBoardParent" text="Notice" imgClassName="noticeBoardImg" imgSrc={noticeBoardImg} alt="notice-board" handleClick = {(e) => { handleClick(e) }}/>
                     <Boards parentClassName="radioBoardParent" text="Radio" imgClassName="radioBoardImg" alt="radio-board" imgSrc={RadioboardImg} />
                 </Box>
 

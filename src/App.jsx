@@ -9,6 +9,7 @@ import ServeRoutes from './Routes/ServeRoutes';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/autoplay';
+import Notice from './Pages/Notice';
 
 function App() {
   
@@ -16,6 +17,8 @@ function App() {
     <>
       <Routes>
         <Route path="/AmbarsariyaMall" element={<Home />} />
+        <Route path="/AmbarsariyaMall/notice" element={<Notice />} />
+        <Route path="/AmbarsariyaMall/notice/:title" element={<Notice />} />
         <Route path="/AmbarsariyaMall/clock" element={<ClockPage />} />
         <Route path="/AmbarsariyaMall/sell/*" element={<SellRoutes />} />
         <Route
