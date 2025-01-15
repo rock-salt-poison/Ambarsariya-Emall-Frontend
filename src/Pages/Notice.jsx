@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import Header from "../Components/Serve/SupplyChain/Header";
 import NoticeBoard from "../Components/Home/NoticeComponents/NoticeBoard";
 import { useParams } from "react-router-dom";
 import NoticeDetail from "../Components/Home/NoticeComponents/NoticeDetail";
+import { get_notice } from "../API/fetchExpressAPI";
 
 function Notice() {
   const { title } = useParams();
+  const [data, setData] = useState([]);
 
   const convert_case_to_capitalize = (title) => {
     if (title) {
@@ -19,12 +21,27 @@ function Notice() {
     }
   };
 
-  const data=[
-        {id:1, title:'District Administration', desc:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique dolores quod praesentium voluptatibus sit possimus accusamus soluta doloribus quasi consequuntur.', date:'01/01/2025'},
-        {id:2, title:'City Events', desc:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique dolores quod praesentium voluptatibus sit possimus accusamus soluta doloribus quasi consequuntur.', date:'01/10/2025'},
-        {id:3, title:'Ambarsariya Mall Events', desc:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique dolores quod praesentium voluptatibus sit possimus accusamus soluta doloribus quasi consequuntur.', date:'01/21/2025'},
-        {id:4, title:'Thought Of The Day', desc:'Lorem ipsum dolor sit amet consectetur adipisicing elit.', date:'01/01/2025'},
-    ]
+  const fetch_notice_from_database = async () => {
+    try{
+      const  resp = await get_notice();
+      if(resp){
+        setData(resp.data);
+      }
+      console.log(resp.data);
+    }catch(e){
+      console.log(e);
+    }
+  }
+
+  useEffect(()=>{
+    fetch_notice_from_database();
+  },[])
+  // const data=[
+  //       {id:1, title:'District Administration', desc:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique dolores quod praesentium voluptatibus sit possimus accusamus soluta doloribus quasi consequuntur.', date:'01/01/2025'},
+  //       {id:2, title:'City Events', desc:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique dolores quod praesentium voluptatibus sit possimus accusamus soluta doloribus quasi consequuntur.', date:'01/10/2025'},
+  //       {id:3, title:'Ambarsariya Mall Events', desc:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique dolores quod praesentium voluptatibus sit possimus accusamus soluta doloribus quasi consequuntur.', date:'01/21/2025'},
+  //       {id:4, title:'Thought Of The Day', desc:'Lorem ipsum dolor sit amet consectetur adipisicing elit.', date:'01/01/2025'},
+  //   ]
 
   return (
     <Box className="notice_wrapper">

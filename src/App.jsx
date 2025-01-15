@@ -18,7 +18,7 @@ function App() {
       <Routes>
         <Route path="/AmbarsariyaMall" element={<Home />} />
         <Route path="/AmbarsariyaMall/notice" element={<Notice />} />
-        <Route path="/AmbarsariyaMall/notice/:title" element={<Notice />} />
+        <Route path="/AmbarsariyaMall/notice/:title/:id" element={<Notice />} />
         <Route path="/AmbarsariyaMall/clock" element={<ClockPage />} />
         <Route path="/AmbarsariyaMall/sell/*" element={<SellRoutes />} />
         <Route
