@@ -19620,6 +19620,11 @@ input[readonly] {
             align-self: stretch;
           }
 
+          .img{
+            height: 200px;
+            object-fit: cover;
+          }
+
           .details {
             @include flex-center(row, space-between);
             gap: 10px;
@@ -19642,8 +19647,20 @@ input[readonly] {
             }
 
             .desc {
+              @include flex-center(column, flex-start);
+              gap: 10px;
               @include homepage-buttons("Proxima", 16px, $light-yellow, "none");
               @include hover-scale(1, 0s);
+
+              & > *{
+                margin: 0px;
+              }
+
+              p{
+                @include homepage-buttons("Proxima", 16px, $light-yellow, "none");
+                @include hover-scale(1, 0s);
+                line-height: 24px;
+              }
             }
           }
         }

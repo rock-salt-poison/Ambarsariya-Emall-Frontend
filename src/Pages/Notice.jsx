@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import Header from "../Components/Serve/SupplyChain/Header";
 import NoticeBoard from "../Components/Home/NoticeComponents/NoticeBoard";
 import { useParams } from "react-router-dom";
@@ -9,6 +9,7 @@ import { get_notice } from "../API/fetchExpressAPI";
 function Notice() {
   const { title } = useParams();
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const convert_case_to_capitalize = (title) => {
     if (title) {
@@ -23,9 +24,11 @@ function Notice() {
 
   const fetch_notice_from_database = async () => {
     try{
+      setLoading(true);
       const  resp = await get_notice();
       if(resp){
         setData(resp.data);
+        setLoading(false);
       }
       console.log(resp.data);
     }catch(e){
@@ -45,6 +48,11 @@ function Notice() {
 
   return (
     <Box className="notice_wrapper">
+      {loading && (
+        <Box className="loading">
+          <CircularProgress />
+        </Box>
+      )}
       <Box className="row">
         <Header
           back_btn_link={
