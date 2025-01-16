@@ -34,9 +34,9 @@ function NoticeBoard({data}) {
                 <Box className="top_border"><Box className="line"></Box></Box>
                 <Link className="middle" to={`${item.title}/${item.id}`}>
                     <Typography className="title">{item.title}</Typography>
-                    <Box className="desc" dangerouslySetInnerHTML={{
+                    <Typography className="desc" dangerouslySetInnerHTML={{
                       __html: `${item.message || ""}`,
-                    }}></Box>
+                    }}></Typography>
                     <Typography className="date">{(item.from_date).split('T')[0]} - {(item.to_date).split('T')[0]}</Typography>
                 </Link>
                 <Box className="bottom_border"><Box className="line"></Box></Box>

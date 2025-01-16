@@ -107,11 +107,11 @@ function NoticeDetail(props) {
             ></Box>
           </Box>
 
-          {notice?.from && <Box className="col-auto">
+        </Box>
+          {notice?.notice_from && <Box className="col-auto">
             <Typography className="heading">From</Typography>
             <Typography className="desc">{notice?.notice_from}</Typography>
           </Box>}
-        </Box>
       </Box>
       <Box className="board_pins">
         <Box className="circle"></Box>
