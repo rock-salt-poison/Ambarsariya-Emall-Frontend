@@ -19551,6 +19551,7 @@ input[readonly] {
               .desc {
                 @include flex-center(column, flex-start);
                 gap: 10px;
+                place-items: normal;
 
                 p {
                   @include homepage-buttons("Proxima", 18px, $white, "none");
