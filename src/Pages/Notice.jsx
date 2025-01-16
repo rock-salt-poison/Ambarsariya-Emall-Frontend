@@ -64,7 +64,7 @@ function Notice() {
           title={title ? convert_case_to_capitalize(title) : "Notice"}
           redirectTo={title ? -1 : "../AmbarsariyaMall"}
         />
-        {data ? (<Box className="col">
+        {data?.length>0 ? (<Box className="col">
           {title ? (
             <NoticeDetail
               title={convert_case_to_capitalize(title)}
