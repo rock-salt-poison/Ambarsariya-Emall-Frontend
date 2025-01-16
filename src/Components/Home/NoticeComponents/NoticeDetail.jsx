@@ -66,6 +66,26 @@ function NoticeDetail(props) {
             <Typography className="heading">Time</Typography>
             <Typography className="desc">{notice?.time}</Typography>
           </Box>}
+
+          {notice?.entry_fee && <Box className="col-auto">
+            <Typography className="heading">Entry Fee</Typography>
+            <Typography className="desc">{notice?.entry_fee}</Typography>
+          </Box>}
+
+          {notice?.shop_name && <Box className="col-auto">
+            <Typography className="heading">Shop Name</Typography>
+            <Typography className="desc">{notice?.shop_name}</Typography>
+          </Box>}
+
+          {notice?.member_name && <Box className="col-auto">
+            <Typography className="heading">Member Name</Typography>
+            <Typography className="desc">{notice?.member_name}</Typography>
+          </Box>}
+
+          {notice?.community && <Box className="col-auto">
+            <Typography className="heading">Community</Typography>
+            <Typography className="desc">{notice?.communtiy}</Typography>
+          </Box>}
           
           <Box className="col-auto">
             <Typography className="heading">Date</Typography>
@@ -75,7 +95,7 @@ function NoticeDetail(props) {
             </Typography>
           </Box>
         </Box>
-        {notice?.image_src && <Box className="img" component="img" src={notice?.image_src} />}
+        {notice?.image_src && <Box className="img" component="img" src={`${process.env.REACT_APP_EXPRESS_API_LINK}/notice_images/${notice.image_src}`} />}
         <Box className="notice">
           <Box className="col-auto">
             <Typography className="heading">Message</Typography>
@@ -86,6 +106,11 @@ function NoticeDetail(props) {
               }}
             ></Box>
           </Box>
+
+          {notice?.from && <Box className="col-auto">
+            <Typography className="heading">From</Typography>
+            <Typography className="desc">{notice?.notice_from}</Typography>
+          </Box>}
         </Box>
       </Box>
       <Box className="board_pins">

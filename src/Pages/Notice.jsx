@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, CircularProgress } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import Header from "../Components/Serve/SupplyChain/Header";
 import NoticeBoard from "../Components/Home/NoticeComponents/NoticeBoard";
 import { useParams } from "react-router-dom";
@@ -33,6 +33,7 @@ function Notice() {
       console.log(resp.data);
     }catch(e){
       console.log(e);
+      setLoading(false);
     }
   }
 
@@ -63,7 +64,7 @@ function Notice() {
           title={title ? convert_case_to_capitalize(title) : "Notice"}
           redirectTo={title ? -1 : "../AmbarsariyaMall"}
         />
-        <Box className="col">
+        {data ? (<Box className="col">
           {title ? (
             <NoticeDetail
               title={convert_case_to_capitalize(title)}
@@ -72,7 +73,9 @@ function Notice() {
           ) : (
             <NoticeBoard data={data} />
           )}
-        </Box>
+        </Box>) : <Box className="col error">
+          <Typography className="desc">No New Notice</Typography>
+        </Box> }
       </Box>
     </Box>
   );

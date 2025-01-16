@@ -19470,6 +19470,17 @@ input[readonly] {
         }
       }
 
+      &.error{
+        @include flex-center(row, center);
+        flex: 1;
+
+        .desc {
+          @include homepage-buttons("Bobby-Jones-Soft", 24px, $light-yellow, "dark-yellow-shadow");
+          @include hover-scale(1, 0s);
+          text-align: center;
+        }
+      }
+
       .cards {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -19635,11 +19646,12 @@ input[readonly] {
             @include flex-center(column, flex-start);
             place-items: flex-start;
             gap: 5px;
+            flex-wrap: wrap;
 
             .heading {
               @include homepage-buttons(
                 "Bobby-Jones-Soft",
-                15px,
+                16px,
                 $yellow,
                 "none"
               );
@@ -19650,7 +19662,7 @@ input[readonly] {
             .desc {
               @include flex-center(column, flex-start);
               gap: 10px;
-              @include homepage-buttons("Proxima", 16px, $light-yellow, "none");
+              @include homepage-buttons("Proxima", 17px, $light-yellow, "none");
               @include hover-scale(1, 0s);
 
               & > *{
@@ -19658,7 +19670,7 @@ input[readonly] {
               }
 
               p{
-                @include homepage-buttons("Proxima", 16px, $light-yellow, "none");
+                @include homepage-buttons("Proxima", 17px, $light-yellow, "none");
                 @include hover-scale(1, 0s);
                 line-height: 24px;
               }
