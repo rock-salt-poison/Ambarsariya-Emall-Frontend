@@ -9,6 +9,7 @@ import ServeRoutes from './Routes/ServeRoutes';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/autoplay';
+import 'swiper/css/pagination';
 import Notice from './Pages/Notice';
 
 function App() {

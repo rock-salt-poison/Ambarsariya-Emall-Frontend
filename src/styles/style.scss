@@ -2729,6 +2729,7 @@ a {
     @include flex-center(column, flex-start);
     place-items: normal;
     gap: 70px;
+    flex: 1;
     min-height: 100%;
 
     .header {
@@ -2780,10 +2781,11 @@ a {
 
     .content {
       // padding: 0px 260px;
-      @include flex-center(column, center);
+      @include flex-center(column, flex-start);
       place-items: normal;
       align-items: center;
       gap: 0px;
+      flex: 1;
 
       .row {
         @include flex-center(row, space-between);
@@ -19606,8 +19608,31 @@ input[readonly] {
         gap: 10px;
         place-items: normal;
         align-self: stretch;
-        margin-top: 20px;
+        margin: 20px auto 0;
 
+        .swiper {
+          max-width: 100%;
+          flex: 1;
+          height: 100%;
+
+          .card img {
+            max-width: 100%;            
+            object-fit: cover;
+          }
+
+          .swiper-button-prev{
+              color: $yellow !important;
+          }
+
+          .swiper-button-prev, .swiper-button-next {
+            color: $yellow !important;
+          }
+        }
+
+        .swiper-button-next,
+      .swiper-button-prev {
+        color: $yellow;
+      }
         .board_pins {
           @include flex-center(row, space-between);
           padding: 0px;
@@ -19639,6 +19664,8 @@ input[readonly] {
           .img{
             height: 200px;
             object-fit: cover;
+            box-shadow: 0px 4px 4px #00000073;
+            border: 3px solid $yellow;
           }
 
           .details {

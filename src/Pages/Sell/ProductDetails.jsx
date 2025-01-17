@@ -4,10 +4,6 @@ import { Link, useParams } from 'react-router-dom';
 import Button2 from '../../Components/Home/Button2';
 import tshirt from '../../Utils/images/Sell/products/tshirt.jpg';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/css';
-import 'swiper/css/pagination';
-import 'swiper/css/navigation'; // Import navigation styles
-
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 
 function ProductDetails() {
