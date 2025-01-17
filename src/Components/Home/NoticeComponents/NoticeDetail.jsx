@@ -113,6 +113,18 @@ function NoticeDetail() {
                         <Typography className="desc">{notice.time}</Typography>
                       </Box>
                     )}
+                    {notice?.shop_name && (
+                      <Box className="col-auto">
+                        <Typography className="heading">Shop</Typography>
+                        <Typography className="desc">{notice.shop_name}</Typography>
+                      </Box>
+                    )}
+                    {notice?.community_name && (
+                      <Box className="col-auto">
+                        <Typography className="heading">Community</Typography>
+                        <Typography className="desc">{notice.community_name}</Typography>
+                      </Box>
+                    )}
                     {notice?.entry_fee && (
                       <Box className="col-auto">
                         <Typography className="heading">Entry Fee</Typography>
