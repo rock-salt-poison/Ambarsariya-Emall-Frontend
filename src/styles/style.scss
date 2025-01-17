@@ -19724,7 +19724,7 @@ input[readonly] {
   @include full-absolute(0px, 0px, 0px, 0px);
   position: fixed;
   z-index: 9999;
-  @include flex-center(row, center);
+  @include flex-center(row, center !important);
   width: 100%;
   height: 100%;
   background-color: #9b643d80;

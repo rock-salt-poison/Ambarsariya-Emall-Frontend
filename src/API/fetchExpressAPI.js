@@ -206,3 +206,12 @@ export const get_notice = async (title, id) => {
       throw e;
   }
 }
+
+export const get_led_board_message = async () => {
+  try{
+      const response = await axios.get(`${admin_link}/led-board-messages`);
+      return response.data;
+  }catch(e){
+      throw e;
+  }
+} 
