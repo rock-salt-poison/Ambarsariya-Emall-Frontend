@@ -19127,6 +19127,35 @@ input[readonly] {
     }
   }
 
+  @media (max-width:992px){
+    .row{
+      .col{
+        &.eshop{
+          .form_col{
+            width: 43%;
+
+            form{
+              .form-control{
+                .form-row{
+                  flex-wrap: wrap;
+                  gap: 10px;
+
+                  .label{
+                    width: 100%;
+                  }
+
+                  .field_container{
+                    width: 100%;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
   @media (max-width: 768px) {
     .row {
       .col {
@@ -19137,6 +19166,12 @@ input[readonly] {
             width: 100%;
             flex: auto;
             order: 1;
+          }
+        }
+
+        &.eshop{
+          .form_col{
+            width: 80%;
           }
         }
       }
@@ -19179,6 +19214,11 @@ input[readonly] {
                 font-size: 22px !important;
               }
             }
+          }
+        }
+        &.eshop{
+          .form_col{
+            width: 100%;
           }
         }
       }
