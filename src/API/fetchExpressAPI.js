@@ -215,3 +215,23 @@ export const get_led_board_message = async () => {
       throw e;
   }
 } 
+
+export const post_products = async (data) => {
+  try{
+    const response = await axios.post(`${link}/sell/products`, data);
+    return response.data;
+  }catch(e){
+    throw e;
+  }
+}
+
+export const get_products = async (shop_no) => {
+  try{
+    if(shop_no){
+      const response = await axios.get(`${link}/sell/products/${shop_no}`);
+      return response.data;
+    }
+  }catch(e){
+    throw e;
+  }
+}

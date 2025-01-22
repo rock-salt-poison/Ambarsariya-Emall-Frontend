@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 
-function DashboardComponents() {
+function DashboardComponents({data}) {
 
     const card_data = [
         { id: 1, heading: 'Today\'s Sale Orders', value: '1249' },

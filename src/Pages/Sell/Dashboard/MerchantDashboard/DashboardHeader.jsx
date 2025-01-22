@@ -8,7 +8,7 @@ import { useParams } from 'react-router-dom';
 import CardBoardPopup from '../../../../Components/CardBoardPopupComponents/CardBoardPopup';
 import EditShopForm_PopupContent from './EditShopForm_PopupContent';
 
-function DashboardHeader() {
+function DashboardHeader({data}) {
     const { token, edit } = useParams();
     const [ openPopup, setOpenPopup ] = useState(false);
 
@@ -29,16 +29,16 @@ function DashboardHeader() {
     </Box>
     <Box className="sub-col">
         <Box className="title">
-            <Typography className='shop_name'>Madhav Stationary</Typography>
+            <Typography className='shop_name'>{data?.business_name}</Typography>
 
             <Box className="domain_sector">
             <Typography>
                 <Typography component="span" className='heading'>Domain: </Typography>
-                Retail
+                {data?.domain_name}
             </Typography>
             <Typography>
                 <Typography component="span" className='heading'>Sector: </Typography>
-                Wholesale
+                {data?.sector_name}
             </Typography>
 
             </Box>

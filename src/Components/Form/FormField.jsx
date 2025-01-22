@@ -1,6 +1,8 @@
 import React from 'react';
 import { Box, Typography, TextField, Select, MenuItem, Checkbox, FormControlLabel, Button, Slider, ListItemText, Switch, InputAdornment, RadioGroup, Radio } from '@mui/material';
 import MuiPhoneNumber from 'mui-phone-number';
+import Address_Google_Map_Field from './Address_Google_Map_Field';
+import { Link } from 'react-router-dom';
 
 const FormField = ({
   icon,
@@ -26,7 +28,8 @@ const FormField = ({
   handleFocus,
   handleBlur, 
   adornmentValue, accept,rows,radioItems,
-  additionalProps
+  additionalProps,
+  handleDownload
 }) => {
 
   const marks = getSliderMarks ? getSliderMarks(name) : [];
@@ -81,7 +84,16 @@ const FormField = ({
               label={value ? 'On' : 'Off'}
             />
           </>
-        ) : type === 'file' ? (
+        ) : type === 'address' ? (
+          <Box>
+            <Typography className="label">{label}</Typography>
+            <Address_Google_Map_Field
+              value={value}
+              onChange={(newValue) =>
+                onChange({ target: { name, value: newValue?.description || '' } })
+              }
+            />
+          </Box>): type === 'file' ? (
           <>
             {icon ? <Box component="img" src={icon} alt={label} className="icon" /> : <Typography className="label">{label}</Typography>}
             <Box className="field_container">
@@ -125,7 +137,11 @@ const FormField = ({
               />
             </Box>
           </>
-        ) : (
+        ) : type==="Download file" ? (
+          <Button onClick={(e)=>handleDownload(e, name)} className='btn-download'>
+           {label}
+          </Button>
+        ):(
           <>
             <Typography className={`label ${emailLabelClassname ? emailLabelClassname : ''}`}>
               {icon ? <Box component="img" src={icon} alt={label} className="icon" /> : label}

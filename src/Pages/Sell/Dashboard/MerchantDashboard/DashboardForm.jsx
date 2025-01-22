@@ -3,33 +3,38 @@ import { Box, Button } from "@mui/material";
 import GeneralLedgerForm from "../../../../Components/Form/GeneralLedgerForm";
 import ribbon from "../../../../Utils/images/Sell/dashboard/merchant_dashboard/ribbon.svg";
 import { useSelector } from "react-redux";
-import { getCategories, getShopUserData, getUser } from "../../../../API/fetchExpressAPI";
+import { getCategories, getShopUserData, getUser, post_products } from "../../../../API/fetchExpressAPI";
+import { useParams } from "react-router-dom";
+import product_csv from '../../../../Sheets/Ambarsariya Mall - Product CSV.csv'
+import item_csv from '../../../../Sheets/Ambarsariya Mall - Item CSV.csv'
+import Papa from "papaparse";
+import CustomSnackbar from "../../../../Components/CustomSnackbar";
 
-function DashboardForm(props) {
+function DashboardForm() {
 
   // Initial form data and errors for 4 forms
   const initialData = {
     form1: {
       product_category: "",
-      product_file: "",
+      csv_file: "",
       trend_or_exp_date: "",
-      catalogue: "",
+      // catalogue: "",
     },
     form2: {
       products: "",
-      item_csv_file: "",
+      csv_file: "",
       price: 0,
       images_or_videos: "",
     },
     form3: {
       items: "",
-      sku_id_csv: "",
+      csv_file: "",
       quantity: 0,
       variation_specifications_images: "",
     },
     form4: {
       sku_id: "",
-      rku_id_csv: "",
+      csv_file: "",
       stock_space: 0,
       upload: "",
     },
@@ -39,16 +44,26 @@ function DashboardForm(props) {
   const [errors, setErrors] = useState({});
   const [categories, setCategories] = useState([]);
   const user_access_token = useSelector((state) => state.auth.userAccessToken);
+  const [csvData, setCsvData] = useState([]);
+  const [shopNo, setShopNo] = useState('');
+  const {token} = useParams();
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
 
   const fetchData = async (token) => {
     try{
       const shopUsersData = (await getShopUserData(token))[0];
       if(shopUsersData){
-        const domain_id = shopUsersData.domain_id;
-        const sector_id = shopUsersData.sector_id;
-        const categories_result = await getCategories({domain_id, sector_id});
-        const formattedCategories  = categories_result.map((data)=>({ id: data.category_id, name: data.category_name }));
-        setCategories(formattedCategories); 
+        setShopNo(shopUsersData.shop_no);
+        const categoriesList = shopUsersData.category_name.map((category, index) => ({
+          name: category,
+          id: shopUsersData.category[index] // Assuming categories and ids are aligned in the same order
+        }));
+  
+        setCategories(categoriesList);      
       }
     }catch(e){
       console.log("Error while fetching : ", e);
@@ -58,8 +73,7 @@ function DashboardForm(props) {
   useEffect(()=>{
     const fetchShopToken = async () => {
       const shop_token = (await getUser(user_access_token))[0].shop_access_token;
-
-      if(shop_token){
+      if(shop_token === token){
         fetchData(shop_token);
       }
 
@@ -67,6 +81,21 @@ function DashboardForm(props) {
     fetchShopToken();
   }, [user_access_token])
 
+  const handleDownload = (e, name) => {
+    if(name==="product_csv"){
+      const link = document.createElement("a");
+      link.href = product_csv;  // File URL or path
+      link.download = "Product CSV.csv";  // Specify the downloaded file name
+      link.click();
+    }
+    if(name==="item_csv"){
+      const link = document.createElement("a");
+      link.href = item_csv;  // File URL or path
+      link.download = "Item CSV.csv";  // Specify the downloaded file name
+      link.click();
+    }
+  };
+console.log(categories)
   // Form fields configuration (for each form)
   const formFields = {
     form1: [
@@ -74,14 +103,14 @@ function DashboardForm(props) {
         id: 1,
         label: "Product Category (s)",
         name: "product_category",
-        type: "select-check",
+        type: "select",
         placeholder: "Select Category(s)",
         options: categories.map((cat) => cat.name),
       },
       {
         id: 2,
         label: "Upload Product File",
-        name: "product_file",
+        name: "csv_file",
         type: "file",
         placeholder: "Choose product file",
         accept: ".csv",
@@ -92,12 +121,19 @@ function DashboardForm(props) {
         name: "trend_or_exp_date",
         type: "date",
       },
+      // {
+      //   id: 4,
+      //   label: "Upload Catalogue",
+      //   name: "catalogue",
+      //   type: "file",
+      //   placeholder: "Choose file",
+      // },
       {
-        id: 4,
-        label: "Upload Catalogue",
-        name: "catalogue",
-        type: "file",
-        placeholder: "Choose file",
+        id: 5,
+        label: "Click here to download file",
+        name: "product_csv",
+        type: 'Download file',
+        handleDownload: handleDownload
       },
     ],
     form2: [
@@ -112,7 +148,7 @@ function DashboardForm(props) {
       {
         id: 2,
         label: "Upload Item CSV",
-        name: "item_csv_file",
+        name: "csv_file",
         type: "file",
         placeholder: "Choose file",
         accept: ".csv",
@@ -131,6 +167,13 @@ function DashboardForm(props) {
         type: "file",
         placeholder: "Choose file",
       },
+      {
+        id: 5,
+        label: "Click here to download file",
+        name: "item_csv",
+        type: 'Download file',
+        handleDownload: handleDownload
+      },
     ],
     form3: [
       {
@@ -144,7 +187,7 @@ function DashboardForm(props) {
       {
         id: 2,
         label: "Upload SKU Id CSV",
-        name: "sku_id_csv",
+        name: "csv_file",
         type: "file",
         placeholder: "Choose file",
         accept: ".csv",
@@ -162,6 +205,13 @@ function DashboardForm(props) {
         type: "file",
         placeholder: "Choose file",
       },
+      {
+        id: 5,
+        label: "Click here to download file",
+        name: "sku_id_csv",
+        type: 'Download file',
+        handleDownload: handleDownload
+      },
     ],
     form4: [
       {
@@ -175,7 +225,7 @@ function DashboardForm(props) {
       {
         id: 2,
         label: "Upload RKU Id CSV",
-        name: "rku_id_csv",
+        name: "csv_file",
         type: "file",
         placeholder: "Choose file",
         accept: ".csv",
@@ -193,44 +243,152 @@ function DashboardForm(props) {
         type: "file",
         placeholder: "Choose file",
       },
+      {
+        id: 5,
+        label: "Click here to download file",
+        name: "rku_csv",
+        type: 'Download file',
+        handleDownload: handleDownload
+      },
     ],
   };
 
   const handleChange = (event, formName) => {
     const { name, value, files, type } = event.target;
-    let fieldValue = type === "file" ? files[0] : value;
+    let file = type === "file" ? files[0] : value;
+    
     // Update formData
     setFormData((prevFormData) => ({
       ...prevFormData,
       [formName]: {
         ...prevFormData[formName],
-        [name]: fieldValue,
+        [name]: file,
       },
     }));
   
    setErrors({...errors, [name]: null});
   };
 
+  
+
   const validateForm = (formName) => {
     const newErrors = {};
     formFields[formName].forEach((field) => {
-      const name = field.name;
-      if (!formData[formName][name]) {
-        newErrors[name] = `${field.label} is required.`;
+      if(field.type !== "Download file"){
+        const name = field.name;
+        if (!formData[formName][name]) {
+          newErrors[name] = `${field.label} is required.`;
+        }
       }
     });
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (event, formName) => {
+  const handleSubmit = async (event, formName) => {
     event.preventDefault();
     if (validateForm(formName)) {
-      console.log(formData[formName]);
-    } else {
-      console.log(errors[formName]);
-    }
+      const file = formData[formName].csv_file;
+      if (file && file.type === "text/csv") {
+        Papa.parse(file, {
+          header: true, // Automatically map the CSV headers to object keys
+          skipEmptyLines: true, // Skip empty lines
+          complete: async (result) => {
+            // Filter out rows where "Product Name" is empty
+            const filteredData = result.data.filter((row) => row["Product Name"] && row["Product Name"].trim() !== "");
+  
+            const processedData = filteredData.map((product) => {
+              // Process product images and ensure empty arrays are handled correctly
+              const productImages = [
+                product["Product Image 1"],
+                product["Product Image 2"],
+                product["Product Image 3"],
+                product["Product Image 4"],
+              ];
+            
+              // Ensure that product_images is an array, if no valid images, set as an empty array
+              const validProductImages = productImages.filter((image) => image && image.trim() !== "");
+              const finalProductImages = validProductImages.length > 0 ? validProductImages : [""];  // Empty array is treated as an empty string to be formatted as '{}'
+            
+              // Process the product data
+              return {
+                shop_no: shopNo,
+                category: categories.find((cat) => cat.name === formData["form1"].product_category)?.id, 
+                product_name: product["Product Name"],
+                product_type: product["Product Type"],
+                product_description: product["Product Description"],
+                price: product["Price"],
+                brand: product["Brand"],
+                product_images: finalProductImages, // Ensure it's an empty array or an array with valid values
+                product_dimensions_width_in_cm: product["Product Dimension Width (in cm)"],
+                product_dimensions_height_in_cm: product["Product Dimension Height (in cm)"],
+                product_dimensions_breadth_in_cm: product["Product Dimension Breadth (in cm)"],
+                product_weight_in_kg: product["Product Weight (in kg)"],
+                packing: product["Packing"],
+                product_style: product["Product Style"],
+                inventory_or_stock_quantity: product["Inventory/Stock Quantity"],
+                shipping_information: product["Shipping Information"],
+                variant_group: product["Variant Group"],
+                features: product["Attributes/Features"],
+                keywords: product["Keywords/Tags Metadata"],
+                warranty_or_guarantee: product["Warranty/Guarantee"],
+                expiry_date: product["Information/Expiry Date"],
+                manufacturer_details: product["Manufacturer Details"],
+                manufacturing_date: product["Manufacturing Date"],
+                compliance_and_certifications: product["Compliance and Certifications"],
+                return_policy: product["Return Policy"],
+                customer_reviews_and_ratings: product["Customer Reviews and Ratings"],
+                promotion_information: product["Promotion Information"],
+                related_products: product["Related Products"] ? product["Related Products"] : [],  // Use empty array if missing
+                variation_1: product["Variation 1"],
+                variation_2: product["Variation 2"],
+                variation_3: product["Variation 3"],
+                variation_4: product["Variation 4"],
+                selling_price: product["Selling Price"],
+                product_catalog: product["product_catalog"],
+              };
+            });
+            
+            const data = { products: processedData };  
+            try{
+              const resp = await post_products(data);
+              
+              setSnackbar({
+                open: true,
+                message: resp.message,
+                severity: "success",
+              });
+            }catch(e){
+              console.log(e)
+              setSnackbar({
+                open: true,
+                message: e.response.data.error,
+                severity: "error",
+              });
+            }
+          },
+          error: (err) => {
+            console.error("Error parsing CSV:", err);
+            setSnackbar({
+              open: true,
+              message: "Error parsing the CSV file. Please try again.",
+              severity: "error",
+            });
+            setErrors({ ...errors, field: "Error parsing the CSV file. Please try again." });
+          },
+        });
+      } else {
+        console.log("Invalid file type. Please upload a CSV file.");
+        setSnackbar({
+          open: true,
+          message: "Invalid file type. Please upload a CSV file.",
+          severity: "error",
+        });
+        setErrors({ ...errors, field: "Invalid file type. Please upload a CSV file." });
+      }
+    } 
   };
+  
 
   // Array for rendering each form
   const formNames = ["form1", "form2", "form3", "form4"];
@@ -247,9 +405,16 @@ function DashboardForm(props) {
               formData={formData[formName]}
               onChange={(e) => handleChange(e, formName)}
               errors={errors}
+              handleDownload={handleDownload}
             />
           </Box>
         ))}
+        <CustomSnackbar
+              open={snackbar.open}
+              handleClose={() => setSnackbar({ ...snackbar, open: false })}
+              message={snackbar.message}
+              severity={snackbar.severity}
+            />
       </Box>
   );
 }

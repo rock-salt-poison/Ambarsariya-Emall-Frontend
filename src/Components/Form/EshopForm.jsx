@@ -26,7 +26,6 @@ const EshopForm = () => {
     daily_walkin: 0,
     parking_availability: 0,
     category: [],
-    products: "",
     advt_video: "",
     key_players: [],
   };
@@ -106,7 +105,6 @@ const EshopForm = () => {
           daily_walkin: shopUsersData.daily_walkin || 0,
           parking_availability: shopUsersData.parking_availability || 0,
           category: selectedCategories || [],
-          products: "",
           advt_video: shopUsersData.advertisement_video_url || "",
           key_players: selected_key_players || [],
         };
@@ -146,10 +144,10 @@ const EshopForm = () => {
         console.log("Please upload a PDF file");
         return;
       }
-      if (name === "products" && file.type !== "text/csv") {
-        console.log("Please upload a CSV file");
-        return;
-      }
+      // if (name === "products" && file.type !== "text/csv") {
+      //   console.log("Please upload a CSV file");
+      //   return;
+      // }
       if (name === "advt_video" && file.type !== "video/mp4") {
         console.log("Please upload an MP4 video file");
         return;
@@ -194,7 +192,6 @@ const EshopForm = () => {
       "daily_walkin",
       "parking_availability",
       "category",
-      "products",
     ];
 
     requiredFields.forEach((field) => {
@@ -361,8 +358,8 @@ const EshopForm = () => {
     // Define accept types based on field name
     if (name === "usp_values") {
       accept = "application/pdf";
-    } else if (name === "products") {
-      accept = ".csv";
+    // } else if (name === "products") {
+    //   accept = ".csv";
     } else if (name === "advt_video") {
       accept = "video/mp4";
     }
@@ -458,7 +455,6 @@ const EshopForm = () => {
           categories.map((cat) => cat.name),
           "Select categories"
         )}
-        {renderFormField("Products (CSV) :", "products", "file")}
         {renderFormField(
           "Advertisement Video :",
           "advt_video",

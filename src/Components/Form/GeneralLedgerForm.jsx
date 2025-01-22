@@ -5,7 +5,7 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
 import { DateRangePicker } from 'rsuite';
 
-function GeneralLedgerForm({ cName, description, handleSubmit, formfields, formData, onChange, errors, handleIncrement, handleDecrement, handleAddMore, submitBtnVisibility = true, submitButtonText, radioItems }) {
+function GeneralLedgerForm({ cName, description, handleSubmit, formfields, formData, onChange, errors, handleIncrement, handleDecrement, handleAddMore, submitBtnVisibility = true, submitButtonText, radioItems, handleDownload }) {
 
     const { afterToday } = DateRangePicker;
     const handleNumeric = (e, behavior) => {
@@ -28,7 +28,7 @@ function GeneralLedgerForm({ cName, description, handleSubmit, formfields, formD
                             <Tooltip key={field.id} title={field.label} className="tooltip" placement="bottom-end">
                             
                             {/* Render the main field's input only if it doesn't have inner fields */}
-                            {!field.innerField && field.type !== 'quantity' && field.type !== 'daterange' && field.type !== 'button' && field.type!== undefined &&(
+                            {!field.innerField && field.type !== 'quantity' && field.type !== 'daterange' && field.type !== 'button' && field.type!== undefined && field.type && (
                                 <React.Fragment>
                                     <FormField
                                         label={field.label}
@@ -48,6 +48,8 @@ function GeneralLedgerForm({ cName, description, handleSubmit, formfields, formD
                                         rows={field.rows}
                                         adornmentValue={field.adornmentValue}
                                         radioItems={field.radioItems}
+                                        accept={field.accept}
+                                        handleDownload={handleDownload}
                                     />
                                     {field.addMoreButton && <Button onClick={handleAddMore} className='add_more_button'>Add more</Button>}
                                 </React.Fragment>

@@ -7592,6 +7592,7 @@ a {
       .products_table_wrapper {
         margin: 0 auto;
         max-width: 100%;
+        min-width: 80%;
 
         .MuiPaper-root {
           max-width: 100%;
@@ -7653,6 +7654,7 @@ a {
                         }
                       }
                     }
+                    
 
                     .vector {
                       @include full-absolute(0px, 0px, 0px, 0px);
@@ -7698,6 +7700,17 @@ a {
                     position: relative;
                     z-index: 1;
                     padding: 0px 30px 0px;
+
+                    .text{
+                      @include homepage-buttons(
+                        "Bobby-Jones-Soft",
+                        20px,
+                        $yellow,
+                        "none"
+                      );
+                      @include hover-scale(1, 0s);
+                      text-align: center;
+                    }
 
                     &.MuiTableCell-paddingCheckbox {
                       padding: 0px;
@@ -18776,6 +18789,7 @@ input[readonly] {
             text-shadow: 1px 3px 4px #d3983180;
             line-height: 40px;
             text-align: center;
+            text-transform: capitalize;
           }
 
           .domain_sector {
@@ -18947,6 +18961,22 @@ input[readonly] {
                 @include flex-center(row, space-between);
                 place-items: normal;
                 gap: 20px;
+
+                .btn-download{
+                  padding: 0px;
+                  @include homepage-buttons(
+                    "Bobby-Jones-Soft",
+                    17px,
+                    $brown-4,
+                    "none"
+                  );
+                  @include hover-scale(1, 0s);
+                  margin-left: auto;
+
+                  &:hover{
+                    background: transparent;
+                  }
+                }
 
                 .label {
                   @include homepage-buttons(
