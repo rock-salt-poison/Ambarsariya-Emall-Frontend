@@ -147,7 +147,7 @@ function Cart() {
             <Typography variant="span" className="span_1">
               Shop No:
               <Typography variant="span" className="span_2">
-                {(shopData?.shop_no).split('_')[1]}
+                {(shopData?.shop_no)?.split('_')[1]}
               </Typography>
             </Typography>
           </Typography>

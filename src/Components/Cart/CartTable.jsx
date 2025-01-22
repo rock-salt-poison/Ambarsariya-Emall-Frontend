@@ -26,7 +26,7 @@ const columns = [
   { id: "1", label_1: "S.No." },
   { id: "2", label_1: "Product" },
   { id: "3", label_1: "Quantity" },
-  { id: "4", label_1: "Model" },
+  { id: "4", label_1: "Brand" },
   { id: "5", label_1: "Unit Price" },
   { id: "6", label_1: "Total Price" },
 ];
@@ -129,7 +129,7 @@ export default function CartTable({ rows }) {
                       <Box className="product_info">
                         <Box component="img" className="vector" src={tbody_vector} />
                         <Typography className="text_1">{row.product_name}</Typography>
-                        <Typography className="text_2">
+                        {/* <Typography className="text_2">
                           {[
                             row.variation_1,
                             row.variation_2,
@@ -138,7 +138,7 @@ export default function CartTable({ rows }) {
                           ]
                             .filter((variation) => variation && variation.trim() !== "")
                             .join(", ")}
-                        </Typography>
+                        </Typography> */}
                       </Box>
                     </TableCell>
                     <TableCell>
@@ -162,9 +162,6 @@ export default function CartTable({ rows }) {
                       <Box className="product_info">
                         <Box component="img" className="vector" src={tbody_vector} />
                         <Typography className="text_1">{row.brand}</Typography>
-                        <Typography className="text_2">
-                          {categoryNames[row.category]}
-                        </Typography>
                       </Box>
                     </TableCell>
                     <TableCell className="text_3" align="right">
