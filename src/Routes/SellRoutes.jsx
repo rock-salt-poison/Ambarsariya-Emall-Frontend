@@ -61,7 +61,7 @@ function SellRoutes() {
       <Route path="support/shop/:token/dashboard/:edit" element={<MerchantDashboard />} />
       <Route path="support/shop/:token/dashboard/:edit/preview" element={<Preview />} />
       <Route path="shop/:token/products" element={<Products />} />
-      <Route path="shop/:token/products/:id" element={<ProductDetails />} />
+      <Route path="shop/:token/products/:product_id" element={<ProductDetails />} />
       <Route path="shop/:owner/cart" element={<Cart />} />
       <Route path=":owner/subscribe" element={<Subscribe />} />
       <Route path=":owner/mou" element={<Mou />} />

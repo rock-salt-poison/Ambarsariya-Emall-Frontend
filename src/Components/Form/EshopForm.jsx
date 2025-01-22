@@ -3,7 +3,6 @@ import { Button, Box, CircularProgress } from "@mui/material";
 import FormField from "./FormField";
 import { useNavigate, useParams } from "react-router-dom";
 import {
-  getAllCategories,
   getCategories,
   getShopUserData,
   getUser,

@@ -1,53 +1,48 @@
-import React, { useState, useEffect } from 'react';
-import { Autocomplete, InputAdornment, TextField, ThemeProvider } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
-import createCustomTheme from '../../styles/CustomSelectDropdownTheme';
-import '../../styles/variables.scss';
+import React, { useState, useEffect } from "react";
+import { Autocomplete, InputAdornment, TextField, ThemeProvider } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+import createCustomTheme from "../../styles/CustomSelectDropdownTheme";
+import "../../styles/variables.scss";
 import { useDebounce } from "@uidotdev/usehooks";
 
 function AutoCompleteSearchField(props) {
     const [inputValue, setInputValue] = useState('');
     const debouncedInputValue = useDebounce(inputValue, 300);
-
     
-
-    const themeProps = {
-        popoverBackgroundColor: props.popoverBackgroundColor || 'var(--yellow)',
-    };
-
     useEffect(() => {
         const filterData = (searchTerm) => {
             if (!searchTerm) {
                 props.onFilter(props.data);
                 return;
             }
-        
-            const filtered = props.data.filter(row => {
-                const values = Object.values(row).map(value => 
-                    value != null ? value.toString().toLowerCase() : ''  // Handle null/undefined values
-                );
-                return values.some(value => value.includes(searchTerm.toLowerCase()));
-            });
+            const filtered = props.data.filter(row =>
+                Object.values(row).some(value =>
+                    value?.toString().toLowerCase().includes(searchTerm.toLowerCase())
+                )
+            );
             props.onFilter(filtered);
         };
-        
 
         filterData(debouncedInputValue);
-    }, [debouncedInputValue, props]);
+    }, [debouncedInputValue, props.data, props.onFilter]);
 
     const handleInputChange = (event, newInputValue) => {
-        event.preventDefault();
         setInputValue(newInputValue);
     };
 
+    const themeProps = {
+        popoverBackgroundColor: props.popoverBackgroundColor || "var(--yellow)",
+    };
+
     const theme = createCustomTheme(themeProps);
+
     return (
         <ThemeProvider theme={theme}>
             <Autocomplete
                 freeSolo
-                options={props.suggestions.length>0?props.suggestions:[]}
-                filterOptions={(options, state) => 
-                    options.filter(option => 
+                options={props.suggestions || []}
+                filterOptions={(options, state) =>
+                    options.filter(option =>
                         option.toLowerCase().includes(state.inputValue.toLowerCase())
                     )
                 }
@@ -56,7 +51,6 @@ function AutoCompleteSearchField(props) {
                 renderInput={(params) => (
                     <TextField
                         {...params}
-                        type={props.type}
                         placeholder={props.placeholder}
                         variant="outlined"
                         InputProps={{

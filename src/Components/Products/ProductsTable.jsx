@@ -24,12 +24,13 @@ const columns = [
   { id: "sample", label_1: "Sample" },
 ];
 
-export default function CustomPaginationTable() {
+export default function CustomPaginationTable({rows}) {
   const [page, setPage] = useState(0);
   const [selectAll, setSelectAll] = useState(false);
   const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState(rows || []);
   const rowsPerPage = 3;
-  const totalPages = Math.ceil(data.length / rowsPerPage);
+  const totalPages = Math.ceil((filteredData.length > 0 ? filteredData : data).length / rowsPerPage);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const selectedProducts = useSelector((state) => state.cart.selectedProducts);
@@ -75,6 +76,8 @@ export default function CustomPaginationTable() {
 
     fetchShopUserData();
   }, [token]);
+
+  const activeData = filteredData.length > 0 ? filteredData : data;
 
   // Fetch data from the API once when the component mounts
   // const fetchData = async () => {
@@ -143,20 +146,20 @@ export default function CustomPaginationTable() {
   const isSelected = (id) =>
     selectedProducts.some((product) => product.product_no === id);
 
-  const handleClick = (e, id) => {
-    navigate(`../shop/${token}/products/${id}`);
+  const handleClick = (e, product_id) => {
+    navigate(`../shop/${token}/products/${product_id}`);
   };
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      data.forEach((row) => {
+      activeData.forEach((row) => {
         if (!isSelected(row.product_no)) {
           dispatch(addProduct(row));
         }
       });
       setSelectAll(true);
     } else {
-      data.forEach((row) => {
+      activeData.forEach((row) => {
         if (isSelected(row.product_no)) {
           dispatch(removeProduct(row.product_no));
         }
@@ -165,18 +168,22 @@ export default function CustomPaginationTable() {
     }
   };
 
+  useEffect(() => {
+    setFilteredData(rows); // Update filtered data when rows change
+  }, [rows]);
+
   // useEffect(() => {
   //   fetchData();
   // }, []); // Fetch data only once when the component mounts
 
   useEffect(() => {
-    setSelectAll(selectedProducts.length === data.length);
-  }, [selectedProducts, data.length]);
+    setSelectAll(selectedProducts.length === activeData.length);
+  }, [selectedProducts, activeData.length]);
 
   // Derived paginated data
   const paginatedData = React.useMemo(
-    () => data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
-    [data, page, rowsPerPage]
+    () => activeData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
+    [activeData, page, rowsPerPage]
   );
 
   // Render table cell content
@@ -188,7 +195,7 @@ export default function CustomPaginationTable() {
           src={row.product_images}
           alt="product_image"
           className="product_image"
-          onClick={(e) => handleClick(e, row.product_no.split("_")[1])}
+          onClick={(e) => handleClick(e, row.product_id)}
         />
       );
     }
@@ -252,7 +259,7 @@ export default function CustomPaginationTable() {
                     color="primary"
                     indeterminate={
                       selectedProducts.length > 0 &&
-                      selectedProducts.length < data.length
+                      selectedProducts.length < activeData.length
                     }
                     checked={selectAll}
                     onChange={handleSelectAllClick}

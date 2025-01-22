@@ -96,8 +96,8 @@ export const getCategories = async (data) => {
   }
 }
 
-export const getAllCategories = async () => {
-  const response = await axios.get(`${link}/allCategories`);
+export const getCategoryName = async (category_id) => {
+  const response = await axios.get(`${link}/category/${category_id}`);
   return response.data;
 };
 
@@ -229,6 +229,17 @@ export const get_products = async (shop_no) => {
   try{
     if(shop_no){
       const response = await axios.get(`${link}/sell/products/${shop_no}`);
+      return response.data;
+    }
+  }catch(e){
+    throw e;
+  }
+}
+
+export const get_product = async (shop_no, product_id) => {
+  try{
+    if(shop_no && product_id){
+      const response = await axios.get(`${link}/sell/products/${shop_no}/${product_id}`);
       return response.data;
     }
   }catch(e){
