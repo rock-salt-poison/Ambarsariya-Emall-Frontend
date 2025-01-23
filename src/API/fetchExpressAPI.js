@@ -246,3 +246,15 @@ export const get_product = async (shop_no, product_id) => {
     throw e;
   }
 }
+
+
+export const send_otp_to_email = async (data) => {
+  try{
+    if(data){
+      const response = await axios.post(`${link}/sell/username-otp`, data);
+      return response.data;
+    }
+  }catch(e){
+    throw e;
+  }
+}

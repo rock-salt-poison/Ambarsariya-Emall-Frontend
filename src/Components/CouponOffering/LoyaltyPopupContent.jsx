@@ -15,10 +15,10 @@ function LoyaltyPopupContent() {
   
     // Initialize local state for discounts
     const [discounts, setDiscounts] = useState({
-      loyalty_unlock: { percentage: '', minimum_order: '' },
+      loyalty_unlock: { unlock: '', last_purchase_above: '' },
       loyalty_bonus: { flat_percent: '' },
       loyalty_prepaid: { pay: '', get: '' },
-      loyalty_by_customer: { save_percent: '' }
+      loyalty_by_customer: { save: '' }
     });
   
     // Sync local state with Redux when retailerCoupon data changes
@@ -65,8 +65,8 @@ function LoyaltyPopupContent() {
         <Box component="form" noValidate autoComplete="off" className="offerings_popup_form" onSubmit={handleSubmit}>
             <Box className="checkbox-group">
                 <DiscountField
-                    name1="percentage"
-                    name2="minimum_order"
+                    name1="unlock"
+                    name2="last_purchase_above"
                     label="Unlock"
                     value={discounts.loyalty_unlock}
                     handleOnChange={(e) => handleOnChange(e, 'loyalty_unlock')}
@@ -114,7 +114,7 @@ function LoyaltyPopupContent() {
                     additionalText2="value"
                 />
                 <DiscountField
-                    name1="save_percent"
+                    name1="save"
                     label="Referred by a Loyal Customer? Save"
                     handleOnChange={(e) => handleOnChange(e, 'loyalty_by_customer')}
                     value={discounts.loyalty_by_customer}

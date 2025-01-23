@@ -15,7 +15,7 @@ function RetailerPopupContent() {
   // Initialize local state for discounts
   const [discounts, setDiscounts] = useState({
     retailer_upto: { percentage: '', minimum_order: '' },
-    retailer_flat: { percentage: '', minimum_order: '' },
+    retailer_flat: { flat: '', minimum_order: '' },
     retailer_freebies: { buy: '', get: '' }
   });
 
@@ -76,7 +76,7 @@ function RetailerPopupContent() {
           additionalText={<><PercentIcon className="icon_2" /> Off on minimum order of <CurrencyRupeeIcon className="icon_2" /></>}
         />
         <DiscountField
-          name1="percentage"
+          name1="flat"
           name2="minimum_order"
           value={retailerCoupon?.discounts?.retailer_flat || discounts.retailer_flat}
           label="Flat"

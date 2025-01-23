@@ -56,7 +56,7 @@ function CouponOfferingPage(props) {
     // Calculate loyalty height
     if (loyaltyCoupon) {
       const loyaltyCheckedCount = Object.values(loyaltyCoupon.discounts)
-        .filter(discount => discount.value_1 && discount.value_1 !== "").length;
+        .filter(discount => discount.checked).length;
       updatedHeights['loyalty'] = Math.min(loyaltyCheckedCount * 20, MAX_HEIGHT);
     }
 

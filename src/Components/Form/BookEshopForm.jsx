@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Button, Box, Typography, CircularProgress } from '@mui/material';
 import FormField from '../Form/FormField';
 import { useNavigate, useParams } from 'react-router-dom';
-import { postEshop, fetchDomains, fetchDomainSectors, fetchSectors, getShopUserData, getUser } from '../../API/fetchExpressAPI'
+import { postEshop, fetchDomains, fetchDomainSectors, fetchSectors, getShopUserData, getUser, send_otp_to_email } from '../../API/fetchExpressAPI'
 import { useDispatch, useSelector } from 'react-redux';
 import { setShopToken, setShopTokenValid, setUserToken } from '../../store/authSlice';
 import CustomSnackbar from '../CustomSnackbar';
+import { setUsernameOtp } from '../../store/otpSlice';
 
 
 const BookEshopForm = () => {
@@ -55,14 +56,16 @@ const BookEshopForm = () => {
 
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.userAccessToken);
+  const otp_token = useSelector((state) => state.otp.usernameOtp);
 
   const navigate = useNavigate();
 
   // Simulated OTP for demonstration purposes
-  const validUsernameOtp = '123456';
+  const validUsernameOtp = otp_token;
   const validPhoneOtp = '123456';
   const validMemberOtp = '123456';
 
+  console.log(otp_token)
   const fetchUserAndShopData = async (shop_access_token) => {
     const response = await getShopUserData(shop_access_token);
     if (response) {
@@ -331,6 +334,16 @@ const BookEshopForm = () => {
       // Validate initial form fields
       if (validateInitialForm()) {
         // Show OTP fields if initial validation is successful
+        try{
+          const data ={
+            username:formData.username,
+          }
+          const otp_resp = await send_otp_to_email(data)
+          console.log(otp_resp)
+          dispatch(setUsernameOtp(otp_resp.otp));
+        }catch(e){
+          console.log(e);
+        }
         setShowUsernameOtp(true);
         setShowPhoneOtp(true);
         setShowMemberOtp(true);

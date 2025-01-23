@@ -4113,6 +4113,12 @@ a {
               @include flex-center(column, flex-start);
               flex: 1;
 
+              .coupon_type{
+                @include homepage-buttons("EFCO", 20px, $black, "none");
+                @include hover-scale(1, 0s);
+                line-height: 0.8em;
+                margin-top: 10px;
+              }
               .coupon,
               .coupon_value {
                 @include homepage-buttons("EFCO", 38px, $orange, "none");

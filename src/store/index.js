@@ -3,6 +3,7 @@ import cartReducer from './cartSlice';
 import authReducer from './authSlice';
 import editedEshopFieldsReducer from './editedEshopFieldsSlice'
 import couponReducer from './couponsSlice';
+import otpReducer from './otpSlice';
 
 const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
     auth: authReducer,
     updatedFields: editedEshopFieldsReducer,
     coupon: couponReducer,
+    otp: otpReducer,
   },
 });
 

@@ -47,14 +47,16 @@ function SubscriptionPopupContent() {
   };
 
   const handleDateRangeChange = (value, field) => {
+    const serializedRange = value ? value.map((date) => date.toLocaleDateString()) : null;
     setDiscounts((prevState) => ({
       ...prevState,
       [field]: {
         ...prevState[field],
-        dateRange: value,
+        dateRange: serializedRange,
       },
     }));
   };
+  
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -109,7 +111,12 @@ function SubscriptionPopupContent() {
           name1="percent_off"
           label={
             <>
-              <DateRangePicker />
+              <DateRangePicker value={
+          discounts.subscription_edit.dateRange
+            ? discounts.subscription_edit.dateRange.map((date) => new Date(date))
+            : null
+        }
+        onChange={(value) => handleDateRangeChange(value, 'subscription_edit')}/>
             </>
           }
           value={discounts.subscription_edit}
