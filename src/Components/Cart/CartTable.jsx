@@ -188,10 +188,10 @@ export default function CartTable({ rows }) {
               <TableFooter>
                 <TableRow>
                   <TableCell colSpan={5} align="right">
-                    <Typography className="text_1">Total:</Typography>
+                    <Typography className="text_1">Total :</Typography>
                   </TableCell>
                   <TableCell className="text_2">
-                    &#8377;{(calculateTotal() - calculateDiscount()).toFixed(2)}
+                    &#8377;{(calculateTotal() ).toFixed(2)}
                   </TableCell>
                 </TableRow>
               </TableFooter>

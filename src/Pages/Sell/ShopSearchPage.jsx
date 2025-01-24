@@ -1,80 +1,84 @@
-import React, {useState} from 'react'
-import { Box, Typography } from '@mui/material'
-import Button2 from '../../Components/Home/Button2'
+import React, { useEffect, useState } from 'react';
+import { Box, CircularProgress, Typography } from '@mui/material';
+import Button2 from '../../Components/Home/Button2';
 import AutoCompleteSearchField from '../../Components/Products/AutoCompleteSearchField';
 import SingleShopPage from './SingleShopPage';
-
-const shopDataArray = [
-    {
-      shopName: 'Madhav',
-      discount: '10',
-      coupon: 'amall10',
-      products: 'pens, textbooks, books, pencils, charts, toffees, paint and brush',
-      domain: 'Retailer',
-      sector: 'Stationary',
-      supply: 'School & Office',
-      shopType: 'Class C',
-      costSensitivity: 'Moderate'
-    },
-    {
-      shopName: 'HealthCare Hub',
-      discount: '15',
-      coupon: 'health15',
-      products: 'masks, gloves, sanitizers, medicines',
-      domain: 'Retailer',
-      sector: 'Healthcare',
-      supply: 'School & Office',
-      shopType: 'Class C',
-      costSensitivity: 'Moderate'
-    },
-    {
-      shopName: 'Tech World',
-      discount: '20',
-      coupon: 'tech20',
-      products: 'laptops, mobiles, tablets, accessories',
-      domain: 'Retailer',
-      sector: 'Electronics',
-      supply: 'School & Office',
-      shopType: 'Class C',
-      costSensitivity: 'Moderate'
-      
-    }
-  ];
+import { allShops } from '../../API/fetchExpressAPI';
 
 function ShopSearchPage() {
+    const [shops, setShops] = useState([]);
+    const [loading, setLoading] = useState(true); // Set to true initially
+    const [filteredData, setFilteredData] = useState([]);
 
-    const [filteredData , setFilteredData] = useState(shopDataArray);
+    const suggestions = ['Stationary', 'Textbook', 'Healthcare'];
 
-    const handleFilter = (data) =>{
+    // Handle the filter based on the search input
+    const handleFilter = (data) => {
+        console.log('Filtered Data:', data);  // Debugging filtered data
         setFilteredData(data);
-    }
+    };
 
-    const suggestions=['Stationary','Textbook', 'Healthcare']
-  
+    // Fetch shops data when the component mounts
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const resp = await allShops();
+                if (resp) {
+                    setShops(resp);
+                    setFilteredData(resp);  // Initialize filteredData with all shops
+                    console.log('Fetched Shops:', resp);  // Debugging fetched shops
+                }
+            } catch (e) {
+                console.log(e);
+            } finally {
+                setLoading(false);  // Stop loading after data is fetched
+            }
+        };
+        fetchData();
+    }, []);
 
     return (
         <Box className="shop_search_wrapper">
+            {loading && (
+                <Box className="loading">
+                    <CircularProgress />
+                </Box>
+            )}
+
             <Box className="row">
                 <Box className="col">
                     <Box className="container">
-                        <Button2 text="Back" redirectTo='../esale' />
+                        <Button2 text="Back" redirectTo="../esale" />
                     </Box>
                     <Box className="container">
-                        <Typography variant='h2' className='title'>Shops</Typography>
+                        <Typography variant="h2" className="title">
+                            Shops
+                        </Typography>
                     </Box>
                     <Box className="container" display="flex" justifyContent="flex-end">
-                        <Button2 text="Next" redirectTo='../shops' />
+                        <Button2 text="Next" redirectTo="../shops" />
                     </Box>
                 </Box>
                 <Box className="col">
-                    <AutoCompleteSearchField data={shopDataArray} onFilter={handleFilter} placeholder="Products, Shops, Nearby Me..." suggestions={suggestions}/>
+                    {/* Pass filteredData to AutoCompleteSearchField */}
+                    <AutoCompleteSearchField
+                        data={filteredData}  // Make sure filteredData is passed
+                        onFilter={handleFilter}
+                        placeholder="Products, Shops, Nearby Me..."
+                        suggestions={suggestions}
+                    />
                 </Box>
                 <Box className="col displayShops">
-                    <SingleShopPage showBackButton={false} shopData={filteredData}/>
+                    {/* Check if filteredData is being passed correctly */}
+                    {filteredData.length === 0 ? (
+                        <Typography>No shops available</Typography>  // Fallback if no shops are available
+                    ) : (
+                        <SingleShopPage showBackButton={false} shopData={filteredData} />
+                    )}
                 </Box>
             </Box>
         </Box>
-    )
+    );
 }
 
-export default ShopSearchPage
+export default ShopSearchPage;

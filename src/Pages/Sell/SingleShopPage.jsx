@@ -8,7 +8,6 @@ import {
 } from "react-router-dom";
 import stationary_bg_img from "../../Utils/images/Sell/merchant_details/stationary.webp";
 import healthcare_bg_img from "../../Utils/images/Sell/merchant_details/healthcare.webp";
-// import electronics_bg_img from '../../Utils/images/Sell/merchant_details/electronics.webp'; // Add this line for Electronics sector
 import Button2 from "../../Components/Home/Button2";
 import ShopDetails from "../../Components/Shop/ShopDetails";
 import VideoPlayer from "../../Components/MerchantWrapper/VideoPlayer";
@@ -40,8 +39,6 @@ const SingleShopPage = ({ showBackButton = true, shopData }) => {
   const navigate = useNavigate();
   const [discountCoupons, setDiscountCoupons] = useState([]);
   const [activeCoupon, setActiveCoupon] = useState(null); // Track active coupon
-
-  
 
   const handleClick = (e, shop_token) =>
     navigate(`../support/shop/shop-detail/${shop_token}`);
@@ -123,13 +120,16 @@ const SingleShopPage = ({ showBackButton = true, shopData }) => {
                           {column.business_name}
                         </Typography>
                       </Box>
-                      <DiscountPercentageSlider setOpenPopup={setOpenPopup} data={activeCoupon} />
+                      <DiscountPercentageSlider
+                        setOpenPopup={setOpenPopup}
+                        data={activeCoupon}
+                      />
                       <CouponsSlider
-        data={discountCoupons}
-        onActiveCouponChange={coupons => setActiveCoupon(coupons)}
-      />
-
-
+                        data={discountCoupons}
+                        onActiveCouponChange={(coupons) =>
+                          setActiveCoupon(coupons)
+                        }
+                      />
                     </Box>
                     <ServicesTypeCard token={token} />
                     <Box className="product_details">

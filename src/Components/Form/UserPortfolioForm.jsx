@@ -190,7 +190,7 @@ const UserPortfolioForm = () => {
     }
   };
 
-  const genderOptions = ['Male', 'Female', 'Other'];
+  const genderOptions = ['Male', 'Female'];
 
   const renderFormField = (name, type, options = [], placeholder = '') => (
     <FormField

@@ -4264,7 +4264,7 @@ a {
             padding: 40px;
             border-bottom: none;
             @include flex-center(row, space-between);
-            gap: 60px;
+            gap: 50px;
             flex-wrap: wrap;
             flex: 0;
             background-color: #76513db3;
@@ -4272,7 +4272,8 @@ a {
 
             .category {
               @include flex-center(column, flex-start);
-              flex: 0.5;
+              flex: none;
+              width: 28%;
               gap: 15px;
 
               .sector_type {
@@ -4535,6 +4536,9 @@ a {
           .sub_col_1 {
             .shop_details {
               justify-content: center;
+              .category{
+                width: 100%;
+              }
             }
 
             .product_details {
@@ -17472,22 +17476,43 @@ input[readonly] {
               .discount_coupon {
                 @include full-absolute(0px, 0px, 0px, 0px);
                 @include flex-center(column, center);
+                // gap: 5px;
 
-                .discount_percentage {
-                  @include homepage-buttons("EFCO", 60px, $black, none);
+                .discount_type{
+                  @include homepage-buttons("EFCO", 24px, $black, none);
                   @include hover-scale(1, 0s);
-                  line-height: 50px;
+                  text-align: center;
+                  padding: 0 15px;
+                  line-height: 24px;
+                  margin-bottom: 20px;
                 }
 
-                .text {
+                .discount_percentage {
+                  @include homepage-buttons("EFCO", 55px, $black, none);
+                  @include hover-scale(1, 0s);
+                  line-height: 40px;
+                }
+
+                .text, .text2 {
                   @include homepage-buttons(
                     "Bobby-Jones-Soft",
-                    24px,
+                    20px,
                     #7afad3,
                     none
                   );
                   text-shadow: 0 2.7px 2.7px $brown-4;
                   @include hover-scale(1, 0s);
+                  line-height: 20px;
+                }
+
+                .text2{
+                  color: $black;
+                  padding: 15px 20px 0px;
+                  text-align: center;
+                  text-shadow: none;
+                }
+                span{
+                  padding: 0px !important;
                 }
               }
             }

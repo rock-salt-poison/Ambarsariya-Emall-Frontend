@@ -2,31 +2,63 @@ import React, { useState, useEffect } from "react";
 import { Box, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
-function NoticeBoard({ data }) {
+function NoticeBoard({ data, title }) {
   const [filteredRecords, setFilteredRecords] = useState([]);
 
-  // Function to filter records where today's date is within from_date and to_date
+  // Function to filter records
   const filterRecords = () => {
     const today = new Date(); // Get today's date
 
-    // Filter items based on the condition
-    const filtered = data?.filter((item) => {
-      const fromDate = new Date(item.from_date); // Convert from_date to Date object
-      const toDate = new Date(item.to_date); // Convert to_date to Date object
+    // Filter items based on date range and remove duplicates by title
+    const filtered = data
+      ?.filter((item) => {
+        const fromDate = new Date(item.from_date); // Convert from_date to Date object
+        const toDate = new Date(item.to_date); // Convert to_date to Date object
 
-      // Check if today's date lies between from_date and to_date
-      return today >= fromDate && today <= toDate;
-    });
+        // Check if today's date lies between from_date and to_date
+        return today >= fromDate && today <= toDate;
+      })
+      .reduce((uniqueRecords, currentItem) => {
+        // Use a Map to store only unique titles
+        if (!uniqueRecords.has(currentItem.title)) {
+          uniqueRecords.set(currentItem.title, currentItem);
+        }
+        return uniqueRecords;
+      }, new Map());
 
-    setFilteredRecords(filtered || []); // Update state with filtered records
+    // Convert the Map back to an array
+    setFilteredRecords([...filtered.values()]);
   };
 
-  // Use useEffect to calculate filtered records when `data` changes
+  // Function to get a single record by title
+  const getRecordByTitle = () => {
+    const today = new Date(); // Get today's date
+
+    // Find the first record with the matching title where today's date is valid
+    const singleRecord = data?.find((item) => {
+      const fromDate = new Date(item.from_date);
+      const toDate = new Date(item.to_date);
+
+      return (
+        item.title.toLowerCase() === title.toLowerCase() &&
+        today >= fromDate &&
+        today <= toDate
+      );
+    });
+
+    setFilteredRecords(singleRecord ? [singleRecord] : []); // Wrap single record in an array
+  };
+
+  // Use useEffect to calculate records based on the presence of the title prop
   useEffect(() => {
     if (data) {
-      filterRecords();
+      if (title) {
+        getRecordByTitle();
+      } else {
+        filterRecords();
+      }
     }
-  }, [data]);
+  }, [data, title]);
 
   return (
     <Box className="cards">
