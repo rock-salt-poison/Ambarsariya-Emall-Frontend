@@ -16,7 +16,7 @@ import {
 import tbody_vector from "../../Utils/images/Sell/products/tbody_vector.webp";
 import plus from "../../Utils/images/Sell/cart/plus.svg";
 import minus from "../../Utils/images/Sell/cart/minus.svg";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { removeProduct } from "../../store/cartSlice";
 import { useParams } from "react-router-dom";
 import Button2 from "../Home/Button2";
@@ -39,7 +39,7 @@ export default function CartTable({ rows }) {
     rows.map((row) => ({ ...row, quantity: 1 })) // Initialize quantity for each product
   );
   const [categoryNames, setCategoryNames] = useState({}); // Map of category IDs to names
-
+  const { totalDiscount } = useSelector((state) => state.discounts);
   // Fetch category names for all products
   useEffect(() => {
     const fetchCategories = async () => {
@@ -91,7 +91,7 @@ export default function CartTable({ rows }) {
   const calculateTotal = () =>
     data.reduce((acc, item) => acc + Number(item.price * item.quantity), 0);
 
-  const calculateDiscount = () => calculateTotal() * 0.1;
+  const calculateDiscount = () => calculateTotal() - totalDiscount;
 
   return (
     <Box className="cart_table_wrapper">
@@ -191,7 +191,7 @@ export default function CartTable({ rows }) {
                     <Typography className="text_1">Total :</Typography>
                   </TableCell>
                   <TableCell className="text_2">
-                    &#8377;{(calculateTotal() ).toFixed(2)}
+                    &#8377;{(calculateDiscount()).toFixed(2)}
                   </TableCell>
                 </TableRow>
               </TableFooter>

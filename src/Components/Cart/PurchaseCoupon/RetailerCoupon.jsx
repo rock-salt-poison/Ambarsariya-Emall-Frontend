@@ -17,6 +17,8 @@ import {
   get_discount_coupons,
   getShopUserData,
 } from "../../../API/fetchExpressAPI";
+import { useDispatch } from "react-redux";
+import { addCoupon } from "../../../store/discountsSlice";
 
 function RetailerCoupon({ selectedCoupon }) {
   const themeProps = {
@@ -30,6 +32,7 @@ function RetailerCoupon({ selectedCoupon }) {
   const [filteredCoupons, setFilteredCoupons] = useState([]);
   const location = useLocation();
   const { owner } = useParams();
+  const dispatch = useDispatch();
 
   // Create a URLSearchParams instance to access query parameters
   const queryParams = new URLSearchParams(location.search);
@@ -52,7 +55,8 @@ function RetailerCoupon({ selectedCoupon }) {
     customizable_coupon: "Customizable Coupons",
   };
   const selectedCouponKey = selectedCoupon?.alt; // Assuming `title` contains the type
-  console.log(selectedCouponKey);
+  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -85,8 +89,10 @@ function RetailerCoupon({ selectedCoupon }) {
     fetchData();
   }, [token, selectedCouponKey]);
 
-  const handleClick = (e, id) => {
+  const handleClick = (e, id, discountAmount) => {
+    e.preventDefault(); 
     setSelectedOption(id);
+    dispatch(addCoupon({ couponId: id, discountAmount }));
   };
 
   // Function to get the current URL with the token query parameter intact
@@ -106,12 +112,15 @@ function RetailerCoupon({ selectedCoupon }) {
           </Box>
           <Box className="body_container">
             {filteredCoupons?.map((coupon) => {
+              const discount = coupon.conditions.find(
+                (condition) => condition.type === "percentage" || condition.type === "flat"
+              )?.value;
               return (
                 <React.Fragment key={coupon.coupon_id}>
                   <Link
                     to={getCurrentUrlWithToken()}
                     onClick={(e) => {
-                      handleClick(e, coupon.coupon_id);
+                      handleClick(e, coupon.coupon_id, Number(discount));
                     }}
                     className={`coupon_container ${
                       selectedOption === coupon.coupon_id
