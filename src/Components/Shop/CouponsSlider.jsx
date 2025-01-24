@@ -32,7 +32,8 @@ function CouponsSlider({ data, onActiveCouponChange }) {
       pagination={false}
       modules={[EffectCube, Pagination, Autoplay]}
       className="mySwiper"
-      loop={true}
+      loop={false}
+      loopAdditionalSlides={flattenedCoupons.length}
       autoplay={{
         delay: 4000,
         disableOnInteraction: false,
@@ -45,6 +46,7 @@ function CouponsSlider({ data, onActiveCouponChange }) {
           onActiveCouponChange(activeCoupon); // Set the active coupon
         }
       }}
+      
     >
       {flattenedCoupons?.map((couponItem, index) => (
         <SwiperSlide key={index}>

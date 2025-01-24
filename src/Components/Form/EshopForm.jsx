@@ -51,6 +51,7 @@ const EshopForm = () => {
 
   const fetchOtherShops = async (token) => {
     try {
+      setLoading(true);
       const resp = await otherShops(token);
       const shopUsersData = (await getShopUserData(token))[0];
       if (resp) {
@@ -109,8 +110,10 @@ const EshopForm = () => {
         };
 
         setFormData(initialFormData);
+        setLoading(false);
       }
     } catch (e) {
+      setLoading(false);
       console.log("Error while fetching : ", e);
     }
   };
@@ -255,6 +258,7 @@ const EshopForm = () => {
 
       if (userAccessToken) {
         try {
+          setLoading(true);
           // Call the function to update e-shop data
           const data = (await getUser(userAccessToken))[0];
           console.log(data)
@@ -286,6 +290,7 @@ const EshopForm = () => {
               console.log(discount_coupons)
             }
             
+            setLoading(false);
 
             setSnackbar({
               open: true,
@@ -299,6 +304,7 @@ const EshopForm = () => {
             }, 2500);
           }
         } catch (error) {
+          setLoading(false);
           console.error("Error updating e-shop data:", error);
           setSnackbar({
             open: true,
@@ -307,6 +313,7 @@ const EshopForm = () => {
           });
         }
       } else {
+        setLoading(false);
         setSnackbar({
           open: true,
           message: "Shop access token not found.",

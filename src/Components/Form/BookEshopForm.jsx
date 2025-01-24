@@ -110,21 +110,22 @@ const BookEshopForm = () => {
     const initializeForm = async () => {
       try {
         // Fetch the list of domains
+        setLoading(true);
         const domainsResp = await fetchDomains();
         const domainNames = domainsResp.map((data) => data.domain_name);
         setDomains(domainNames);
 
         // Fetch data if token exists
         if (token) {
-          setLoading(true);
           let shop_token = (await getUser(token))[0].shop_access_token;
           if (shop_token) {
             await fetchUserAndShopData(shop_token);
-            setLoading(false);
           }
         }
+        setLoading(false);
       } catch (error) {
         console.error('Error initializing form:', error);
+        setLoading(false);
       }
     };
 
@@ -139,6 +140,7 @@ const BookEshopForm = () => {
     setSubmitBtnDisable(false);
     if (name === 'domain') {
       try {
+        setLoading(true);
         // Fetch domains and find the selected domain
         const domains = await fetchDomains();
         const selectedDomain = domains.find((val) => val.domain_name === value);
@@ -153,28 +155,33 @@ const BookEshopForm = () => {
             sector: 0, // Reset sector field to default value
           }));
         }
-
+        
         // Add 'Create' to the list of sectors and update the formData state
         setSectors(sectors);
+        setLoading(false);
 
       } catch (error) {
         console.error('Error fetching sectors:', error);
+        setLoading(false);
       }
     }
 
     // Handle sector change
     if (name === 'sector') {
       try {
+        setLoading(true);
         const selectedSector = (await fetchSectors()).find((val) => val.sector_name === value);
-
+        
         if (selectedSector) {
           setFormData((prevData) => ({
             ...prevData,
             sector: selectedSector.sector_id, // Update sector_id in form data
           }));
         }
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching sectors:', error);
+        setLoading(false);
       }
     }
 
@@ -338,11 +345,23 @@ const BookEshopForm = () => {
           const data ={
             username:formData.username,
           }
+          setLoading(true);
+
           const otp_resp = await send_otp_to_email(data)
           console.log(otp_resp)
           dispatch(setUsernameOtp(otp_resp.otp));
+          setLoading(false);
+          if(otp_resp.message === "OTP sent successfully"){
+            setSnackbar({ open: true, message: 'OTP sent successfully. Please check and verify.', severity: 'success' });
+          }else{
+            setSnackbar({ open: true, message: 'Failed to send OTP. Try again.', severity: 'error' });
+          }
+            console.log('Form Data:', formData);
+
         }catch(e){
           console.log(e);
+          setLoading(false);
+          setSnackbar({ open: true, message: 'Failed to send OTP. Try again.', severity: 'error' });
         }
         setShowUsernameOtp(true);
         setShowPhoneOtp(true);
@@ -393,6 +412,7 @@ const BookEshopForm = () => {
                 member_detail: formData.member_detail,
               }),
             };
+            setLoading(true);
 
             const response = await postEshop(postData);
 
@@ -406,6 +426,8 @@ const BookEshopForm = () => {
 
             setSnackbar({ open: true, message: 'Form submitted successfully!', severity: 'success' });
             console.log('Form Data:', formData);
+            setLoading(false);
+
             if (formData.premiumVersion) {
               setTimeout(() => {
                 loggedIn ? navigate('../eshop') : navigate('../login');

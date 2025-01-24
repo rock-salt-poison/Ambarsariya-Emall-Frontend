@@ -11,7 +11,6 @@ import 'swiper/css/pagination';
 import { Autoplay, EffectCube, Pagination } from 'swiper/modules';
 
 function DiscountPercentageSlider({ setOpenPopup, data }) {
-  console.log('Data received by DiscountPercentageSlider:', data); // Debug data
 
   // Ensure `data` is treated as an array
   const coupons = Array.isArray(data) ? data : [data];
@@ -27,8 +26,26 @@ function DiscountPercentageSlider({ setOpenPopup, data }) {
     const findCondition = (type) => conditions.find((cond) => cond.type === type)?.value || '';
 
     switch (couponType) {
-      case 'retailer_upto' || 'retailer_flat': {
+      case 'retailer_upto': {
         const percentage = findCondition('percentage');
+        const minimumOrder = findCondition('minimum_order');
+
+        return (
+          <>
+            <Typography className="percent">{percentage}</Typography>
+            <Box className="discount_details">
+              <Typography className="text_1">%</Typography>
+              <Typography className="text_2">off</Typography>
+              {minimumOrder && (
+                <Typography className="text_3">Minimum order {minimumOrder}</Typography>
+              )}
+            </Box>
+          </>
+        );
+      }
+
+      case 'retailer_flat': {
+        const percentage = findCondition('flat');
         const minimumOrder = findCondition('minimum_order');
 
         return (

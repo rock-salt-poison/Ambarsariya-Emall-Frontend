@@ -41,9 +41,7 @@ const SingleShopPage = ({ showBackButton = true, shopData }) => {
   const [discountCoupons, setDiscountCoupons] = useState([]);
   const [activeCoupon, setActiveCoupon] = useState(null); // Track active coupon
 
-  // Video URL for the video player
-  const videoUrl =
-    "https://www.youtube.com/embed/m701WKQMeYQ?controls=0&modestbranding=1";
+  
 
   const handleClick = (e, shop_token) =>
     navigate(`../support/shop/shop-detail/${shop_token}`);
@@ -85,7 +83,7 @@ const SingleShopPage = ({ showBackButton = true, shopData }) => {
     fetchData();
   }, [token]);
 
-  console.log(discountCoupons);
+  console.log(data);
 
   return (
     <>
@@ -156,7 +154,7 @@ const SingleShopPage = ({ showBackButton = true, shopData }) => {
                         className="video_frame"
                         alt="frame"
                       />
-                      <VideoPlayer url={videoUrl} />
+                      <VideoPlayer url={data?.[0]?.advertisement_video_url} />
                     </Box>
                   </Box>
                 </Box>
