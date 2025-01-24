@@ -249,7 +249,7 @@ const EshopForm = () => {
         daily_walkin: formData.daily_walkin,
         parking_availability: formData.parking_availability,
         category: selectedCategoryIds, // Hardcoded category, make sure to replace if needed
-        advt_video: "link", // Placeholder, replace as needed
+        advt_video: formData.advt_video, // Placeholder, replace as needed
         key_players: selectedKeyPlayers,
       };
 
