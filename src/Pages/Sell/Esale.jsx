@@ -51,9 +51,9 @@ function Esale() {
                     <Box className="row_2">
                         <Box className="col">
                             <Box className="sub_col">
-                                <Box className="profile_col">
+                                <Link className="profile_col" to='../user'>
                                     <Box component="img" src={female_user} alt="avatar" className='avatar' />
-                                </Box>
+                                </Link>
                             </Box>
                             <Box className="sub_col cards">
                                 <Box className="card">

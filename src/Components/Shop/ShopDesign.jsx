@@ -44,7 +44,7 @@ function ShopDesign({ data }) {
       </Box>
 
       <Box className="domain_container">
-        <Link to={openDashboard ? `../support/shop/${data.shop_access_token}/dashboard`: '../login'}>
+        <Link to={openDashboard ? `../support/shop/${data.shop_access_token}/dashboard`: `../shop/${data.shop_access_token}/products`}>
           <Typography className="domain" variant="h3">
             {data.domain_name}
           </Typography>

@@ -13,6 +13,7 @@ import Logo from '../Components/Logo';
 import { useSelector } from 'react-redux';
 import { useLogout } from '../customHooks/useLogout';
 import { fetchUserType } from '../Components/userBadge';
+import { getUser } from '../API/fetchExpressAPI';
 
 function Sell() {
   const navigate = useNavigate();
@@ -20,6 +21,18 @@ function Sell() {
   const handleLogout = useLogout();
   const [audio] = useState(new Audio(hornSound));
   const [userIcon, setUserIcon] = useState(null);
+
+  const [shopToken, setShopToken] = useState('');
+
+  useEffect(()=> {
+    const fetchShopToken = async() => {
+      if(token){
+        const resp = await getUser(token);
+        setShopToken(resp[0].shop_access_token);
+      }
+    }
+    fetchShopToken();
+  }, [token])
 
   const handleClick = (e) => {
     const btns = e.target.closest('.btn');
@@ -51,7 +64,7 @@ function Sell() {
       } else if (btns.classList.contains('Grow')) {
         destination = 'grow';
       }else if (btns.classList.contains('E-shop')) {
-        destination =token ? 'eshop':'login';
+        destination = token ? shopToken ? `support/shop/shop-detail/${shopToken}` : 'eshop':'login';
       }else if (btns.classList.contains('E-sale')) {
         destination =token ? 'esale':'login';
       }
