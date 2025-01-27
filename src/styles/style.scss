@@ -8143,7 +8143,7 @@ a {
         width: 85%;
         white-space: nowrap;
 
-        .MuiPaper-root {
+        .MuiPaper-root.table {
           max-width: 100%;
           // background-color: #9b643db3;
           background: repeating-linear-gradient(
@@ -8486,7 +8486,7 @@ a {
         .cart_table_wrapper {
           width: 90%;
 
-          .MuiPaper-root {
+          & .MuiPaper-root.table {
             .MuiTableContainer-root {
               white-space: nowrap;
 
@@ -19821,6 +19821,7 @@ input[readonly] {
     }
   }
 }
+
 
 .MuiAlert-message {
   padding: 0px !important;

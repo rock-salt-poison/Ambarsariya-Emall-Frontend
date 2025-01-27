@@ -8,6 +8,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import CardBoardPopup from "../CardBoardPopupComponents/CardBoardPopup";
 import PrepaidPostpaid from "../Cart/Prepaid_Postpaid/PrepaidPostpaid";
 import ServiceType from "../Cart/ServiceType/ServiceType";
+import ServiceTypes from "../Cart/ServiceType/ServiceTypes";
 
 function ServicesTypeCard({ token }) {
   const [openPopup, setOpenPopup] = useState(null);
@@ -37,7 +38,7 @@ function ServicesTypeCard({ token }) {
       id: 3,
       type: "Service Type",
       imgSrc: shop_detail_service_type_img,
-      popupContent: <ServiceType />,
+      popupContent: <ServiceTypes />,
       cName: "service_type_popup",
     },
   ];

@@ -21,6 +21,7 @@ import { removeProduct } from "../../store/cartSlice";
 import { useParams } from "react-router-dom";
 import Button2 from "../Home/Button2";
 import { getCategoryName } from "../../API/fetchExpressAPI";
+import CustomSnackbar from "../CustomSnackbar";
 
 const columns = [
   { id: "1", label_1: "S.No." },
@@ -35,11 +36,17 @@ export default function CartTable({ rows }) {
   const dispatch = useDispatch();
   const { owner } = useParams();
   const [loading, setLoading] = useState(false);
+   const [snackbar, setSnackbar] = useState({
+      open: false,
+      message: "",
+      severity: "success",
+    });
   const [data, setData] = useState(
     rows.map((row) => ({ ...row, quantity: 1 })) // Initialize quantity for each product
   );
   const [categoryNames, setCategoryNames] = useState({}); // Map of category IDs to names
-  const { totalDiscount } = useSelector((state) => state.discounts);
+  const { selectedCoupon } = useSelector((state) => state.discounts);
+
   // Fetch category names for all products
   useEffect(() => {
     const fetchCategories = async () => {
@@ -62,6 +69,63 @@ export default function CartTable({ rows }) {
 
     fetchCategories();
   }, [rows]);
+
+  useEffect(() => {
+    if (selectedCoupon) {
+      const total = calculateTotal();
+      const totalQuantity = data.reduce((sum, item) => sum + item.quantity, 0);
+  
+      const minOrder = Number(
+        selectedCoupon.conditions.find(
+          (c) => c.type === "minimum_order" || c.type === "last_purchase_above"
+        )?.value || 0
+      );
+      const percent = Number(
+        selectedCoupon.conditions.find(
+          (c) =>
+            c.type === "percentage" ||
+            c.type === "flat" ||
+            c.type === "unlock" ||
+            c.type === "save" ||
+            c.type === "percent_off" ||
+            c.type === "flat_percent"
+        )?.value || 0
+      );
+      const buy = Number(selectedCoupon.conditions.find((c) => c.type === "buy")?.value || 0);
+      const get = Number(selectedCoupon.conditions.find((c) => c.type === "get")?.value || 0);
+  
+      if (selectedCoupon.coupon_type === "retailer_freebies") {
+        if (totalQuantity < buy) {
+          setSnackbar({
+            open: true,
+            message: `Add ${buy - totalQuantity} more items to use Buy ${buy} Get ${get} coupon.`,
+            severity: "error",
+          });
+        } else {
+          setSnackbar({
+            open: true,
+            message: `You qualify for the offer: Buy ${buy}, Get ${get}.`,
+            severity: "success",
+          });
+        }
+      } else if (total < minOrder) {
+        setSnackbar({
+          open: true,
+          message: `Add ₹${(minOrder - total).toFixed(2)} more to use this coupon.`,
+          severity: "error",
+        });
+      } else {
+        setSnackbar({
+          open: true,
+          message: `You saved ₹${((total * percent) / 100).toFixed(2)}!`,
+          severity: "success",
+        });
+      }
+    } else {
+      setSnackbar({ open: false, message: "", severity: "success" }); // Reset snackbar when no coupon is selected
+    }
+  }, [selectedCoupon, data]); // Dependencies: re-run whenever selectedCoupon or cart data changes  
+  
 
   const handleIncrement = (index) => {
     const newData = data.map((item, i) =>
@@ -91,12 +155,75 @@ export default function CartTable({ rows }) {
   const calculateTotal = () =>
     data.reduce((acc, item) => acc + Number(item.price * item.quantity), 0);
 
-  const calculateDiscount = () => calculateTotal() - totalDiscount;
+  const calculateDiscount = () => {
+    if (!selectedCoupon) return 0;
+  
+    const { coupon_type, conditions } = selectedCoupon;
+    const total = calculateTotal();
+    const totalQuantity = data.reduce((sum, item) => sum + item.quantity, 0);
+  
+    // Extract relevant conditions
+    const minOrder = Number(
+      conditions.find(
+        (c) => c.type === "minimum_order" || c.type === "last_purchase_above"
+      )?.value || 0
+    );
+    const percent = Number(
+      conditions.find(
+        (c) =>
+          c.type === "percentage" ||
+          c.type === "flat" ||
+          c.type === "unlock" ||
+          c.type === "save" ||
+          c.type === "percent_off" ||
+          c.type === "flat_percent"
+      )?.value || 0
+    );
+    const buy = Number(conditions.find((c) => c.type === "buy")?.value || 0);
+    const pay = Number(conditions.find((c) => c.type === "pay")?.value || 0);
+  
+    switch (coupon_type) {
+      case "retailer_upto":
+      case "retailer_flat":
+        return total >= minOrder ? (total * percent) / 100 : 0;
+  
+      case "retailer_freebies":
+        return totalQuantity >= buy ? 0 : 0;
+  
+      case "loyalty_prepaid":
+        const get = Number(conditions.find((c) => c.type === "get")?.value || 0);
+        return total >= pay ? get : 0;
+  
+      case "subscription_daily":
+        return ((total * percent) / 100);
+
+      case "subscription_weekly":
+        return ((total * percent) / 100);
+
+      case "subscription_monthly":
+        return ((total * percent) / 100);
+
+      case "subscription_edit":
+        return ((total * percent) / 100);
+      
+      default:
+        return 0;
+    }
+  };
+  
+  
+  
+
+  // const calculateDiscount = () => calculateTotal() ;
 
   return (
     <Box className="cart_table_wrapper">
-      {loading && <Box className="loading"><CircularProgress/></Box>} 
-      <Paper>
+      {loading && (
+        <Box className="loading">
+          <CircularProgress />
+        </Box>
+      )}
+      <Paper className="table">
         <Box className="board_pins">
           <Box className="circle"></Box>
           <Box className="circle"></Box>
@@ -115,7 +242,7 @@ export default function CartTable({ rows }) {
             <TableBody>
               {data.length > 0 ? (
                 data.map((row, index) => (
-                  <TableRow key={row.id}>
+                  <TableRow key={row.product_no}>
                     <TableCell className="text_3" align="center">
                       {index + 1}
                     </TableCell>
@@ -127,8 +254,14 @@ export default function CartTable({ rows }) {
                         className="product_image"
                       />
                       <Box className="product_info">
-                        <Box component="img" className="vector" src={tbody_vector} />
-                        <Typography className="text_1">{row.product_name}</Typography>
+                        <Box
+                          component="img"
+                          className="vector"
+                          src={tbody_vector}
+                        />
+                        <Typography className="text_1">
+                          {row.product_name}
+                        </Typography>
                         {/* <Typography className="text_2">
                           {[
                             row.variation_1,
@@ -149,7 +282,9 @@ export default function CartTable({ rows }) {
                         >
                           <Box component="img" src={minus} alt="minus" />
                         </Button>
-                        <Typography className="text_3">{row.quantity}</Typography>
+                        <Typography className="text_3">
+                          {row.quantity}
+                        </Typography>
                         <Button
                           onClick={() => handleIncrement(index)}
                           className="operator"
@@ -160,7 +295,11 @@ export default function CartTable({ rows }) {
                     </TableCell>
                     <TableCell>
                       <Box className="product_info">
-                        <Box component="img" className="vector" src={tbody_vector} />
+                        <Box
+                          component="img"
+                          className="vector"
+                          src={tbody_vector}
+                        />
                         <Typography className="text_1">{row.brand}</Typography>
                       </Box>
                     </TableCell>
@@ -186,15 +325,32 @@ export default function CartTable({ rows }) {
             </TableBody>
             {data.length > 0 && (
               <TableFooter>
-                <TableRow>
-                  <TableCell colSpan={5} align="right">
-                    <Typography className="text_1">Total :</Typography>
-                  </TableCell>
-                  <TableCell className="text_2">
-                    &#8377;{(calculateDiscount()).toFixed(2)}
-                  </TableCell>
-                </TableRow>
-              </TableFooter>
+              <TableRow>
+                <TableCell colSpan={5} align="right">
+                  <Typography className="text_1">Subtotal :</Typography>
+                </TableCell>
+                <TableCell className="text_2">
+                  &#8377;{calculateTotal().toFixed(2)}
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell colSpan={5} align="right">
+                  <Typography className="text_1">Discount :</Typography>
+                </TableCell>
+                <TableCell className="text_2">
+                  -&#8377;{calculateDiscount().toFixed(2)}
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell colSpan={5} align="right">
+                  <Typography className="text_1">Total :</Typography>
+                </TableCell>
+                <TableCell className="text_2">
+                  &#8377;{(calculateTotal() - calculateDiscount()).toFixed(2)}
+                </TableCell>
+              </TableRow>
+            </TableFooter>
+            
             )}
           </Table>
         </TableContainer>
@@ -203,6 +359,12 @@ export default function CartTable({ rows }) {
           <Box className="circle"></Box>
         </Box>
       </Paper>
+      <CustomSnackbar
+              open={snackbar.open}
+              handleClose={() => setSnackbar({ ...snackbar, open: false })}
+              message={snackbar.message}
+              severity={snackbar.severity}
+            />
     </Box>
   );
 }

@@ -89,10 +89,10 @@ function RetailerCoupon({ selectedCoupon }) {
     fetchData();
   }, [token, selectedCouponKey]);
 
-  const handleClick = (e, id, discountAmount) => {
+  const handleClick = (e, coupon) => {
     e.preventDefault(); 
-    setSelectedOption(id);
-    dispatch(addCoupon({ couponId: id, discountAmount }));
+    setSelectedOption(coupon.coupon_id);
+    dispatch(addCoupon(coupon));
   };
 
   // Function to get the current URL with the token query parameter intact
@@ -113,14 +113,14 @@ function RetailerCoupon({ selectedCoupon }) {
           <Box className="body_container">
             {filteredCoupons?.map((coupon) => {
               const discount = coupon.conditions.find(
-                (condition) => condition.type === "percentage" || condition.type === "flat"
+                (condition) => condition.type === "percentage" || condition.type === "flat" || condition.type === "percent_off" || condition.type === "flat_percent" || condition.type === "save" ||condition.type === "unlock"
               )?.value;
               return (
                 <React.Fragment key={coupon.coupon_id}>
                   <Link
                     to={getCurrentUrlWithToken()}
                     onClick={(e) => {
-                      handleClick(e, coupon.coupon_id, Number(discount));
+                      handleClick(e, coupon);
                     }}
                     className={`coupon_container ${
                       selectedOption === coupon.coupon_id
