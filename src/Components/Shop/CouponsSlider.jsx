@@ -56,7 +56,7 @@ function CouponsSlider({ data, onActiveCouponChange }) {
               {couponItem.discount_category}
             </Typography>
             <Typography className="coupon_type">
-              {(couponItem.coupon_type)?.replace('_', ' ')}
+              {(couponItem.coupon_type)?.replace(/_/g, ' ')}
             </Typography>
           </Box>
         </SwiperSlide>

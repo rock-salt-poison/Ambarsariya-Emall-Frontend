@@ -149,7 +149,7 @@ function RetailerCoupon({ selectedCoupon }) {
 
                     <Box className="discount_coupon">
                       <Typography className="discount_type">
-                        {coupon.coupon_type.replace("_", " ")}
+                        {coupon.coupon_type.replace(/_/g, " ")}
                       </Typography>
                       {coupon.coupon_type === "retailer_upto" ? (
                         <>
