@@ -1,32 +1,54 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Box } from "@mui/material";
 import Button2 from "../../Components/Home/Button2";
 import LoginPageCard from "../../Components/Login/LoginPageCard";
 import lion_img from "../../Utils/images/Sell/login/lion.webp";
 import peacock_img from "../../Utils/images/Sell/login/peacock.webp";
 import { useSelector } from "react-redux";
-import { getUser } from "../../API/fetchExpressAPI";
+import { getShopUserData, getUser } from "../../API/fetchExpressAPI";
 
 function Login() {
   const token = useSelector((state) => state.auth.userAccessToken);
 
-  const [shopAccessToken, setShopAccessToken] = useState("");
+  const [accessToken, setAccessToken] = useState("");
+  const [isValidShop, setIsValidShop] = useState(false);
 
-  useEffect(() => {
-    const fetchShopToken = async () => {
-      if (token) {
-        try {
-          const resp = await getUser(token);
-          if(resp.length>0){
-            setShopAccessToken(resp[0].shop_access_token);
-          }
-        } catch (e) {
-          console.log(e);
+  // Fetch shop token and details
+  const fetchShopToken = useCallback(async () => {
+    try {
+      const resp = await getUser(token);
+      if (resp.length > 0) {
+        const shopToken = resp[0].shop_access_token;
+        const getShopDetails = await getShopUserData(shopToken);
+
+        if (
+          getShopDetails.length > 0 &&
+          getShopDetails[0].business_name.length > 0
+        ) {
+          setAccessToken(shopToken);
+          setIsValidShop(true);
+        } else {
+          setAccessToken('');
+          setIsValidShop(false);
         }
       }
-    };
-    fetchShopToken();
+    } catch (e) {
+      console.error(e);
+    }
   }, [token]);
+
+  useEffect(() => {
+    if (token) {
+      fetchShopToken();
+    }
+  }, [token, fetchShopToken]);
+
+  // Define the logic for redirectTo dynamically for "Sell" based on shop validity
+  const sellRedirectTo = accessToken
+    ? isValidShop
+      ? `../../AmbarsariyaMall/sell/support/shop/shop-detail/${accessToken}`
+      : "../../AmbarsariyaMall/sell/eshop"
+    : "../../AmbarsariyaMall/sell/eshop";
 
   return (
     <Box className="login_wrapper">
@@ -34,13 +56,16 @@ function Login() {
         <Box className="col">
           <Button2 text="Back" redirectTo={-1} />
         </Box>
+
+        {/* Always Render LoginPageCard but Change Redirect Dynamically */}
         <Box className="col">
           <LoginPageCard
             title="Sell"
             imgSrc={peacock_img}
-            redirectTo={`../../AmbarsariyaMall/sell/support/shop/shop-detail/${shopAccessToken}`}
+            redirectTo={sellRedirectTo}
           />
         </Box>
+
         <Box className="col">
           <LoginPageCard
             title="Buy"

@@ -7,12 +7,12 @@ import tag_chain_icon from '../../Utils/images/Sell/login/tag_chain_icon.svg';
 import input_img from '../../Utils/images/Sell/login/input_bg.svg';
 import { authenticateUser, getUser } from '../../API/fetchExpressAPI';
 import { setShopToken, setUserToken, setShopTokenValid, setUserTokenValid, setMemberTokenValid, setMemberToken } from '../../store/authSlice'; 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import CustomSnackbar from '../CustomSnackbar';
 
-const LoginForm = ({redirectTo, title, forgotPassword}) => {
-  const navigate = useNavigate();
+const LoginForm = ({ redirectTo, title, forgotPassword }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
   const [formData, setFormData] = useState({
@@ -31,6 +31,9 @@ const LoginForm = ({redirectTo, title, forgotPassword}) => {
   });
 
   const [step, setStep] = useState(0); // Step 0: username, Step 1: password
+  const [isLoginSuccessful, setIsLoginSuccessful] = useState(false); // State to track login success
+
+  const token = useSelector((state) => state.auth.userAccessToken); // Get token from Redux
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -92,7 +95,7 @@ const LoginForm = ({redirectTo, title, forgotPassword}) => {
 
   const handleSubmit = async (e) => {
     if (e) e.preventDefault();
-    console.log(title)
+
     if (validate()) {
       try {
         const formattedData = {
@@ -100,25 +103,27 @@ const LoginForm = ({redirectTo, title, forgotPassword}) => {
           username: formData.username.toLowerCase(),
           type: title.toLowerCase(),
         };
+
         // Call the API function to authenticate user
         const data = await authenticateUser(formattedData);
         
-        if(data.user_access_token){
-            dispatch(setUserToken(data.user_access_token));
-            
-            localStorage.setItem('accessToken', data.user_access_token);
+        if (data.user_access_token) {
+          // Dispatch the token to Redux first
+          dispatch(setUserToken(data.user_access_token));
+          localStorage.setItem('accessToken', data.user_access_token);
 
-            // Store token validity in Redux
-            dispatch(setUserTokenValid(true));
+          // Store token validity in Redux
+          dispatch(setUserTokenValid(true));
+
+          // Set login success flag
+          setIsLoginSuccessful(true); // Flag to indicate login success
+
+          setSnackbar({
+            open: true,
+            message: 'Login Successful',
+            severity: 'success',
+          });
         }
-
-        setSnackbar({
-          open: true,
-          message: 'Login Successful',
-          severity: 'success',
-        });
-        setTimeout(()=>{navigate(redirectTo)},2500);
-        
       } catch (error) {
         console.error('Error logging in:', error);
         setSnackbar({
@@ -126,12 +131,22 @@ const LoginForm = ({redirectTo, title, forgotPassword}) => {
           message: error.response.data.message,
           severity: 'error',
         });
-        if(!(error.response.data.message === "Incorrect password.")){
+
+        if (!(error.response.data.message === "Incorrect password.")) {
           setStep(0);
         }
       }
     }
   };
+
+  // Effect to handle redirection after token is updated
+  useEffect(() => {
+    if (isLoginSuccessful && token) {
+      setTimeout(() => {
+        navigate(redirectTo); // Redirect after setting the token
+      }, 2500);
+    }
+  }, [isLoginSuccessful, token, redirectTo, navigate]);
 
   return (
     <Box component="form" noValidate autoComplete="off">
@@ -202,5 +217,6 @@ const LoginForm = ({redirectTo, title, forgotPassword}) => {
     </Box>
   );
 };
+
 
 export default LoginForm;

@@ -11,11 +11,15 @@ import mall_road_amritsar from '../../Utils/images/Sell/support/mall_road_amrits
 import hall_gate_amritsar from '../../Utils/images/Sell/support/hall_gate_amritsar.webp';
 import AutoCompleteSearchField from '../../Components/Products/AutoCompleteSearchField';
 import { allShops } from '../../API/fetchExpressAPI';
+import CouponsSlider from '../../Components/Shop/CouponsSlider';
 
 const MerchantDetailsPage = () => {
   const [searchParams] = useSearchParams();
   const id = searchParams.get("q");
   const navigate = useNavigate();
+  const [discountCoupons, setDiscountCoupons] = useState([]);
+  const [activeCoupon, setActiveCoupon] = useState(null); // Track active coupon
+  
 
   const imgSrc = () => {
     if (id === 'Wagah Border') {
@@ -47,6 +51,7 @@ const MerchantDetailsPage = () => {
         const resp = await allShops();
         if (resp && Array.isArray(resp)) {
           setShopData(resp);
+          console.log(resp)
           setFilteredData(resp);  
         } else {
           console.error('Failed to fetch shops data');
@@ -100,10 +105,16 @@ const MerchantDetailsPage = () => {
                         <Typography className='text_3'>min purchase 1000</Typography>
                       </Box>
                     </Box>
-                    <Box className="discount_coupon">
-                      <Typography className='coupon'>coupon</Typography>
-                      <Typography className='coupon_value'>Amall10</Typography>
-                    </Box>
+                    {/* <DiscountPercentageSlider
+                        setOpenPopup={setOpenPopup}
+                        data={activeCoupon}
+                      /> */}
+                      <CouponsSlider
+                        data={discountCoupons}
+                        onActiveCouponChange={(coupons) =>
+                          setActiveCoupon(coupons)
+                        }
+                      />
                   </Box>
                   <Box className="product_details">
                     <Typography variant="h3">Category:

@@ -13,7 +13,7 @@ import Logo from '../Components/Logo';
 import { useSelector } from 'react-redux';
 import { useLogout } from '../customHooks/useLogout';
 import { fetchUserType } from '../Components/userBadge';
-import { getUser } from '../API/fetchExpressAPI';
+import { getShopUserData, getUser } from '../API/fetchExpressAPI';
 
 function Sell() {
   const navigate = useNavigate();
@@ -23,12 +23,26 @@ function Sell() {
   const [userIcon, setUserIcon] = useState(null);
 
   const [shopToken, setShopToken] = useState('');
+  const [validShop, setValidShop] = useState(false);
 
   useEffect(()=> {
     const fetchShopToken = async() => {
       if(token){
         const resp = await getUser(token);
-        setShopToken(resp[0].shop_access_token);
+        if(resp.length>0){
+          const shopData = await getShopUserData(resp[0].shop_access_token);
+          console.log(shopData)
+          if(shopData?.length>0){
+            if((shopData[0]?.business_name)?.length>0){
+              setValidShop(true);
+              setShopToken(shopData[0].shop_access_token);
+            }else{
+              setValidShop(false);
+              setShopToken(shopData[0].shop_access_token);
+            }
+          }
+
+        }
       }
     }
     fetchShopToken();
@@ -64,9 +78,9 @@ function Sell() {
       } else if (btns.classList.contains('Grow')) {
         destination = 'grow';
       }else if (btns.classList.contains('E-shop')) {
-        destination = token ? shopToken ? `support/shop/shop-detail/${shopToken}` : 'eshop':'login';
+        destination = shopToken ? validShop ? `support/shop/shop-detail/${shopToken}` : 'eshop':'login';
       }else if (btns.classList.contains('E-sale')) {
-        destination =token ? 'esale':'login';
+        destination = token ? 'esale':'login';
       }
 
       setTimeout(() => {

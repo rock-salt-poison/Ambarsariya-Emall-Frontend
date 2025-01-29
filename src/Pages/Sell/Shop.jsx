@@ -91,6 +91,7 @@ function Shop() {
               <Box className="col">
                 <Box className="visible_on_small_screen">
                   <Button2 text="Back" redirectTo={`../support/shop?token=${token}`} />
+                  {/* <Button2 text="Back" redirectTo={-1} /> */}
                 </Box>
                 {data && <ShopDesign data={data} />}
                 {data && <WomanPointingShopName />}
