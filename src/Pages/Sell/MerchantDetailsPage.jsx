@@ -10,7 +10,7 @@ import trilium_mall_amritsar from '../../Utils/images/Sell/support/trilium_mall_
 import mall_road_amritsar from '../../Utils/images/Sell/support/mall_road_amritsar.webp';
 import hall_gate_amritsar from '../../Utils/images/Sell/support/hall_gate_amritsar.webp';
 import AutoCompleteSearchField from '../../Components/Products/AutoCompleteSearchField';
-import { allShops } from '../../API/fetchExpressAPI';
+import { allShops, get_discount_coupons } from '../../API/fetchExpressAPI';
 import CouponsSlider from '../../Components/Shop/CouponsSlider';
 
 const MerchantDetailsPage = () => {
@@ -51,8 +51,18 @@ const MerchantDetailsPage = () => {
         const resp = await allShops();
         if (resp && Array.isArray(resp)) {
           setShopData(resp);
-          console.log(resp)
-          setFilteredData(resp);  
+          setFilteredData(resp);
+  
+          const discounts = await Promise.all(
+            resp.map((shop) => get_discount_coupons(shop.shop_no))
+          );
+  
+          const allCoupons = discounts.map((d) => d.data).flat();
+          setDiscountCoupons(allCoupons);
+  
+          if (allCoupons.length > 0) {
+            setActiveCoupon(allCoupons[0]?.coupons?.[0]);
+          }
         } else {
           console.error('Failed to fetch shops data');
         }
@@ -64,7 +74,7 @@ const MerchantDetailsPage = () => {
     };
     fetchShops();
   }, [id]);
-
+  
   const handleFilter = (data) => {
     setFilteredData(data);
   };

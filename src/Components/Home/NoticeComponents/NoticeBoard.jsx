@@ -7,13 +7,13 @@ function NoticeBoard({ data, title }) {
 
   // Function to filter records
   const filterRecords = () => {
-    const today = new Date(); // Get today's date
+    const today = new Date().toLocaleDateString('en-CA'); // Get today's date as 'YYYY-MM-DD'
 
     // Filter items based on date range and remove duplicates by title
     const filtered = data
       ?.filter((item) => {
-        const fromDate = new Date(item.from_date); // Convert from_date to Date object
-        const toDate = new Date(item.to_date); // Convert to_date to Date object
+        const fromDate = new Date(item.from_date).toLocaleDateString('en-CA');
+      const toDate = new Date(item.to_date).toLocaleDateString('en-CA'); // Convert to_date to Date object
 
         // Check if today's date lies between from_date and to_date
         return today >= fromDate && today <= toDate;
@@ -32,12 +32,12 @@ function NoticeBoard({ data, title }) {
 
   // Function to get a single record by title
   const getRecordByTitle = () => {
-    const today = new Date(); // Get today's date
+    const today = new Date().toLocaleDateString('en-CA');
 
     // Find the first record with the matching title where today's date is valid
     const singleRecord = data?.find((item) => {
-      const fromDate = new Date(item.from_date);
-      const toDate = new Date(item.to_date);
+      const fromDate = new Date(item.from_date).toLocaleDateString('en-CA');
+    const toDate = new Date(item.to_date).toLocaleDateString('en-CA');
 
       return (
         item.title.toLowerCase() === title.toLowerCase() &&
@@ -80,7 +80,7 @@ function NoticeBoard({ data, title }) {
                   }}
                 ></Typography>
                 <Typography className="date">
-                  {item.from_date.split("T")[0]} - {item.to_date.split("T")[0]}
+                  {new Date(item.from_date).toLocaleDateString('en-CA')} - {new Date(item.to_date).toLocaleDateString("en-CA")}
                 </Typography>
               </Link>
               <Box className="bottom_border">

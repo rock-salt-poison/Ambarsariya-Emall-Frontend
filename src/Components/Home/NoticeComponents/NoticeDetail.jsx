@@ -77,9 +77,10 @@ function NoticeDetail() {
           speed={2000}
           pagination={{
             clickable: true,
+            type: 'fraction',
           }}
           navigation={true}
-          modules={[Autoplay, Navigation]}
+          modules={[ Pagination, Navigation]}
           className="mySwiper"
         >
           {noticeList.map((notice, index) => (
@@ -133,14 +134,6 @@ function NoticeDetail() {
                         </Typography>
                       </Box>
                     )}
-                    {notice?.shop_name && (
-                      <Box className="col-auto">
-                        <Typography className="heading">Shop Name</Typography>
-                        <Typography className="desc">
-                          {notice.shop_name}
-                        </Typography>
-                      </Box>
-                    )}
                     {notice?.member_name && (
                       <Box className="col-auto">
                         <Typography className="heading">Member Name</Typography>
@@ -160,8 +153,8 @@ function NoticeDetail() {
                     <Box className="col-auto">
                       <Typography className="heading">Date</Typography>
                       <Typography className="desc">
-                        {notice?.from_date?.split("T")[0]} -{" "}
-                        {notice?.to_date?.split("T")[0]}
+                        {new Date(notice?.from_date)?.toLocaleDateString('en-CA')} -{" "}
+                        {new Date(notice?.to_date)?.toLocaleDateString('en-CA')}
                       </Typography>
                     </Box>
                   </Box>

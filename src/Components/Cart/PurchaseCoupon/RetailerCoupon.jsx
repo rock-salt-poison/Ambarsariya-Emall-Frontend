@@ -202,7 +202,7 @@ function RetailerCoupon({ selectedCoupon }) {
                       ) : coupon.coupon_type === "retailer_freebies" ? (
                         <>
                           <Typography className="text2">
-                            buy
+                            buy{" "}
                             <Typography
                               className="discount_percentage"
                               variant="span"
@@ -214,7 +214,7 @@ function RetailerCoupon({ selectedCoupon }) {
                               }
                             </Typography>
                             <Typography className="text2" variant="span">
-                              get
+                              {" "}get
                               <Typography
                                 className="discount_percentage"
                                 variant="span"
@@ -315,7 +315,7 @@ function RetailerCoupon({ selectedCoupon }) {
                       ) : coupon.coupon_type === "loyalty_prepaid" ? (
                         <>
                           <Typography className="text2">
-                            Pay
+                            Pay {" "}
                             <Typography
                               className="discount_percentage"
                               variant="span"
@@ -326,6 +326,7 @@ function RetailerCoupon({ selectedCoupon }) {
                                 )?.value
                               }
                             </Typography>
+                            {" "}
                             <Typography className="text2" variant="span">
                               get
                               <Typography
