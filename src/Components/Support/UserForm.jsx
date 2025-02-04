@@ -4,10 +4,10 @@ import arrow_icon from "../../Utils/images/Sell/support/arrow_icon.svg";
 import { get_memberData, get_visitorData, getMemberData, post_support_name_password } from "../../API/fetchExpressAPI";
 import FormField from "../Form/FormField";
 import CustomSnackbar from "../CustomSnackbar";
-import { setVisitorToken } from "../../store/authSlice";
+import { setUserToken } from "../../store/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 
-const UserForm = ({ onValidation, visitorData }) => {
+const UserForm = ({ onValidation, visitorData, visibility }) => {
   // State to store form data and errors
 
   const [formData, setFormData] = useState({
@@ -139,11 +139,11 @@ const UserForm = ({ onValidation, visitorData }) => {
             setLoading(false);
             
             if(resp){
-              dispatch(setVisitorToken(resp.newAccessToken));
+              dispatch(setUserToken(resp.access_token));
               
-              localStorage.setItem('visitorAccessToken', resp.newAccessToken);
+              localStorage.setItem('accessToken', resp.access_token);
               
-              onValidation(true, resp.newAccessToken);
+              onValidation(true, resp.access_token);
               setSnackbar({ open: true, message: resp.message, severity: 'success' });
             }
 
@@ -167,7 +167,7 @@ const UserForm = ({ onValidation, visitorData }) => {
     {loading && <Box className="loading">
                 <CircularProgress />
               </Box>}
-    <Box component="form" noValidate autoComplete="off" onSubmit={handleSubmit}>
+    <Box component="form" noValidate autoComplete="off" onSubmit={handleSubmit} visibility={visibility && visibility}>
       <Box className="form-group">
         <FormField
           type="text"

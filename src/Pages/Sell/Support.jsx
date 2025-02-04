@@ -8,14 +8,14 @@ import attachment_icon from '../../Utils/images/Sell/support/attachment_icon.png
 import createCustomTheme from '../../styles/CustomSelectDropdownTheme';
 import FormField from '../../Components/Form/FormField';
 import { useSelector } from 'react-redux';
-import { get_visitorData } from '../../API/fetchExpressAPI';
+import { get_visitorData, getUser } from '../../API/fetchExpressAPI';
 import CustomSnackbar from '../../Components/CustomSnackbar';
 
 function Support(props) {
   const [file, setFile] = useState(null); // State to hold the uploaded file
   const [isFormValid, setIsFormValid] = useState(false); // State to track form validation
   // const [userName, setUserName] = useState('');
-  const [visitorData, setVisitorData] = useState('');
+  const [visitorData, setVisitorData] = useState(null);
 
   const [loading, setLoading] = useState(false);
   
@@ -25,7 +25,7 @@ function Support(props) {
     severity: "success",
   });
 
-  const token = useSelector((state) => state.auth.visitorAccessToken);
+  const token = useSelector((state) => state.auth.userAccessToken);
 
   const themeProps = {
     popoverBackgroundColor: props.popoverBackgroundColor || 'var(--yellow)',
@@ -44,28 +44,35 @@ function Support(props) {
     }
   };
 
+  const fetchData = async (visitor_token) => {
+    try {
+      setLoading(true);
+      const resp = (await get_visitorData(visitor_token));
+      if (resp.valid) {
+        setVisitorData(resp.data[0]);
+        setLoading(false);
+      } else {
+        console.error(resp);
+        setVisitorData(null);
+        setLoading(false);
+        setSnackbar({ open: true, message: resp.message, severity: 'error' });
+      }
+    } catch (error) {
+      setLoading(false);
+      setSnackbar({ open: true, message: error.response.data.message, severity: 'error' });
+      setVisitorData(null);
+    }
+  };
+
   useEffect(() => {
     if(token){
-      const fetchData = async () => {
-        try {
-          setLoading(true);
-          const resp = (await get_visitorData(token));
-          if (resp.valid) {
-            setVisitorData(resp.data[0]);
-            setLoading(false);
-          } else {
-            console.error(resp);
-            setVisitorData({});
-            setLoading(false);
-            setSnackbar({ open: true, message: resp.message, severity: 'error' });
+      const verifyUser = async () => {
+        const user = (await getUser(token))[0];
+          if(user.user_type === "visitor"){
+            fetchData(user.user_access_token);
           }
-        } catch (error) {
-          setLoading(false);
-          setSnackbar({ open: true, message: error.response.data.message, severity: 'error' });
-          setVisitorData({});
-        }
-      };
-      fetchData();
+      }
+      verifyUser();
     }
   }, [token]);
   
@@ -81,6 +88,7 @@ function Support(props) {
     setVisitorData(data);
   };
 
+console.log(visitorData);
 
   return (
     <ThemeProvider theme={theme}>
@@ -93,8 +101,8 @@ function Support(props) {
             <Cards />
           </Box>
           <Box className="col second_wrapper">
-            <Box className="col-1">
-              <UserForm onValidation={handleFormValidation} visitorData={visitorData} />
+            <Box className='col-1'>
+              <UserForm onValidation={handleFormValidation} visitorData={visitorData} visibility={visitorData !== null  ? 'hidden' : 'visible'}/>
               <Button2 text="Back" redirectTo="/AmbarsariyaMall/sell" />
             </Box>
             {visitorData && Object.keys(visitorData).length > 0 && (

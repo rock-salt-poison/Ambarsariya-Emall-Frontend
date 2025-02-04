@@ -12,7 +12,7 @@ const UserPortfolioForm = () => {
     name: '',
     phoneNumber: '',
     gender: '',
-    age: '',
+    dob: '',
     address: '',
     username: '',
     password: '',
@@ -41,7 +41,7 @@ const UserPortfolioForm = () => {
           name: user[0].full_name,
           phoneNumber: user[0].phone_no_1,
           gender: user[0].gender,
-          age: user[0].age,
+          dob: user[0].dob,
           address: user[0].address,
           username: user[0].username
         })
@@ -92,7 +92,7 @@ const UserPortfolioForm = () => {
     let valid = true;
     const newErrors = {};
     const newErrorMessages = {};
-    const requiredFields = ['name', 'phoneNumber', 'gender', 'age', 'address', 'username', 'password', 'confirm_password'];
+    const requiredFields = ['name', 'phoneNumber', 'gender', 'dob', 'address', 'username', 'password', 'confirm_password'];
 
     requiredFields.forEach((field) => {
       if (!formData[field]) {
@@ -116,11 +116,11 @@ const UserPortfolioForm = () => {
       valid = false;
     }
 
-    if (!/^\d+$/.test(formData.age)) {
-      newErrors.age = true;
-      newErrorMessages.age = 'Age must be a number.';
-      valid = false;
-    }
+    // if (!/^\d+$/.test(formData.age)) {
+    //   newErrors.age = true;
+    //   newErrorMessages.age = 'Age must be a number.';
+    //   valid = false;
+    // }
 
     if (formData.confirm_password !== formData.password) {
       newErrors.confirm_password = true;
@@ -145,7 +145,7 @@ const UserPortfolioForm = () => {
           address:formData.address,
           phone:formData.phoneNumber,
           gender:formData.gender,
-          age:formData.age
+          dob:formData.dob
         }
   
         const response = await postMemberData(userData);
@@ -215,7 +215,7 @@ const UserPortfolioForm = () => {
 
         <Box className="form-group-2">
           {renderFormField('gender', 'select', genderOptions, 'Select gender')}
-          {renderFormField('age', 'number', [], 'Enter your age')}
+          {renderFormField('dob', 'date', [], 'Enter your dob')}
         </Box>
         
         {renderFormField('address', 'text', [], 'Enter your address')}

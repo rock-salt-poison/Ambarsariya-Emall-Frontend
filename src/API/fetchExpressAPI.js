@@ -258,3 +258,17 @@ export const send_otp_to_email = async (data) => {
     throw e;
   }
 }
+
+export const get_advt = async (advt_page) => {
+  try{
+      if(advt_page){
+          const response = await  axios.get(`${admin_link}/advt/${advt_page}`);
+          return response.data;
+      }else{
+          const response = await  axios.get(`${admin_link}/advt`);
+          return response.data;
+      }
+  }catch(e){
+      throw e;
+  }
+}

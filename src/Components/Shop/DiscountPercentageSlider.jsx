@@ -298,7 +298,7 @@ function DiscountPercentageSlider({ setOpenPopup, data }) {
           <Box
             className="discount_percentage"
             onClick={() => {
-              setOpenPopup(true);
+              setOpenPopup && setOpenPopup(true);
             }}
           >
             {renderConditions(couponItem.conditions, couponItem.coupon_type)}

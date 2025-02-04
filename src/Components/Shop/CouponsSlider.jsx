@@ -12,7 +12,7 @@ import { Autoplay, EffectCube, Pagination } from 'swiper/modules';
 
 function CouponsSlider({ data, onActiveCouponChange }) {
   // Flatten the data into a single array of coupons with their category
-  const flattenedCoupons = data.flatMap((category) =>
+  const flattenedCoupons = data?.flatMap((category) =>
     category.coupons.map((coupon) => ({
       ...coupon,
       discount_category: category.discount_category,
@@ -33,7 +33,7 @@ function CouponsSlider({ data, onActiveCouponChange }) {
       modules={[EffectCube, Pagination, Autoplay]}
       className="mySwiper"
       loop={false}
-      loopAdditionalSlides={flattenedCoupons.length}
+      loopAdditionalSlides={flattenedCoupons?.length}
       autoplay={{
         delay: 4000,
         disableOnInteraction: false,

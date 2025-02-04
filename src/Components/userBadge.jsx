@@ -9,7 +9,7 @@ export const fetchUserType = async (token, setUserIcon) => {
   if (token) {
     try {
       const user = await getUser(token);
-      const user_type = user[0].user_type;
+      const user_type = user?.[0].user_type;
 
       // Set the user icon based on the user type
       if (user_type === 'member') {

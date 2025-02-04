@@ -866,10 +866,129 @@ a {
             top: -10px;
 
             img {
-              width: 285px;
+              width: 68%;
               height: 175px;
             }
 
+            .ticket {
+              @include full-absolute(30px, 0px, 33px, 0px);
+              margin: 0 auto;
+              width: 51%;
+              height: 96px;
+              gap: 5px;
+              background: $yellow; 
+              border-radius: 10px;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              padding: 10px 17px;
+              box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+              --mask:
+              /* Left side cuts */
+              radial-gradient(circle 10px at 0% 57%, transparent 98%, black) 0% 14% / 80% 26px no-repeat,
+              radial-gradient(circle 10px at 0% 52%, transparent 98%, black) 0% 39% / 80% 23px no-repeat,
+              radial-gradient(circle 10px at 0% 52%, transparent 98%, black) 0% 61% / 80% 22px no-repeat,
+              radial-gradient(circle 10px at 0% 50%, transparent 96%, black) 0% 85% / 80% 24px no-repeat,
+          
+              /* Right side cuts (mirroring left side) */
+              radial-gradient(circle 10px at 100% 57%, transparent 98%, black) 100% 14% / 80% 26px no-repeat,
+              radial-gradient(circle 10px at 100% 52%, transparent 98%, black) 100% 39% / 80% 23px no-repeat,
+              radial-gradient(circle 10px at 100% 52%, transparent 98%, black) 100% 61% / 80% 22px no-repeat,
+              radial-gradient(circle 10px at 100% 50%, transparent 96%, black) 100% 85% / 80% 24px no-repeat,
+          
+              /* Top and Bottom middle cuts */  
+              radial-gradient(circle 10px at 1% 0, transparent 98%, black) left top / 12% 14px no-repeat,  
+              radial-gradient(circle 10px at 31% 0, transparent 98%, black) center top / 79% 14px no-repeat, 
+              radial-gradient(circle 10px at 97% 0, transparent 98%, black) right top / 23% 14px no-repeat,
+
+
+              radial-gradient(circle 10px at 1% 100%, transparent 98%, black) left bottom / 12% 14px no-repeat,  
+              radial-gradient(circle 10px at 35% 100%, transparent 98%, black) center bottom / 79% 14px no-repeat,
+              radial-gradient(circle 10px at 97% 100%, transparent 98%, black) right bottom / 23% 14px no-repeat;
+          
+          -webkit-mask: var(--mask);
+          mask: var(--mask);
+          
+          }
+          
+          /* Left section */
+          .ticket .left {
+              width: 25%;
+              align-self: stretch;
+              background: $light-yellow; 
+              border-radius: 5px;
+              padding: 10px;
+              --mask: radial-gradient(8px at 26px 26px,#0000 98%,#000) -26px -26px;
+              -webkit-mask: var(--mask);
+                      mask: var(--mask);
+          }
+          
+          /* Right section */
+          .ticket .right {
+              width: 70%;
+              align-self: stretch;
+              position: relative;
+              --mask: radial-gradient(8px at 26px 26px,#0000 98%,#000) -26px -26px;
+              -webkit-mask: var(--mask);
+                      mask: var(--mask);
+              background-color: $light-yellow;
+          }
+
+          .divider{
+            border-right: 2px dashed $white;
+            height: 100%;
+          }
+
+          
+          /* Inner border box */
+          .inner-box {
+              padding: 10px;
+          }
+          
+
+          .mySwiper{
+            @include full-absolute(-67px, 0px, 0px, 0px);
+            width: 64%;
+            margin: 0 auto;
+          }
+
+          .star{
+            background: linear-gradient(180deg, #adc6e9cc 20%, #e6bbcdcc 60%);
+            box-shadow: -5px 12px 4px 6px #000;
+            // width: 64%;
+            aspect-ratio: 1;
+            margin: 0 auto;
+           /* Define the gradient */
+           --g: /38% 38% radial-gradient(#000 calc(64% - -6px), #0000 72%) no-repeat;
+           --mask: radial-gradient(80% 85%, #000 calc(27.476% - 1px), #0000 22.476%) subtract, 100% 63% var(--g), 49.5% 98% var(--g), -1% 63% var(--g), 20% 9% var(--g), 78% 9% var(--g);
+           overflow:visible;
+          -webkit-mask: var(--mask);
+           mask: var(--mask);
+           @include flex-center(column, center);
+
+           .container{
+            width: 21%;
+            height: 18%;
+            position: relative;
+            top: 5px;
+            @include flex-center(column, center);
+            gap:5px;
+
+            .marquee__message{
+              @include homepage-buttons(
+                  "Proxima",
+                  15px,
+                  $black,
+                  "none"
+                );
+                @include hover-scale(1, 0s);
+                line-height: 15px;
+                white-space: nowrap;
+                margin-right: 30px;
+                text-transform: capitalize;
+            }
+           }
+          }
             .content {
               @include full-absolute(auto, auto, auto, auto);
 
@@ -2050,9 +2169,104 @@ a {
         position: relative;
 
         .neonBorderImg {
-          width: 320px;
-          height: 220px;
+          width: 380px;
+          height: 190px;
         }
+
+        .ticket {
+          @include full-absolute(0px, 0px, 0px, 0px);
+          margin: 0 auto;
+          gap: 5px;
+          background: $yellow; 
+          border-radius: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 10px 17px;
+          box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+          --mask:
+          /* Left side cuts */ 
+          radial-gradient(circle 10px at 0% 57%, transparent 98%, black) 0% 17% / 80% 27px no-repeat,  
+          radial-gradient(circle 10px at 0% 52%, transparent 98%, black) 0% 35% / 80% 23px no-repeat,  
+          radial-gradient(circle 10px at 0% 52%, transparent 98%, black) 0% 52% / 80% 22px no-repeat,  
+          radial-gradient(circle 10px at 0% 50%, transparent 96%, black) 0% 68% / 80% 24px no-repeat,
+          radial-gradient(circle 10px at 0% 50%, transparent 96%, black) 0% 84% / 80% 24px no-repeat, 
+          
+          /* Right side cuts (mirroring left side) */  
+          radial-gradient(circle 10px at 100% 57%, transparent 98%, black) 100% 17% / 80% 27px no-repeat,  
+          radial-gradient(circle 10px at 100% 52%, transparent 98%, black) 100% 35% / 80% 23px no-repeat,  
+          radial-gradient(circle 10px at 100% 52%, transparent 98%, black) 100% 52% / 80% 22px no-repeat,  
+          radial-gradient(circle 10px at 100% 50%, transparent 96%, black) 100% 68% / 80% 24px no-repeat,  
+          radial-gradient(circle 10px at 100% 50%, transparent 96%, black) 100% 84% / 80% 24px no-repeat,  
+          
+          /* Top and Bottom middle cuts */  
+          radial-gradient(circle 10px at 1% 0, transparent 98%, black) left top / 12% 23px no-repeat,  
+          radial-gradient(circle 10px at 35% 0, transparent 98%, black) center top / 79% 23px no-repeat,  
+          radial-gradient(circle 10px at 97% 0, transparent 98%, black) right top / 23% 23px no-repeat,  
+          radial-gradient(circle 10px at 1% 100%, transparent 98%, black) left bottom / 12% 21px no-repeat,  
+          radial-gradient(circle 10px at 35% 100%, transparent 98%, black) center bottom / 79% 21px no-repeat,  
+          radial-gradient(circle 10px at 97% 100%, transparent 98%, black) right bottom / 23% 21px no-repeat;
+      
+      -webkit-mask: var(--mask);
+      mask: var(--mask);
+      
+      }
+      
+      /* Left section */
+      .ticket .left {
+          width: 25%;
+          align-self: stretch;
+          background: $light-yellow; 
+          border-radius: 5px;
+          padding: 10px;
+          --mask: radial-gradient(8px at 26px 26px,#0000 98%,#000) -26px -26px;
+          -webkit-mask: var(--mask);
+                  mask: var(--mask);
+                  
+          .container{
+            @include flex-center(column, center);
+          }
+
+          .sector{
+            white-space: no-wrap;
+            width:100%;
+            transform: rotate(270deg);
+          }
+          .domain{
+            white-space: no-wrap;
+            width:100%;
+            transform: rotate(270deg);
+          }
+      }
+      
+      /* Right section */
+      .ticket .right {
+          width: 70%;
+          align-self: stretch;
+          position: relative;
+          --mask: radial-gradient(8px at 26px 26px,#0000 98%,#000) -26px -26px;
+          -webkit-mask: var(--mask);
+                  mask: var(--mask);
+          background-color: $light-yellow;
+      }
+
+      .divider{
+        border-right: 2px dashed $white;
+        height: 100%;
+      }
+
+      
+      /* Inner border box */
+      .inner-box {
+          padding: 10px;
+      }
+      
+
+      .mySwiper{
+        @include full-absolute(18px, 0px, 20px, 0px);
+        width: 80%;
+        margin: 0 auto;
+      }
 
         .travelRow {
           @include full-absolute(0px, 0px, 0px, 0px);
@@ -3331,6 +3545,7 @@ a {
   position: relative;
   width: 100%;
   min-height: 100vh;
+  max-height: 100vh;
   @include background-center-no-repeat($supportBgImg);
   background-size: cover;
   background-position: center top;
@@ -3491,6 +3706,11 @@ a {
         place-items: normal;
         flex-wrap: wrap;
         flex: 1;
+        height: 60%;
+
+        .hidden{
+          visibility: hidden;
+        }
 
         .col-1 {
           @include flex-center(column, space-between);
@@ -3601,6 +3821,8 @@ a {
 
           form {
             margin-right: 40px;
+            transform: translate(58px, -80px);
+            z-index: 1;
 
             .form-control {
               .form-row {
@@ -3615,7 +3837,7 @@ a {
                       box-shadow: none;
 
                       .upload_file {
-                        width: 80px;
+                        width: 46.49px;
                       }
                     }
                   }
@@ -3646,6 +3868,7 @@ a {
           flex: 1.2;
           width: 100%;
           z-index: 0;
+          height: 90%;
 
           .MuiList-root {
             max-width: 260px;
@@ -3665,6 +3888,7 @@ a {
             opacity: 0.87;
             box-shadow: -30px 25px 0px 7px #984a1b;
             align-self: stretch;
+            height: 75%;
 
             .circle {
               width: 100px;
@@ -3677,9 +3901,20 @@ a {
             }
 
             .content {
-              @include flex-center(column, center);
+              @include flex-center(column, flex-start);
               gap: 15px;
               width: 100%;
+              height: 100%;
+              overflow-y: scroll;
+              padding-right: 10px;
+
+              &::-webkit-scrollbar-thumb{
+                background: $brown;
+              }
+
+              &::-webkit-scrollbar{
+                background: $yellow;
+              }
 
               h2 {
                 @include homepage-buttons(
@@ -3817,8 +4052,11 @@ a {
               }
 
               .notifications {
-                padding: 0 30px;
-                width: 70%;
+                padding: 15px;
+                margin-top: 20px;
+                background: #fadfb9;
+                width: 90%;
+                align-self: center;
                 @include flex-center(column, center);
                 gap: 8px;
 
@@ -3867,12 +4105,21 @@ a {
 
         .col-3 {
           margin-top: 40px;
+          height: auto !important;
+          flex: auto !important;
 
           .container {
             border-radius: 30px !important;
             box-shadow: -7px 9px 0px 1px #984a1b !important;
             padding: 45px 15px 25px !important;
             border: 5px solid #994b1d !important;
+            height: auto !important;
+
+            .content{
+              height: auto !important;
+              padding: 0px !important;
+              overflow-y: visible !important;
+            }
 
             .circle {
               width: 75px !important;
@@ -4041,6 +4288,19 @@ a {
             flex: 1;
             align-self: stretch;
             cursor: pointer;
+
+            .swiper {
+              max-width: 200px;
+              flex: 1;
+              align-self: stretch;
+              margin: 0px !important;
+
+              .swiper-wrapper {
+                .swiper-slide {
+                  @include flex-center(row, center);
+                }
+              }
+            }
 
             .category {
               @include flex-center(column, flex-start);
@@ -16993,6 +17253,10 @@ body .MuiBackdrop-root {
 }
 
 input[readonly] {
+  cursor: not-allowed;
+}
+
+textarea[readonly]{
   cursor: not-allowed;
 }
 

@@ -30,15 +30,17 @@ function Sell() {
       if(token){
         const resp = await getUser(token);
         if(resp.length>0){
-          const shopData = await getShopUserData(resp[0].shop_access_token);
-          console.log(shopData)
-          if(shopData?.length>0){
-            if((shopData[0]?.business_name)?.length>0){
-              setValidShop(true);
-              setShopToken(shopData[0].shop_access_token);
-            }else{
-              setValidShop(false);
-              setShopToken(shopData[0].shop_access_token);
+          if(resp[0].shop_access_token){
+            const shopData = await getShopUserData(resp[0].shop_access_token);
+            console.log(shopData)
+            if(shopData?.length>0){
+              if((shopData[0]?.business_name)?.length>0){
+                setValidShop(true);
+                setShopToken(shopData[0].shop_access_token);
+              }else{
+                setValidShop(false);
+                setShopToken(shopData[0].shop_access_token);
+              }
             }
           }
 

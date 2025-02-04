@@ -12,6 +12,9 @@ import CurrencyAndTimeComponent from "../Components/Home/ClockPageComponents/Cur
 import { fetchWeatherData } from "../API/weatherAPI2";
 import useHeight from "../customHooks/useHeight";
 import { get_countries } from "../API/fetchExpressAPI";
+import Coupon from "../Components/Home/TimeTablePopupComponents/Coupon";
+import clockPageNeonBg from '../Utils/images/clock-page-neon-shadow.png';
+
 
 function ClockPage() {
   const [weather, setWeather] = useState(null);
@@ -50,6 +53,15 @@ function ClockPage() {
     }
   };
 
+  const renderComponent = () => {
+    return (
+      <Box className="travelWrapper">
+        <Box component="img" src={clockPageNeonBg} className="neonBorderImg" alt="neon-border" />
+        <Coupon page='clock'/>
+      </Box>
+    )
+  }
+
   return (
     <Box className="clock-wrapper">
       <Box className="col-1">
@@ -59,7 +71,7 @@ function ClockPage() {
               <Button2 text="Back" redirectTo="/AmbarsariyaMall" />
             </Box>
           }
-          componentToRender={<TravelNeeds text="All your travel needs" />}
+          componentToRender={renderComponent()}
           componentToRender2={
             <Date_Time_Weather
               imgSrc={CalendarIcon}

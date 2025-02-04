@@ -20,10 +20,6 @@ const VisitorFormBox = ({ visitorData }) => {
     setValue((prevData)=>({...prevData, domain, sector}))
   };
 
-  const handleClick = (e, id) => {
-    e.preventDefault();
-    navigate(`../support/${id}`);
-  }
 
   return (
     <Box className="container">
@@ -36,7 +32,7 @@ const VisitorFormBox = ({ visitorData }) => {
         <Box className="form_container">
           <VisitorShopForm visitorData={visitorData} onSubmitSuccess={handleFormSubmitSuccess} showFields={showFields}/>
         </Box>
-        {formSubmitted && (
+        {/* {formSubmitted && (
           <Box className="notifications">
             <Link onClick={(e)=>{handleClick(e, 'stationary')}}>
               <Typography variant="h3">
@@ -54,7 +50,7 @@ const VisitorFormBox = ({ visitorData }) => {
               </Typography>
             </Link>
           </Box>
-        )}
+        )} */}
       </Box>
     </Box>
   );

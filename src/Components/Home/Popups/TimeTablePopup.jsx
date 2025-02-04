@@ -18,6 +18,8 @@ import { Link } from 'react-router-dom';
 import FlightDetailsPopup from './FlightDetailsPopup';
 import BusDetailsPopup from './BusDetailsPopup';  // New Component
 import TrainDetailsPopup from './TrainDetailsPopup';  // New Component
+import Coupon from '../TimeTablePopupComponents/Coupon';
+import StarAdvt from '../TimeTablePopupComponents/StarAdvt';
 
 function TimeTablePopup({ open, handleClose }) {
   const [openDetails, setOpenDetails] = useState(null);
@@ -79,11 +81,13 @@ function TimeTablePopup({ open, handleClose }) {
           <Box className="content-body">
             <Box className="row1">
               <Box component='img' src={neonShadow} alt='shadow' className='shadow' />
-              <Box className='content'>
+              {/* <Box className='content'>
                 <Typography>Flight</Typography>
                 <Typography>XR-9506</Typography>
                 <Typography>Delayed</Typography>
-              </Box>
+              </Box> */}
+              {/* <Coupon/> */}
+              <StarAdvt page='travel-time'/>
             </Box>
 
             <Box className='row2'>

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, CircularProgress } from '@mui/material';
+import { Box, Button, CircularProgress, Typography } from '@mui/material';
 import FormField from '../Form/FormField';
 import { fetchDomains, fetchDomainSectors, fetchSectors, get_visitorData, put_visitorData } from '../../API/fetchExpressAPI';
 import CustomSnackbar from '../CustomSnackbar';
+import { Link } from 'react-router-dom';
 
 const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
   const [formData, setFormData] = useState({
@@ -18,6 +19,8 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
   const [domains, setDomains] = useState([]);
   const [sectors, setSectors] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [formSubmitted, setFormSubmitted] = useState(false);
+
 
   const token = visitorData.access_token || '';
 
@@ -93,6 +96,7 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
               name: 'message',
               type: 'textarea',
               value: visitorData.message || '',
+              readOnly: formSubmitted 
             },
           ];
 
@@ -210,10 +214,11 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
         setSnackbar({ open: true, message: resp.message, severity: 'success' });
 
         onSubmitSuccess(formData.domain, formData.sector, true);
-        
+        setFormSubmitted(true);
         
       }catch(e){
         setSnackbar({ open: true, message: e.resp.data.error, severity: 'success' });
+        setFormSubmitted(false);
       }
       
 
@@ -248,6 +253,26 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
           />
         ))}
       </Box>
+
+      {formSubmitted && (
+          <Box className="notifications">
+            <Link >
+              <Typography variant="h3">
+                Merchant 1230:
+                <Typography variant="span">Hi, I am from UCB</Typography>
+                <Typography variant="span">Shop from Trilium Mall</Typography>
+              </Typography>
+            </Link>
+
+            <Link>
+              <Typography variant="h3">
+                Merchant 1230:
+                <Typography variant="span">Hi, I am from UCB</Typography>
+                <Typography variant="span">Shop from Trilium Mall</Typography>
+              </Typography>
+            </Link>
+          </Box>
+        )}
       <Box className="submit_button_container">
         <Button type="submit" variant="contained" className="submit_button">
           Submit
