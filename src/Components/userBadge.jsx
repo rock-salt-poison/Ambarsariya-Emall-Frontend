@@ -8,16 +8,28 @@ import visitor_icon from '../Utils/images/visitor.webp';
 export const fetchUserType = async (token, setUserIcon) => {
   if (token) {
     try {
-      const user = await getUser(token);
-      const user_type = user?.[0].user_type;
+      const user = (await getUser(token))?.[0];
+      const user_type = user?.user_type;
 
       // Set the user icon based on the user type
       if (user_type === 'member') {
-        setUserIcon(member_icon);
+        if(user.visitor_id){
+          setUserIcon(visitor_icon);
+        }else{
+          setUserIcon(member_icon);
+        }
       } else if (user_type === 'shop') {
-        setUserIcon(shop_icon);
+        if(user.visitor_id){
+          setUserIcon(visitor_icon);
+        }else{
+          setUserIcon(shop_icon);
+        }
       } else if (user_type === 'merchant') {
-        setUserIcon(merchant_icon);
+        if(user.visitor_id){
+          setUserIcon(visitor_icon);
+        }else{
+          setUserIcon(merchant_icon);
+        }
       } else if (user_type === 'visitor') {
         setUserIcon(visitor_icon);
       } else {

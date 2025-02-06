@@ -23,6 +23,7 @@ function Sell() {
   const [userIcon, setUserIcon] = useState(null);
 
   const [shopToken, setShopToken] = useState('');
+  const [validMember, setValidMember] = useState(false);
   const [validShop, setValidShop] = useState(false);
 
   useEffect(()=> {
@@ -32,7 +33,6 @@ function Sell() {
         if(resp.length>0){
           if(resp[0].shop_access_token){
             const shopData = await getShopUserData(resp[0].shop_access_token);
-            console.log(shopData)
             if(shopData?.length>0){
               if((shopData[0]?.business_name)?.length>0){
                 setValidShop(true);
@@ -42,6 +42,8 @@ function Sell() {
                 setShopToken(shopData[0].shop_access_token);
               }
             }
+          }else if(resp[0].user_type === 'member' && !resp[0].visitor_id){
+            setValidMember(true);
           }
 
         }
@@ -82,7 +84,7 @@ function Sell() {
       }else if (btns.classList.contains('E-shop')) {
         destination = shopToken ? validShop ? `support/shop/shop-detail/${shopToken}` : 'eshop':'login';
       }else if (btns.classList.contains('E-sale')) {
-        destination = token ? 'esale':'login';
+        destination = validMember ? 'esale':'login';
       }
 
       setTimeout(() => {

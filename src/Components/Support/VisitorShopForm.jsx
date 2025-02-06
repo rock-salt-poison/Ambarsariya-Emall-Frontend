@@ -12,6 +12,7 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
     sector: '',
     purpose: '',
     message: '',
+    reply:'',
   });
 
   const [errors, setErrors] = useState({});
@@ -32,6 +33,8 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
 
   const [formFieldData, setFormFieldData] = useState([]); // Initialize formFieldData
 
+  console.log(visitorData);
+  
   
   // Fetch domains once and set initial form field data
   useEffect(() => {
@@ -50,7 +53,7 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
           });
           
           // Fetch sectors for the pre-filled domain
-          const selectedDomain = domainList.find(domain => domain.domain_name === visitorData.domain_name);
+          const selectedDomain = domainList?.find(domain => domain.domain_name === visitorData.domain_name);
           if (selectedDomain) {
             const sectorList = (await fetchDomainSectors(selectedDomain.domain_id)).map(sector => sector.sector_name);
             setSectors(sectorList);
@@ -58,9 +61,9 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
   
           // Determine which fields to include in formFieldData
           const isFilled = visitorData.domain_name && visitorData.sector_name && visitorData.purpose;
-          const initialFields = [
+          let initialFields = [
             {
-              label: 'Visitor Mall001:',
+              label: visitorData.visitor_id ? `${visitorData.user_type}:` : 'Visitor',
               name: 'name',
               type: 'text',
               value: visitorData.name || '',
@@ -74,6 +77,7 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
                     type: 'select',
                     placeholder: 'Select your domain',
                     options: domainList.map(domain => domain.domain_name),
+                    required:true
                   },
                   {
                     label: 'Sector:',
@@ -81,6 +85,7 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
                     type: 'select',
                     placeholder: 'Select your sector',
                     options: sectors || [],
+                    required: true
                   },
                   {
                     label: 'Purpose for:',
@@ -88,6 +93,7 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
                     type: 'select',
                     placeholder: 'Select your purpose',
                     options: ['Sell', 'Buy'],
+                    required: true
                   },
                 ]
               : []),
@@ -95,15 +101,20 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
               label: 'Message:',
               name: 'message',
               type: 'textarea',
-              value: visitorData.message || '',
-              readOnly: formSubmitted 
+              value: visitorData.message || '', 
+              required:true
             },
           ];
+
+          if (formSubmitted) {
+            initialFields = initialFields.map(field => ({ ...field, readOnly: true }));
+          }
 
           isFilled ? onSubmitSuccess(visitorData.domain_name, visitorData.sector_name, true):onSubmitSuccess('domain', 'sector', false);
           setFormFieldData(initialFields);
 
         } catch (error) {
+          console.log(error)
         setLoading(false);
         setSnackbar({ open: true, message: error.response.data.message, severity: 'error' });
         console.error('Error fetching initial data:', error);
@@ -112,6 +123,9 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
   
     fetchInitialData();
   }, [visitorData, showFields]);
+
+  console.log(visitorData);
+  
   
    // Run this effect only once when the component mounts
 
@@ -207,16 +221,22 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
           domain: selectedDomain?.domain_id,
           sector: selectedSector?.sector_id,
           purpose: formData.purpose,
-          message: formData.message,
+          message: formData.reply ? formData.reply : formData.message,
           access_token: token
         })
         setLoading(false);
         setSnackbar({ open: true, message: resp.message, severity: 'success' });
-
+        setFormData(prevData => ({
+          ...prevData,
+          message: formData.reply, // Update the message with reply
+          reply: '' // Reset reply field
+        }));
         onSubmitSuccess(formData.domain, formData.sector, true);
         setFormSubmitted(true);
         
       }catch(e){
+        console.log(e);
+        
         setSnackbar({ open: true, message: e.resp.data.error, severity: 'success' });
         setFormSubmitted(false);
       }
@@ -231,18 +251,18 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
   };
 
   return (
-    <Box component="form" noValidate autoComplete="off" onSubmit={handleSubmit}>
+    <Box component="form" autoComplete="off" onSubmit={handleSubmit}>
        {loading && <Box className="loading">
                 <CircularProgress />
               </Box>}
       <Box className="form-group">
-        {formFieldData.map(({ label, name, type, value, readOnly, placeholder, options }) => (
+        {formFieldData.map(({ label, name, type, value, readOnly, placeholder, options, required }) => (
           <FormField
             key={name}
             label={label}
             name={name}
             type={type}
-            value={value || formData[name]}
+            value={'' || formData[name]}
             onChange={handleChange}
             error={errors[name]}
             errorMessage={errorMessages[name]}
@@ -250,6 +270,7 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
             options={options}
             className="input_field"
             readOnly={readOnly}
+            required={required}
           />
         ))}
       </Box>
@@ -273,6 +294,20 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
             </Link>
           </Box>
         )}
+
+{formSubmitted && <Box className="form-group">
+            <FormField
+            label='Reply:'
+            name='reply'
+            type='textarea'
+            value={'' || formData['reply']}
+            onChange={handleChange}
+            error={errors['reply']}
+            errorMessage={errorMessages['reply']}
+            className="input_field"
+            required={true}
+          />
+          </Box>}
       <Box className="submit_button_container">
         <Button type="submit" variant="contained" className="submit_button">
           Submit

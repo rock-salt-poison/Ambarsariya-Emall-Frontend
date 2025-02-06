@@ -68,7 +68,9 @@ function Support(props) {
     if(token){
       const verifyUser = async () => {
         const user = (await getUser(token))[0];
-          if(user.user_type === "visitor"){
+        console.log(user);
+        
+          if(user.support_id && user.visitor_id){
             fetchData(user.user_access_token);
           }
       }

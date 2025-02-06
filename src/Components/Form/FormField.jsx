@@ -29,7 +29,7 @@ const FormField = ({
   handleBlur, 
   adornmentValue, accept,rows,radioItems,
   additionalProps,
-  handleDownload
+  handleDownload, required
 }) => {
 
   const marks = getSliderMarks ? getSliderMarks(name) : [];
@@ -155,6 +155,7 @@ const FormField = ({
                   displayEmpty
                   className={`input_field ${className}`}
                   {...(error && { error: true })}
+                  required={required}
                 >
                   <MenuItem value="" disabled key={0}>
                     {placeholder}

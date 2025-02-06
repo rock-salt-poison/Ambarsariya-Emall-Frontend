@@ -1,36 +1,51 @@
-import React, { useState } from 'react';
-import { Box, Typography } from '@mui/material';
-import VisitorShopForm from './VisitorShopForm';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { Box, Typography } from "@mui/material";
+import VisitorShopForm from "./VisitorShopForm";
+import { Link, useNavigate } from "react-router-dom";
 
 const VisitorFormBox = ({ visitorData }) => {
   const [formSubmitted, setFormSubmitted] = useState(false);
-  const [value, setValue] = useState({domain:'domain', sector:'sector'});
-  
+  const [value, setValue] = useState({ domain: "domain", sector: "sector" });
+
   const [showFields, setShowFields] = useState(false);
 
   const navigate = useNavigate();
 
   const handleFormSubmitSuccess = (domain, sector, submit) => {
-    if(submit){
+    if (submit) {
       setFormSubmitted(true);
-    }else{
+    } else {
       setFormSubmitted(false);
     }
-    setValue((prevData)=>({...prevData, domain, sector}))
+    setValue((prevData) => ({ ...prevData, domain, sector }));
   };
-
 
   return (
     <Box className="container">
       <Box className="circle"></Box>
       <Box className="content">
-        <Typography variant='h2'>
+        <Typography variant="h2">
           E-Ambarsariya:
-          <Link onClick={()=>setShowFields(true)}><Typography variant="span">{value.domain} - {value.sector}</Typography></Link>
+          {!formSubmitted && visitorData.domain_name && visitorData.sector_name ? (
+            <Link onClick={() => setShowFields(true)}>
+              <Typography variant="span">
+                {visitorData.domain_name} - {visitorData.sector_name}
+              </Typography>
+            </Link>
+          ) : (
+            <Link onClick={() => setShowFields(true)}>
+              <Typography variant="span">
+                {value.domain} - {value.sector}
+              </Typography>
+            </Link>
+          )}
         </Typography>
         <Box className="form_container">
-          <VisitorShopForm visitorData={visitorData} onSubmitSuccess={handleFormSubmitSuccess} showFields={showFields}/>
+          <VisitorShopForm
+            visitorData={visitorData}
+            onSubmitSuccess={handleFormSubmitSuccess}
+            showFields={showFields}
+          />
         </Box>
         {/* {formSubmitted && (
           <Box className="notifications">

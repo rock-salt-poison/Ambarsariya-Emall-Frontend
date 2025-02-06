@@ -3729,13 +3729,17 @@ a {
 
           form {
             width: max-content;
-            @include flex-center(column, center);
+            @include flex-center(column, flex-start);
             place-items: normal;
             opacity: 0.85;
 
             .form-group {
               @include flex-center(column, flex-start);
               gap: 15px;
+
+              .form-control{
+                align-self: flex-start;
+              }
 
               .field_container {
                 padding-top: 4px;
@@ -3745,6 +3749,7 @@ a {
                 margin: 0 auto;
                 border-radius: 10px;
                 @include flex-center(column, flex-start);
+                float: left;
               }
 
               .input_field,
@@ -3779,7 +3784,7 @@ a {
                 @include homepage-buttons(
                   "Bobby-Jones-Soft",
                   15px,
-                  $light-yellow,
+                  $black,
                   "none"
                 );
                 @include hover-scale(1, 0s);
@@ -4053,7 +4058,7 @@ a {
 
               .notifications {
                 padding: 15px;
-                margin-top: 20px;
+                margin: 20px 0;
                 background: #fadfb9;
                 width: 90%;
                 align-self: center;
