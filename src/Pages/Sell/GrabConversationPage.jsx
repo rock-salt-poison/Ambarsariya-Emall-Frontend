@@ -8,15 +8,21 @@ import conversation_4 from '../../Utils/images/Sell/grab/conversation_4.svg'
 import teenagers_whispering_secrete from '../../Utils/images/Sell/grab/teenagers_whispering_secrete.svg'
 import man_and_women_friendly_conversation from '../../Utils/images/Sell/grab/man_and _women_friendly_conversation.svg'
 import be_kind_to_everyone from '../../Utils/images/Sell/grab/be_kind_to_everyone.svg'
+import { useSelector } from 'react-redux';
+import UserBadge from '../../Components/UserBadge';
 
-function GrowConversationPage() {
+function GrabConversationPage() {
+    const token = useSelector((state) => state.auth.userAccessToken);
 
     return (
     <Box className="grab_conversation_wrapper" >
         <Box className="row">
             <Box className="col">
-                <Button2 text="Back" redirectTo="/AmbarsariyaMall/sell" />
-                <Button2 text="Next" redirectTo="../user" />
+                <UserBadge
+                    handleBadgeBgClick="../"
+                    handleLogin="../login"
+                    handleLogoutClick="../../AmbarsariyaMall"
+                    />
             </Box>
 
             <Box className="col">
@@ -40,4 +46,4 @@ function GrowConversationPage() {
   )
 }
 
-export default GrowConversationPage
+export default GrabConversationPage

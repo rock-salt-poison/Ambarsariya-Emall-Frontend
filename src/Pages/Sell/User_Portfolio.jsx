@@ -20,6 +20,7 @@ import SocialLinksPopupContent from '../../Components/CardBoardPopupComponents/S
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import SpeedDialIcon from '@mui/material/SpeedDialIcon';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
+import UserBadge from '../../Components/UserBadge';
 
 function User_Portfolio(props) {
     const [openPopup, setOpenPopup] = useState(false);
@@ -127,8 +128,13 @@ function User_Portfolio(props) {
                             </Box>
                         </Box>
                         <Box className="forward_backward_button_container">
-                            <Button2 text="Back" redirectTo="/AmbarsariyaMall/sell" />
-                            <Button2 text="Next" redirectTo="../esale" />
+                            {/* <Button2 text="Back" redirectTo="/AmbarsariyaMall/sell" /> */}
+                            <UserBadge
+                                                  handleBadgeBgClick={`../`}
+                                                  handleLogin="../login"
+                                                  handleLogoutClick="../../AmbarsariyaMall"
+                                              />
+                            {/* <Button2 text="Next" redirectTo="../esale" /> */}
                         </Box>
                     </Box>
                     <Box className="col">

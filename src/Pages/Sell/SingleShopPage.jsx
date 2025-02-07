@@ -24,6 +24,7 @@ import {
 } from "../../API/fetchExpressAPI";
 import CustomSnackbar from "../../Components/CustomSnackbar";
 import { getSectorImage } from "../../Utils/sector_images";
+import UserBadge from "../../Components/UserBadge";
 
 const SingleShopPage = ({ showBackButton = true, shopData }) => {
   const [searchParams] = useSearchParams();
@@ -100,7 +101,12 @@ const SingleShopPage = ({ showBackButton = true, shopData }) => {
             <Box className="row">
               {showBackButton && (
                 <Box className="col-1">
-                  <Button2 text="Back" redirectTo={"../support"} />
+                  {/* <Button2 text="Back" redirectTo={"../support"} /> */}
+                  <UserBadge
+                      handleBadgeBgClick={`../support`}
+                      handleLogin="../login"
+                      handleLogoutClick="../../AmbarsariyaMall"
+                  />
                 </Box>
               )}
               <Box className="container">

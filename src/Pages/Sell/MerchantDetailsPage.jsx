@@ -18,6 +18,7 @@ import AutoCompleteSearchField from "../../Components/Products/AutoCompleteSearc
 import { allShops, get_discount_coupons } from "../../API/fetchExpressAPI";
 import CouponsSlider from "../../Components/Shop/CouponsSlider";
 import DiscountPercentageSlider from "../../Components/Shop/DiscountPercentageSlider";
+import UserBadge from "../../Components/UserBadge";
 
 const MerchantDetailsPage = () => {
   const [searchParams] = useSearchParams();
@@ -110,7 +111,12 @@ const MerchantDetailsPage = () => {
       )}
       <Box className="row">
         <Box className="col-1">
-          <Button2 text="Back" redirectTo="../support" />
+          {/* <Button2 text="Back" redirectTo="../support" /> */}
+           <UserBadge
+            handleBadgeBgClick="../support"
+            handleLogin="../login"
+            handleLogoutClick="../../AmbarsariyaMall"
+          />
         </Box>
         <Box className="container">
           <AutoCompleteSearchField

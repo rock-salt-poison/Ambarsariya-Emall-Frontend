@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 import CircularText from '../Home/CircularText';
 import Button2 from '../Home/Button2';
+import UserBadge from '../UserBadge';
 
 function BusinessHours({ data }) {
 
@@ -43,8 +44,13 @@ function BusinessHours({ data }) {
 
   return (
     <Box className="business_hours_container">
-      <Button2 text="Back" redirectTo={`../support/shop?token=${data.shop_access_token}`} />
+      {/* <Button2 text="Back" redirectTo={`../support/shop?token=${data.shop_access_token}`} /> */}
       {/* <Button2 text="Back" redirectTo={-1} /> */}
+      <UserBadge
+          handleBadgeBgClick={`../support/shop?token=${data.shop_access_token}`}
+          handleLogin="../login"
+          handleLogoutClick="../../AmbarsariyaMall"
+      />
       <Box className="business_hours_wrapper">
         <CircularText text="Business Hours" />
         <Box className="h_line"></Box>

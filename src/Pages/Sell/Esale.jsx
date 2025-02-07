@@ -13,6 +13,7 @@ import emotional_care_img from '../../Utils/images/Sell/esale/emotional.svg'
 import professional_gif from '../../Utils/gifs/professional.gif'
 import bg_img from '../../Utils/images/Sell/esale/bg_img.png'
 import { Link, useParams } from 'react-router-dom'
+import UserBadge from '../../Components/UserBadge'
 
 const data = [
     { id: 1, title: "Emotional", imgSrc: emotional_care_img, linkTo:'emotional' },
@@ -37,7 +38,12 @@ function Esale() {
                 <Box className="row">
                     <Box className="col">
                         <Box className="container">
-                            <Button2 text="Back" redirectTo='../' />
+                            {/* <Button2 text="Back" redirectTo='../' /> */}
+                            <UserBadge
+                                                  handleBadgeBgClick={`../`}
+                                                  handleLogin="../login"
+                                                  handleLogoutClick="../../AmbarsariyaMall"
+                                              />
                         </Box>
                         <Box className="container">
                             <Box className="header_board">
@@ -45,7 +51,7 @@ function Esale() {
                             </Box>
                         </Box>
                         <Box className="container" display="flex" justifyContent="flex-end">
-                            <Button2 text="Next" redirectTo='../shops' />
+                            {/* <Button2 text="Next" redirectTo='../shops' /> */}
                         </Box>
                     </Box>
                     <Box className="row_2">

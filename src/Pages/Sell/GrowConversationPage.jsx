@@ -10,8 +10,11 @@ import conversation_6 from '../../Utils/images/Sell/grow/conversation_6.svg'
 import success_quote from '../../Utils/images/Sell/grow/success_quote.webp'
 import Logo from '../../Components/Logo';
 import { Link, useNavigate } from 'react-router-dom';
+import UserBadge from '../../Components/UserBadge';
+import { useSelector } from 'react-redux';
 
 function GrowConversationPage() {
+    const token = useSelector((state) => state.auth.userAccessToken);
 
     const imgs = [
         {id:1,src:conversation_1, alt:"Ambarsariya Mall" },
@@ -37,10 +40,16 @@ function GrowConversationPage() {
     return (
     <Box className="grow_conversation_wrapper" >
         <Box className="row">
-            <Box className="col">
-                <Button2 text="Back" redirectTo="../" optionalcName='d-sm-none'/>
+            <Box className="col header">
+                <Box></Box>
+                {/* <Button2 text="Back" redirectTo="../" optionalcName='d-sm-none'/> */}
                 <Link onClick={(e)=>handleClick(e)}><Typography variant='h2' className='heading'> Book Your E-shop</Typography></Link>
-                <Button2 text="Next" redirectTo="../coupon-offering" optionalcName='d-sm-none'/>
+                <UserBadge
+                    handleBadgeBgClick="../"
+                    handleLogin="../login"
+                    handleLogoutClick="../../AmbarsariyaMall"
+                />
+                {/* <Button2 text="Next" redirectTo="../coupon-offering" optionalcName='d-sm-none'/> */}
             </Box>
 
             <Box className="container">

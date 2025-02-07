@@ -10,6 +10,7 @@ import FormField from '../../Components/Form/FormField';
 import { useSelector } from 'react-redux';
 import { get_visitorData, getUser } from '../../API/fetchExpressAPI';
 import CustomSnackbar from '../../Components/CustomSnackbar';
+import UserBadge from '../../Components/UserBadge';
 
 function Support(props) {
   const [file, setFile] = useState(null); // State to hold the uploaded file
@@ -105,7 +106,12 @@ console.log(visitorData);
           <Box className="col second_wrapper">
             <Box className='col-1'>
               <UserForm onValidation={handleFormValidation} visitorData={visitorData} visibility={visitorData !== null  ? 'hidden' : 'visible'}/>
-              <Button2 text="Back" redirectTo="/AmbarsariyaMall/sell" />
+              {/* <Button2 text="Back" redirectTo="/AmbarsariyaMall/sell" /> */}
+              <UserBadge
+                handleBadgeBgClick="../"
+                handleLogin="../login"
+                handleLogoutClick="../../AmbarsariyaMall"
+              />
             </Box>
             {visitorData && Object.keys(visitorData).length > 0 && (
               <>

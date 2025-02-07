@@ -5,6 +5,7 @@ import Button2 from "../../Components/Home/Button2";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import { get_product, getShopUserData } from "../../API/fetchExpressAPI";
+import UserBadge from "../../Components/UserBadge";
 
 function ProductDetails() {
   const { product_id, token } = useParams();
@@ -62,7 +63,12 @@ function ProductDetails() {
       <Box className="row">
         <Box className="col">
           <Box className="sub_col">
-            <Button2 text={"Back"} redirectTo={`../shop/${token}/products`} />
+            <UserBadge
+                handleBadgeBgClick={`../shop/${token}/products`}
+                handleLogin="../login"
+                handleLogoutClick="../../AmbarsariyaMall"
+            />
+            {/* <Button2 text={"Back"} redirectTo={`../shop/${token}/products`} /> */}
           </Box>
           <Box className="sub_col">
             <Typography variant="h2" className="heading">

@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import { useParams, useSearchParams } from "react-router-dom";
 import { allShops, getShopUserData } from "../../API/fetchExpressAPI";
 import CustomSnackbar from "../../Components/CustomSnackbar";
+import UserBadge from "../../Components/UserBadge";
 
 
 function Shop() {
@@ -90,7 +91,12 @@ function Shop() {
             <Box className="row">
               <Box className="col">
                 <Box className="visible_on_small_screen">
-                  <Button2 text="Back" redirectTo={`../support/shop?token=${token}`} />
+                <UserBadge
+                    handleBadgeBgClick={`../support/shop?token=${token}`}
+                    handleLogin="../login"
+                    handleLogoutClick="../../AmbarsariyaMall"
+                />
+                  {/* <Button2 text="Back" redirectTo={`../support/shop?token=${token}`} /> */}
                   {/* <Button2 text="Back" redirectTo={-1} /> */}
                 </Box>
                 {data && <ShopDesign data={data} />}

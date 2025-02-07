@@ -66,8 +66,11 @@ function Serve() {
     <Box className="serve_wrapper">
       <Box className="row">
         <Box className="back-button-wrapper">
-            <Button2 text="Back" redirectTo='../../AmbarsariyaMall'/>
-          {token && <UserBadge/>}
+        <UserBadge
+          handleLogoutClick="../../AmbarsariyaMall"
+          handleBadgeBgClick="../../AmbarsariyaMall"
+          handleLogin="login"
+        />
 
         </Box>
         <Box className="container">

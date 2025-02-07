@@ -12,7 +12,8 @@ import { useLogout } from "../customHooks/useLogout";
 import { useNavigate } from "react-router-dom";
 
 export default function UserBadge({
-  optionalCName,
+  handleLogin,
+  handleLogoutClick,
   handleBadgeBgClick,
 }) {
   const [userIcon, setUserIcon] = useState(null);
@@ -54,7 +55,7 @@ export default function UserBadge({
   }, [token]);
 
   const handleIconClick = (e) => {
-    const target = e.target.closest(".badge");
+    const target = e.target.closest(".badge_icon");
     const actionTarget = e.target.closest(".logoutBtn, .loginBtn");
 
     if (target) {
@@ -64,10 +65,10 @@ export default function UserBadge({
       if (actionTarget) {
         setTimeout(() => {
           if (actionTarget.classList.contains("logoutBtn")) {
-            handleLogout("../AmbarsariyaMall");
+            handleLogout(handleLogoutClick);
             actionTarget.classList.replace("logoutBtn", "loginBtn");
-          } else {
-            navigate("sell/login");
+          } else if (actionTarget.classList.contains("loginBtn")){
+            navigate(handleLogin);
           }
         }, 600);
       }
@@ -75,7 +76,7 @@ export default function UserBadge({
   };
 
   const handleCrownClick = (e) => {
-    const target = e.target.closest(".badge");
+    const target = e.target.closest(".badge_bg");
     if (target) {
       target.classList.add("reduceSize3");
       setTimeout(() => {
@@ -90,7 +91,7 @@ export default function UserBadge({
   return (
     <>
       {!loading && (
-        <Box className={`${optionalCName} badge`}>
+        <Box className={`${token ? 'logoutBtn' : 'loginBtn'} badge`}>
           <Box
             className="badge_bg"
             component="img"

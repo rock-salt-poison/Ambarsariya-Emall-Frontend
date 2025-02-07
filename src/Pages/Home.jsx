@@ -182,7 +182,7 @@ export default function Home() {
                     </Box>
                 </Box>
             {/* {token ? <Button2 optionalcName='logoutBtn' text={`Logged in as ${userType}`} onClick={() => handleLogout('../AmbarsariyaMall')}/>:<Button2 optionalcName='logoutBtn' text={`Login`} redirectTo='sell/login'/>} */}
-            {token ? <UserBadge optionalCName='logoutBtn' logout={true}/>:<UserBadge optionalCName='loginBtn'/>}
+            <UserBadge handleLogin="sell/login" handleLogoutClick="../../AmbarsariyaMall"/>
             </Box>
             
 

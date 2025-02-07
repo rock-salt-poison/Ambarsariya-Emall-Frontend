@@ -19,6 +19,7 @@ import Delivery from "../../Components/Cart/ServiceType/Delivery";
 import Visit from "../../Components/Cart/ServiceType/Visit";
 import CoHelper from "../../Components/Cart/CoHelper/CoHelper";
 import { getShopUserData } from "../../API/fetchExpressAPI";
+import UserBadge from "../../Components/UserBadge";
 
 function Cart() {
   const sampleRows = useSelector((state) => state.cart.selectedProducts);
@@ -131,7 +132,12 @@ function Cart() {
     <Box className="cart_wrapper">
       <Box className="row">
         <Box className="col">
-          <Button2 text={"Back"} redirectTo={-1} />
+          <UserBadge
+            handleBadgeBgClick={-1}
+            handleLogin="../login"
+            handleLogoutClick="../../AmbarsariyaMall"
+        />
+          {/* <Button2 text={"Back"} redirectTo={-1} /> */}
           <Link to={`../${owner}/return`}>
             <Box
               component="img"
@@ -167,7 +173,12 @@ function Cart() {
           <Box className="sub_col"></Box>
         </Box>
         <Box className="col">
-          <Button2 text={"Back"} redirectTo={-1} />
+          <UserBadge
+                          handleBadgeBgClick={-1}
+                          handleLogin="../login"
+                          handleLogoutClick="../../AmbarsariyaMall"
+                      />
+          {/* <Button2 text={"Back"} redirectTo={-1} /> */}
           <Box className="offers">
             {offers.map((item) => (
               <React.Fragment key={item.id}>

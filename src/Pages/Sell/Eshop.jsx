@@ -5,6 +5,7 @@ import Board from '../../Components/CouponOffering/Board'
 import boardImg from '../../Utils/images/Sell/eshop/board.svg'
 import EshopForm from '../../Components/Form/EshopForm'
 import createCustomTheme from '../../styles/CustomSelectDropdownTheme';
+import UserBadge from '../../Components/UserBadge'
 
 
 function Eshop(props) {
@@ -18,7 +19,12 @@ const theme = createCustomTheme(themeProps);
     <Box className="eshop_wrapper">
       <Box className="row">
         <Box className="col">
-          <Button2 text="Back" redirectTo="/AmbarsariyaMall/sell" />
+          <UserBadge
+              handleBadgeBgClick={`../`}
+              handleLogin="../login"
+              handleLogoutClick="../../AmbarsariyaMall"
+          />
+          {/* <Button2 text="Back" redirectTo="/AmbarsariyaMall/sell" /> */}
           <Box className="header_board">
             <Board text="E-shop" imgSrc={boardImg} />
           </Box>

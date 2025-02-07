@@ -695,7 +695,7 @@ a {
 }
 
 .reduceSize3 {
-  transform: scale(0.89);
+  transform: scale(0.89) !important;
 }
 
 .increase_scale {
@@ -2948,8 +2948,9 @@ a {
 
     .header {
       position: relative;
-      @include flex-center(row, space-between);
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: 120px 1fr 120px;
+      place-items: center;
 
       .back-button-wrapper {
         @include backButton(
@@ -2963,6 +2964,7 @@ a {
           10px 18px
         );
         @include flex-center(row, center);
+        margin-left: auto;
       }
 
       .title_container {
@@ -4509,6 +4511,7 @@ a {
   @extend .merchant_wrapper;
 
   .row {
+    padding: 30px ;
     .container {
       display: flex;
 
@@ -4842,16 +4845,20 @@ a {
   min-height: 100vh;
 
   .row {
-    padding: 25px;
+    padding: 20px 25px;
     flex: 1;
     @include flex-center(column, flex-start);
-    gap: 25px;
     place-items: normal;
 
     .col {
       @include flex-center(row, space-between);
-      place-items: normal;
+      place-items: center;
       flex-wrap: wrap;
+
+      &.header{
+        display: grid;
+        grid-template-columns: 120px 1fr 120px;
+      }
 
       .d-lg-none {
         display: none !important;
@@ -4897,7 +4904,7 @@ a {
       .col {
         justify-content: center;
         gap: 12px;
-        padding-top: 12px;
+        // padding-top: 12px;
         flex-wrap: nowrap;
       }
 
@@ -4934,8 +4941,17 @@ a {
     }
 
     @media (max-width: 768px) {
+      gap: 15px;
       .col {
         flex-wrap: wrap !important;
+
+        &.header{
+          grid-template-columns: auto 1fr 120px;
+
+          a{
+            margin-right: auto;
+          }
+        }
 
         .growImg {
           width: 100%;
@@ -4984,14 +5000,16 @@ a {
   place-items: normal;
   background-color: #fff2dd;
   min-height: 100vh;
+  width: 100%;
 
   .row {
-    padding: 25px;
+    padding: 20px 25px;
     @include flex-center(column, space-between);
     place-items: normal;
+    flex: 1;
 
     .col {
-      @include flex-center(row, space-between);
+      @include flex-center(row, flex-end);
       place-items: normal;
       flex-wrap: wrap;
       @include backButton(
@@ -5021,7 +5039,7 @@ a {
 
       &:nth-child(2) {
         justify-content: center;
-        gap: 12px;
+        gap: 10px;
         @include flex-center(row, center);
         // padding-top: 20px;
 
@@ -7369,6 +7387,10 @@ a {
           align-self: flex-end;
         }
 
+        .badge{
+          align-self: flex-end;
+        }
+
         .business_hours_wrapper {
           background: linear-gradient(
             311deg,
@@ -8352,7 +8374,7 @@ a {
       flex-wrap: wrap;
 
       &:first-child {
-        .backButton {
+        .badge {
           display: none;
         }
       }
@@ -8811,7 +8833,7 @@ a {
             }
           }
 
-          .backButton {
+          .badge {
             display: flex;
           }
         }
@@ -8824,7 +8846,7 @@ a {
             margin: 0 auto;
           }
 
-          .backButton {
+          .badge {
             display: none;
           }
         }
@@ -10264,7 +10286,8 @@ a {
 
     .back-button-wrapper {
       align-self: stretch;
-      @include flex-center(row, space-between);
+      @include flex-center(row, flex-end);
+
 
       @include backButton(
         linear-gradient(to bottom, #8a803fb3, #48605ab3),
@@ -20141,6 +20164,11 @@ textarea[readonly]{
 
   .badge_bg{
     width: 100%;
+    transition: 0.2s all linear;
+
+    &:hover{
+      transform: scale(1.05);
+    }
   }
 
   .badge_icon{

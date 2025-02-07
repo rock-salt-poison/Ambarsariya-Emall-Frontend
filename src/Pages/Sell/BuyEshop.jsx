@@ -7,6 +7,7 @@ import BookEshopForm from '../../Components/Form/BookEshopForm'
 import createCustomTheme from '../../styles/CustomSelectDropdownTheme';
 import { useSelector } from 'react-redux'
 import { getUser } from '../../API/fetchExpressAPI'
+import UserBadge from '../../Components/UserBadge'
 
 function BuyEshop(props) {
   const themeProps = {
@@ -37,7 +38,12 @@ function BuyEshop(props) {
       <Box className="buy_eshop_wrapper">
         <Box className="row">
           <Box className="col">
-            <Button2 text="Back" redirectTo="/AmbarsariyaMall/sell" />
+            <UserBadge
+                          handleBadgeBgClick={`../`}
+                          handleLogin="../login"
+                          handleLogoutClick="../../AmbarsariyaMall"
+                      />
+            {/* <Button2 text="Back" redirectTo="/AmbarsariyaMall/sell" /> */}
             <Box className="header_board">
               <Board text="Book Your E-shop" imgSrc={boardImg} />
             </Box>
