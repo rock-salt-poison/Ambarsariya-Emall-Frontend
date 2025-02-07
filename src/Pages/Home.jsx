@@ -23,7 +23,7 @@ import { useSelector } from 'react-redux';
 import Button2 from '../Components/Home/Button2';
 import { useLogout } from '../customHooks/useLogout';
 import { getUser } from '../API/fetchExpressAPI';
-import { fetchUserType } from '../Components/userBadge';
+import UserBadge from '../Components/UserBadge';
 
 export default function Home() {
     const navigate = useNavigate();
@@ -36,9 +36,9 @@ export default function Home() {
     const [userIcon, setUserIcon] = useState(null);
     
 
-    useEffect(()=> {
-        fetchUserType(token, setUserIcon);
-      }, [token]);
+    // useEffect(()=> {
+    //     fetchUserType(token, setUserIcon);
+    //   }, [token]);
 
     const handleClose = () => {
         setOpenPopup(null);
@@ -182,7 +182,7 @@ export default function Home() {
                     </Box>
                 </Box>
             {/* {token ? <Button2 optionalcName='logoutBtn' text={`Logged in as ${userType}`} onClick={() => handleLogout('../AmbarsariyaMall')}/>:<Button2 optionalcName='logoutBtn' text={`Login`} redirectTo='sell/login'/>} */}
-            {token ? <Box component="img" src={userIcon} className="badge logoutBtn" onClick={()=>handleLogout('../AmbarsariyaMall')} sx={{cursor:'pointer'}}/>:<Button2 optionalcName='logoutBtn' text={`Login`} redirectTo='sell/login'/>}
+            {token ? <UserBadge optionalCName='logoutBtn' logout={true}/>:<UserBadge optionalCName='loginBtn'/>}
             </Box>
             
 

@@ -20,6 +20,7 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
   const [domains, setDomains] = useState([]);
   const [sectors, setSectors] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [replyField, showReplyField] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
 
 
@@ -32,103 +33,65 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
   });
 
   const [formFieldData, setFormFieldData] = useState([]); // Initialize formFieldData
-
-  console.log(visitorData);
   
   
   // Fetch domains once and set initial form field data
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
-        // Fetch domains
         const domainList = await fetchDomains();
         setDomains(domainList.map(domain => domain.domain_name));
   
-          setFormData({
-            name: visitorData.name || '',
-            domain: visitorData.domain_name || '',
-            sector: visitorData.sector_name || '',
-            purpose: visitorData.purpose || '',
-            message: visitorData.message || '',
-          });
-          
-          // Fetch sectors for the pre-filled domain
-          const selectedDomain = domainList?.find(domain => domain.domain_name === visitorData.domain_name);
-          if (selectedDomain) {
-            const sectorList = (await fetchDomainSectors(selectedDomain.domain_id)).map(sector => sector.sector_name);
-            setSectors(sectorList);
-          }
+        const selectedDomain = domainList.find(d => d.domain_name === visitorData.domain_name);
+        
+        let sectorList = [];
+        if (selectedDomain) {
+          sectorList = (await fetchDomainSectors(selectedDomain.domain_id)).map(s => s.sector_name);
+          setSectors(sectorList);
+        }
   
-          // Determine which fields to include in formFieldData
-          const isFilled = visitorData.domain_name && visitorData.sector_name && visitorData.purpose;
-          let initialFields = [
-            {
-              label: visitorData.visitor_id ? `${visitorData.user_type}:` : 'Visitor',
-              name: 'name',
-              type: 'text',
-              value: visitorData.name || '',
-              readOnly: true,
-            },
-            ...(showFields || !isFilled
-              ? [
-                  {
-                    label: 'Domain:',
-                    name: 'domain',
-                    type: 'select',
-                    placeholder: 'Select your domain',
-                    options: domainList.map(domain => domain.domain_name),
-                    required:true
-                  },
-                  {
-                    label: 'Sector:',
-                    name: 'sector',
-                    type: 'select',
-                    placeholder: 'Select your sector',
-                    options: sectors || [],
-                    required: true
-                  },
-                  {
-                    label: 'Purpose for:',
-                    name: 'purpose',
-                    type: 'select',
-                    placeholder: 'Select your purpose',
-                    options: ['Sell', 'Buy'],
-                    required: true
-                  },
-                ]
-              : []),
-            {
-              label: 'Message:',
-              name: 'message',
-              type: 'textarea',
-              value: visitorData.message || '', 
-              required:true
-            },
-          ];
-
-          if (formSubmitted) {
-            initialFields = initialFields.map(field => ({ ...field, readOnly: true }));
-          }
-
-          isFilled ? onSubmitSuccess(visitorData.domain_name, visitorData.sector_name, true):onSubmitSuccess('domain', 'sector', false);
-          setFormFieldData(initialFields);
-
-        } catch (error) {
-          console.log(error)
+        setFormData((prevData) => ({
+          ...prevData,
+          name: visitorData.name || '',
+          domain: visitorData.domain_name || '',
+          sector: visitorData.sector_name || '',
+          purpose: visitorData.purpose || '',
+          message: visitorData.message || '',
+        }));
+  
+        const isFilled = visitorData.domain_name && visitorData.sector_name && visitorData.purpose;
+        setFormFieldData([
+          { label: visitorData.visitor_id ? `${visitorData.user_type}:` : 'Visitor', name: 'name', type: 'text', value: visitorData.name || '', readOnly: true },
+          ...(showFields || !isFilled ? [
+            { label: 'Domain:', name: 'domain', type: 'select', placeholder: 'Select your domain', options: domainList.map(d => d.domain_name), required: true },
+            { label: 'Sector:', name: 'sector', type: 'select', placeholder: 'Select your sector', options: sectorList, required: true },
+            { label: 'Purpose for:', name: 'purpose', type: 'select', placeholder: 'Select your purpose', options: ['Sell', 'Buy'], required: true },
+          ] : []),
+          { label: 'Message:', name: 'message', type: 'textarea', value: formData.reply ? formData.reply : (formData.message || visitorData.message || ''), readOnly: replyField, required: true },
+        ]);
+  
+        isFilled ? onSubmitSuccess(visitorData.domain_name, visitorData.sector_name, true) : onSubmitSuccess('domain', 'sector', true);
+      } catch (error) {
         setLoading(false);
-        setSnackbar({ open: true, message: error.response.data.message, severity: 'error' });
-        console.error('Error fetching initial data:', error);
+        setSnackbar({ open: true, message: error?.response?.data?.message || 'Error fetching data', severity: 'error' });
       }
     };
   
     fetchInitialData();
   }, [visitorData, showFields]);
-
-  console.log(visitorData);
   
   
-   // Run this effect only once when the component mounts
+console.log(showFields);
 
+  useEffect(() => {
+    setFormFieldData(prevFields =>
+      prevFields.map(field =>
+        field.name === 'message' ? { ...field, readOnly: replyField } : field
+      )
+    );
+  }, [replyField]);
+  
+  
   // Handle change in form fields
   const handleChange = async (e) => {
     const { name, value } = e.target;
@@ -225,10 +188,11 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
           access_token: token
         })
         setLoading(false);
+        showReplyField(true);
         setSnackbar({ open: true, message: resp.message, severity: 'success' });
         setFormData(prevData => ({
           ...prevData,
-          message: formData.reply, // Update the message with reply
+          message: formData.reply ? formData.reply : formData.message, // Update the message with reply
           reply: '' // Reset reply field
         }));
         onSubmitSuccess(formData.domain, formData.sector, true);
@@ -262,7 +226,7 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
             label={label}
             name={name}
             type={type}
-            value={'' || formData[name]}
+            value={formData[name] || ''}
             onChange={handleChange}
             error={errors[name]}
             errorMessage={errorMessages[name]}
@@ -275,7 +239,7 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
         ))}
       </Box>
 
-      {formSubmitted && (
+      {formSubmitted && replyField && (
           <Box className="notifications">
             <Link >
               <Typography variant="h3">
@@ -295,7 +259,7 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
           </Box>
         )}
 
-{formSubmitted && <Box className="form-group">
+{formSubmitted && replyField && <Box className="form-group">
             <FormField
             label='Reply:'
             name='reply'

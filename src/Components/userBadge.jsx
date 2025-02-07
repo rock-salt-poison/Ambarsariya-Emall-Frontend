@@ -1,43 +1,110 @@
-import { getUser } from '../API/fetchExpressAPI'; // Adjust the import path as needed
-import member_icon from '../Utils/images/member.webp';
-import shop_icon from '../Utils/images/shop.webp';
-import merchant_icon from '../Utils/images/merchant.webp';
-import visitor_icon from '../Utils/images/visitor.webp';
+import { getUser } from "../API/fetchExpressAPI";
+import member_icon from "../Utils/images/member.webp";
+import shop_icon from "../Utils/images/shop.webp";
+import merchant_icon from "../Utils/images/merchant.webp";
+import visitor_icon from "../Utils/images/visitor.webp";
+import login_icon from "../Utils/images/login.webp";
+import crown_bg from "../Utils/images/crown_bg.webp";
+import { Box } from "@mui/material";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useLogout } from "../customHooks/useLogout";
+import { useNavigate } from "react-router-dom";
 
-// Utility function to fetch the user type and set the icon
-export const fetchUserType = async (token, setUserIcon) => {
-  if (token) {
-    try {
-      const user = (await getUser(token))?.[0];
-      const user_type = user?.user_type;
+export default function UserBadge({
+  optionalCName,
+  handleBadgeBgClick,
+}) {
+  const [userIcon, setUserIcon] = useState(null);
+  const token = useSelector((state) => state.auth.userAccessToken);
+  const handleLogout = useLogout();
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-      // Set the user icon based on the user type
-      if (user_type === 'member') {
-        if(user.visitor_id){
-          setUserIcon(visitor_icon);
-        }else{
-          setUserIcon(member_icon);
-        }
-      } else if (user_type === 'shop') {
-        if(user.visitor_id){
-          setUserIcon(visitor_icon);
-        }else{
-          setUserIcon(shop_icon);
-        }
-      } else if (user_type === 'merchant') {
-        if(user.visitor_id){
-          setUserIcon(visitor_icon);
-        }else{
-          setUserIcon(merchant_icon);
-        }
-      } else if (user_type === 'visitor') {
-        setUserIcon(visitor_icon);
-      } else {
-        setUserIcon(null); // Default icon if user type doesn't match
-      }
-    } catch (error) {
-      console.error('Error fetching user type:', error);
-      setUserIcon(null); // Handle error gracefully
+  const set_badge = async () => {
+    if (!token) {
+      setUserIcon(login_icon);
+      return;
     }
-  }
-};
+
+    try {
+      setLoading(true);
+      const user = (await getUser(token))?.[0];
+      const userType = user?.user_type;
+      const isVisitor = Boolean(user?.visitor_id);
+
+      const iconMap = {
+        member: isVisitor ? visitor_icon : member_icon,
+        shop: isVisitor ? visitor_icon : shop_icon,
+        merchant: isVisitor ? visitor_icon : merchant_icon,
+        visitor: visitor_icon,
+      };
+
+      setUserIcon(iconMap[userType] || login_icon);
+    } catch (error) {
+      console.error("Error fetching user type:", error);
+      setUserIcon(login_icon);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    set_badge();
+  }, [token]);
+
+  const handleIconClick = (e) => {
+    const target = e.target.closest(".badge");
+    const actionTarget = e.target.closest(".logoutBtn, .loginBtn");
+
+    if (target) {
+      target.classList.add("reduceSize3");
+      setTimeout(() => target.classList.remove("reduceSize3"), 300);
+
+      if (actionTarget) {
+        setTimeout(() => {
+          if (actionTarget.classList.contains("logoutBtn")) {
+            handleLogout("../AmbarsariyaMall");
+            actionTarget.classList.replace("logoutBtn", "loginBtn");
+          } else {
+            navigate("sell/login");
+          }
+        }, 600);
+      }
+    }
+  };
+
+  const handleCrownClick = (e) => {
+    const target = e.target.closest(".badge");
+    if (target) {
+      target.classList.add("reduceSize3");
+      setTimeout(() => {
+        target.classList.remove("reduceSize3");
+      }, 300);
+      setTimeout(() => {
+        navigate(handleBadgeBgClick);
+      }, 600);
+    }
+  };
+
+  return (
+    <>
+      {!loading && (
+        <Box className={`${optionalCName} badge`}>
+          <Box
+            className="badge_bg"
+            component="img"
+            src={crown_bg}
+            onClick={handleCrownClick}
+          />
+          <Box
+            className="badge_icon"
+            component="img"
+            src={userIcon}
+            onClick={handleIconClick}
+          />
+        </Box>
+      )}
+    </>
+  );
+}

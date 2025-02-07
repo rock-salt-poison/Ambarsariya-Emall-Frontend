@@ -7,7 +7,7 @@ const VisitorFormBox = ({ visitorData }) => {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [value, setValue] = useState({ domain: "domain", sector: "sector" });
 
-  const [showFields, setShowFields] = useState(false);
+  const [showFields, setShowFields] = useState(true);
 
   const navigate = useNavigate();
 
@@ -20,25 +20,25 @@ const VisitorFormBox = ({ visitorData }) => {
     setValue((prevData) => ({ ...prevData, domain, sector }));
   };
 
+  console.log(showFields);
+  const handleHeadingClick = () => {
+    setShowFields((prev) => !prev); // Toggle visibility
+  };
+
+
   return (
     <Box className="container">
       <Box className="circle"></Box>
       <Box className="content">
         <Typography variant="h2">
           E-Ambarsariya:
-          {!formSubmitted && visitorData.domain_name && visitorData.sector_name ? (
-            <Link onClick={() => setShowFields(true)}>
-              <Typography variant="span">
-                {visitorData.domain_name} - {visitorData.sector_name}
-              </Typography>
-            </Link>
-          ) : (
-            <Link onClick={() => setShowFields(true)}>
-              <Typography variant="span">
-                {value.domain} - {value.sector}
-              </Typography>
-            </Link>
-          )}
+          <Link onClick={handleHeadingClick}> {/* Toggle form on click */}
+            <Typography variant="span">
+              {formSubmitted && visitorData.domain_name && visitorData.sector_name
+                ? `${visitorData.domain_name} - ${visitorData.sector_name}`
+                : `${value.domain} - ${value.sector}`}
+            </Typography>
+          </Link>
         </Typography>
         <Box className="form_container">
           <VisitorShopForm

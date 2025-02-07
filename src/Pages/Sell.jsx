@@ -12,7 +12,7 @@ import hornSound from '../Utils/audio/horn-sound.mp3';
 import Logo from '../Components/Logo';
 import { useSelector } from 'react-redux';
 import { useLogout } from '../customHooks/useLogout';
-import { fetchUserType } from '../Components/userBadge';
+import UserBadge from '../Components/UserBadge';
 import { getShopUserData, getUser } from '../API/fetchExpressAPI';
 
 function Sell() {
@@ -20,7 +20,6 @@ function Sell() {
   const token = useSelector((state) => state.auth.userAccessToken);
   const handleLogout = useLogout();
   const [audio] = useState(new Audio(hornSound));
-  const [userIcon, setUserIcon] = useState(null);
 
   const [shopToken, setShopToken] = useState('');
   const [validMember, setValidMember] = useState(false);
@@ -102,9 +101,6 @@ function Sell() {
     { src: esaleBtnBg, text: 'E-sale', handleClick }
   ];
 
-  useEffect(()=> {
-    fetchUserType(token, setUserIcon);
-  }, [token]);
 
   return (
     <Box className="sell_wrapper">
@@ -122,7 +118,7 @@ function Sell() {
             </Link>
           </Box>
           <Box className="back-button-wrapper">
-          {userIcon && <Box component="img" src={userIcon} className="badge"/>}
+          {token && <UserBadge handleBadgeBgClick='../../AmbarsariyaMall'/>}
 
           </Box>
         </Box>

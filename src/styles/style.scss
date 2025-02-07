@@ -561,8 +561,8 @@ a {
       }
     }
 
-    .logoutBtn {
-      @include full-absolute(40px, 40px, auto, auto);
+    .logoutBtn, .loginBtn {
+      @include full-absolute(40px, 60px, auto, auto);
       z-index: 9999;
     }
 
@@ -20134,5 +20134,22 @@ textarea[readonly]{
 }
 
 .badge {
-  width: 90px;
+  width: 115px;
+  cursor: pointer;
+  transition: all .2s linear;
+  position: relative;
+
+  .badge_bg{
+    width: 100%;
+  }
+
+  .badge_icon{
+    @include full-absolute(20px, 20px, 20px, 26px);
+    transition: 0.2s all linear;
+    width: 62%;
+    
+    &:hover{
+      transform: scale(1.05);
+    }
+  }
 }

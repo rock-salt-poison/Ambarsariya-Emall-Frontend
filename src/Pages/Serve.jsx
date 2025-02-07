@@ -8,14 +8,14 @@ import Button2 from '../Components/Home/Button2';
 import { Link, useNavigate } from 'react-router-dom';
 import hornSound from '../Utils/audio/horn-sound.mp3';
 import { useSelector } from 'react-redux';
-import { fetchUserType } from '../Components/userBadge';
+import UserBadge from '../Components/UserBadge';
 
 function Serve() {
   const [connectorSrc, setConnectorSrc] = useState(card_connector);
   const [audio] = useState(new Audio(hornSound));
   const navigate = useNavigate();
   const token = useSelector((state) => state.auth.userAccessToken);
-  const [userIcon, setUserIcon] = useState(null);
+  // const [userIcon, setUserIcon] = useState(null);
 
 
   useEffect(() => {
@@ -35,9 +35,7 @@ function Serve() {
     };
   }, []);
 
-  useEffect(()=> {
-    fetchUserType(token, setUserIcon);
-  }, [token]);
+
 
   const handleClick = (e) =>{
         const target = e.target.closest(".emotional, .unexpected, .simple");
@@ -69,7 +67,7 @@ function Serve() {
       <Box className="row">
         <Box className="back-button-wrapper">
             <Button2 text="Back" redirectTo='../../AmbarsariyaMall'/>
-          {userIcon && <Box component="img" src={userIcon} className="badge"/>}
+          {token && <UserBadge/>}
 
         </Box>
         <Box className="container">
