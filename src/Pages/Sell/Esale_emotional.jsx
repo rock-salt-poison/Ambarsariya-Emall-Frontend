@@ -13,6 +13,7 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import Switch_On_Off from '../../Components/Form/Switch_On_Off';
 import clock from '../../Utils/images/Sell/esale/emotional/clock.png'
 import timetable from '../../Utils/images/Sell/esale/emotional/timetable.png'
+import UserBadge from '../../UserBadge';
 
 function Esale_emotional() {
   const [joyBarCount, setJoyBarCount] = useState(1);
@@ -63,7 +64,7 @@ function Esale_emotional() {
       <Box className="row">
         <Box className="col">
           <Box className="container">
-            <Button2 text="Back" redirectTo="../esale" />
+            {/* <Button2 text="Back" redirectTo="../esale" /> */}
           </Box>
           <Box className="container title">
             <Box className="heading">
@@ -72,7 +73,12 @@ function Esale_emotional() {
             </Box>
           </Box>
           <Box className="container" display="flex" justifyContent="flex-end">
-            <Button2 text="Next" redirectTo="../esale/personal" />
+            {/* <Button2 text="Next" redirectTo="../esale/personal" /> */}
+            <UserBadge
+                handleBadgeBgClick={`../esale`}
+                handleLogin="../login"
+                handleLogoutClick="../../AmbarsariyaMall"
+            />
           </Box>
         </Box>
 

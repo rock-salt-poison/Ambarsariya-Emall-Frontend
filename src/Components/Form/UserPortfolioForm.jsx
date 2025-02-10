@@ -41,7 +41,7 @@ const UserPortfolioForm = () => {
           name: user[0].full_name,
           phoneNumber: user[0].phone_no_1,
           gender: user[0].gender,
-          dob: user[0].dob,
+          dob: new Date(user[0].dob).toLocaleDateString('en-CA'),
           address: user[0].address,
           username: user[0].username
         })

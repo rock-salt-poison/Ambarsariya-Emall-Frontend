@@ -13,6 +13,7 @@ import home_icon from '../../Utils/images/Sell/budget/home.svg';
 import dreams_icon from '../../Utils/images/Sell/budget/dreams.svg';
 import family_icon from '../../Utils/images/Sell/budget/family.svg';
 import BudgetPopup from '../../Components/Sell/BudgetPopup';
+import UserBadge from '../../UserBadge';
 
 function Budget() {
   const { owner, action } = useParams();
@@ -159,8 +160,12 @@ function Budget() {
     <Box className="budget_wrapper">
       <Box className="row">
         <Box className="col">
-          <Button2 text="Back" redirectTo={`../${owner}/subscribe`} />
-          <Button2 text="Next" redirectTo={`../${owner}/subscribe`} />
+          {/* <Button2 text="Back" redirectTo={`../${owner}/subscribe`} /> */}
+          <UserBadge
+                handleBadgeBgClick={`../${owner}/subscribe`}
+                handleLogin="../login"
+                handleLogoutClick="../../AmbarsariyaMall"
+            />
         </Box>
         <Box className="col">
           <Box className="container">

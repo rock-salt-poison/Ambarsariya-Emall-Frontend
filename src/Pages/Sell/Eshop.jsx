@@ -19,16 +19,16 @@ const theme = createCustomTheme(themeProps);
     <Box className="eshop_wrapper">
       <Box className="row">
         <Box className="col">
+          {/* <Button2 text="Back" redirectTo="/AmbarsariyaMall/sell" /> */}
+          <Box className='col-1'></Box>
+          <Box className="header_board">
+            <Board text="E-shop" imgSrc={boardImg} />
+          </Box>
           <UserBadge
               handleBadgeBgClick={`../`}
               handleLogin="../login"
               handleLogoutClick="../../AmbarsariyaMall"
           />
-          {/* <Button2 text="Back" redirectTo="/AmbarsariyaMall/sell" /> */}
-          <Box className="header_board">
-            <Board text="E-shop" imgSrc={boardImg} />
-          </Box>
-          <Box></Box>
         </Box>
         <Box className="col">
         <Box></Box>

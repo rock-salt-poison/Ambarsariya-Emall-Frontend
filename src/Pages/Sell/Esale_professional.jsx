@@ -4,6 +4,7 @@ import Button2 from '../../Components/Home/Button2';
 import EsalePersonalForm from '../../Components/Form/EsalePersonalForm';
 import createCustomTheme from '../../styles/CustomSelectDropdownTheme';
 import professional_gif from '../../Utils/gifs/professional.gif';
+import UserBadge from '../../UserBadge';
 
 function Esale_professional() {
   const themeProps = {
@@ -261,7 +262,7 @@ function Esale_professional() {
         <Box className="row">
           <Box className="col">
             <Box className="container">
-              <Button2 text="Back" redirectTo="../esale/personal" />
+              {/* <Button2 text="Back" redirectTo="../esale/personal" /> */}
             </Box>
             <Box className="container title">
               <Box className="heading">
@@ -269,7 +270,12 @@ function Esale_professional() {
               </Box>
             </Box>
             <Box className="container" display="flex" justifyContent="flex-end">
-              <Button2 text="Next" redirectTo="../esale/emotional" />
+              {/* <Button2 text="Next" redirectTo="../esale/emotional" /> */}
+              <UserBadge
+                handleBadgeBgClick={`../esale`}
+                handleLogin="../login"
+                handleLogoutClick="../../AmbarsariyaMall"
+            />
             </Box>
           </Box>
 

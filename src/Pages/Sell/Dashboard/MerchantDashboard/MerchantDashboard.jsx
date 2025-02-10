@@ -46,9 +46,9 @@ function MerchantDashboard(props) {
             <Box className="row">
                 <DashboardHeader optionalColCname="calendar" data={details?.[0]}/>
                 {edit ? <DashboardForm data={details?.[0]}/> : <DashboardComponents data={details?.[0]}/>}
-                <Box className="col">
+                {/* <Box className="col">
                     <Button2 text={edit ? "Back" : "Next"} redirectTo={edit ? -1 :'edit'} optionalcName={edit ? "" : 'align-right'}/>
-                </Box>
+                </Box> */}
             </Box>
         </Box>
         </ThemeProvider>

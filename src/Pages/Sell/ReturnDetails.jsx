@@ -1,15 +1,22 @@
-import { Box, FormControlLabel, Typography } from '@mui/material';
-import React, { useState } from 'react';
-import Checkbox from '@mui/joy/Checkbox';
-import Close from '@mui/icons-material/Close';
-import { Link, useParams } from 'react-router-dom';
+import { Box, FormControlLabel, Typography } from "@mui/material";
+import React, { useState } from "react";
+import Checkbox from "@mui/joy/Checkbox";
+import Close from "@mui/icons-material/Close";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 // Reusable DetailRow component
 const DetailRow = ({ title, checked, onChange, name, disabled }) => (
   <Box className="detail_row">
     <Box className="col_1">
       <FormControlLabel
-        control={<Checkbox checked={checked} name={name} disabled uncheckedIcon={<Close />} />}
+        control={
+          <Checkbox
+            checked={checked}
+            name={name}
+            disabled
+            uncheckedIcon={<Close />}
+          />
+        }
         label={<Typography className="return_steps">{title}</Typography>}
       />
     </Box>
@@ -34,14 +41,31 @@ function ReturnDetails() {
     });
   };
 
-  const {owner} = useParams();
-  const order_id ="00046597"
+  const { owner } = useParams();
+  const order_id = "00046597";
+  const navigate = useNavigate();
+
+  const handleClick = (e) => {
+    if(e.target){
+      const target = e.target.closest('.btn');
+      if(target){
+        target.classList.add('reduceSize3');
+        setTimeout(()=> {target.classList.remove('reduceSize3')}, 300);
+        setTimeout(()=> {navigate(`../${owner}/review`)}, 600);
+      } 
+    }
+  }
+
+ 
 
   return (
     <Box className="details">
-          <Typography variant='h3' className='order_id'>Order Id: <Typography variant="span">
-              <Link to={`../${owner}/cart`}>{order_id}</Link>
-            </Typography></Typography>
+      <Typography variant="h3" className="order_id">
+        Order Id:{" "}
+        <Typography variant="span">
+          <Link to={`../${owner}/cart`}>{order_id}</Link>
+        </Typography>
+      </Typography>
       <DetailRow
         title="Refund Policy and Return Status"
         checked={checkboxStates.refundPolicy}
@@ -75,6 +99,12 @@ function ReturnDetails() {
         disabled
         uncheckedIcon={<Close />}
       />
+
+      <Link className="btn"  onClick={(e)=>handleClick(e)}>
+        <Typography className="link">
+          Review
+        </Typography> 
+      </Link>
     </Box>
   );
 }

@@ -63,11 +63,7 @@ function ProductDetails() {
       <Box className="row">
         <Box className="col">
           <Box className="sub_col">
-            <UserBadge
-                handleBadgeBgClick={`../shop/${token}/products`}
-                handleLogin="../login"
-                handleLogoutClick="../../AmbarsariyaMall"
-            />
+            
             {/* <Button2 text={"Back"} redirectTo={`../shop/${token}/products`} /> */}
           </Box>
           <Box className="sub_col">
@@ -75,7 +71,13 @@ function ProductDetails() {
               Product
             </Typography>
           </Box>
-          <Box className="sub_col"></Box>
+          <Box className="sub_col">
+          <UserBadge
+                handleBadgeBgClick={`../shop/${token}/products`}
+                handleLogin="../login"
+                handleLogoutClick="../../AmbarsariyaMall"
+            />
+          </Box>
         </Box>
         <Box className="col">
           <Box className="sub_col"></Box>

@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLogout } from "./customHooks/useLogout";
 import { useNavigate } from "react-router-dom";
+import ConfirmationDialog from "./Components/ConfirmationDialog"; // Import the dialog component
 
 function UserBadge({
   handleLogin,
@@ -20,6 +21,7 @@ function UserBadge({
   const token = useSelector((state) => state.auth.userAccessToken);
   const handleLogout = useLogout();
   const [loading, setLoading] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false); // State for dialog
   const navigate = useNavigate();
 
   const set_badge = async () => {
@@ -63,35 +65,33 @@ function UserBadge({
       setTimeout(() => target.classList.remove("reduceSize3"), 300);
 
       if (actionTarget) {
-        setTimeout(() => {
-          if (actionTarget.classList.contains("logoutBtn")) {
-            handleLogout(handleLogoutClick);
-            actionTarget.classList.replace("logoutBtn", "loginBtn");
-          } else if (actionTarget.classList.contains("loginBtn")){
-            navigate(handleLogin);
-          }
-        }, 600);
+        if (actionTarget.classList.contains("logoutBtn")) {
+          setOpenDialog(true); // Open the confirmation dialog
+        } else if (actionTarget.classList.contains("loginBtn")) {
+          setTimeout(() => navigate(handleLogin), 600);
+        }
       }
     }
+  };
+
+  const handleConfirmLogout = () => {
+    setOpenDialog(false);
+    handleLogout(handleLogoutClick);
   };
 
   const handleCrownClick = (e) => {
     const target = e.target.closest(".badge_bg");
     if (target) {
       target.classList.add("reduceSize3");
-      setTimeout(() => {
-        target.classList.remove("reduceSize3");
-      }, 300);
-      setTimeout(() => {
-        navigate(handleBadgeBgClick);
-      }, 600);
+      setTimeout(() => target.classList.remove("reduceSize3"), 300);
+      setTimeout(() => navigate(handleBadgeBgClick), 600);
     }
   };
 
   return (
     <>
       {!loading && (
-        <Box className={`${token ? 'logoutBtn' : 'loginBtn'} badge`}>
+        <Box className={`${token ? "logoutBtn" : "loginBtn"} badge`}>
           <Box
             className="badge_bg"
             component="img"
@@ -106,8 +106,18 @@ function UserBadge({
           />
         </Box>
       )}
+
+      {/* Confirmation Dialog */}
+      <ConfirmationDialog
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+        onConfirm={handleConfirmLogout}
+        title="Confirm Logout"
+        message="Are you sure you want to logout?"
+        optionalCname="logoutDialog"
+      />
     </>
   );
 }
 
-export default UserBadge
+export default UserBadge;

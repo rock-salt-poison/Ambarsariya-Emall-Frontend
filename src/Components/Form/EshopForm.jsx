@@ -121,11 +121,16 @@ const EshopForm = () => {
   useEffect(() => {
     const fetchData = async () => {
       if (user_access_token) {
-        setLoading(true);
-        let shop_token = (await getUser(user_access_token))[0]
-        .shop_access_token;
-        if (shop_token) {
-          fetchOtherShops(shop_token);
+        try{
+          setLoading(true);
+          let shop_token = (await getUser(user_access_token))[0]
+          .shop_access_token;
+          if (shop_token) {
+            fetchOtherShops(shop_token);
+          }
+        }catch(e){
+          console.log(e);
+        }finally{
           setLoading(false);
         }
       }

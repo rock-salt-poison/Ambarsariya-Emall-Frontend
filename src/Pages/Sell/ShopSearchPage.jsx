@@ -4,6 +4,7 @@ import Button2 from '../../Components/Home/Button2';
 import AutoCompleteSearchField from '../../Components/Products/AutoCompleteSearchField';
 import SingleShopPage from './SingleShopPage';
 import { allShops } from '../../API/fetchExpressAPI';
+import UserBadge from '../../UserBadge';
 
 function ShopSearchPage() {
     const [shops, setShops] = useState([]);
@@ -48,7 +49,7 @@ function ShopSearchPage() {
             <Box className="row">
                 <Box className="col">
                     <Box className="container">
-                        <Button2 text="Back" redirectTo="../esale" />
+                        {/* <Button2 text="Back" redirectTo="../esale" /> */}
                     </Box>
                     <Box className="container">
                         <Typography variant="h2" className="title">
@@ -56,7 +57,12 @@ function ShopSearchPage() {
                         </Typography>
                     </Box>
                     <Box className="container" display="flex" justifyContent="flex-end">
-                        <Button2 text="Next" redirectTo="../shops" />
+                        {/* <Button2 text="Next" redirectTo="../shops" /> */}
+                        <UserBadge
+                            handleBadgeBgClick={`../esale`}
+                            handleLogin="../login"
+                            handleLogoutClick="../../AmbarsariyaMall"
+                        />
                     </Box>
                 </Box>
                 <Box className="col">

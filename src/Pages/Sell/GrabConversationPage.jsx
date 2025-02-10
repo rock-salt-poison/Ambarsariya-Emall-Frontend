@@ -10,6 +10,7 @@ import man_and_women_friendly_conversation from '../../Utils/images/Sell/grab/ma
 import be_kind_to_everyone from '../../Utils/images/Sell/grab/be_kind_to_everyone.svg'
 import { useSelector } from 'react-redux';
 import UserBadge from '../../UserBadge';
+import { Link } from 'react-router-dom';
 
 function GrabConversationPage() {
     const token = useSelector((state) => state.auth.userAccessToken);
@@ -34,7 +35,7 @@ function GrabConversationPage() {
                 <Box className="img_container">
                 <Box component="img" src={conversation_3} className="conversation" alt="Second hand" />
                 <Box component="img" src={man_and_women_friendly_conversation} className="conversation" alt="Second hand" />
-                <Box component="img" src={conversation_4} className="conversation" alt="Second hand" />
+                <Link to='../user'><Box component="img" src={conversation_4} className="conversation" alt="Second hand" /></Link>
                 </Box>
             </Box>
 

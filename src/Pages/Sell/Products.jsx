@@ -77,11 +77,7 @@ function Products() {
             <Box className="row">
                 <Box className="col">
                     <Box className="sub_col">
-                      <UserBadge
-                          handleBadgeBgClick={`../support/shop?token=${token}`}
-                          handleLogin="../login"
-                          handleLogoutClick="../../AmbarsariyaMall"
-                      />
+                      
                         {/* <Button2 text={"Back"} redirectTo={`../support/shop?token=${token}`} /> */}
                     </Box>
                     <Box className="sub_col">
@@ -89,7 +85,13 @@ function Products() {
                             Products
                         </Typography>
                     </Box>
-                    <Box className="sub_col"></Box>
+                    <Box className="sub_col">
+                    <UserBadge
+                          handleBadgeBgClick={`../support/shop?token=${token}`}
+                          handleLogin="../login"
+                          handleLogoutClick="../../AmbarsariyaMall"
+                      />
+                    </Box>
                 </Box>
                 
                 <Box className="col">

@@ -4,6 +4,7 @@ import Button2 from '../../Components/Home/Button2';
 import personalIcon from '../../Utils/images/Sell/esale/personal_care.svg';
 import EsalePersonalForm from '../../Components/Form/EsalePersonalForm';
 import createCustomTheme from '../../styles/CustomSelectDropdownTheme';
+import UserBadge from '../../UserBadge';
 
 function Esale_personal(props) {
 
@@ -93,7 +94,7 @@ function Esale_personal(props) {
         <Box className="row">
           <Box className="col">
             <Box className="container">
-              <Button2 text="Back" redirectTo="../esale/emotional" />
+              {/* <Button2 text="Back" redirectTo="../esale/emotional" /> */}
             </Box>
             <Box className="container title">
               <Box className="heading">
@@ -102,7 +103,12 @@ function Esale_personal(props) {
               </Box>
             </Box>
             <Box className="container" display="flex" justifyContent="flex-end">
-              <Button2 text="Next" redirectTo="../esale/professional" />
+              {/* <Button2 text="Next" redirectTo="../esale/professional" /> */}
+              <UserBadge
+                handleBadgeBgClick={`../esale`}
+                handleLogin="../login"
+                handleLogoutClick="../../AmbarsariyaMall"
+            />
             </Box>
           </Box>
 

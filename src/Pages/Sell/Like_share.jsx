@@ -13,6 +13,8 @@ import social_media_img from '../../Utils/images/Sell/like_share/social_media.we
 import budget_img from '../../Utils/images/Sell/like_share/budget.webp'
 import vector_line from '../../Utils/images/Sell/like_share/vector_line.png';
 import arrow_icon from '../../Utils/images/Sell/like_share/arrow.svg'
+import UserBadge from '../../UserBadge';
+import ShopNameAndNo from '../../Components/Cart/ShopNameAndNo';
 
 function Like_share() {
     const { owner } = useParams();
@@ -74,24 +76,25 @@ function Like_share() {
         {id:3, type:'Budget', alt:"budget", imgSrc:budget_img, linkTo:`../${owner}/budget`}
     ]
 
+
+
     return (
         <Box className="like_share_wrapper">
             <Box className="row">
                 <Box className="col">
                     <Box className="container">
-                        <Button2 text="Back" redirectTo={`../${owner}/review`} />
+                        {/* <Button2 text="Back" redirectTo={`../${owner}/review`} /> */}
                     </Box>
                     <Box className="container">
-                        <Typography variant='h2' className='heading'>
-                            <Typography variant='span' className="span_1">Apna Departmental</Typography>
-                            <Typography variant='span' className="span_1">
-                                Shop No:
-                                <Typography variant='span' className='span_2'>123</Typography>
-                            </Typography>
-                        </Typography>
+                        <ShopNameAndNo token={owner}/>
                     </Box>
                     <Box className="container">
-                        <Button2 text="Next" redirectTo={`../${owner}/subscribe`} />
+                        {/* <Button2 text="Next" redirectTo={`../${owner}/subscribe`} /> */}
+                        <UserBadge
+                            handleBadgeBgClick={`../${owner}/review`}
+                            handleLogin="../login"
+                            handleLogoutClick="../../AmbarsariyaMall"
+                        />
                     </Box>
                 </Box>
 

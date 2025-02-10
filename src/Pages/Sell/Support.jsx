@@ -101,7 +101,6 @@ console.log(visitorData);
       <Box className="support_wrapper">
         <Box className="row">
           <Box className="col">
-            {/* <Box></Box> */}
             <Cards />
             <UserBadge
                 handleBadgeBgClick="../"

@@ -6,6 +6,7 @@ import OrderDetails from './OrderDetails'
 import ReturnDetails from './ReturnDetails'
 import Review from './Review'
 import reviewBg from '../../Utils/images/Sell/order_details/reviewBg.webp';
+import UserBadge from '../../UserBadge'
 
 export default function Order_Return_Review_Component() {
 
@@ -62,13 +63,17 @@ export default function Order_Return_Review_Component() {
       <Box className="row">
         <Box className="col">
           <Box className="container">
-            <Button2 text="Back" redirectTo={redirectBackPageTo()} />
           </Box>
           <Box className="container">
             <Typography className='heading' variant='h2'>{renderHeading()}</Typography>
           </Box>
           <Box className="container" >
-            <Button2 text="Next" redirectTo={redirectNextPageTo()}/>
+            {/* <Button2 text="Next" redirectTo={redirectNextPageTo()}/> */}
+            <UserBadge
+                handleBadgeBgClick={redirectBackPageTo()}
+                handleLogin="../login"
+                handleLogoutClick="../../AmbarsariyaMall"
+            />
           </Box>
         </Box>
 

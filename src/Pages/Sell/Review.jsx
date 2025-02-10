@@ -66,7 +66,7 @@ const RenderRow = ({ imgSrc, title, subscribe, id }) => {
         }
 
         {
-          subscribe && <Link to={`../id/subscribe`}>
+          subscribe && <Link to={`../${id}/subscribe`}>
             <Box component="img" src={subscribe_gif} className='subscribe' alt="subscribe"/>
           </Link>
         }
@@ -77,15 +77,16 @@ const RenderRow = ({ imgSrc, title, subscribe, id }) => {
 };
 
 function Review() {
-  const {id, action} = useParams();
-
+  const {owner, action} = useParams();
+  console.log(owner);
+  
 
   return (
     <Box className="details">
       <RenderRow title="Price Effective" imgSrc={price_effective} />
       <RenderRow title="Quality of Compliance" imgSrc={quality_of_compliance} />
       <RenderRow title="Quality of Service" imgSrc={quality_of_service} />
-      <RenderRow title="Presentable to Share"  subscribe={true} id={id}/>
+      <RenderRow title="Presentable to Share"  subscribe={true} id={owner}/>
     </Box>
   );
 }

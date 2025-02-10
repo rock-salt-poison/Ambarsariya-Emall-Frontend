@@ -29,7 +29,7 @@ function DashboardHeader({data}) {
     </Box>
     <Box className="sub-col">
         <Box className="title">
-            <Typography className='shop_name'>{data?.business_name}</Typography>
+            <Link to={edit ? -1 :'edit'}><Typography className='shop_name'>{data?.business_name}</Typography></Link>
 
             <Box className="domain_sector">
             <Typography>
