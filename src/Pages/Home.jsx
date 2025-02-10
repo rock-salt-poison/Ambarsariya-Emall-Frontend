@@ -23,7 +23,7 @@ import { useSelector } from 'react-redux';
 import Button2 from '../Components/Home/Button2';
 import { useLogout } from '../customHooks/useLogout';
 import { getUser } from '../API/fetchExpressAPI';
-import UserBadge from '../Components/UserBadge';
+import UserBadge from '../Components/Userbadge';
 
 export default function Home() {
     const navigate = useNavigate();

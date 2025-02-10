@@ -8,7 +8,7 @@ import Button2 from '../Components/Home/Button2';
 import { Link, useNavigate } from 'react-router-dom';
 import hornSound from '../Utils/audio/horn-sound.mp3';
 import { useSelector } from 'react-redux';
-import UserBadge from '../Components/UserBadge';
+import UserBadge from '../Components/Userbadge';
 
 function Serve() {
   const [connectorSrc, setConnectorSrc] = useState(card_connector);

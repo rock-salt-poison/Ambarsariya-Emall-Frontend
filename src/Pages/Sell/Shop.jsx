@@ -11,7 +11,7 @@ import { useSelector } from "react-redux";
 import { useParams, useSearchParams } from "react-router-dom";
 import { allShops, getShopUserData } from "../../API/fetchExpressAPI";
 import CustomSnackbar from "../../Components/CustomSnackbar";
-import UserBadge from "../../Components/UserBadge";
+import UserBadge from "../../Components/Userbadge";
 
 
 function Shop() {
