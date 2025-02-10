@@ -23,7 +23,7 @@ import { useSelector } from 'react-redux';
 import Button2 from '../Components/Home/Button2';
 import { useLogout } from '../customHooks/useLogout';
 import { getUser } from '../API/fetchExpressAPI';
-// import UserBadge from '../Components/UserBadge';
+import UserBadge from '../UserBadge';
 
 export default function Home() {
     const navigate = useNavigate();
@@ -182,7 +182,7 @@ export default function Home() {
                     </Box>
                 </Box>
             {/* {token ? <Button2 optionalcName='logoutBtn' text={`Logged in as ${userType}`} onClick={() => handleLogout('../AmbarsariyaMall')}/>:<Button2 optionalcName='logoutBtn' text={`Login`} redirectTo='sell/login'/>} */}
-            {/* <UserBadge handleLogin="sell/login" handleLogoutClick="../../AmbarsariyaMall"/> */}
+            <UserBadge handleLogin="sell/login" handleLogoutClick="../../AmbarsariyaMall"/>
             </Box>
             
 
