@@ -9,7 +9,7 @@ import teenagers_whispering_secrete from '../../Utils/images/Sell/grab/teenagers
 import man_and_women_friendly_conversation from '../../Utils/images/Sell/grab/man_and _women_friendly_conversation.svg'
 import be_kind_to_everyone from '../../Utils/images/Sell/grab/be_kind_to_everyone.svg'
 import { useSelector } from 'react-redux';
-import UserBadge from '../../Components/UserBadge';
+import UserBadge from '../../UserBadge';
 
 function GrabConversationPage() {
     const token = useSelector((state) => state.auth.userAccessToken);

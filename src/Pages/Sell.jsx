@@ -12,7 +12,7 @@ import hornSound from "../Utils/audio/horn-sound.mp3";
 import Logo from "../Components/Logo";
 import { useSelector } from "react-redux";
 import { useLogout } from "../customHooks/useLogout";
-import UserBadge from '../Components/UserBadge';
+import UserBadge from '../UserBadge';
 import { getShopUserData, getUser } from "../API/fetchExpressAPI";
 
 function Sell() {

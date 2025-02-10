@@ -10,7 +10,7 @@ import FormField from '../../Components/Form/FormField';
 import { useSelector } from 'react-redux';
 import { get_visitorData, getUser } from '../../API/fetchExpressAPI';
 import CustomSnackbar from '../../Components/CustomSnackbar';
-import UserBadge from '../../Components/UserBadge';
+import UserBadge from '../../UserBadge';
 
 function Support(props) {
   const [file, setFile] = useState(null); // State to hold the uploaded file

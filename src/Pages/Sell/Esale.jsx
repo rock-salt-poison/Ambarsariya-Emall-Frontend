@@ -13,7 +13,7 @@ import emotional_care_img from '../../Utils/images/Sell/esale/emotional.svg'
 import professional_gif from '../../Utils/gifs/professional.gif'
 import bg_img from '../../Utils/images/Sell/esale/bg_img.png'
 import { Link, useParams } from 'react-router-dom'
-import UserBadge from '../../Components/UserBadge'
+import UserBadge from '../../UserBadge'
 
 const data = [
     { id: 1, title: "Emotional", imgSrc: emotional_care_img, linkTo:'emotional' },

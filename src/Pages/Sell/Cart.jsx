@@ -19,7 +19,7 @@ import Delivery from "../../Components/Cart/ServiceType/Delivery";
 import Visit from "../../Components/Cart/ServiceType/Visit";
 import CoHelper from "../../Components/Cart/CoHelper/CoHelper";
 import { getShopUserData } from "../../API/fetchExpressAPI";
-import UserBadge from "../../Components/UserBadge";
+import UserBadge from "../../UserBadge";
 
 function Cart() {
   const sampleRows = useSelector((state) => state.cart.selectedProducts);

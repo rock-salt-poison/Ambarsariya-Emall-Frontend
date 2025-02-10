@@ -1,14 +1,14 @@
-import { getUser } from "../API/fetchExpressAPI";
-import member_icon from "../Utils/images/member.webp";
-import shop_icon from "../Utils/images/shop.webp";
-import merchant_icon from "../Utils/images/merchant.webp";
-import visitor_icon from "../Utils/images/visitor.webp";
-import login_icon from "../Utils/images/login.webp";
-import crown_bg from "../Utils/images/crown_bg.webp";
+import { getUser } from "./API/fetchExpressAPI";
+import member_icon from "./Utils/images/member.webp";
+import shop_icon from "./Utils/images/shop.webp";
+import merchant_icon from "./Utils/images/merchant.webp";
+import visitor_icon from "./Utils/images/visitor.webp";
+import login_icon from "./Utils/images/login.webp";
+import crown_bg from "./Utils/images/crown_bg.webp";
 import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useLogout } from "../customHooks/useLogout";
+import { useLogout } from "./customHooks/useLogout";
 import { useNavigate } from "react-router-dom";
 
 function UserBadge({

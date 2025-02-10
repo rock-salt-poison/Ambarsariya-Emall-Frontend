@@ -24,7 +24,7 @@ import {
 } from "../../API/fetchExpressAPI";
 import CustomSnackbar from "../../Components/CustomSnackbar";
 import { getSectorImage } from "../../Utils/sector_images";
-import UserBadge from "../../Components/UserBadge";
+import UserBadge from "../../UserBadge";
 
 const SingleShopPage = ({ showBackButton = true, shopData }) => {
   const [searchParams] = useSearchParams();

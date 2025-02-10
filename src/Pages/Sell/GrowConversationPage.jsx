@@ -10,7 +10,7 @@ import conversation_6 from '../../Utils/images/Sell/grow/conversation_6.svg'
 import success_quote from '../../Utils/images/Sell/grow/success_quote.webp'
 import Logo from '../../Components/Logo';
 import { Link, useNavigate } from 'react-router-dom';
-import UserBadge from '../../Components/UserBadge';
+import UserBadge from '../../UserBadge';
 import { useSelector } from 'react-redux';
 
 function GrowConversationPage() {
