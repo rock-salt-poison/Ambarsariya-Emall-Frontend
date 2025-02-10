@@ -39,11 +39,6 @@ function Esale() {
                     <Box className="col">
                         <Box className="container">
                             {/* <Button2 text="Back" redirectTo='../' /> */}
-                            <UserBadge
-                                                  handleBadgeBgClick={`../`}
-                                                  handleLogin="../login"
-                                                  handleLogoutClick="../../AmbarsariyaMall"
-                                              />
                         </Box>
                         <Box className="container">
                             <Box className="header_board">
@@ -51,7 +46,11 @@ function Esale() {
                             </Box>
                         </Box>
                         <Box className="container" display="flex" justifyContent="flex-end">
-                            {/* <Button2 text="Next" redirectTo='../shops' /> */}
+                        <UserBadge
+                                                  handleBadgeBgClick={`../`}
+                                                  handleLogin="../login"
+                                                  handleLogoutClick="../../AmbarsariyaMall"
+                                              />
                         </Box>
                     </Box>
                     <Box className="row_2">

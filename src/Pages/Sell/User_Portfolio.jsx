@@ -128,16 +128,19 @@ function User_Portfolio(props) {
                             </Box>
                         </Box>
                         <Box className="forward_backward_button_container">
-                            {/* <Button2 text="Back" redirectTo="/AmbarsariyaMall/sell" /> */}
-                            <UserBadge
-                                                  handleBadgeBgClick={`../`}
-                                                  handleLogin="../login"
-                                                  handleLogoutClick="../../AmbarsariyaMall"
-                                              />
-                            {/* <Button2 text="Next" redirectTo="../esale" /> */}
+                        <UserBadge
+                            handleBadgeBgClick={`../`}
+                            handleLogin="../login"
+                            handleLogoutClick="../../AmbarsariyaMall"
+                        />
                         </Box>
                     </Box>
                     <Box className="col">
+                    <UserBadge
+                        handleBadgeBgClick={`../`}
+                        handleLogin="../login"
+                        handleLogoutClick="../../AmbarsariyaMall"
+                    />
                         <Card />
                     </Box>
                 </Box>

@@ -3573,10 +3573,22 @@ a {
     gap: 65px;
 
     .col {
+
+      &:first-child{
+        @include flex-center(row, space-between);
+        gap: 20px;
+        flex-wrap: wrap;
+
+        .badge{
+          align-self: flex-start;
+        }
+      }
+
       .cards_outer_container {
         position: relative;
         display: flex;
         align-items: center;
+        width: 88%;
 
         .cards_container {
           display: flex;
@@ -4092,8 +4104,27 @@ a {
       }
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 992px){
       padding: 20px;
+      .col{
+        &:first-child{
+          flex-direction: column;
+
+          .cards_outer_container{
+            width: 100%;
+            order: 1;
+          }
+
+          .badge{
+            order: 0;
+            align-self: flex-end;
+          }
+        }
+      }
+    }
+
+    @media (max-width: 768px) {
+      // padding: 20px;
 
       .col {
         gap: 20px;
@@ -5029,6 +5060,9 @@ a {
       }
 
       &:first-child {
+        .badge{
+          @include full-absolute(auto, auto, auto, auto);
+        }
         @media (max-width: 452px) {
           .heading {
             order: 2;
@@ -5041,7 +5075,7 @@ a {
         justify-content: center;
         gap: 10px;
         @include flex-center(row, center);
-        // padding-top: 20px;
+        margin: auto;
 
         .img_container {
           @include flex-center(row, center);
@@ -5070,6 +5104,13 @@ a {
       gap: 20px;
 
       .col {
+
+        &:first-child{
+          .badge{
+            position: relative;
+          }
+        }
+        
         &:nth-child(2) {
           .img_container {
             img {
@@ -5100,6 +5141,10 @@ a {
           }
         }
       }
+    }
+
+    @media (max-width: 779px) {
+      padding: 20px;
     }
   }
 }
@@ -5145,7 +5190,7 @@ a {
         10px 18px
       );
 
-      .backButton {
+      .badge {
         margin: 0 0 auto 0;
       }
 
@@ -5153,9 +5198,17 @@ a {
         justify-content: space-evenly;
       }
 
+      &:first-child{
+        display: grid;
+        grid-template-columns: 120px 1fr 120px;
+        gap: 0 10px;
+      }
+
       .header_board {
         @include flex-center(row, space-between);
-        flex: 1;
+        flex-wrap: wrap;
+        justify-self: stretch;
+        gap: 10px;
 
         .container {
           position: relative;
@@ -5263,6 +5316,55 @@ a {
           line-height: 0px;
           position: relative;
           top: 6px;
+        }
+      }
+    }
+    @media screen and (max-width:992px){
+      .col{
+        &:first-child{
+          grid-template-columns: auto 1fr 120px;
+        }
+      }
+    }
+    @media screen and (max-width:768px){
+      padding: 20px;
+
+      .col{
+        &:first-child{
+          .header_board{
+            .container{
+              .board_img{
+                height: 100px;
+              }
+              .title_container{
+                top: 32px;
+                
+                p{
+                  font-size: 34px;
+                  line-height: .8em;
+                }
+              }
+
+            }
+          }
+        }
+      }
+    }
+    @media screen and (max-width:560px){
+      gap: 15px;
+      .col{
+        justify-content: center;
+        &:first-child{
+          grid-template-columns: 1fr;
+
+          .header_board{
+            order: 3;
+            gap: 0px;
+            justify-content: center;
+          }
+          .badge{
+            order: 2;
+          }
         }
       }
     }
@@ -5759,7 +5861,7 @@ a {
       );
 
       &:first-child {
-        @include full-absolute(30px, auto, auto, 60px);
+        @include full-absolute(30px, 60px, auto, auto);
       }
 
       .card {
@@ -6556,6 +6658,7 @@ a {
     @include flex-center(row, space-between);
     place-items: normal;
     width: 100%;
+    align-self: stretch;
     flex-wrap: wrap;
 
     .col {
@@ -6835,8 +6938,8 @@ a {
         }
 
         .forward_backward_button_container {
-          padding: 15px 0;
-          @include flex-center(row, space-between);
+          padding: 0;
+          display: none;
           @include backButton(
             $yellow,
             $dark-yellow2,
@@ -6852,8 +6955,13 @@ a {
 
       &:last-child {
         flex: 0 0 36%;
+        align-self: stretch;
         height: 100vh;
-        overflow: hidden;
+
+        .badge{
+          align-self: flex-end;
+          margin-top: 20px;
+        }
 
         .right_wrapper {
           margin: 20px 0;
@@ -7055,8 +7163,9 @@ a {
       flex: 0 0 100% !important;
 
       .forward_backward_button_container {
+        display: flex !important;
+        @include flex-center(row, flex-end);
         order: 0;
-        padding-top: 0px !important;
       }
 
       .heading_container {
@@ -7093,6 +7202,11 @@ a {
       &:last-child {
         height: max-content !important;
         overflow: visible;
+        padding-top: 0px !important;
+
+        .badge{
+          display: none;
+        }
 
         .right_wrapper {
           height: max-content !important;
@@ -7113,6 +7227,7 @@ a {
       }
 
       &:first-child {
+        padding-top: 0px !important;
         .user_details_container {
           .form_container {
             form {

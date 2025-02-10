@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import Button2 from "../Components/Home/Button2";
 import { Link, useNavigate } from "react-router-dom";
 import icon from "../Utils/images/Sell/person_on_call.svg";
@@ -20,6 +20,7 @@ function Sell() {
   const token = useSelector((state) => state.auth.userAccessToken);
   const handleLogout = useLogout();
   const [audio] = useState(new Audio(hornSound));
+  const [loading, setLoading] = useState(false);
 
   const [shopToken, setShopToken] = useState("");
   const [validMember, setValidMember] = useState(false);
@@ -28,22 +29,29 @@ function Sell() {
   useEffect(() => {
     const fetchShopToken = async () => {
       if (token) {
-        const resp = await getUser(token);
-        if (resp.length > 0) {
-          if (resp[0].shop_access_token) {
-            const shopData = await getShopUserData(resp[0].shop_access_token);
-            if (shopData?.length > 0) {
-              if (shopData[0]?.business_name?.length > 0) {
-                setValidShop(true);
-                setShopToken(shopData[0].shop_access_token);
-              } else {
-                setValidShop(false);
-                setShopToken(shopData[0].shop_access_token);
+        try{
+          setLoading(true);
+          const resp = await getUser(token);
+          if (resp.length > 0) {
+            if (resp[0].shop_access_token) {
+              const shopData = await getShopUserData(resp[0].shop_access_token);
+              if (shopData?.length > 0) {
+                if (shopData[0]?.business_name?.length > 0) {
+                  setValidShop(true);
+                  setShopToken(shopData[0].shop_access_token);
+                } else {
+                  setValidShop(false);
+                  setShopToken(shopData[0].shop_access_token);
+                }
               }
+            } else if (resp[0].user_type === "member" && !resp[0].visitor_id) {
+              setValidMember(true);
             }
-          } else if (resp[0].user_type === "member" && !resp[0].visitor_id) {
-            setValidMember(true);
           }
+        }catch(e){
+          console.error("Error fetching shop token:", e);
+        }finally{
+          setLoading(false);
         }
       }
     };
@@ -106,6 +114,7 @@ function Sell() {
 
   return (
     <Box className="sell_wrapper">
+      {loading ? <Box className="loading"><CircularProgress/></Box> :(
       <Box className="row_wrapper">
         <Box className="header col">
           <Box className="back-button-wrapper">
@@ -164,6 +173,7 @@ function Sell() {
           ))}
         </Box>
       </Box>
+      )}
     </Box>
   );
 }

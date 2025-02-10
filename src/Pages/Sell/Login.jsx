@@ -6,6 +6,7 @@ import lion_img from "../../Utils/images/Sell/login/lion.webp";
 import peacock_img from "../../Utils/images/Sell/login/peacock.webp";
 import { useSelector } from "react-redux";
 import { getShopUserData, getUser } from "../../API/fetchExpressAPI";
+import UserBadge from "../../UserBadge";
 
 function Login() {
   const token = useSelector((state) => state.auth.userAccessToken);
@@ -54,7 +55,12 @@ function Login() {
     <Box className="login_wrapper">
       <Box className="container">
         <Box className="col">
-          <Button2 text="Back" redirectTo={-1} />
+          {/* <Button2 text="Back" redirectTo={-1} /> */}
+          <UserBadge
+                    handleBadgeBgClick="../"
+                    handleLogin="../login"
+                    handleLogoutClick="../../AmbarsariyaMall"
+                    />
         </Box>
 
         {/* Always Render LoginPageCard but Change Redirect Dynamically */}

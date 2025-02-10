@@ -12,6 +12,7 @@ import SubscriptionPopupContent from '../../Components/CouponOffering/Subscripti
 import CustomizablePopupContent from '../../Components/CouponOffering/CustomizablePopupContent';
 import RsTenPerDayContent from '../../Components/CouponOffering/RsTenPerDayContent';
 import { useSelector } from 'react-redux';
+import UserBadge from '../../UserBadge';
 
 const OFFER_TYPES = [
   { type: 'retailer', popup: true, popup_body_content: <RetailerPopupContent /> },
@@ -136,13 +137,19 @@ function CouponOfferingPage(props) {
       <Box className="coupon_offering_wrapper">
         <Box className="row">
           <Box className="col">
-            <Button2 text="Back" redirectTo="/AmbarsariyaMall/sell" />
-
+            <Box></Box>
             <Box className="header_board">
               <Board text="E-shop" imgSrc={boardImg} />
               <Board text="coupons offering" imgSrc={boardImg} />
               <Board text="emboss brand" imgSrc={boardImg} />
             </Box>
+            {/* <Button2 text="Back" redirectTo="/AmbarsariyaMall/sell" /> */}
+
+            <UserBadge
+                handleBadgeBgClick="../"
+                handleLogin="../login"
+                handleLogoutClick="../../AmbarsariyaMall"
+                />
           </Box>
 
           <Box className="col">

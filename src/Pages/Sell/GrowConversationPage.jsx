@@ -33,7 +33,7 @@ function GrowConversationPage() {
             target.parentElement.classList.add('reduceSize3');
 
             setTimeout(()=>{target.parentElement.classList.remove('reduceSize3')}, 300);
-            setTimeout(()=>{navigate('../')}, 600);
+            setTimeout(()=>{navigate('../coupon-offering')}, 600);
         }
     }
 
