@@ -20,7 +20,7 @@ import SocialLinksPopupContent from '../../Components/CardBoardPopupComponents/S
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import SpeedDialIcon from '@mui/material/SpeedDialIcon';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
-import UserBadge from '../../Components/Userbadge';
+import UserBadge from '../../Components/UserBadge';
 
 function User_Portfolio(props) {
     const [openPopup, setOpenPopup] = useState(false);

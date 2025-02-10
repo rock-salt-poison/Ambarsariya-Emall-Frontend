@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 import CircularText from '../Home/CircularText';
 import Button2 from '../Home/Button2';
-import UserBadge from '../Userbadge';
+import UserBadge from '../UserBadge';
 
 function BusinessHours({ data }) {
 

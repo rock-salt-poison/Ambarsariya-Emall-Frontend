@@ -6,7 +6,7 @@ import AutoCompleteSearchField from '../../Components/Products/AutoCompleteSearc
 import ProductsTable from '../../Components/Products/ProductsTable';
 // import rows from '../../API/productsRowData';
 import { get_products, getShopUserData } from '../../API/fetchExpressAPI';
-import UserBadge from '../../Components/Userbadge';
+import UserBadge from '../../Components/UserBadge';
 
 function Products() {
     

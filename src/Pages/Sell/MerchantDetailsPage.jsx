@@ -18,7 +18,7 @@ import AutoCompleteSearchField from "../../Components/Products/AutoCompleteSearc
 import { allShops, get_discount_coupons } from "../../API/fetchExpressAPI";
 import CouponsSlider from "../../Components/Shop/CouponsSlider";
 import DiscountPercentageSlider from "../../Components/Shop/DiscountPercentageSlider";
-import UserBadge from "../../Components/Userbadge";
+import UserBadge from "../../Components/UserBadge";
 
 const MerchantDetailsPage = () => {
   const [searchParams] = useSearchParams();

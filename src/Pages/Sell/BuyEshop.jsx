@@ -7,7 +7,7 @@ import BookEshopForm from '../../Components/Form/BookEshopForm'
 import createCustomTheme from '../../styles/CustomSelectDropdownTheme';
 import { useSelector } from 'react-redux'
 import { getUser } from '../../API/fetchExpressAPI'
-import UserBadge from '../../Components/Userbadge'
+import UserBadge from '../../Components/UserBadge'
 
 function BuyEshop(props) {
   const themeProps = {

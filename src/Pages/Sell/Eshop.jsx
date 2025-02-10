@@ -5,7 +5,7 @@ import Board from '../../Components/CouponOffering/Board'
 import boardImg from '../../Utils/images/Sell/eshop/board.svg'
 import EshopForm from '../../Components/Form/EshopForm'
 import createCustomTheme from '../../styles/CustomSelectDropdownTheme';
-import UserBadge from '../../Components/Userbadge'
+import UserBadge from '../../Components/UserBadge'
 
 
 function Eshop(props) {
