@@ -5,7 +5,7 @@ import Button2 from "../../Components/Home/Button2";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import { get_product, getShopUserData } from "../../API/fetchExpressAPI";
-import UserBadge from "../../Components/UserBadge";
+import UserBadge from "../../Components/Userbadge";
 
 function ProductDetails() {
   const { product_id, token } = useParams();
