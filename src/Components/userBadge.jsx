@@ -11,7 +11,7 @@ import { useSelector } from "react-redux";
 import { useLogout } from "../customHooks/useLogout";
 import { useNavigate } from "react-router-dom";
 
-export default function UserBadge({
+function UserBadge({
   handleLogin,
   handleLogoutClick,
   handleBadgeBgClick,
@@ -109,3 +109,5 @@ export default function UserBadge({
     </>
   );
 }
+
+export default UserBadge
