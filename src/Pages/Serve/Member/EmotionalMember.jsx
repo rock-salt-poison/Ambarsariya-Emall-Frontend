@@ -9,6 +9,7 @@ import frame from '../../../Utils/images/Serve/emotional/frame.webp';
 import { Link, useNavigate } from 'react-router-dom';
 import arrow_gif from '../../../Utils/gifs/arrow.gif'; 
 import hornSound from '../../../Utils/audio/horn-sound.mp3';
+import UserBadge from '../../../UserBadge';
 
 function EmotionalMember() {
     const navigate = useNavigate();
@@ -46,14 +47,19 @@ function EmotionalMember() {
         <Box className="emotional_wrapper member">
             <Box className="row">
                 <Box className="col">
-                    <Button2 text="Back" redirectTo="../" />
+                    {/* <Button2 text="Back" redirectTo="../" /> */}
                     <Box className="title_container d-lg-none">
                         <Box component="img" src={frame} alt="frame" className='frame' />
                         <Link className="heading" onClick={(e)=>handleClick(e)}>
                             <Typography className="title">Emotional</Typography>
                         </Link>
                     </Box>
-                    <Button2 text="Next" redirectTo="../unexpected" />
+                    {/* <Button2 text="Next" redirectTo="../unexpected" /> */}
+                    <UserBadge
+                            handleBadgeBgClick={`../`}
+                            handleLogin="../login"
+                            handleLogoutClick="../../AmbarsariyaMall"
+                        />
                 </Box>
                 <Box className="container">
                     <Box className="col">

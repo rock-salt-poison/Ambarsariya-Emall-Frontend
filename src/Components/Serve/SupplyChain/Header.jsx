@@ -2,6 +2,7 @@ import { Box, Typography } from '@mui/material'
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Button2 from '../../Home/Button2'
+import UserBadge from '../../../UserBadge';
 
 function Header({ icon_1, icon_2, title, span_value, icon_1_link, icon_2_link, back_btn_link, next_btn_link, title_container, heading_with_bg, redirectTo, iconWithHeading, nextBtn=true }) {
 
@@ -19,7 +20,7 @@ function Header({ icon_1, icon_2, title, span_value, icon_1_link, icon_2_link, b
             <Box component="img" src={icon_1} alt="suppliers_for_shop" className='icon' />
           </Link>
           :
-          <Button2 text="Back" redirectTo={back_btn_link} />
+          <Box></Box>
       }
 
       {title_container ?
@@ -53,7 +54,11 @@ function Header({ icon_1, icon_2, title, span_value, icon_1_link, icon_2_link, b
       {
         icon_2 ? <Link to={icon_2_link} className='icon_link'>
           <Box component="img" src={icon_2} alt="icon" className='icon' />
-        </Link> : nextBtn ? <Button2 text="Next" redirectTo={next_btn_link} /> : <Typography></Typography>
+        </Link> : nextBtn ?  <UserBadge
+                            handleBadgeBgClick={back_btn_link}
+                            handleLogin="../login"
+                            handleLogoutClick="../../AmbarsariyaMall"
+                        /> : <Typography></Typography>
       }
 
     </Box>

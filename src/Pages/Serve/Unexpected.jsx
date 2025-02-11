@@ -8,6 +8,7 @@ import confirmation from '../../Utils/images/Serve/unexpected/confirmation.webp'
 import { Link, useNavigate } from 'react-router-dom';
 import frame from '../../Utils/images/Serve/emotional/frame.webp';
 import hornSound from '../../Utils/audio/horn-sound.mp3';
+import UserBadge from '../../UserBadge';
 
 function Unexpected() {
     const navigate = useNavigate();
@@ -36,14 +37,19 @@ function Unexpected() {
     <Box className="unexpected_wrapper">
         <Box className="row">
             <Box className="col">
-                    <Button2 text="Back" redirectTo="../"/>
+                    {/* <Button2 text="Back" redirectTo="../"/> */}
                     <Box className="title_container d-lg-none">
                             <Box component="img" src={frame} alt="frame" className='frame'/>
                             <Link className="heading" onClick={handleClick}>
                                 <Typography className="title">Unexpected</Typography>
                             </Link>
                         </Box>
-                    <Button2 text="Next" redirectTo="../unexpected"/>
+                    {/* <Button2 text="Next" redirectTo="../unexpected"/> */}
+                    <UserBadge
+                handleBadgeBgClick={`../`}
+                handleLogin="../login"
+                handleLogoutClick="../../AmbarsariyaMall"
+            />
                 </Box>
 
             <Box className="container">

@@ -8,6 +8,7 @@ import campaign from '../../Utils/images/Serve/emotional/campaign.webp';
 import frame from '../../Utils/images/Serve/emotional/frame.webp';
 import { Link, useNavigate } from 'react-router-dom';
 import hornSound from '../../Utils/audio/horn-sound.mp3';
+import UserBadge from '../../UserBadge';
 
 function Emotional() {
     const navigate = useNavigate();
@@ -43,14 +44,19 @@ function Emotional() {
         <Box className="emotional_wrapper">
             <Box className="row">
                 <Box className="col">
-                    <Button2 text="Back" redirectTo="../" />
+                    {/* <Button2 text="Back" redirectTo="../" /> */}
                     <Box className="title_container d-lg-none">
                         <Box component="img" src={frame} alt="frame" className='frame' />
                         <Link className="heading" onClick={(e)=>handleClick(e)}>
                             <Typography className="title">Emotional</Typography>
                         </Link>
                     </Box>
-                    <Button2 text="Next" redirectTo="../unexpected" />
+                    {/* <Button2 text="Next" redirectTo="../unexpected" /> */}
+                    <UserBadge
+                            handleBadgeBgClick={`../`}
+                            handleLogin="../login"
+                            handleLogoutClick="../../AmbarsariyaMall"
+                        />
                 </Box>
                 <Box className="container">
                     <Box className="col">

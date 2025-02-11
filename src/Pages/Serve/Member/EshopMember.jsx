@@ -9,6 +9,7 @@ import life from '../../../Utils/images/Serve/emotional/eshop_member/life.webp';
 
 import { Link, useNavigate } from 'react-router-dom';
 import hornSound from '../../../Utils/audio/horn-sound.mp3';
+import UserBadge from '../../../UserBadge';
 
 function EshopMember() {
     const navigate = useNavigate();
@@ -46,8 +47,11 @@ function EshopMember() {
         <Box className="eshop_member_wrapper">
             <Box className="row">
                 <Box className="col">
-                    <Button2 text="Back" redirectTo="../" />
-                    <Button2 text="Next" redirectTo="" />
+                    <UserBadge
+                            handleBadgeBgClick={`../`}
+                            handleLogin="../login"
+                            handleLogoutClick="../../AmbarsariyaMall"
+                        />
                 </Box>
                 <Box className="container">
                     <Box className="col">

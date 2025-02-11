@@ -13,6 +13,7 @@ import stock_management_icon2 from '../../Utils/images/Serve/emotional/eshop/sto
 import suppliers_for_shop_icon from '../../Utils/images/Serve/emotional/eshop/suppliers_for_shop_icon.webp'
 import supply_chain_management_icon from '../../Utils/images/Serve/emotional/eshop/supply_chain_management_icon.webp'
 import supply_chain_management_icon2 from '../../Utils/images/Serve/emotional/campaign/community/icon_1.webp'
+import UserBadge from '../../UserBadge'
 
 function Eshop() {
 
@@ -102,8 +103,13 @@ function Eshop() {
                     </Box>
                 </Box>
                 <Box className="col">
-                    <Button2 text="Back" redirectTo='../emotional' />
-                    <Button2 text="Next" redirectTo='../emotional/analytics' />
+                    {/* <Button2 text="Back" redirectTo='../emotional' />
+                    <Button2 text="Next" redirectTo='../emotional/analytics' /> */}
+                    <UserBadge
+                            handleBadgeBgClick={`../emotional`}
+                            handleLogin="../login"
+                            handleLogoutClick="../../AmbarsariyaMall"
+                        />
                 </Box>
             </Box>
         </Box>

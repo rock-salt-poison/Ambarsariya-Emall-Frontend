@@ -10710,6 +10710,10 @@ a {
     .col {
       @include flex-center(row, space-between);
 
+      .badge{
+        margin-left: auto;
+      }
+
       &.title_col {
         justify-content: center;
       }
@@ -12827,6 +12831,10 @@ a {
         7px 16px
       );
 
+      .badge{
+        margin-left: auto;
+      }
+
       .backButton:last-child {
         a {
           background: linear-gradient(to right, #af7b23, #8f6e3d);
@@ -12988,6 +12996,22 @@ a {
     @media (max-width: 560px) {
       .col {
         flex-wrap: wrap;
+
+        &:nth-child(1){
+          order: 1;
+        }
+
+        &:nth-child(2){
+          order: 2;
+        }
+
+        &:nth-child(3){
+          order: 3;
+        }
+
+        &:nth-child(4){
+          order: 0;
+        }
 
         &.d_lg_none {
           display: flex;
@@ -14906,6 +14930,11 @@ a {
         18px,
         7px 16px
       );
+
+      &:first-child{
+        display: grid;
+        grid-template-columns: 120px 1fr 120px;
+      }
 
       .title_container {
         .heading {
