@@ -86,7 +86,9 @@ function Review() {
       <RenderRow title="Price Effective" imgSrc={price_effective} />
       <RenderRow title="Quality of Compliance" imgSrc={quality_of_compliance} />
       <RenderRow title="Quality of Service" imgSrc={quality_of_service} />
-      <RenderRow title="Presentable to Share"  subscribe={true} id={owner}/>
+      <RenderRow title="Presentable to Share"   id={owner}/>
+      <RenderRow title="Subscribe"  subscribe={true} id={owner}/>
+      {/*  */}
     </Box>
   );
 }

@@ -9343,12 +9343,7 @@ a {
         padding: 20px;
 
         &.light {
-          background: repeating-linear-gradient(
-            297deg,
-            rgba(191, 107, 54, 0.6) 50%,
-            rgb(211 168 140 / 62%),
-            rgba(191, 107, 54, 0.6)
-          );
+          background: repeating-linear-gradient(297deg, #c9957399 50%, #75523b9e, #c9957399);
 
           .details {
             .detail_row {

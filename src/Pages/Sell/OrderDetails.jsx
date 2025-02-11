@@ -59,6 +59,16 @@ function OrderDetails() {
     }
   };
 
+  const handleSwitchChange2 = (event) => {
+    const isChecked = event.target.checked;
+    setSwitchChecked(isChecked);
+    if (isChecked) {
+      setTimeout(() => {
+        navigate(`../${owner}/review`);
+      }, 400);
+    }
+  };
+
   if (loading) {
     return ; // Show loading indicator while fetching data
   }
@@ -75,13 +85,18 @@ function OrderDetails() {
       <DetailRow title="Payment Details" description={orderDetails.paymentDetails} />
       <DetailRow title="Service Type" description={orderDetails.serviceType} />
       <DetailRow title="Pickup Schedule" description={orderDetails.pickupSchedule} />
-      <DetailRow title="Home Visit" description={orderDetails.homeVisit} />
+      <DetailRow title="Location" description={orderDetails.homeVisit} />
       <DetailRow
         title="Return"
         isReturn
         handleSwitchChange={handleSwitchChange}
         switchChecked={switchChecked}
-      />
+      /><DetailRow
+      title="Review"
+      isReturn
+      handleSwitchChange={handleSwitchChange2}
+      switchChecked={switchChecked}
+    />
     </Box>
   );
 }
