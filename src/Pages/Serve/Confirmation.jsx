@@ -21,7 +21,7 @@ function Confirmation() {
   ]
 
   return (
-    <CardsGrid component_className="confirmation_wrapper" backLink="../unexpected/capture" nextLink="" title="Confirmation" cards_data={cards_data} redirectTo='../unexpected'/>
+    <CardsGrid component_className="confirmation_wrapper" backLink="../unexpected" nextLink="" title="Confirmation" cards_data={cards_data} redirectTo='../unexpected'/>
   )
 }
 

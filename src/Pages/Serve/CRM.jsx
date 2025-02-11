@@ -16,7 +16,7 @@ function CRM() {
   return (
     <Box className="crm_wrapper">
       <Box className="row">
-        <Header back_btn_link='../emotional/analytics' next_btn_link="../emotional/campaign" title_container={true} title="Customer Service & Support" redirectTo='../emotional'/>
+        <Header back_btn_link='../emotional' next_btn_link="../emotional/campaign" title_container={true} title="Customer Service & Support" redirectTo='../emotional'/>
         <Box className="col">
             <Box className="cards_container">
                 {data.slice(0,2).map((card)=>{

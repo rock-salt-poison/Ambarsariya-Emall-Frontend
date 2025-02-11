@@ -96,7 +96,7 @@ const campaign_data = {
     <ThemeProvider theme={theme}>
       <Box className="crm_sub_wrapper">
         <Box className="row">
-        <Header back_btn_link='../emotional/crm/sales-pipeline' next_btn_link="../emotional/crm/customer-records" heading_with_bg={true} title="Marketing Campaigns" redirectTo='../emotional/crm' />
+        <Header back_btn_link='../emotional/crm' next_btn_link="../emotional/crm/customer-records" heading_with_bg={true} title="Marketing Campaigns" redirectTo='../emotional/crm' />
 
 
           <Box className="col">

@@ -13,7 +13,7 @@ function Header({ icon_1, icon_2, title, span_value, icon_1_link, icon_2_link, b
   }
 
   return (
-    <Box className="col">
+    <Box className="col header_badge">
       {
         icon_1 ?
           <Link to={icon_1_link} className='icon_link'>

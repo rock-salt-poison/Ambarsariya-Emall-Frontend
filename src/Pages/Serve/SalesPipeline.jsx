@@ -145,7 +145,7 @@ const theme = createCustomTheme(themeProps);
     <ThemeProvider theme={theme}>
       <Box className="crm_sub_wrapper">
         <Box className="row">
-        <Header back_btn_link='../emotional/crm/member-group-creation' next_btn_link="../emotional/crm/marketing-campaigns" heading_with_bg={true} title="Sales Pipeline" redirectTo='../emotional/crm' />
+        <Header back_btn_link='../emotional/crm' next_btn_link="../emotional/crm/marketing-campaigns" heading_with_bg={true} title="Sales Pipeline" redirectTo='../emotional/crm' />
 
           <Box className="col">
             <Box className="container">

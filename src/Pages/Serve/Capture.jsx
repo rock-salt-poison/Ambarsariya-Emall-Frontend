@@ -25,7 +25,7 @@ function Capture() {
   ]
 
   return (
-    <CardsGrid component_className="capture_wrapper" backLink="../unexpected/suggestions" nextLink="../unexpected/confirmation" title="Capture" cards_data={cards_data} redirectTo='../unexpected'/>
+    <CardsGrid component_className="capture_wrapper" backLink="../unexpected" nextLink="../unexpected/confirmation" title="Capture" cards_data={cards_data} redirectTo='../unexpected'/>
   )
 }
 

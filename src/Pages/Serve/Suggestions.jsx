@@ -35,7 +35,7 @@ function Suggestions() {
   ]
 
   return (
-    <CardsGrid component_className="suggestions_wrapper" backLink="../unexpected/lead_generation" nextLink="../unexpected/capture" title="Suggestions" cards_data={cards_data} redirectTo='../unexpected'/>
+    <CardsGrid component_className="suggestions_wrapper" backLink="../unexpected" nextLink="../unexpected/capture" title="Suggestions" cards_data={cards_data} redirectTo='../unexpected'/>
   )
 }
 
