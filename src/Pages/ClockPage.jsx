@@ -13,8 +13,8 @@ import { fetchWeatherData } from "../API/weatherAPI2";
 import useHeight from "../customHooks/useHeight";
 import { get_countries } from "../API/fetchExpressAPI";
 import Coupon from "../Components/Home/TimeTablePopupComponents/Coupon";
-import clockPageNeonBg from '../Utils/images/clock-page-neon-shadow.png';
-
+import clockPageNeonBg from "../Utils/images/clock-page-neon-shadow.png";
+import UserBadge from "../UserBadge";
 
 function ClockPage() {
   const [weather, setWeather] = useState(null);
@@ -56,11 +56,16 @@ function ClockPage() {
   const renderComponent = () => {
     return (
       <Box className="travelWrapper">
-        <Box component="img" src={clockPageNeonBg} className="neonBorderImg" alt="neon-border" />
-        <Coupon page='clock'/>
+        <Box
+          component="img"
+          src={clockPageNeonBg}
+          className="neonBorderImg"
+          alt="neon-border"
+        />
+        {/* <Coupon page='clock'/> */}
       </Box>
-    )
-  }
+    );
+  };
 
   return (
     <Box className="clock-wrapper">
@@ -68,7 +73,7 @@ function ClockPage() {
         <Sidebar
           backButton={
             <Box ref={ref}>
-              <Button2 text="Back" redirectTo="/AmbarsariyaMall" />
+              {/* <Button2 text="Back" redirectTo="/AmbarsariyaMall" /> */}
             </Box>
           }
           componentToRender={renderComponent()}
@@ -79,7 +84,9 @@ function ClockPage() {
               text2="04 June"
             />
           }
-          currencyAndTimeComponent={<CurrencyAndTimeComponent data={data ? data.slice(0, 3):''}/>}
+          currencyAndTimeComponent={
+            <CurrencyAndTimeComponent data={data ? data.slice(0, 3) : ""} />
+          }
         />
       </Box>
       <Box className="col-2">
@@ -97,10 +104,17 @@ function ClockPage() {
         <Sidebar
           backButton={<Box sx={{ height: `${height}px`, width: "100%" }}></Box>}
           componentToRender={
-            <TravelNeeds
-              text="ESPN Feed"
-              optionalButton={<Button2 text="Sports" />}
-            />
+            <>
+              <UserBadge
+                handleBadgeBgClick="/AmbarsariyaMall"
+                handleLogin="sell/login"
+                handleLogoutClick="../../AmbarsariyaMall"
+              />
+              <TravelNeeds
+                text="ESPN Feed"
+                optionalButton={<Button2 text="Sports" />}
+              />
+            </>
           }
           componentToRender2={
             <Date_Time_Weather
@@ -110,7 +124,10 @@ function ClockPage() {
             />
           }
           currencyAndTimeComponent={
-            <CurrencyAndTimeComponent optionalCName="currency-wrapper-2" data={data ? data.slice(3):''}/>
+            <CurrencyAndTimeComponent
+              optionalCName="currency-wrapper-2"
+              data={data ? data.slice(3) : ""}
+            />
           }
         />
       </Box>

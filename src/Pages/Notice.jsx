@@ -59,7 +59,7 @@ function Notice() {
           back_btn_link={
             title ? "../AmbarsariyaMall/notice" : "../AmbarsariyaMall"
           }
-          nextBtn={false}
+          nextBtn={true}
           title_container={true}
           title={title ? convert_case_to_capitalize(title) : "Notice"}
           redirectTo={title ? -1 : "../AmbarsariyaMall"}

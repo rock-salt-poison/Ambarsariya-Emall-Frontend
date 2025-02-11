@@ -41,7 +41,7 @@ function CurrencyAndTimeComponent({ data, optionalCName }) {
           {/* Row 1: Flags */}
           <TableRow>
             {data?.map((item) => (
-              <TableCell key={item.id} className="tableCell">
+              <TableCell key={item.id} className="tableCell flags">
                 <Box
                   component="img"
                   src={`https://flagcdn.com/${item.country_code.toLowerCase()}.svg`}

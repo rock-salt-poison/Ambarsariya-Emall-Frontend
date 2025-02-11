@@ -16,6 +16,7 @@ function UserBadge({
   handleLogin,
   handleLogoutClick,
   handleBadgeBgClick,
+  handleClose
 }) {
   const [userIcon, setUserIcon] = useState(null);
   const token = useSelector((state) => state.auth.userAccessToken);
@@ -84,7 +85,11 @@ function UserBadge({
     if (target) {
       target.classList.add("reduceSize3");
       setTimeout(() => target.classList.remove("reduceSize3"), 300);
-      setTimeout(() => navigate(handleBadgeBgClick), 600);
+      if(handleClose){
+        setTimeout(()=>handleClose(), 600);
+      }else{
+        setTimeout(() => navigate(handleBadgeBgClick), 600);
+      }
     }
   };
 

@@ -20,7 +20,7 @@ function Header({ icon_1, icon_2, title, span_value, icon_1_link, icon_2_link, b
             <Box component="img" src={icon_1} alt="suppliers_for_shop" className='icon' />
           </Link>
           :
-          <Box></Box>
+          <Box className='col-1'></Box>
       }
 
       {title_container ?
