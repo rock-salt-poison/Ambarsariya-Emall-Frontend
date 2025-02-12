@@ -102,17 +102,21 @@ console.log(visitorData);
         <Box className="row">
           <Box className="col">
             <Cards />
-            <UserBadge
+            {/* <UserBadge
                 handleBadgeBgClick="../"
                 handleLogin="../login"
                 handleLogoutClick="../../AmbarsariyaMall"
-              />
+              /> */}
           </Box>
           <Box className="col second_wrapper">
             <Box className='col-1'>
               <UserForm onValidation={handleFormValidation} visitorData={visitorData} visibility={visitorData !== null  ? 'hidden' : 'visible'}/>
               {/* <Button2 text="Back" redirectTo="/AmbarsariyaMall/sell" /> */}
-             
+              <UserBadge
+                handleBadgeBgClick="../"
+                handleLogin="../login"
+                handleLogoutClick="../../AmbarsariyaMall"
+              />
             </Box>
             {visitorData && Object.keys(visitorData).length > 0 && (
               <>

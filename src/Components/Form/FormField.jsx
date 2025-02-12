@@ -84,16 +84,18 @@ const FormField = ({
               label={value ? 'On' : 'Off'}
             />
           </>
-        ) : type === 'address' ? (
-          <Box>
+        ) : type === 'address' ? 
+          <>
             <Typography className="label">{label}</Typography>
-            <Address_Google_Map_Field
-              value={value}
-              onChange={(newValue) =>
-                onChange({ target: { name, value: newValue?.description || '' } })
-              }
+            <Box className="field_container">
+              <Address_Google_Map_Field
+              value={value ? value : ""} // Ensure value is set if it exists
+              onChange={(data) => {onChange({ target: { name, value: data } });
+              }}
             />
-          </Box>): type === 'file' ? (
+            </Box>
+          </>
+        : type === 'file' ? (
           <>
             {icon ? <Box component="img" src={icon} alt={label} className="icon" /> : <Typography className="label">{label}</Typography>}
             <Box className="field_container">

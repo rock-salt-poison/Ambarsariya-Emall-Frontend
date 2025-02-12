@@ -3663,16 +3663,16 @@ a {
         gap: 20px;
         flex-wrap: wrap;
 
-        .badge{
-          align-self: flex-start;
-        }
       }
-
+      
+      .badge{
+        align-self: flex-start;
+      }
       .cards_outer_container {
         position: relative;
         display: flex;
         align-items: center;
-        width: 88%;
+        width: 100%;
 
         .cards_container {
           display: flex;
@@ -5711,6 +5711,12 @@ a {
                     background-color: #e0b5a8e6;
                     border-radius: 8px;
                     border: 0px;
+                  }
+
+                  .address{
+                    .MuiInputBase-root{
+                      padding: 0px 50px 0px 0px;
+                    }
                   }
 
                   .MuiTextField-root,
@@ -7850,6 +7856,9 @@ a {
           p {
             @include homepage-buttons("Bobby-Jones-Soft", 20px, $white, "none");
             @include hover-scale(1, 0s);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
           }
         }
       }
@@ -20830,6 +20839,26 @@ textarea[readonly]{
 
     .badge{
       justify-self: flex-end;
+    }
+  }
+}
+
+.street-view-dialog{
+  .MuiPaper-root{
+    background-color : #D49832d9;
+    .content{
+      #confirm-message{
+        @include flex-center(row, space-between);
+        gap: 10px;
+
+        @include homepage-buttons(
+          "Bobby-Jones-Soft", 
+          20px, 
+          $light-yellow, 
+          "none"
+        );
+        @include hover-scale(1, 0s);
+      }
     }
   }
 }

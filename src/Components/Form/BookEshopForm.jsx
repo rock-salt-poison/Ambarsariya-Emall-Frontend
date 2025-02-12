@@ -65,18 +65,28 @@ const BookEshopForm = () => {
   const validPhoneOtp = '123456';
   const validMemberOtp = '123456';
 
-  console.log(otp_token)
   const fetchUserAndShopData = async (shop_access_token) => {
     const response = await getShopUserData(shop_access_token);
-    if (response) {
+    if (response && response.length > 0) {
       const data = response[0];
-      // Fetch sectors to get the sector name based on sector_id
+  
+      // Fetch domains and sectors
+      const domainResp = await fetchDomains();
       const sectors = await fetchSectors();
+      setDomains(domainResp.map((data) => data.domain_name)); 
+  
+      // Find matching domain and sector
+      const selectedDomain = domainResp.find((domain) => domain.domain_name === data.domain_name);
+  let sectorList = [];
+          if (selectedDomain) {
+            sectorList = (await fetchDomainSectors(selectedDomain.domain_id)).map(s => s.sector_name);
+            setSectors(sectorList);
+          }
+  
       const selectedSector = sectors.find((sector) => sector.sector_name === data.sector_name);
-      console.log(selectedSector)
-
-      setFormData({
-        ...formData,
+  
+      setFormData((prevData) => ({
+        ...prevData,
         username: data.username || '',
         password: data.password || '',
         confirm_password: data.password || '',
@@ -85,15 +95,15 @@ const BookEshopForm = () => {
         phone1: data.phone_no_1 || '',
         phone2: data.phone_no_2 || '',
         address: data.address || '',
-        domain: data.domain_name || 0,
+        domain: selectedDomain ? selectedDomain.domain_name : prevData.domain, // Preserve if exists
         domain_create: data.created_domain || '',
-        sector: selectedSector ? selectedSector.sector_name : 0, // Use sector name if available
+        sector: selectedSector ? selectedSector.sector_name : prevData.sector, // Preserve if exists
         sector_create: data.created_sector || '',
-        onTime: data.ontime || 0,
-        offTime: data.offtime || 0,
-        pickup: data.type_of_service.includes("Pickup") || false,
-        delivery: data.type_of_service.includes("Delivery") || false,
-        homeVisit: data.type_of_service.includes("Home Visit") || false,
+        onTime: data.ontime || '',
+        offTime: data.offtime || '',
+        pickup: data.type_of_service?.includes("Pickup") || false,
+        delivery: data.type_of_service?.includes("Delivery") || false,
+        homeVisit: data.type_of_service?.includes("Home Visit") || false,
         gst: data.gst || '',
         msme: data.msme || '',
         pan_no: data.pan_no || '',
@@ -102,18 +112,20 @@ const BookEshopForm = () => {
         premiumVersion: data.premium_service || false,
         merchant: data.is_merchant || false,
         member_detail: data.member_username_or_phone_no || ''
-      });
+      }));
     }
   };
+  
 
   useEffect(() => {
     const initializeForm = async () => {
       try {
         // Fetch the list of domains
         setLoading(true);
-        const domainsResp = await fetchDomains();
-        const domainNames = domainsResp.map((data) => data.domain_name);
-        setDomains(domainNames);
+        const domainResp = await fetchDomains();
+      setDomains(domainResp.map((data) => data.domain_name)); 
+  
+      
 
         // Fetch data if token exists
         if (token) {
@@ -152,7 +164,7 @@ const BookEshopForm = () => {
           setFormData((prevData) => ({
             ...prevData,
             domain: selectedDomain.domain_id, // Set domain_id
-            sector: 0, // Reset sector field to default value
+            // sector: 0, // Reset sector field to default value
           }));
         }
         
@@ -380,7 +392,9 @@ const BookEshopForm = () => {
               fullName: formData.fullName,
               username: (formData.username).toLowerCase(),
               password: formData.password,
-              address: formData.address,
+              address: formData.address.description,
+              latitude: formData.address.latitude,
+              longitude: formData.address.longitude,
               phone1: formData.phone1,
               domain: selectedDomain?.domain_id,
               sector: selectedSector?.sector_id,
@@ -437,6 +451,8 @@ const BookEshopForm = () => {
                 loggedIn ? navigate('../eshop') : navigate('../login');
               }, 2500);
             }
+            console.log(postData);
+            
           } catch (error) {
             if (error.response.data.error === 'duplicate key value violates unique constraint "users_phone_no_1_key"') {
               setSnackbar({
@@ -507,7 +523,7 @@ const BookEshopForm = () => {
           {renderFormField('Full Name :', 'title', 'select', titleOptions)}
           {renderFormField('Full Name :', 'fullName', 'text')}
         </Box>
-        {renderFormField('Address :', 'address', 'text')}
+        {renderFormField('Address :', 'address', 'address')}
         <Box className="form-group2">
           <Box className="form-subgroup">
             {renderFormField('Phone No. 1:', 'phone1', 'phone_number', [], '', { maxLength: 10 })}
