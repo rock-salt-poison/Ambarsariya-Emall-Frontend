@@ -16,7 +16,7 @@ function Login() {
                     handleBadgeBgClick="../"
                     handleLogin="../login"
                     handleLogoutClick="../../AmbarsariyaMall"
-                    />
+                />
             </Box>
             <Box className="col">
                 <LoginPageCard title="Sell" imgSrc={peacock_img} redirectTo="../../AmbarsariyaMall/serve"/>
