@@ -4,13 +4,19 @@ import Button2 from '../../Components/Home/Button2'
 import LoginPageCard from '../../Components/Login/LoginPageCard'
 import lion_img from '../../Utils/images/Sell/login/lion.webp'
 import peacock_img from '../../Utils/images/Sell/login/peacock.webp'
+import UserBadge from '../../UserBadge'
 
 function Login() {
   return (
     <Box className="login_wrapper">
         <Box className="container">
             <Box className="col">
-                <Button2 text="Back" redirectTo={-1} />
+                {/* <Button2 text="Back" redirectTo={-1} /> */}
+                <UserBadge
+                    handleBadgeBgClick="../"
+                    handleLogin="../login"
+                    handleLogoutClick="../../AmbarsariyaMall"
+                    />
             </Box>
             <Box className="col">
                 <LoginPageCard title="Sell" imgSrc={peacock_img} redirectTo="../../AmbarsariyaMall/serve"/>

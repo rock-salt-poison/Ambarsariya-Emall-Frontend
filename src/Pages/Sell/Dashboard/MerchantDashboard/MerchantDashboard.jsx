@@ -7,6 +7,7 @@ import DashboardComponents from './DashboardComponents';
 import DashboardForm from './DashboardForm';
 import createCustomTheme from '../../../../styles/CustomSelectDropdownTheme';
 import { getShopUserData } from '../../../../API/fetchExpressAPI';
+import UserBadge from '../../../../UserBadge';
 
 function MerchantDashboard(props) {
     const {token, edit} = useParams();
@@ -46,9 +47,10 @@ function MerchantDashboard(props) {
             <Box className="row">
                 <DashboardHeader optionalColCname="calendar" data={details?.[0]}/>
                 {edit ? <DashboardForm data={details?.[0]}/> : <DashboardComponents data={details?.[0]}/>}
-                {/* <Box className="col">
-                    <Button2 text={edit ? "Back" : "Next"} redirectTo={edit ? -1 :'edit'} optionalcName={edit ? "" : 'align-right'}/>
-                </Box> */}
+                <Box className="col">
+                    {/* <Button2 text={edit ? "Back" : "Next"} redirectTo={edit ? -1 :'edit'} optionalcName={edit ? "" : 'align-right'}/> */}
+                    <UserBadge handleBadgeBgClick={-1} handleLogin={'../login'} handleLogoutClick={'../../AmbarsariyaMall'} optionalcName={'align-right'}/>
+                </Box>
             </Box>
         </Box>
         </ThemeProvider>

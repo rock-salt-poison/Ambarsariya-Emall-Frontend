@@ -19577,6 +19577,10 @@ textarea[readonly]{
       flex: 1;
       flex-wrap: wrap;
 
+      &:last-child{
+        justify-content: flex-end;
+      }
+
       a {
         height: max-content;
         display: inline-block;

@@ -3,6 +3,7 @@ import React from 'react';
 import price_effective from '../../Utils/images/Sell/order_details/price_effective.svg';
 import quality_of_compliance from '../../Utils/images/Sell/order_details/quality_of_compliance.svg';
 import quality_of_service from '../../Utils/images/Sell/order_details/quality_of_service.svg';
+import like_share_icon from '../../Utils/images/Sell/order_details/like_share_icon.webp';
 import subscribe_gif from '../../Utils/gifs/subscribe.gif';
 import { Link, useParams } from 'react-router-dom';
  
@@ -35,7 +36,7 @@ const StyledRating = styled(Rating)({
 
 const iconSizes = [35, 45, 55, 65];
 
-const RenderRow = ({ imgSrc, title, subscribe, id }) => {
+const RenderRow = ({ imgSrc, title, subscribe, like_share, id }) => {
   const handleRatingChange = (event, newValue) => {
     event.preventDefault();
     console.log(`${title} Rating:`, newValue);
@@ -70,6 +71,10 @@ const RenderRow = ({ imgSrc, title, subscribe, id }) => {
             <Box component="img" src={subscribe_gif} className='subscribe' alt="subscribe"/>
           </Link>
         }
+
+        {like_share && <Link to={`../${id}/like-and-share`}>
+            <Box component="img" src={like_share_icon} className='subscribe' alt="subscribe"/>
+          </Link>}
         
       </Box>
     </Box>
@@ -86,7 +91,7 @@ function Review() {
       <RenderRow title="Price Effective" imgSrc={price_effective} />
       <RenderRow title="Quality of Compliance" imgSrc={quality_of_compliance} />
       <RenderRow title="Quality of Service" imgSrc={quality_of_service} />
-      <RenderRow title="Presentable to Share"   id={owner}/>
+      <RenderRow title="Presentable to Share"  like_share={true} id={owner}/>
       <RenderRow title="Subscribe"  subscribe={true} id={owner}/>
       {/*  */}
     </Box>

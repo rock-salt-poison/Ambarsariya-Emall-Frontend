@@ -204,13 +204,13 @@ export default function CustomPaginationTable({rows}) {
       column.id === "variations"
         ? renderVariations(row)
         : column.id === "product"
-        ? row.product_type
+        ? row.product_name
         : column.id === "price"
         ? `₹ ${row.price}`
         : "";
     const secondaryText =
       column.id === "variations"
-        ? row.product_name
+        ? row.product_type
         : column.id === "product"
         ? row.brand
         : "";

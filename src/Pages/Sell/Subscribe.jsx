@@ -46,7 +46,7 @@ function Subscribe() {
             {/* <Button2 text={"Back"} redirectTo={`../${owner}/like-and-share`}/> */}
             <ShopNameAndNo token={owner}/>
             <UserBadge
-              handleBadgeBgClick={`../${owner}/like-and-share`}
+              handleBadgeBgClick={`../${owner}/review`}
               handleLogin="../login"
               handleLogoutClick="../../AmbarsariyaMall"
             />
