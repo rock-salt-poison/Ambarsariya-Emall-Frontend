@@ -26,7 +26,7 @@ function loadScript(src, position, id) {
 const autocompleteService = { current: null };
 const placesService = { current: null };
 
-export default function Address_Google_Map_Field({ value, label, onChange }) {
+export default function Address_Google_Map_Field({ value, label, onChange, placeholder }) {
   const [inputValue, setInputValue] = React.useState('');
   const [updatedValue, setUpdatedValue] = React.useState('');
   const [options, setOptions] = React.useState([]);
@@ -69,6 +69,12 @@ export default function Address_Google_Map_Field({ value, label, onChange }) {
     fetch({ input: inputValue }, (results) => {
       if (active) {
         let newOptions = updatedValue ? [updatedValue, ...(results || [])] : results || [];
+        
+        // If no results, allow user input as a selectable option
+        if (newOptions.length === 0) {
+          newOptions = [{ description: inputValue, place_id: "no_match" }];
+        }
+
         setOptions(newOptions);
       }
     });
@@ -85,9 +91,8 @@ export default function Address_Google_Map_Field({ value, label, onChange }) {
     }
   }, [value]);
 
-  // **Fetch Full Place Details (Including Latitude & Longitude)**
   const handlePlaceSelect = (event, newValue) => {
-    if (newValue) {
+    if (newValue && newValue.place_id !== "no_match") {
       if (!placesService.current && window.google) {
         placesService.current = new window.google.maps.places.PlacesService(document.createElement('div'));
       }
@@ -99,21 +104,35 @@ export default function Address_Google_Map_Field({ value, label, onChange }) {
             const placeData = {
               description: newValue.description,
               place_id: newValue.place_id,
-              latitude: placeDetails.geometry.location.lat(),
-              longitude: placeDetails.geometry.location.lng(),
-              formatted_address: placeDetails.formatted_address,
+              latitude: placeDetails.geometry?.location?.lat() || 31.6340, // Default Amritsar
+              longitude: placeDetails.geometry?.location?.lng() || 74.8723, // Default Amritsar
+              formatted_address: placeDetails.formatted_address || newValue.description,
             };
 
-            // console.log("Selected Place Details:", placeData);
             onChange(placeData);
             setUpdatedValue(placeData);
           }
         }
       );
     } else {
-      onChange(null);
-      setUpdatedValue('');
+      saveUserTypedLocation();
     }
+  };
+
+  // Saves the user-typed input if no option is selected
+  const saveUserTypedLocation = () => {
+    if (!inputValue.trim()) return;
+
+    const defaultPlace = {
+      description: inputValue, // Preserve user input
+      place_id: "manual_entry",
+      latitude: 31.6340, // Default Amritsar
+      longitude: 74.8723, // Default Amritsar
+      formatted_address: inputValue, // Use the user-typed address
+    };
+
+    onChange(defaultPlace);
+    setUpdatedValue(defaultPlace);
   };
 
   return (
@@ -129,17 +148,26 @@ export default function Address_Google_Map_Field({ value, label, onChange }) {
       value={updatedValue}
       size='small'
       fullWidth
+      freeSolo={true}
       noOptionsText="No locations"
       className="input_field"
       isOptionEqualToValue={(option, value) => 
         option?.description === value?.description
       }
+      placeholder={placeholder}
       onChange={handlePlaceSelect}
       onInputChange={(event, newInputValue) => {
         setInputValue(newInputValue);
       }}
+      onBlur={saveUserTypedLocation} // Handle case when user leaves input without selection
+      onKeyDown={(event) => {
+        if (event.key === "Enter") {
+          event.preventDefault(); // Prevent form submission
+          saveUserTypedLocation();
+        }
+      }}
       renderInput={(params) => (
-        <TextField {...params} fullWidth className="input_field address" />
+        <TextField {...params} fullWidth placeholder={placeholder} className="input_field address" />
       )}
       renderOption={(props, option) => {
         const { key, ...optionProps } = props;

@@ -218,7 +218,7 @@ const UserPortfolioForm = () => {
           {renderFormField('dob', 'date', [], 'Enter your dob')}
         </Box>
         
-        {renderFormField('address', 'text', [], 'Enter your address')}
+        {renderFormField('address', 'address', [], 'Enter your address')}
         {renderFormField('username', 'text', [], 'Enter your username')}
         <Box className="form-group-2">
           {renderFormField('password', 'password', [], 'Enter your password')}
