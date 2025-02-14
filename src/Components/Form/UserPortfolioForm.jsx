@@ -142,7 +142,9 @@ const UserPortfolioForm = () => {
           name:formData.name,
           username:(formData.username).toLowerCase(),
           password:formData.password,
-          address:formData.address,
+          address:formData.address.description,
+          latitude: formData.address.latitude,
+          longitude: formData.address.longitude,
           phone:formData.phoneNumber,
           gender:formData.gender,
           dob:formData.dob

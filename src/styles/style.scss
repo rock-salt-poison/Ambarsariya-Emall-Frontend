@@ -6929,6 +6929,13 @@ a {
                         border: 1px solid $dark-yellow;
                       }
 
+                      .address{
+                        .MuiInputBase-root{
+                          padding: 0px 39px 0px 0px;
+                          border: 0px;
+                        }
+                      }
+
                       .MuiTextField-root,
                       .MuiInputBase-root {
                         margin: 0px;
