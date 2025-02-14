@@ -92,6 +92,12 @@ export default function Address_Google_Map_Field({ value, label, onChange, place
   }, [value]);
 
   const handlePlaceSelect = (event, newValue) => {
+    if (!newValue) {
+      // Handle clearing the value
+      setUpdatedValue(null);
+      onChange(null);
+      return;
+    }
     if (newValue && newValue.place_id !== "no_match") {
       if (!placesService.current && window.google) {
         placesService.current = new window.google.maps.places.PlacesService(document.createElement('div'));
@@ -158,6 +164,10 @@ export default function Address_Google_Map_Field({ value, label, onChange, place
       onChange={handlePlaceSelect}
       onInputChange={(event, newInputValue) => {
         setInputValue(newInputValue);
+        if (!newInputValue.trim()) {
+          setUpdatedValue(null);
+          onChange(null);
+        }
       }}
       onBlur={saveUserTypedLocation} // Handle case when user leaves input without selection
       onKeyDown={(event) => {
