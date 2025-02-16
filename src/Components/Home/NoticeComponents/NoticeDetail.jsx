@@ -162,7 +162,7 @@ function NoticeDetail() {
                     <Box
                       className="img"
                       component="img"
-                      src={`${process.env.REACT_APP_EXPRESS_API_LINK}/notice_images/${notice.image_src}`}
+                      src={`${notice.image_src}`}
                     />
                   )}
                   <Box className="notice">
