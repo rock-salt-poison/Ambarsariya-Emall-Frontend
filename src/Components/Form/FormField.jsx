@@ -91,8 +91,8 @@ const FormField = ({
               <Address_Google_Map_Field
               value={value ? value : ""} // Ensure value is set if it exists
               onChange={(data) => {onChange({ target: { name, value: data } });console.log(data);
-              
-              }}
+            }}
+            placeholder={placeholder}
             />
             </Box>
           </>

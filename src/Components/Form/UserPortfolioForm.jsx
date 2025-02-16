@@ -147,8 +147,12 @@ const UserPortfolioForm = () => {
           longitude: formData.address.longitude,
           phone:formData.phoneNumber,
           gender:formData.gender,
-          dob:formData.dob
+          dob:formData.dob,
+          profile_img: formData.displayPicture,
+          bg_img: formData.backgroundPicture,
         }
+        console.log('userData', userData);
+        
   
         const response = await postMemberData(userData);
         if(response){
@@ -168,6 +172,8 @@ const UserPortfolioForm = () => {
         }
         setTimeout(()=>{navigate('../esale')}, 2500);
       }catch(error){
+        console.log(error);
+        
         if (error.response.data.error === 'duplicate key value violates unique constraint "users_phone_no_1_key"') {
           setSnackbar({
             open: true,

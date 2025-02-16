@@ -107,7 +107,11 @@ export const getCategoryName = async (category_id) => {
 
 export const postMemberData = async (userData) => {
   try {
-      const response = await axios.post(`${link}/sell/member`, userData);
+      const response = await axios.post(`${link}/sell/member`, userData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       return response.data;
   } catch (error) {
       throw error
