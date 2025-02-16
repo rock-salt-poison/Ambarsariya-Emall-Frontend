@@ -100,7 +100,7 @@ function Shop() {
                   {/* <Button2 text="Back" redirectTo={-1} /> */}
                 </Box>
                 {data && <ShopDesign data={data} />}
-                {data && <WomanPointingShopName />}
+                {data && <WomanPointingShopName data={data}/>}
                 {data && <BusinessHours data={data} />}
                 {data && <TypeOfServices />}                
                 {data && <ShopDetails2 data={data} />}

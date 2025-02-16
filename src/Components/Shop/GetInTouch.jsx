@@ -33,6 +33,8 @@ function GetInTouch({ data }) {
     },
   ];
 
+  console.log(data);
+  
   return (
     <Box className="get_in_touch_wrapper">
       <Box className="contact_row">

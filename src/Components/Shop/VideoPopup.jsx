@@ -6,7 +6,7 @@ import { Box, Dialog, DialogContent, IconButton, ThemeProvider, useMediaQuery } 
 import createCustomTheme from '../../styles/CustomSelectDropdownTheme';
 import video_frame from '../../Utils/images/frames/frame2.png';
 
-export default function VideoPopup({ open, handleClose }, props) {
+export default function VideoPopup({ open, handleClose, url }, props) {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const themeProps = {
@@ -33,7 +33,7 @@ const theme2 = createCustomTheme(themeProps);
           >
             <CloseIcon />
           </IconButton>
-          <ReactPlayer url="https://www.youtube.com/embed/m701WKQMeYQ" playing controls width="auto" height="auto" className="videoPlayer">
+          <ReactPlayer url={url ? url : "https://www.youtube.com/embed/m701WKQMeYQ"} playing controls width="auto" height="auto" className="videoPlayer">
 
           </ReactPlayer>
         </Box>

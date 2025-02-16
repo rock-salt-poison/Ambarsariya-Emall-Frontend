@@ -5,7 +5,7 @@ import woman_pointing_down from '../../Utils/images/Sell/shop_details/woman_poin
 import { Link } from 'react-router-dom';
 import VideoPopup from './VideoPopup'; // Import the VideoPopup component
 
-function WomanPointingShopName() {
+function WomanPointingShopName({data}) {
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -27,7 +27,7 @@ function WomanPointingShopName() {
       <Box className="calendar">
         <Calendar display="sinceYear" />
       </Box>
-      <VideoPopup open={open} handleClose={handleClose} />
+      <VideoPopup open={open} handleClose={handleClose} url={data?.advertisement_video_url}/>
     </Box>
   );
 }

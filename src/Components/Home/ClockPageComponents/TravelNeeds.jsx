@@ -2,6 +2,7 @@ import React from 'react'
 import { Box, Typography } from '@mui/material'
 import clockPageNeonBg from '../../../Utils/images/clock-page-neon-shadow.png';
 import axios from 'axios';
+import VideoPlayer from '../../MerchantWrapper/VideoPlayer';
 
 function TravelNeeds({ optionalButton, text }) {
 
@@ -33,12 +34,7 @@ function TravelNeeds({ optionalButton, text }) {
         <Box className="travelWrapper">
             <Box component="img" src={clockPageNeonBg} className="neonBorderImg" alt="neon-border" />
 
-            <Box className="travelRow">
-                <Typography variant='h3'>
-                    {text}
-                </Typography>
-                {optionalButton}
-            </Box>
+           <VideoPlayer url={'https://www.youtube.com/live/EbAHl8xx1NU?si=AITuW_RdIGsR-Aao'}/>
         </Box>
     )
 }

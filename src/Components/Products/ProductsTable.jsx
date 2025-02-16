@@ -192,7 +192,7 @@ export default function CustomPaginationTable({rows}) {
       return (
         <Box
           component="img"
-          src={row.product_images}
+          src={row.product_images[0]}
           alt="product_image"
           className="product_image"
           onClick={(e) => handleClick(e, row.product_id)}
@@ -228,6 +228,7 @@ export default function CustomPaginationTable({rows}) {
       </>
     );
   };
+console.log(rows);
 
   // Render variations for the given product
   const renderVariations = (row) => {

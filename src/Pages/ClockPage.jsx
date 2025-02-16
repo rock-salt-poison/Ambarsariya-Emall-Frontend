@@ -67,6 +67,26 @@ function ClockPage() {
     );
   };
 
+  const updatedAt = data?.[0]?.updated_at 
+  ? new Date(data[0].updated_at.replace("Z", ""))  // Remove 'Z' to prevent UTC assumption
+  : null;
+
+const formattedTime = updatedAt
+  ? updatedAt.toLocaleTimeString('en-IN', {
+      day:'2-digit',
+      month:'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    })
+  : "N/A";
+
+
+  console.log("Raw updated_at:", data?.[0]?.updated_at);
+console.log("Parsed Date:", updatedAt);
+console.log("Formatted Time:", formattedTime);
+
   return (
     <Box className="clock-wrapper">
       <Box className="col-1">
@@ -79,10 +99,13 @@ function ClockPage() {
           componentToRender={renderComponent()}
           componentToRender2={
             <Date_Time_Weather
-              imgSrc={CalendarIcon}
-              text1="Wednesday"
-              text2="04 June"
+              text1="Last Updated"
+              text2={formattedTime}
+
+              
+              
             />
+
           }
           currencyAndTimeComponent={
             <CurrencyAndTimeComponent data={data ? data.slice(0, 3) : ""} />
