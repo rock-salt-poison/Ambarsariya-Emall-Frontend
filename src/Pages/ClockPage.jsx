@@ -83,10 +83,6 @@ const formattedTime = updatedAt
   : "N/A";
 
 
-  console.log("Raw updated_at:", data?.[0]?.updated_at);
-console.log("Parsed Date:", updatedAt);
-console.log("Formatted Time:", formattedTime);
-
   return (
     <Box className="clock-wrapper">
       <Box className="col-1">
@@ -99,7 +95,7 @@ console.log("Formatted Time:", formattedTime);
           componentToRender={renderComponent()}
           componentToRender2={
             <Date_Time_Weather
-              text1="Last Updated"
+              text1="Last Updated Currency"
               text2={formattedTime}
 
               
