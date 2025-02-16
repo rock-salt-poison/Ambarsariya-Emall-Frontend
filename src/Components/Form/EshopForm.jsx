@@ -58,6 +58,8 @@ const EshopForm = () => {
         setSimilarOptions(resp);
         setKeyPlayers(resp);
       }
+      console.log(shopUsersData);
+      
 
       if (shopUsersData) {
         const domain_id = shopUsersData.domain_id;
@@ -69,7 +71,7 @@ const EshopForm = () => {
         }));
         setCategories(formattedCategories);
 
-        const selectedCategories = shopUsersData.category.map((category_id) => {
+        const selectedCategories = shopUsersData.category?.map((category_id) => {
           const resp = formattedCategories.filter(
             (category) => category.id === category_id
           );
@@ -77,13 +79,13 @@ const EshopForm = () => {
         });
 
         const selected_key_players = shopUsersData.key_players
-          .map((shop_no) =>
+          ?.map((shop_no) =>
             resp.filter((othershops) => othershops.shop_no === shop_no)
           )
           .map((key_players) => key_players[0].business_name);
 
         const selected_similar_options = shopUsersData.similar_options
-          .map((shop_no) =>
+          ?.map((shop_no) =>
             resp.filter((othershops) => othershops.shop_no === shop_no)
           )
           .map((options) => options[0].business_name);
@@ -155,10 +157,10 @@ const EshopForm = () => {
       //   console.log("Please upload a CSV file");
       //   return;
       // }
-      if (name === "advt_video" && file.type !== "video/mp4") {
-        console.log("Please upload an MP4 video file");
-        return;
-      }
+      // if (name === "advt_video" && file.type !== "video/mp4") {
+      //   console.log("Please upload an MP4 video file");
+      //   return;
+      // }
 
       fieldValue = file;
     }
@@ -174,7 +176,6 @@ const EshopForm = () => {
     setErrorMessages((prevMessages) => ({ ...prevMessages, [name]: "" }));
   };
 
-  console.log(updatedFields);
   const handleSliderChange = (event, newValue, name) => {
     setFormData({
       ...formData,
@@ -247,7 +248,7 @@ const EshopForm = () => {
       const updatedPostData = {
         business_name: formData.business_name,
         date_of_establishment: formData.date_of_establishment,
-        usp_values: "link", // Placeholder link, make sure to replace with actual URL if needed
+        usp_values: formData.usp_values, // Placeholder link, make sure to replace with actual URL if needed
         product_samples: formData.product_samples,
         similar_options: selectedSimilarOptions,
         cost_sensitivity: formData.cost_sensitivity,
@@ -311,11 +312,19 @@ const EshopForm = () => {
         } catch (error) {
           setLoading(false);
           console.error("Error updating e-shop data:", error);
-          setSnackbar({
-            open: true,
-            message: error.error,
-            severity: "error",
-          });
+          if(error.response.data.error==="File size exceeds the 1MB limit."){
+            setSnackbar({
+              open: true,
+              message: "File size should not exceed the 1MB limit.",
+              severity: "error",
+            });
+          }else{
+            setSnackbar({
+              open: true,
+              message: error.error,
+              severity: "error",
+            });
+          }
         }
       } else {
         setLoading(false);

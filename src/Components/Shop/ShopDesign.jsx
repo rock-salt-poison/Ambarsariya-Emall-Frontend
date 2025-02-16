@@ -9,7 +9,7 @@ function ShopDesign({ data }) {
 
   const openPdf = (e) => {
     if(e) e.preventDefault();
-    window.open('https://pdfobject.com/pdf/sample.pdf', '_target');
+    window.open(data?.usp_values_url, '_target');
   }
 
   const token = useSelector((state) => state.auth.userAccessToken);

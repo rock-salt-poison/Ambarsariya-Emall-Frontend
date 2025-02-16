@@ -32,7 +32,11 @@ export const updateEshopData = async (eshopData, shopAccessToken) => {
     try {
       const response = await axios.put(
         `${link}/sell/buyeshop/${shopAccessToken}`, 
-        eshopData
+        eshopData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
       );
       return response.data;
     } catch (error) {
