@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Box, Typography } from '@mui/material';
+import { Button, Box, Typography, CircularProgress } from '@mui/material';
 import FormField from './FormField'; 
 import { useNavigate } from 'react-router-dom';
-import { getMemberData, getUser, postMemberData } from '../../API/fetchExpressAPI';
+import { getMemberData, getUser, postMemberData, send_otp_to_email } from '../../API/fetchExpressAPI';
 import CustomSnackbar from '../CustomSnackbar';
 import { useDispatch, useSelector } from 'react-redux';
 import { setMemberToken, setMemberTokenValid, setUserToken, setUserTokenValid } from '../../store/authSlice';
+import { setUsernameOtp } from '../../store/otpSlice';
 
 const UserPortfolioForm = () => {
   const initialFormData = {
@@ -16,6 +17,8 @@ const UserPortfolioForm = () => {
     address: '',
     username: '',
     password: '',
+    username_otp: '',
+    phone_otp: '',
     confirm_password: '',
     displayPicture: null,
     backgroundPicture: null,
@@ -29,22 +32,30 @@ const UserPortfolioForm = () => {
   const [selectedBackgroundFileName, setSelectedBackgroundFileName] = useState('');
   const navigate = useNavigate();
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+  const [showUsernameOtp, setShowUsernameOtp] = useState(false);
+  const [showPhoneOtp, setShowPhoneOtp] = useState(false);
 
+  const [loading, setLoading] = useState(false);
+
+  const otp_token = useSelector((state) => state.otp.usernameOtp);
   const token = useSelector((state) => state.auth.userAccessToken);
 
   const fetchMemberData = async (memberToken) => {
-      const user = await getMemberData(memberToken);
-      if(user){
-        console.log(user)
-        setFormData({
-          ...formData,
-          name: user[0].full_name,
-          phoneNumber: user[0].phone_no_1,
-          gender: user[0].gender,
-          dob: new Date(user[0].dob).toLocaleDateString('en-CA'),
-          address: user[0].address,
-          username: user[0].username
-        })
+    setLoading(true);
+    const user = await getMemberData(memberToken);
+    if(user){
+      setFormData({
+        ...formData,
+        name: user[0].full_name,
+        phoneNumber: user[0].phone_no_1,
+        gender: user[0].gender,
+        dob: new Date(user[0].dob).toLocaleDateString('en-CA'),
+        address: user[0].address,
+        username: user[0].username,
+        latitude: user[0].latitude,
+        longitude: user[0].longitude,
+      })
+      setLoading(false);
       }
   }
 
@@ -60,6 +71,8 @@ const UserPortfolioForm = () => {
     fetchData();
   }, [token])
 
+  const validUsernameOtp = otp_token;
+  const validPhoneOtp = '123456';
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -86,6 +99,30 @@ const UserPortfolioForm = () => {
         setSelectedBackgroundFileName(file.name);
       }
     }
+  };
+
+  const validateOtp = () => {
+    let valid = true;
+    const newErrors = {};
+    const newErrorMessages = {};
+
+    // Validate OTP for username
+    if (formData.username_otp !== validUsernameOtp) {
+      newErrors.username_otp = true;
+      newErrorMessages.username_otp = 'Invalid OTP for username';
+      valid = false;
+    }
+
+    // Validate OTP for phone numbers
+    if (formData.phone_otp !== validPhoneOtp) {
+      newErrors.phone_otp = true;
+      newErrorMessages.phone_otp = 'Invalid OTP for Phone No.';
+      valid = false;
+    }
+
+    setErrors(newErrors);
+    setErrorMessages(newErrorMessages);
+    return valid;
   };
 
   const validate = () => {
@@ -132,75 +169,114 @@ const UserPortfolioForm = () => {
     setErrorMessages(newErrorMessages);
     return valid;
   };
+  console.log(formData);
   
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validate()) {
-
-      try{
-        const userData = {
-          name:formData.name,
-          username:(formData.username).toLowerCase(),
-          password:formData.password,
-          address:formData.address.description,
-          latitude: formData.address.latitude,
-          longitude: formData.address.longitude,
-          phone:formData.phoneNumber,
-          gender:formData.gender,
-          dob:formData.dob,
-          profile_img: formData.displayPicture,
-          bg_img: formData.backgroundPicture,
-        }
-        console.log('userData', userData);
-        
-  
-        const response = await postMemberData(userData);
-        if(response){
-
-          dispatch(setUserToken(response.user_access_token));
-        
-        localStorage.setItem('accessToken', response.user_access_token);
-
-        // Store token validity in Redux
-        dispatch(setUserTokenValid(true));
-
-          setSnackbar({
-            open: true,
-            message: response.message,
-            severity: 'success',
-          });
-        }
-        setTimeout(()=>{navigate('../esale')}, 2500);
-      }catch(error){
-        console.log(error);
-        
-        if (error.response.data.error === 'duplicate key value violates unique constraint "users_phone_no_1_key"') {
-          setSnackbar({
-            open: true,
-            message: 'The phone number you entered already exists. Please use a different phone number.',
-            severity: 'error',
-          });
-        }else if (error.response.data.error.includes('Username') &&  error.response.data.error.includes('already exists')) {
-          setSnackbar({
-            open: true,
-            message: 'Username already exists.',
-            severity: 'error',
-          });
+    if (!showUsernameOtp) {
+          // Validate initial form fields
+          if (validate()) {
+            // Show OTP fields if initial validation is successful
+            try{
+              const data ={
+                username:(formData.username).toLowerCase(),
+              }
+              setLoading(true);
+    
+              const otp_resp = await send_otp_to_email(data)
+              console.log(otp_resp)
+              dispatch(setUsernameOtp(otp_resp.otp));
+              setLoading(false);
+              if(otp_resp.message === "OTP sent successfully"){
+                setSnackbar({ open: true, message: 'OTP sent successfully. Please check and verify.', severity: 'success' });
+              }else{
+                setSnackbar({ open: true, message: 'Failed to send OTP. Try again.', severity: 'error' });
+              }
+                console.log('Form Data:', formData);
+    
+            }catch(e){
+              console.log(e);
+              setLoading(false);
+              setSnackbar({ open: true, message: 'Failed to send OTP. Try again.', severity: 'error' });
+            }
+            setShowUsernameOtp(true);
+            setShowPhoneOtp(true);
+          }
         }else{
-          setSnackbar({
-            open: true,
-            message: 'Error while submitting the form. Please try again.',
-            severity: 'error',
-          });
+          if(validateOtp()){
+            if (validate()) {
+              try{
+                const userData = {
+                  name:formData.name,
+                  username:(formData.username).toLowerCase(),
+                  password:formData.password,
+                  address:formData.address.description || formData.address,
+                  latitude: formData.address?.latitude || formData.latitude ,
+                  longitude: formData.address?.longitude || formData.longitude,
+                  phone:formData.phoneNumber,
+                  gender:formData.gender,
+                  dob:formData.dob,
+                  profile_img: formData.displayPicture,
+                  bg_img: formData.backgroundPicture,
+                  access_token: token ? token : ''
+                }
+                console.log('userData', userData);
+                
+          
+                const response = await postMemberData(userData);
+                if(response){
+        
+                  dispatch(setUserToken(response.user_access_token));
+                
+                localStorage.setItem('accessToken', response.user_access_token);
+        
+                // Store token validity in Redux
+                dispatch(setUserTokenValid(true));
+        
+                  setSnackbar({
+                    open: true,
+                    message: response.message,
+                    severity: 'success',
+                  });
+                }
+                setTimeout(()=>{navigate('../esale')}, 2500);
+              }catch(error){
+                console.log(error);
+                if(error.response?.data?.error==="File size exceeds the 1MB limit."){
+                  setSnackbar({
+                    open: true,
+                    message: "File size should not exceed the 1MB limit.",
+                    severity: "error",
+                  });
+                }else if (error.response.data.error === 'duplicate key value violates unique constraint "users_phone_no_1_key"') {
+                  setSnackbar({
+                    open: true,
+                    message: 'The phone number you entered already exists. Please use a different phone number.',
+                    severity: 'error',
+                  });
+                }else if (error.response.data.error.includes('Username') &&  error.response.data.error.includes('already exists')) {
+                  setSnackbar({
+                    open: true,
+                    message: 'Username already exists.',
+                    severity: 'error',
+                  });
+                }else{
+                  setSnackbar({
+                    open: true,
+                    message: 'Error while submitting the form. Please try again.',
+                    severity: 'error',
+                  });
+                }
+              }
+               // Navigate to the appropriate page
+            }
+          }
         }
-      }
-       // Navigate to the appropriate page
-    }
   };
 
   const genderOptions = ['Male', 'Female'];
 
-  const renderFormField = (name, type, options = [], placeholder = '') => (
+  const renderFormField = (name, type, options = [], placeholder = '', readOnly=false) => (
     <FormField
       name={name}
       type={type}
@@ -210,24 +286,34 @@ const UserPortfolioForm = () => {
       errorMessage={errorMessages[name]}
       options={options}
       placeholder={placeholder}
+      readOnly={readOnly}
     />
   );
 
   return (
     <Box component="form" noValidate autoComplete="off" onSubmit={handleSubmit}>
+      {loading && <Box className="loading"><CircularProgress/></Box>}
       <Box className="form-group">
         <Box className="form-group-2">
           {renderFormField('name', 'text', [], 'Enter your name')}
-          {renderFormField('phoneNumber', 'phone_number', [], 'Enter your phone number')}
+          {renderFormField('gender', 'select', genderOptions, 'Select gender')}
         </Box>
 
         <Box className="form-group-2">
-          {renderFormField('gender', 'select', genderOptions, 'Select gender')}
-          {renderFormField('dob', 'date', [], 'Enter your dob')}
+          {renderFormField('phoneNumber', 'phone_number', [], 'Enter your phone number')}
+          {showPhoneOtp &&
+            renderFormField('phone_otp', 'text', [], 'Enter Phone OTP' )
+          }
+        {renderFormField('dob', 'date', [], 'Enter your dob')}
         </Box>
         
         {renderFormField('address', 'address', [], 'Enter your address')}
-        {renderFormField('username', 'text', [], 'Enter your username')}
+        <Box className="form-group-2">
+          {renderFormField('username', 'text', [], 'Enter your username', formData.username ? true : false)}
+        {showUsernameOtp && 
+            renderFormField('username_otp', 'text', [], 'Enter Username OTP' )
+        }
+        </Box>
         <Box className="form-group-2">
           {renderFormField('password', 'password', [], 'Enter your password')}
           {renderFormField('confirm_password', 'password', [], 'Confirm password')}
@@ -271,6 +357,8 @@ const UserPortfolioForm = () => {
             </Typography>
           )}
         </Box>
+
+        
       </Box>
 
       <Box className="submit_button_container">
