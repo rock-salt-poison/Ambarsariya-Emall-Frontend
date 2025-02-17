@@ -34,7 +34,8 @@ const UserPortfolioForm = () => {
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
   const [showUsernameOtp, setShowUsernameOtp] = useState(false);
   const [showPhoneOtp, setShowPhoneOtp] = useState(false);
-
+  const [initialPhoneNumber, setInitialPhoneNumber] = useState('');
+ 
   const [loading, setLoading] = useState(false);
 
   const otp_token = useSelector((state) => state.otp.usernameOtp);
@@ -43,6 +44,8 @@ const UserPortfolioForm = () => {
   const fetchMemberData = async (memberToken) => {
     setLoading(true);
     const user = await getMemberData(memberToken);
+    console.log(user);
+    
     if(user){
       setFormData({
         ...formData,
@@ -54,7 +57,10 @@ const UserPortfolioForm = () => {
         username: user[0].username,
         latitude: user[0].latitude,
         longitude: user[0].longitude,
+        displayPicture : user[0].profile_img,
+        backgroundPicture : user[0].bg_img,
       })
+      setInitialPhoneNumber(user.phone_no_1);
       setLoading(false);
       }
   }
@@ -101,7 +107,7 @@ const UserPortfolioForm = () => {
     }
   };
 
-  const validateOtp = () => {
+  const validateUserNameOtp = () => {
     let valid = true;
     const newErrors = {};
     const newErrorMessages = {};
@@ -112,6 +118,16 @@ const UserPortfolioForm = () => {
       newErrorMessages.username_otp = 'Invalid OTP for username';
       valid = false;
     }
+
+    setErrors(newErrors);
+    setErrorMessages(newErrorMessages);
+    return valid;
+  };
+
+  const validatePhoneOtp = () => {
+    let valid = true;
+    const newErrors = {};
+    const newErrorMessages = {};
 
     // Validate OTP for phone numbers
     if (formData.phone_otp !== validPhoneOtp) {
@@ -173,106 +189,206 @@ const UserPortfolioForm = () => {
   
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
+    // Check if phone number exists and is different from the initial value
+    if (formData.phoneNumber && initialPhoneNumber !== formData.phoneNumber) {
+      setShowPhoneOtp(true); // Show phone OTP if phone number has changed
+    }
+  
+    // Show username OTP only if the username is empty
+    // setShowUsernameOtp(!formData.username);
+
     if (!showUsernameOtp) {
-          // Validate initial form fields
-          if (validate()) {
-            // Show OTP fields if initial validation is successful
-            try{
-              const data ={
-                username:(formData.username).toLowerCase(),
-              }
-              setLoading(true);
-    
-              const otp_resp = await send_otp_to_email(data)
-              console.log(otp_resp)
-              dispatch(setUsernameOtp(otp_resp.otp));
-              setLoading(false);
-              if(otp_resp.message === "OTP sent successfully"){
-                setSnackbar({ open: true, message: 'OTP sent successfully. Please check and verify.', severity: 'success' });
-              }else{
-                setSnackbar({ open: true, message: 'Failed to send OTP. Try again.', severity: 'error' });
-              }
-                console.log('Form Data:', formData);
-    
-            }catch(e){
-              console.log(e);
-              setLoading(false);
-              setSnackbar({ open: true, message: 'Failed to send OTP. Try again.', severity: 'error' });
-            }
-            setShowUsernameOtp(true);
-            setShowPhoneOtp(true);
+      // Validate initial form fields
+      if (validate()) {
+        // Show OTP fields if initial validation is successful
+        try{
+          const data = {
+            username:(formData.username).toLowerCase(),
           }
-        }else{
-          if(validateOtp()){
-            if (validate()) {
-              try{
-                const userData = {
-                  name:formData.name,
-                  username:(formData.username).toLowerCase(),
-                  password:formData.password,
-                  address:formData.address.description || formData.address,
-                  latitude: formData.address?.latitude || formData.latitude ,
-                  longitude: formData.address?.longitude || formData.longitude,
-                  phone:formData.phoneNumber,
-                  gender:formData.gender,
-                  dob:formData.dob,
-                  profile_img: formData.displayPicture,
-                  bg_img: formData.backgroundPicture,
-                  access_token: token ? token : ''
-                }
-                console.log('userData', userData);
+          setLoading(true);
+
+          const otp_resp = await send_otp_to_email(data)
+          console.log(otp_resp)
+          dispatch(setUsernameOtp(otp_resp.otp));
+          setLoading(false);
+          if(otp_resp.message === "OTP sent successfully"){
+            setSnackbar({ open: true, message: 'OTP sent successfully. Please check and verify.', severity: 'success' });
+          }else{
+            setSnackbar({ open: true, message: 'Failed to send OTP. Try again.', severity: 'error' });
+          }
+            console.log('Form Data:', formData);
+
+        }catch(e){
+          console.log(e);
+          setLoading(false);
+          setSnackbar({ open: true, message: 'Failed to send OTP. Try again.', severity: 'error' });
+        }
+        setShowUsernameOtp(true);
+        setShowPhoneOtp(true);
+      }
+    }
+  
+  
+    // Proceed with form validation if OTP validation passed
+    if(validateUserNameOtp() && validatePhoneOtp()){
+      if (validate()) {
+        try {
+          setLoading(true);
+    
+          // Prepare user data for submission
+          const userData = {
+            name: formData.name,
+            username: formData.username.toLowerCase(),
+            password: formData.password,
+            address: formData.address.description || formData.address,
+            latitude: formData.address?.latitude || formData.latitude,
+            longitude: formData.address?.longitude || formData.longitude,
+            phone: formData.phoneNumber,
+            gender: formData.gender,
+            dob: formData.dob,
+            profile_img: formData.displayPicture,
+            bg_img: formData.backgroundPicture,
+            access_token: token || '',
+          };
+    
+          console.log('userData', userData); // Log user data for debugging
+    
+          // Submit user data
+          const response = await postMemberData(userData);
+          if (response) {
+            dispatch(setUserToken(response.user_access_token));
+            localStorage.setItem('accessToken', response.user_access_token);
+            dispatch(setUserTokenValid(true));
+    
+            setSnackbar({
+              open: true,
+              message: response.message,
+              severity: 'success',
+            });
+          }
+    
+          // Redirect after successful submission
+          setTimeout(() => navigate('../esale'), 2500);
+        } catch (error) {
+          console.log(error);
+          setSnackbar({
+            open: true,
+            message: 'Error while submitting the form. Please try again.',
+            severity: 'error',
+          });
+        } finally {
+          setLoading(false); // Stop loading spinner
+        }
+      }
+    }
+  };
+
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   if (!showUsernameOtp) {
+  //         // Validate initial form fields
+  //         if (validate()) {
+  //           // Show OTP fields if initial validation is successful
+  //           try{
+  //             const data ={
+  //               username:(formData.username).toLowerCase(),
+  //             }
+  //             setLoading(true);
+    
+  //             const otp_resp = await send_otp_to_email(data)
+  //             console.log(otp_resp)
+  //             dispatch(setUsernameOtp(otp_resp.otp));
+  //             setLoading(false);
+  //             if(otp_resp.message === "OTP sent successfully"){
+  //               setSnackbar({ open: true, message: 'OTP sent successfully. Please check and verify.', severity: 'success' });
+  //             }else{
+  //               setSnackbar({ open: true, message: 'Failed to send OTP. Try again.', severity: 'error' });
+  //             }
+  //               console.log('Form Data:', formData);
+    
+  //           }catch(e){
+  //             console.log(e);
+  //             setLoading(false);
+  //             setSnackbar({ open: true, message: 'Failed to send OTP. Try again.', severity: 'error' });
+  //           }
+  //           setShowUsernameOtp(true);
+  //           setShowPhoneOtp(true);
+  //         }
+  //       }else{
+  //         if(validateOtp()){
+  //           if (validate()) {
+  //             try{
+  //               const userData = {
+  //                 name:formData.name,
+  //                 username:(formData.username).toLowerCase(),
+  //                 password:formData.password,
+  //                 address:formData.address.description || formData.address,
+  //                 latitude: formData.address?.latitude || formData.latitude ,
+  //                 longitude: formData.address?.longitude || formData.longitude,
+  //                 phone:formData.phoneNumber,
+  //                 gender:formData.gender,
+  //                 dob:formData.dob,
+  //                 profile_img: formData.displayPicture,
+  //                 bg_img: formData.backgroundPicture,
+  //                 access_token: token ? token : ''
+  //               }
+  //               console.log('userData', userData);
                 
           
-                const response = await postMemberData(userData);
-                if(response){
+  //               const response = await postMemberData(userData);
+  //               if(response){
         
-                  dispatch(setUserToken(response.user_access_token));
+  //                 dispatch(setUserToken(response.user_access_token));
                 
-                localStorage.setItem('accessToken', response.user_access_token);
+  //               localStorage.setItem('accessToken', response.user_access_token);
         
-                // Store token validity in Redux
-                dispatch(setUserTokenValid(true));
+  //               // Store token validity in Redux
+  //               dispatch(setUserTokenValid(true));
         
-                  setSnackbar({
-                    open: true,
-                    message: response.message,
-                    severity: 'success',
-                  });
-                }
-                setTimeout(()=>{navigate('../esale')}, 2500);
-              }catch(error){
-                console.log(error);
-                if(error.response?.data?.error==="File size exceeds the 1MB limit."){
-                  setSnackbar({
-                    open: true,
-                    message: "File size should not exceed the 1MB limit.",
-                    severity: "error",
-                  });
-                }else if (error.response.data.error === 'duplicate key value violates unique constraint "users_phone_no_1_key"') {
-                  setSnackbar({
-                    open: true,
-                    message: 'The phone number you entered already exists. Please use a different phone number.',
-                    severity: 'error',
-                  });
-                }else if (error.response.data.error.includes('Username') &&  error.response.data.error.includes('already exists')) {
-                  setSnackbar({
-                    open: true,
-                    message: 'Username already exists.',
-                    severity: 'error',
-                  });
-                }else{
-                  setSnackbar({
-                    open: true,
-                    message: 'Error while submitting the form. Please try again.',
-                    severity: 'error',
-                  });
-                }
-              }
-               // Navigate to the appropriate page
-            }
-          }
-        }
-  };
+  //                 setSnackbar({
+  //                   open: true,
+  //                   message: response.message,
+  //                   severity: 'success',
+  //                 });
+  //               }
+  //               setTimeout(()=>{navigate('../esale')}, 2500);
+  //             }catch(error){
+  //               console.log(error);
+  //               if(error.response?.data?.error==="File size exceeds the 1MB limit."){
+  //                 setSnackbar({
+  //                   open: true,
+  //                   message: "File size should not exceed the 1MB limit.",
+  //                   severity: "error",
+  //                 });
+  //               }else if (error.response.data.error === 'duplicate key value violates unique constraint "users_phone_no_1_key"') {
+  //                 setSnackbar({
+  //                   open: true,
+  //                   message: 'The phone number you entered already exists. Please use a different phone number.',
+  //                   severity: 'error',
+  //                 });
+  //               }else if (error.response.data.error.includes('Username') &&  error.response.data.error.includes('already exists')) {
+  //                 setSnackbar({
+  //                   open: true,
+  //                   message: 'Username already exists.',
+  //                   severity: 'error',
+  //                 });
+  //               }else{
+  //                 setSnackbar({
+  //                   open: true,
+  //                   message: 'Error while submitting the form. Please try again.',
+  //                   severity: 'error',
+  //                 });
+  //               }
+  //             }
+  //              // Navigate to the appropriate page
+  //           }
+  //         }
+  //       }
+  // };
+  
+
 
   const genderOptions = ['Male', 'Female'];
 
@@ -309,7 +425,7 @@ const UserPortfolioForm = () => {
         
         {renderFormField('address', 'address', [], 'Enter your address')}
         <Box className="form-group-2">
-          {renderFormField('username', 'text', [], 'Enter your username', formData.username ? true : false)}
+          {renderFormField('username', 'text', [], 'Enter your username', formData.username ? false : true)}
         {showUsernameOtp && 
             renderFormField('username_otp', 'text', [], 'Enter Username OTP' )
         }

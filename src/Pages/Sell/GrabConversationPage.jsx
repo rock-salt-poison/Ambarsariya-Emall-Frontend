@@ -40,7 +40,7 @@ function GrabConversationPage() {
             </Box>
 
             <Box className="col">
-                <Box component="img" src={be_kind_to_everyone} className="growImg" alt="Second hand" />
+            <Link to='../user'><Box component="img" src={be_kind_to_everyone} className="growImg" alt="Second hand" /></Link>
             </Box>
         </Box>
     </Box>

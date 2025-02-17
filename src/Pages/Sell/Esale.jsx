@@ -78,7 +78,7 @@ function Esale() {
             </Box>
             <Box className="container">
               <Box className="header_board">
-                <Board text="E-sale" imgSrc={boardImg} />
+                <Board text="Ambarsariya" imgSrc={boardImg} />
               </Box>
             </Box>
             <Box className="container" display="flex" justifyContent="flex-end">
@@ -105,7 +105,7 @@ function Esale() {
                 <Box className="card">
                   <Box
                     className="card_bg_img"
-                    src={bg_img}
+                    src={userData?.bg_img || bg_img}
                     alt="card_bg_img"
                     component="img"
                   />
