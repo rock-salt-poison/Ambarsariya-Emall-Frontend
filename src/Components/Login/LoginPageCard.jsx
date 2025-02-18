@@ -11,13 +11,13 @@ function LoginPageCard({title, imgSrc, backButton, redirectTo}) {
     const pathname = location.pathname;
 
     // Effect hook to detect when the forgot-password route is active
-    // useEffect(() => {
-    //     if (pathname.includes('forgot-password')) {
-    //         setForgotPassword(true);
-    //     } else {
-    //         setForgotPassword(false);
-    //     }
-    // }, [pathname]);
+    useEffect(() => {
+        if (pathname.includes('forgot-password')) {
+            setForgotPassword(true);
+        } else {
+            setForgotPassword(false);
+        }
+    }, [pathname]);
 
     return (
         <Box className="card">

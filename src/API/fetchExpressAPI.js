@@ -63,6 +63,28 @@ export const authenticateUser = async (data) => {
     }
 }
 
+export const put_forgetPassword = async (data) => {
+  try{
+    if(data){
+      const response = await axios.put(`${link}/sell/forget-password`, data);
+      return response.data;
+    }
+  }catch(error){
+    throw error;
+  }
+}
+
+export const post_verify_otp = async (data) => {
+  try{
+    if(data){
+      const response = await axios.post(`${link}/sell/verify_otp`, data);
+      return response.data;
+    }
+  }catch(error){
+    throw error;
+  }
+}
+
 export const allShops = async () => {
   try{
     const response = await axios.get(`${link}/sell/shops`);

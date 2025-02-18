@@ -78,7 +78,7 @@ function Esale() {
             </Box>
             <Box className="container">
               <Box className="header_board">
-                <Board text="Ambarsariya" imgSrc={boardImg} />
+                <Board text="Ambarsariya" imgSrc={boardImg} redirectTo={"../user"}/>
               </Box>
             </Box>
             <Box className="container" display="flex" justifyContent="flex-end">

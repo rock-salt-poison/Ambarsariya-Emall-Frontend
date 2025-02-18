@@ -127,19 +127,20 @@ export default function Address_Google_Map_Field({ value, label, onChange, place
 
   // Saves the user-typed input if no option is selected
   const saveUserTypedLocation = () => {
-    if (!inputValue.trim()) return;
-
+    if (!inputValue.trim() || (updatedValue && updatedValue.place_id !== "manual_entry")) return;
+  
     const defaultPlace = {
-      description: inputValue, // Preserve user input
+      description: inputValue, 
       place_id: "manual_entry",
-      latitude: 31.6340, // Default Amritsar
-      longitude: 74.8723, // Default Amritsar
-      formatted_address: inputValue, // Use the user-typed address
+      latitude: 31.6340, 
+      longitude: 74.8723,
+      formatted_address: inputValue, 
     };
-
+  
     onChange(defaultPlace);
     setUpdatedValue(defaultPlace);
   };
+  
 
   return (
     <Autocomplete

@@ -34,8 +34,9 @@ const UserPortfolioForm = () => {
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
   const [showUsernameOtp, setShowUsernameOtp] = useState(false);
   const [showPhoneOtp, setShowPhoneOtp] = useState(false);
-  const [initialPhoneNumber, setInitialPhoneNumber] = useState('');
- 
+  const [initialPhoneNumber, setInitialPhoneNumber] = useState(null);
+  const [initialUsername, setInitialUsername] = useState(null);
+
   const [loading, setLoading] = useState(false);
 
   const otp_token = useSelector((state) => state.otp.usernameOtp);
@@ -60,11 +61,12 @@ const UserPortfolioForm = () => {
         displayPicture : user[0].profile_img,
         backgroundPicture : user[0].bg_img,
       })
-      setInitialPhoneNumber(user.phone_no_1);
+      setInitialPhoneNumber(user[0].phone_no_1);
+      setInitialUsername(user[0].username);
       setLoading(false);
       }
   }
-
+  
   useEffect(()=>{
     const fetchData = async () => {
       if(token){
@@ -107,7 +109,7 @@ const UserPortfolioForm = () => {
     }
   };
 
-  const validateUserNameOtp = () => {
+  const validateOtp = () => {
     let valid = true;
     const newErrors = {};
     const newErrorMessages = {};
@@ -119,21 +121,13 @@ const UserPortfolioForm = () => {
       valid = false;
     }
 
-    setErrors(newErrors);
-    setErrorMessages(newErrorMessages);
-    return valid;
-  };
-
-  const validatePhoneOtp = () => {
-    let valid = true;
-    const newErrors = {};
-    const newErrorMessages = {};
-
     // Validate OTP for phone numbers
-    if (formData.phone_otp !== validPhoneOtp) {
-      newErrors.phone_otp = true;
-      newErrorMessages.phone_otp = 'Invalid OTP for Phone No.';
-      valid = false;
+    if(initialPhoneNumber !== formData.phoneNumber && showPhoneOtp){
+      if (formData.phone_otp !== validPhoneOtp) {
+        newErrors.phone_otp = true;
+        newErrorMessages.phone_otp = 'Invalid OTP for Phone No.';
+        valid = false;
+      }
     }
 
     setErrors(newErrors);
@@ -145,7 +139,7 @@ const UserPortfolioForm = () => {
     let valid = true;
     const newErrors = {};
     const newErrorMessages = {};
-    const requiredFields = ['name', 'phoneNumber', 'gender', 'dob', 'address', 'username', 'password', 'confirm_password'];
+    const requiredFields = initialUsername === null ? ['name', 'phoneNumber', 'gender', 'dob', 'address', 'username', 'password', 'confirm_password']: ['name', 'phoneNumber', 'gender', 'dob', 'address', 'username'];
 
     requiredFields.forEach((field) => {
       if (!formData[field]) {
@@ -156,7 +150,7 @@ const UserPortfolioForm = () => {
     });
 
     const passwordPattern = /^(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
-    if (!passwordPattern.test(formData.password)) {
+    if (!passwordPattern.test(formData.password) && initialUsername===null ) {
       newErrors.password = true;
       newErrorMessages.password = 'Password must be at least 8 characters long and include a special character';
       valid = false;
@@ -185,104 +179,105 @@ const UserPortfolioForm = () => {
     setErrorMessages(newErrorMessages);
     return valid;
   };
-  console.log(formData);
+  console.log(errorMessages);
+  
+  const [isUsernameOtpSent, setIsUsernameOtpSent] = useState(false);
+  const [isPhoneOtpSent, setIsPhoneOtpSent] = useState(false);
   
   const handleSubmit = async (e) => {
     e.preventDefault();
   
-    // Check if phone number exists and is different from the initial value
-    if (formData.phoneNumber && initialPhoneNumber !== formData.phoneNumber) {
-      setShowPhoneOtp(true); // Show phone OTP if phone number has changed
+    // Ensure form validation passes before proceeding
+    if (!validate()) {
+      return;
     }
   
-    // Show username OTP only if the username is empty
-    // setShowUsernameOtp(!formData.username);
-
-    if (!showUsernameOtp) {
-      // Validate initial form fields
-      if (validate()) {
-        // Show OTP fields if initial validation is successful
-        try{
-          const data = {
-            username:(formData.username).toLowerCase(),
-          }
-          setLoading(true);
-
-          const otp_resp = await send_otp_to_email(data)
-          console.log(otp_resp)
-          dispatch(setUsernameOtp(otp_resp.otp));
-          setLoading(false);
-          if(otp_resp.message === "OTP sent successfully"){
-            setSnackbar({ open: true, message: 'OTP sent successfully. Please check and verify.', severity: 'success' });
-          }else{
-            setSnackbar({ open: true, message: 'Failed to send OTP. Try again.', severity: 'error' });
-          }
-            console.log('Form Data:', formData);
-
-        }catch(e){
-          console.log(e);
-          setLoading(false);
-          setSnackbar({ open: true, message: 'Failed to send OTP. Try again.', severity: 'error' });
-        }
-        setShowUsernameOtp(true);
-        setShowPhoneOtp(true);
+    let shouldShowPhoneOtp = formData.phoneNumber.length > 0 && initialPhoneNumber !== formData.phoneNumber;
+  
+  
+    setShowPhoneOtp(shouldShowPhoneOtp);
+  
+    // Send OTP for username if required and not already sent
+    if (!showUsernameOtp && !isUsernameOtpSent) {
+      try {
+        const data = { username: formData.username.toLowerCase() };
+        setLoading(true);
+  
+        const otp_resp = await send_otp_to_email(data);
+        dispatch(setUsernameOtp(otp_resp.otp));
+        setLoading(false);
+  
+        setIsUsernameOtpSent(true); // Mark OTP as sent for username
+  
+        setSnackbar({
+          open: true,
+          message: otp_resp.message === "OTP sent successfully" ? 'OTP sent successfully. Please check and verify.' : 'Failed to send OTP. Try again.',
+          severity: otp_resp.message === "OTP sent successfully" ? 'success' : 'error'
+        });
+      } catch (e) {
+        setLoading(false);
+        setSnackbar({ open: true, message: 'Failed to send OTP. Try again.', severity: 'error' });
       }
+      setShowUsernameOtp(true);
+      return; // Stop execution until OTP is verified
     }
   
+    // Send OTP for phone number if required and not already sent
+    if (shouldShowPhoneOtp && !isPhoneOtpSent) {
+      setShowPhoneOtp(true);
+      setIsPhoneOtpSent(true); // Mark OTP as sent for phone number
+      return; // Stop execution until phone OTP is verified
+    }
   
-    // Proceed with form validation if OTP validation passed
-    if(validateUserNameOtp() && validatePhoneOtp()){
-      if (validate()) {
-        try {
-          setLoading(true);
-    
-          // Prepare user data for submission
-          const userData = {
-            name: formData.name,
-            username: formData.username.toLowerCase(),
-            password: formData.password,
-            address: formData.address.description || formData.address,
-            latitude: formData.address?.latitude || formData.latitude,
-            longitude: formData.address?.longitude || formData.longitude,
-            phone: formData.phoneNumber,
-            gender: formData.gender,
-            dob: formData.dob,
-            profile_img: formData.displayPicture,
-            bg_img: formData.backgroundPicture,
-            access_token: token || '',
-          };
-    
-          console.log('userData', userData); // Log user data for debugging
-    
-          // Submit user data
-          const response = await postMemberData(userData);
-          if (response) {
-            dispatch(setUserToken(response.user_access_token));
-            localStorage.setItem('accessToken', response.user_access_token);
-            dispatch(setUserTokenValid(true));
-    
-            setSnackbar({
-              open: true,
-              message: response.message,
-              severity: 'success',
-            });
-          }
-    
-          // Redirect after successful submission
+    // Validate OTP if both username and phone OTPs are required
+    if (validateOtp()) {
+      try {
+        setLoading(true);
+        const userData = {
+          name: formData.name,
+          username: formData.username.toLowerCase(),
+          password: formData.password,
+          address: formData.address.description || formData.address,
+          latitude: formData.address?.latitude || formData.latitude,
+          longitude: formData.address?.longitude || formData.longitude,
+          phone: formData.phoneNumber,
+          gender: formData.gender,
+          dob: formData.dob,
+          profile_img: formData.displayPicture,
+          bg_img: formData.backgroundPicture,
+          access_token: token || '',
+        };
+  
+        const response = await postMemberData(userData);
+  
+        if (response) {
+          dispatch(setUserToken(response.user_access_token));
+          localStorage.setItem('accessToken', response.user_access_token);
+          dispatch(setUserTokenValid(true));
+  
+          setSnackbar({ open: true, message: response.message, severity: 'success' });
           setTimeout(() => navigate('../esale'), 2500);
-        } catch (error) {
-          console.log(error);
-          setSnackbar({
-            open: true,
-            message: 'Error while submitting the form. Please try again.',
-            severity: 'error',
-          });
-        } finally {
-          setLoading(false); // Stop loading spinner
         }
+      } catch (error) {
+        console.log(error);
+        
+        let errorMessage = 'Error while submitting the form. Please try again.';
+        
+        if (error.response?.data?.error === "File size exceeds the 1MB limit.") {
+          errorMessage = "File size should not exceed the 1MB limit.";
+        } else if (error.response?.data?.error.includes("duplicate key value") && error.response?.data?.error.includes("users_phone_no_1_key")) {
+          errorMessage = "The phone number you entered already exists. Please use a different phone number.";
+        } else if (error.response?.data?.error.includes("Username") && error.response?.data?.error.includes("already exists")) {
+          errorMessage = "Username already exists.";
+        }
+  
+        setSnackbar({ open: true, message: errorMessage, severity: 'error' });
+      } finally {
+        setLoading(false);
       }
     }
   };
+  
 
 
   // const handleSubmit = async (e) => {
@@ -425,15 +420,16 @@ const UserPortfolioForm = () => {
         
         {renderFormField('address', 'address', [], 'Enter your address')}
         <Box className="form-group-2">
-          {renderFormField('username', 'text', [], 'Enter your username', formData.username ? false : true)}
+          {renderFormField('username', 'text', [], 'Enter your username', initialUsername === null ? false : true)}
         {showUsernameOtp && 
             renderFormField('username_otp', 'text', [], 'Enter Username OTP' )
         }
         </Box>
-        <Box className="form-group-2">
+        {initialUsername === null && <Box className="form-group-2">
           {renderFormField('password', 'password', [], 'Enter your password')}
           {renderFormField('confirm_password', 'password', [], 'Confirm password')}
-        </Box>
+        </Box>}
+        
 
         {/* File upload inputs */}
         <Box className="form-group">

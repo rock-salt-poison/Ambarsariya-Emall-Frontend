@@ -20835,6 +20835,7 @@ textarea[readonly]{
         @include hover-scale(1, 0s);
       }
       .MuiDialogContent-root{
+        padding: 0px 24px 20px 24px;
         #confirm-message{
             @include homepage-buttons(
             "Bobby-Jones-Soft", 
