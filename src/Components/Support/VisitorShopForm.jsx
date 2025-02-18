@@ -24,7 +24,7 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
   const [formSubmitted, setFormSubmitted] = useState(false);
 
 
-  const token = visitorData.access_token || '';
+  const token = visitorData?.access_token || '';
 
   const [snackbar, setSnackbar] = useState({
     open: false,

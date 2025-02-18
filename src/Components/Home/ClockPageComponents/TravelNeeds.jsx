@@ -34,7 +34,7 @@ function TravelNeeds({ optionalButton, text }) {
         <Box className="travelWrapper">
             <Box component="img" src={clockPageNeonBg} className="neonBorderImg" alt="neon-border" />
 
-           <VideoPlayer url={'https://www.youtube.com/live/EbAHl8xx1NU?si=AITuW_RdIGsR-Aao'}/>
+           <VideoPlayer url={'https://www.youtube.com/live/sr2Ry9JVDtU?si=M1NsLpJgK83e93yf'}/>
         </Box>
     )
 }

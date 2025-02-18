@@ -1997,36 +1997,36 @@ a {
               .row-2 {
                 flex: 1;
                 @include flex-center(column, center);
-                gap: 10px;
+                // gap: 10px;
 
                 .col-1 {
                   @include flex-center(column, center);
 
                   p {
-                    background-color: $yellow;
+                    background-color: #ddb8df;
                     padding: 3px 15px;
                     text-transform: uppercase;
                     @include homepage-buttons(
                       "Bobby-Jones-Soft",
                       18px,
-                      $black,
+                      $purple,
                       "none"
                     );
                     @include hover-scale(1, 0s);
 
                     &:first-child {
                       display: inline-block;
-                      border-radius: 5px 5px 0px 0px;
+                      border-radius: 15px 15px 0px 0px;
                       padding-bottom: 0px;
                     }
 
                     &:nth-child(2) {
-                      border-radius: 5px;
+                      border-radius: 15px;
                       padding: 3px 15px;
                     }
 
                     &:last-child {
-                      border-radius: 0px 0px 5px 5px;
+                      border-radius: 15px;
                       padding-top: 0;
                     }
                   }
@@ -2085,8 +2085,8 @@ a {
                 @include homepage-buttons(
                   "Bobby-Jones-Soft",
                   24px,
-                  $black,
-                  "none    "
+                  $purple,
+                  "none"
                 );
               }
 
@@ -2123,8 +2123,8 @@ a {
                 .route {
                   @include homepage-buttons(
                     "Bobby-Jones-Soft",
-                    18px,
-                    $black,
+                    20px,
+                    $purple,
                     "none"
                   );
                   @include hover-scale(1, 0s);
@@ -2134,8 +2134,8 @@ a {
                 .finalTime {
                   @include homepage-buttons(
                     "Bobby-Jones-Soft",
-                    16px,
-                    $black,
+                    18px,
+                    $purple,
                     "none"
                   );
                   @include hover-scale(1, 0s);
@@ -2386,7 +2386,10 @@ a {
 
           .currencyTd {
             @include flex-center(row, center);
+            padding: 10px 0;
+            background-color: $blue;
           }
+
 
           .price {
             @include homepage-buttons("Bobby-Jones-Soft", 20px, $white, "none");
@@ -2395,9 +2398,9 @@ a {
           }
 
           .time {
-            background-color: $white;
+            background-color: $black;
             text-align: center;
-            @include homepage-buttons("Digital", 20px, $red, "none");
+            @include homepage-buttons("Digital", 28px, $red, "none");
             @include hover-scale(1, 0s);
             font-weight: 600;
           }
@@ -3676,6 +3679,7 @@ a {
       
       .badge{
         align-self: flex-start;
+        margin-top: auto;
       }
       .cards_outer_container {
         position: relative;

@@ -13,6 +13,9 @@ function CurrencyAndTimeComponent({ data, optionalCName }) {
   // State to store temperatures
   const [temperatures, setTemperatures] = useState({});
 
+  // http://api.timezonedb.com/v2.1/get-time-zone?key=RCU9ASSFRVQU&format=json&by=zone&zone=Asia/Kolkata
+
+
   // Fetch weather data when component mounts or data changes
   useEffect(() => {
     const fetchData = async (city) => {
@@ -65,7 +68,7 @@ function CurrencyAndTimeComponent({ data, optionalCName }) {
           <TableRow>
             {data?.map((item) => (
               <TableCell key={item.id} className="tableCell">
-                <Box className="currencyTd">
+                <Box className="temp">
                   <Typography className="price" sx={{ marginLeft: 1 }}>
                   {temperatures[item.country_capital] ? `${temperatures[item.country_capital]}°C` : "Loading..."}
                   </Typography>
@@ -77,7 +80,7 @@ function CurrencyAndTimeComponent({ data, optionalCName }) {
           {/* Row 4: Currency */}
           <TableRow>
             {data?.map((item) => (
-              <TableCell key={item.id} className="tableCell">
+              <TableCell key={item.id} className="tableCell p-0">
                 <Box className="currencyTd">
                   <Typography
                     className="price"

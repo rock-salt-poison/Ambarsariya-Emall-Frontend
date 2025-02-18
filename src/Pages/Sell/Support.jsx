@@ -17,6 +17,7 @@ function Support(props) {
   const [isFormValid, setIsFormValid] = useState(false); // State to track form validation
   // const [userName, setUserName] = useState('');
   const [visitorData, setVisitorData] = useState(null);
+  const [userLoggedIn , setUserLoggedIn] = useState(false);
 
   const [loading, setLoading] = useState(false);
   
@@ -71,7 +72,12 @@ function Support(props) {
         const user = (await getUser(token))[0];
         console.log(user);
         
-          if(user.support_id && user.visitor_id){
+          // if(user.support_id && user.visitor_id){
+          //   fetchData(user.user_access_token);
+          // }
+
+          if(user){
+            setUserLoggedIn(true);
             fetchData(user.user_access_token);
           }
       }
@@ -110,7 +116,7 @@ console.log(visitorData);
           </Box>
           <Box className="col second_wrapper">
             <Box className='col-1'>
-              <UserForm onValidation={handleFormValidation} visitorData={visitorData} visibility={visitorData !== null  ? 'hidden' : 'visible'}/>
+              {!userLoggedIn && <UserForm onValidation={handleFormValidation} visitorData={visitorData} visibility={userLoggedIn ? 'hidden' : 'visible'}/>}
               {/* <Button2 text="Back" redirectTo="/AmbarsariyaMall/sell" /> */}
               <UserBadge
                 handleBadgeBgClick="../"
@@ -118,7 +124,7 @@ console.log(visitorData);
                 handleLogoutClick="../../AmbarsariyaMall"
               />
             </Box>
-            {visitorData && Object.keys(visitorData).length > 0 && (
+            {(visitorData && Object.keys(visitorData).length > 0) || userLoggedIn  && (
               <>
                 <Box className="col-2">
                   <Box component="form" className="form_container" noValidate autoComplete="off" onSubmit={handleSubmit}>
@@ -138,7 +144,7 @@ console.log(visitorData);
                   </Box>
                 </Box>
                 <Box className="col-3">
-                  <VisitorFormBox visitorData={visitorData}/>
+                  <VisitorFormBox />
                 </Box>
               </>
             )}
