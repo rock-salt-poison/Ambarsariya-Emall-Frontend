@@ -2400,9 +2400,11 @@ a {
           .time {
             background-color: $black;
             text-align: center;
-            @include homepage-buttons("Digital", 28px, $red, "none");
+            @include homepage-buttons("Digital", 24px, $red, "none");
             @include hover-scale(1, 0s);
             font-weight: 600;
+            padding: 4px 5px;
+            white-space: nowrap;
           }
         }
       }
