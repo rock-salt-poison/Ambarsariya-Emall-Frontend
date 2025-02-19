@@ -8,7 +8,7 @@ import attachment_icon from '../../Utils/images/Sell/support/attachment_icon.png
 import createCustomTheme from '../../styles/CustomSelectDropdownTheme';
 import FormField from '../../Components/Form/FormField';
 import { useSelector } from 'react-redux';
-import { get_visitorData, getUser } from '../../API/fetchExpressAPI';
+import { get_visitorData, getMemberData, getShopUserData, getUser } from '../../API/fetchExpressAPI';
 import CustomSnackbar from '../../Components/CustomSnackbar';
 import UserBadge from '../../UserBadge';
 
@@ -17,6 +17,8 @@ function Support(props) {
   const [isFormValid, setIsFormValid] = useState(false); // State to track form validation
   // const [userName, setUserName] = useState('');
   const [visitorData, setVisitorData] = useState(null);
+  const [shopData, setShopData] = useState(null);
+  const [memberData, setMemberData] = useState(null);
   const [userLoggedIn , setUserLoggedIn] = useState(false);
 
   const [loading, setLoading] = useState(false);
@@ -36,15 +38,6 @@ function Support(props) {
   
   const theme = createCustomTheme(themeProps);
 
-  // Handle file change
-  const handleFileChange = (event) => {
-    const selectedFile = event.target.files[0];
-    if (selectedFile && (selectedFile.type === 'application/pdf' || selectedFile.type === 'image/gif')) {
-      setFile(selectedFile); // Update state with selected file
-    } else {
-      alert('Please upload a PDF or GIF file.');
-    }
-  };
 
   const fetchData = async (visitor_token) => {
     try {
@@ -60,11 +53,61 @@ function Support(props) {
         setSnackbar({ open: true, message: resp.message, severity: 'error' });
       }
     } catch (error) {
+      console.error(error);
+      
       setLoading(false);
       setSnackbar({ open: true, message: error.response.data.message, severity: 'error' });
       setVisitorData(null);
     }
   };
+
+  const fetchShopData = async (shop_token, user_token) => {
+    try{
+      setLoading(true);
+      const resp = await getShopUserData(shop_token);
+      const shopUserData = resp?.[0] || {}; // Ensure an object even if API returns nothing
+
+    console.log(shopUserData);
+
+    if (Object.keys(shopUserData).length > 0) {
+      setShopData((prev) => ({
+        ...shopUserData,
+        user_type: "shop",
+        access_token: user_token
+      }));
+    }
+    }catch(e){
+      console.log(e);
+      setSnackbar({ open: true, message: e.response.data.message, severity: 'error' });
+      setVisitorData(null);
+      setShopData(null);
+    }finally{
+      setLoading(false);
+    }
+  }
+
+  const fetchMemberData = async (user_access_token) => {
+    try{
+      setLoading(true);
+      const resp = await getMemberData(user_access_token);
+      const memberUserData = resp?.[0] || {}; // Ensure an object even if API returns nothing
+      
+      if (Object.keys(memberUserData).length > 0) {
+      setMemberData((prev) => ({
+        ...memberUserData,
+        user_type: "member",
+        access_token : user_access_token
+      }));
+    } 
+    }catch(e){
+      console.log(e);
+      setSnackbar({ open: true, message: e.response.data.message, severity: 'error' });
+      setVisitorData(null);
+      setShopData(null);
+    }finally{
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
     if(token){
@@ -76,9 +119,23 @@ function Support(props) {
           //   fetchData(user.user_access_token);
           // }
 
-          if(user){
+          if(user.shop_access_token && user.user_type === 'shop'){
+            fetchShopData(user.shop_access_token, user.user_access_token)
+            setUserLoggedIn(true);
+          }
+
+          else if(user.user_access_token && user.user_type === 'member'){
+            fetchMemberData(user.user_access_token)
+            setUserLoggedIn(true);
+          }
+
+          else if(user.user_access_token && user.user_type === 'visitor'){
             setUserLoggedIn(true);
             fetchData(user.user_access_token);
+          } 
+
+          else{
+            setUserLoggedIn(false);
           }
       }
       verifyUser();
@@ -86,18 +143,13 @@ function Support(props) {
   }, [token]);
   
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(file);
-  };
 
   // Handle form validation callback
   const handleFormValidation = (isValid, data) => {
     setIsFormValid(isValid);
     setVisitorData(data);
   };
-
-console.log(visitorData);
+  
 
   return (
     <ThemeProvider theme={theme}>
@@ -124,10 +176,12 @@ console.log(visitorData);
                 handleLogoutClick="../../AmbarsariyaMall"
               />
             </Box>
-            {(visitorData && Object.keys(visitorData).length > 0) || userLoggedIn  && (
+
+          {/* (visitorData !== null && Object.keys(visitorData).length > 0) ||  */}
+            { userLoggedIn  && (
               <>
                 <Box className="col-2">
-                  <Box component="form" className="form_container" noValidate autoComplete="off" onSubmit={handleSubmit}>
+                  {/* <Box component="form" className="form_container" noValidate autoComplete="off" onSubmit={handleSubmit}>
                     <Tooltip title="Select pdf or gif file" className="tooltip" placement="bottom-end">
                       <Box>
                         <FormField
@@ -141,10 +195,10 @@ console.log(visitorData);
                         />
                       </Box>
                     </Tooltip>
-                  </Box>
+                  </Box> */}
                 </Box>
                 <Box className="col-3">
-                  <VisitorFormBox />
+                  <VisitorFormBox visitorData={visitorData ? visitorData : shopData ? shopData : memberData ? memberData : null}/>
                 </Box>
               </>
             )}

@@ -169,8 +169,14 @@ export const get_visitorData = async (access_token) => {
 
 export const put_visitorData = async (data) => {
     try{
-      const response = await axios.put(`${link}/sell/support`, data);
-      return response.data;
+      if(data){
+        const response = await axios.put(`${link}/sell/support`, data, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        return response.data;
+      }
     }catch(e){
       throw e;
     }

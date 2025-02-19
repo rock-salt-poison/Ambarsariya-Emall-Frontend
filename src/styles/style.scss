@@ -4058,6 +4058,49 @@ a {
                   @include flex-center(column, center);
                   place-items: normal;
 
+                  .tooltip{
+                    width: max-content;
+                    @include full-absolute(auto, auto, 80px, -54px);
+                    z-index: 1;
+
+                    .form-control {
+                      .form-row {
+                        .field_container {
+                          @include flex-center(column, flex-end);
+                          align-items: flex-end;
+        
+                          .file_label {
+                            .file_button {
+                              padding: 0px;
+                              background: transparent;
+                              box-shadow: none;
+        
+                              .upload_file {
+                                width: 46.49px;
+                              }
+                            }
+                          }
+        
+                          .file_name {
+                            max-width: 200px;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            display: inline-block;
+                            vertical-align: middle;
+                            @include homepage-buttons(
+                              "Bobby-Jones-Soft",
+                              15px,
+                              $black,
+                              "none"
+                            );
+                            @include hover-scale(1, 0s);
+                          }
+                        }
+                      }
+                    }
+                  }
+
                   .form-group {
                     @include flex-center(column, flex-start);
                     gap: 10px;

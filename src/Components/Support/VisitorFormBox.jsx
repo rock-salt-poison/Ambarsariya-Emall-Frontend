@@ -10,6 +10,8 @@ const VisitorFormBox = ({ visitorData }) => {
   const [showFields, setShowFields] = useState(true);
 
   const navigate = useNavigate();
+  // console.log(visitorData);
+  
 
   const handleFormSubmitSuccess = (domain, sector, submit) => {
     if (submit) {
@@ -19,8 +21,7 @@ const VisitorFormBox = ({ visitorData }) => {
     }
     setValue((prevData) => ({ ...prevData, domain, sector }));
   };
-
-  console.log(showFields);
+  
   const handleHeadingClick = () => {
     setShowFields((prev) => !prev); // Toggle visibility
   };
@@ -34,7 +35,7 @@ const VisitorFormBox = ({ visitorData }) => {
           E-Ambarsariya:
           <Link onClick={handleHeadingClick}> {/* Toggle form on click */}
             <Typography variant="span">
-              {formSubmitted && visitorData.domain_name && visitorData.sector_name
+              {formSubmitted && visitorData?.domain_name && visitorData?.sector_name
                 ? `${visitorData.domain_name} - ${visitorData.sector_name}`
                 : `${value.domain} - ${value.sector}`}
             </Typography>

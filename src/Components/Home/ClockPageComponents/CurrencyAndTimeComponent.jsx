@@ -16,7 +16,6 @@ function CurrencyAndTimeComponent({ data, optionalCName }) {
   const [weatherInfo, setWeatherInfo] = useState({});
   const [timeInfo, setTimeInfo] = useState({});
   const [loading, setLoading] = useState(false);
-  const [timeLoading, setTimeLoading] = useState(false);
 
   const timezone_db_api_key = process.env.REACT_APP_TIMEZONEDB_API_KEY;
 
@@ -99,11 +98,7 @@ function CurrencyAndTimeComponent({ data, optionalCName }) {
 
     return () => clearInterval(interval);
   }, [timeInfo]);
-
-  console.log(weatherInfo);
-  console.log(timeInfo);
-  console.log(data);
-  
+ 
 
   return (
     <Box className={`${optionalCName && optionalCName} currency-wrapper`}>
