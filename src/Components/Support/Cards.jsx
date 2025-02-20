@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -12,26 +12,48 @@ import trilium_mall_amritsar from '../../Utils/images/Sell/support/trilium_mall_
 import mall_road_amritsar from '../../Utils/images/Sell/support/mall_road_amritsar.webp';
 import hall_gate_amritsar from '../../Utils/images/Sell/support/hall_gate_amritsar.webp';
 import { Link, useNavigate } from 'react-router-dom';
-import { Box, Typography } from '@mui/material';
+import { Box, CircularProgress, Typography } from '@mui/material';
+import { get_support_page_famous_areas } from '../../API/fetchExpressAPI';
 
-const cardData = [
-  { title: 'Wagah Border', bgImage: wagah_border_amritsar },
-  { title: 'Nehru Shopping Complex', bgImage: nehru_shoppping_complex_amritsar },
-  { title: 'Trilium Mall', bgImage: trilium_mall_amritsar },
-  { title: 'Mall Road', bgImage: mall_road_amritsar },
-  { title: 'Hall Gate', bgImage: hall_gate_amritsar },
-  { title: 'Hall Gate', bgImage: hall_gate_amritsar },
-];
+// const cardData = [
+//   { title: 'Wagah Border', bgImage: wagah_border_amritsar },
+//   { title: 'Nehru Shopping Complex', bgImage: nehru_shoppping_complex_amritsar },
+//   { title: 'Trilium Mall', bgImage: trilium_mall_amritsar },
+//   { title: 'Mall Road', bgImage: mall_road_amritsar },
+//   { title: 'Hall Gate', bgImage: hall_gate_amritsar },
+//   { title: 'Hall Gate', bgImage: hall_gate_amritsar },
+// ];
+
 
 export default function Cards() {
   const navigate = useNavigate();
+  const [cardData, setCardData] = useState([]);
+  const [loading, setLoading] = useState(false);
   const handleClick = (e, id) => {
     e.preventDefault();
     navigate(`../support/shops-near?q=${id}`);
   }
 
+  useEffect(()=>{
+    const fetchData  = async () => {
+      try{
+        setLoading(false);
+
+        const resp = await get_support_page_famous_areas();
+        console.log(resp);
+        setCardData(resp);
+      }catch(e){
+
+      }finally{
+        setLoading(false);
+      }
+    }
+    fetchData();
+  }, [])
+
   return (
     <Box className="cards_outer_container">
+      {loading && <Box className="loading"><CircularProgress/></Box> }
       <Box className="cards_container">
         <Swiper
           slidesPerView={5}
@@ -53,12 +75,12 @@ export default function Cards() {
             <SwiperSlide key={index} className="card">
               <Link
                 className="card-body"
-                style={{ backgroundImage: `url(${card.bgImage})` }}
-                onClick={(e) => { handleClick(e, card.title) }}
+                style={{ backgroundImage: `url(${card.image_src})` }}
+                onClick={(e) => { handleClick(e, card.area_title) }}
               >
                 <Typography variant="h3">
                   <Typography variant="span">
-                    {card.title}
+                    {card.area_title}
                   </Typography>
                 </Typography>
               </Link>

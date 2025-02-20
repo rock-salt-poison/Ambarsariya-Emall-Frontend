@@ -308,3 +308,12 @@ export const get_advt = async (advt_page) => {
       throw e;
   }
 }
+
+export const get_support_page_famous_areas = async () => {
+  try{
+      const response = await axios.get(`${admin_link}/famous-areas`);
+      return response.data;
+  }catch(e){
+      throw e;
+  }
+} 
