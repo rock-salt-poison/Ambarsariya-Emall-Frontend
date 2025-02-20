@@ -35,7 +35,7 @@ function ShopDetails({ column }) {
             {column.similar_options_name.map((name, index) => (
               <React.Fragment key={index}>
                 <Link
-                  to={`../support/shop?id=${column.similar_options_token[index]}`}
+                  to={`../support/shop?token=${column.similar_options_token[index]}`}
                 >
                   <Typography>
                     {name}
