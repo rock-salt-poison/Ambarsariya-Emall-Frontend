@@ -67,7 +67,7 @@ function Support(props) {
       const resp = await getShopUserData(shop_token);
       const shopUserData = resp?.[0] || {}; // Ensure an object even if API returns nothing
 
-    console.log(shopUserData);
+    // console.log(shopUserData);
 
     if (Object.keys(shopUserData).length > 0) {
       setShopData((prev) => ({
@@ -113,7 +113,7 @@ function Support(props) {
     if(token){
       const verifyUser = async () => {
         const user = (await getUser(token))[0];
-        console.log(user);
+        // console.log(user);
         
           // if(user.support_id && user.visitor_id){
           //   fetchData(user.user_access_token);

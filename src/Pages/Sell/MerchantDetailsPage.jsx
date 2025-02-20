@@ -15,7 +15,7 @@ import trilium_mall_amritsar from "../../Utils/images/Sell/support/trilium_mall_
 import mall_road_amritsar from "../../Utils/images/Sell/support/mall_road_amritsar.webp";
 import hall_gate_amritsar from "../../Utils/images/Sell/support/hall_gate_amritsar.webp";
 import AutoCompleteSearchField from "../../Components/Products/AutoCompleteSearchField";
-import { allShops, get_discount_coupons } from "../../API/fetchExpressAPI";
+import { allShops, get_discount_coupons, get_nearby_shops } from "../../API/fetchExpressAPI";
 import CouponsSlider from "../../Components/Shop/CouponsSlider";
 import DiscountPercentageSlider from "../../Components/Shop/DiscountPercentageSlider";
 import UserBadge from "../../UserBadge";
@@ -25,6 +25,7 @@ const MerchantDetailsPage = () => {
   const id = searchParams.get("q");
   const navigate = useNavigate();
   const [discountCoupons, setDiscountCoupons] = useState([]);
+  const [areaDetails, setAreaDetails] = useState(null);
   const [activeCoupon, setActiveCoupon] = useState(null); // Track active coupon
 
   const imgSrc = () => {
@@ -50,7 +51,16 @@ const MerchantDetailsPage = () => {
   useEffect(() => {
     const fetchShops = async () => {
       try {
-        const resp = await allShops();
+        const area = await get_nearby_shops(id);
+        if(Object.keys(area).length>0){
+          setAreaDetails(area);
+        }
+        
+        const resp = (await allShops())?.filter(shop => 
+          area.shops.some(areaShop => areaShop.shop_access_token === shop.shop_access_token)
+      );
+      
+        
         if (resp && Array.isArray(resp)) {
           setShopData(resp);
           setFilteredData(resp);
@@ -93,7 +103,7 @@ const MerchantDetailsPage = () => {
   
   }, [id]);
 
-  console.log(activeCoupon);
+  // console.log(activeCoupon);
 
   const handleFilter = (data) => {
     setFilteredData(data);
@@ -103,7 +113,7 @@ const MerchantDetailsPage = () => {
 
   return (
     <Box className="merchant_wrapper">
-      <Box component="img" src={imgSrc()} className="sector_bg_img" />
+      <Box component="img" src={areaDetails && areaDetails.image_src} className="sector_bg_img" />
       {loading && (
         <Box className="loading">
           <CircularProgress />
@@ -135,7 +145,7 @@ const MerchantDetailsPage = () => {
               <Box className="sub_col_1">
                 <Box className="shop_details">
                   <Box className="category">
-                    <Typography className="sector_type">{id}</Typography>
+                    <Typography className="sector_type">{areaDetails && areaDetails.area_title}</Typography>
                     <Typography className="shop_name">
                       {shop.business_name}
                     </Typography>

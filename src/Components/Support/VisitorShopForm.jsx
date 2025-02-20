@@ -39,7 +39,6 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
     severity: "success",
   });
 
-  console.log(visitorData);
   
 
   const [formFieldData, setFormFieldData] = useState([]); // Initialize formFieldData

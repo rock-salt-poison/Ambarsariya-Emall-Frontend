@@ -10,7 +10,6 @@ const VisitorFormBox = ({ visitorData }) => {
   const [showFields, setShowFields] = useState(true);
 
   const navigate = useNavigate();
-  console.log(visitorData);
   
 
   const handleFormSubmitSuccess = (domain, sector, submit) => {

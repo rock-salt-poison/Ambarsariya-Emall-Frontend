@@ -317,3 +317,13 @@ export const get_support_page_famous_areas = async () => {
       throw e;
   }
 } 
+
+
+export const get_nearby_shops = async (token) => {
+  try{
+    const response = await axios.get(`${admin_link}/sell/famous-areas/${token}`);
+    return response.data;
+  }catch(e){
+    throw e;
+  }
+}

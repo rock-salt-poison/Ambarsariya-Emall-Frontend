@@ -40,7 +40,7 @@ export default function Cards() {
         setLoading(false);
 
         const resp = await get_support_page_famous_areas();
-        console.log(resp);
+        // console.log(resp);
         setCardData(resp);
       }catch(e){
 
@@ -76,7 +76,7 @@ export default function Cards() {
               <Link
                 className="card-body"
                 style={{ backgroundImage: `url(${card.image_src})` }}
-                onClick={(e) => { handleClick(e, card.area_title) }}
+                onClick={(e) => { handleClick(e, card.access_token) }}
               >
                 <Typography variant="h3">
                   <Typography variant="span">
