@@ -35,12 +35,16 @@ function UserBadge({
       setLoading(true);
       const user = (await getUser(token))?.[0];
       const userType = user?.user_type;
-      const isVisitor = Boolean(user?.visitor_id);
+      // const isVisitor = Boolean(user?.visitor_id);
 
       const iconMap = {
-        member: isVisitor ? visitor_icon : member_icon,
-        shop: isVisitor ? visitor_icon : shop_icon,
-        merchant: isVisitor ? visitor_icon : merchant_icon,
+        // member: isVisitor ? visitor_icon : member_icon,
+        // shop: isVisitor ? visitor_icon : shop_icon,
+        // merchant: isVisitor ? visitor_icon : merchant_icon,
+        // visitor: visitor_icon,
+        member:  member_icon,
+        shop:  shop_icon,
+        merchant:  merchant_icon,
         visitor: visitor_icon,
       };
 

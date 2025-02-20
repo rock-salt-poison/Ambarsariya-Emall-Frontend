@@ -120,12 +120,18 @@ function Support(props) {
           // }
 
           if(user.shop_access_token && user.user_type === 'shop'){
-            fetchShopData(user.shop_access_token, user.user_access_token)
+            fetchShopData(user.shop_access_token, user.user_access_token);
+            if(user.support_id && user.visitor_id){
+              fetchData(user.user_access_token);
+            }
             setUserLoggedIn(true);
           }
 
           else if(user.user_access_token && user.user_type === 'member'){
             fetchMemberData(user.user_access_token)
+            if(user.support_id && user.visitor_id){
+              fetchData(user.user_access_token);
+            }
             setUserLoggedIn(true);
           }
 

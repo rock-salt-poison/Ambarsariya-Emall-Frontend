@@ -73,6 +73,7 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
           sector: visitorData?.sector_name || "",
           purpose: visitorData?.purpose || "",
           message: visitorData?.message || "",
+          file: visitorData?.file_attached || '',
         });
   
         const formFields = [
@@ -261,17 +262,6 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
           (sector) => sector.sector_name === formData.sector
         );
 
-        console.log(formData);
-        console.log({
-          name: visitorData.full_name || visitorData.name || formData.name,
-          phone_no: visitorData.phone_no_1 || visitorData.phone_no,
-          domain: selectedDomain?.domain_id,
-          sector: selectedSector?.sector_id,
-          purpose: formData.purpose,
-          message: formData.reply ? formData.reply : formData.message,
-          file: formData.file,
-          access_token: token,
-        });
 
         const resp = await put_visitorData({
           name: visitorData.full_name || visitorData.name || formData.name,
@@ -282,10 +272,9 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
           message: formData.reply ? formData.reply : formData.message,
           file: formData.file,
           access_token: token,
+          user_type: visitorData.user_type 
         });
 
-       
-        
 
         setLoading(false);
         showReplyField(true);
