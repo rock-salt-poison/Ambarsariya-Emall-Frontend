@@ -2,6 +2,7 @@ import axios from 'axios';
 
 const link = `${process.env.REACT_APP_EXPRESS_API_LINK}/api/ambarsariya`;
 const admin_link = `${process.env.REACT_APP_EXPRESS_API_LINK}/admin/api`;
+const drive_link = `${process.env.REACT_APP_EXPRESS_API_LINK}/api/drive`;
 
 export const fetchDomains = async () => {
     const response = await axios.get(`${link}/domains`);
@@ -323,6 +324,17 @@ export const get_nearby_shops = async (token) => {
   try{
     const response = await axios.get(`${admin_link}/sell/famous-areas/${token}`);
     return response.data;
+  }catch(e){
+    throw e;
+  }
+}
+
+export const post_open_file = async (email)=>{
+  try{
+    if(email){
+      const response = await axios.post(`${drive_link}/open-file/${email}`);
+      return response.data; 
+    }
   }catch(e){
     throw e;
   }

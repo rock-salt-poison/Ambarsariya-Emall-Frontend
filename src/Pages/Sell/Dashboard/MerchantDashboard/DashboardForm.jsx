@@ -3,15 +3,17 @@ import { Box, Button } from "@mui/material";
 import GeneralLedgerForm from "../../../../Components/Form/GeneralLedgerForm";
 import ribbon from "../../../../Utils/images/Sell/dashboard/merchant_dashboard/ribbon.svg";
 import { useSelector } from "react-redux";
-import { getCategories, getShopUserData, getUser, post_products } from "../../../../API/fetchExpressAPI";
+import { getCategories, getShopUserData, getUser, post_open_file, post_products } from "../../../../API/fetchExpressAPI";
 import { useParams } from "react-router-dom";
 import product_csv from '../../../../Sheets/Ambarsariya Mall - Product CSV.csv'
 import item_csv from '../../../../Sheets/Ambarsariya Mall - Item CSV.csv'
 import Papa from "papaparse";
 import CustomSnackbar from "../../../../Components/CustomSnackbar";
 
-function DashboardForm() {
+function DashboardForm({data}) {
 
+  console.log(data);
+  
   // Initial form data and errors for 4 forms
   const initialData = {
     form1: {
@@ -81,12 +83,17 @@ function DashboardForm() {
     fetchShopToken();
   }, [user_access_token])
 
-  const handleDownload = (e, name) => {
+  const handleDownload = async (e, name) => {
     if(name==="product_csv"){
-      const link = document.createElement("a");
-      link.href = product_csv;  // File URL or path
-      link.download = "Product CSV.csv";  // Specify the downloaded file name
-      link.click();
+      console.log({email :data?.username});
+      
+      const resp = await post_open_file(data?.username);
+      console.log(resp)
+      if (resp.success) {
+        window.open(resp.url, "_blank");
+      } else {
+        console.error(data.message);
+      }
     }
     if(name==="item_csv"){
       const link = document.createElement("a");
@@ -103,7 +110,7 @@ console.log(categories)
         id: 1,
         label: "Product Category (s)",
         name: "product_category",
-        type: "select",
+        type: "select-check",
         placeholder: "Select Category(s)",
         options: categories.map((cat) => cat.name),
       },
@@ -130,7 +137,7 @@ console.log(categories)
       // },
       {
         id: 5,
-        label: "Click here to download file",
+        label: "Click here to open file",
         name: "product_csv",
         type: 'Download file',
         handleDownload: handleDownload
@@ -169,7 +176,7 @@ console.log(categories)
       },
       {
         id: 5,
-        label: "Click here to download file",
+        label: "Click here to open file",
         name: "item_csv",
         type: 'Download file',
         handleDownload: handleDownload
@@ -207,7 +214,7 @@ console.log(categories)
       },
       {
         id: 5,
-        label: "Click here to download file",
+        label: "Click here to open file",
         name: "sku_id_csv",
         type: 'Download file',
         handleDownload: handleDownload
@@ -245,7 +252,7 @@ console.log(categories)
       },
       {
         id: 5,
-        label: "Click here to download file",
+        label: "Click here to open file",
         name: "rku_csv",
         type: 'Download file',
         handleDownload: handleDownload
