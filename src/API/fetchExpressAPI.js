@@ -339,3 +339,19 @@ export const post_open_file = async (email)=>{
     throw e;
   }
 }
+
+
+export const get_checkDriveAccess = async (email) => {
+  try{
+    if(email){
+      const response = await axios.get(`${drive_link}/check-drive-access/${email}`);
+      return response.data;
+    }
+  }catch(e){  
+    throw e;
+  }
+}
+
+export const get_requestDriveAccess = () => {
+  window.location.href = `${drive_link}/request-drive-access`;
+};

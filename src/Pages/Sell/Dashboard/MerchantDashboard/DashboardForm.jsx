@@ -3,7 +3,7 @@ import { Box, Button } from "@mui/material";
 import GeneralLedgerForm from "../../../../Components/Form/GeneralLedgerForm";
 import ribbon from "../../../../Utils/images/Sell/dashboard/merchant_dashboard/ribbon.svg";
 import { useSelector } from "react-redux";
-import { getCategories, getShopUserData, getUser, post_open_file, post_products } from "../../../../API/fetchExpressAPI";
+import { get_checkDriveAccess, get_requestDriveAccess, getCategories, getShopUserData, getUser, post_open_file, post_products } from "../../../../API/fetchExpressAPI";
 import { useParams } from "react-router-dom";
 import product_csv from '../../../../Sheets/Ambarsariya Mall - Product CSV.csv'
 import item_csv from '../../../../Sheets/Ambarsariya Mall - Item CSV.csv'
@@ -85,14 +85,24 @@ function DashboardForm({data}) {
 
   const handleDownload = async (e, name) => {
     if(name==="product_csv"){
-      console.log({email :data?.username});
-      
-      const resp = await post_open_file(data?.username);
-      console.log(resp)
-      if (resp.success) {
-        window.open(resp.url, "_blank");
+      console.log(`Checking Drive access for: ${data?.username}`);
+
+      // Step 1: Check if user has access
+      const checkAccess = await get_checkDriveAccess(data?.username);
+      if (!checkAccess.accessGranted) {
+        console.warn("🔄 Redirecting for Google Drive access...");
+        get_requestDriveAccess();
+        return;
+      }
+
+      // Step 2: Open Google Drive file
+      console.log("Access granted, opening file");
+      const response = await post_open_file(data?.username);
+
+      if (response.success) {
+        window.open(response.url, "_blank");
       } else {
-        console.error(data.message);
+        console.error("❌ Error:", response.message);
       }
     }
     if(name==="item_csv"){
@@ -292,6 +302,8 @@ console.log(categories)
     return Object.keys(newErrors).length === 0;
   };
 
+  console.log(formData["form1"].product_category);
+  
   const handleSubmit = async (event, formName) => {
     event.preventDefault();
     if (validateForm(formName)) {
@@ -320,7 +332,7 @@ console.log(categories)
               // Process the product data
               return {
                 shop_no: shopNo,
-                category: categories.find((cat) => cat.name === formData["form1"].product_category)?.id, 
+                category: categories.find((cat) => cat.name === product["Category"])?.id, 
                 product_name: product["Product Name"],
                 product_type: product["Product Type"],
                 product_description: product["Product Description"],
