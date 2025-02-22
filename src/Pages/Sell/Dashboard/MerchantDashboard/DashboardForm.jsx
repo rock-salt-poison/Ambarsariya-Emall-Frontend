@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button } from "@mui/material";
+import { Box, Button, CircularProgress } from "@mui/material";
 import GeneralLedgerForm from "../../../../Components/Form/GeneralLedgerForm";
 import ribbon from "../../../../Utils/images/Sell/dashboard/merchant_dashboard/ribbon.svg";
 import { useSelector } from "react-redux";
@@ -13,6 +13,8 @@ import CustomSnackbar from "../../../../Components/CustomSnackbar";
 function DashboardForm({data}) {
 
   console.log(data);
+
+  const [loading, setLoading] = useState(false);
   
   // Initial form data and errors for 4 forms
   const initialData = {
@@ -87,6 +89,7 @@ function DashboardForm({data}) {
     if(name==="product_csv"){
       console.log(`Checking Drive access for: ${data?.username}`);
 
+      setLoading(true);
       // Step 1: Check if user has access
       const checkAccess = await get_checkDriveAccess(data?.username);
       if (!checkAccess.accessGranted) {
@@ -94,11 +97,12 @@ function DashboardForm({data}) {
         get_requestDriveAccess();
         return;
       }
-
+      
       // Step 2: Open Google Drive file
       console.log("Access granted, opening file");
       const response = await post_open_file(data?.username);
-
+      
+      setLoading(false);
       if (response.success) {
         window.open(response.url, "_blank");
       } else {
@@ -414,6 +418,7 @@ console.log(categories)
 
   return (
       <Box className="col eshop">
+        {loading && <Box className="loading"><CircularProgress/></Box>}
         {formNames.map((formName) => (
           <Box className="form_col" key={formName}>
             <Box component="img" src={ribbon} alt="ribbon" className="ribbon" />
