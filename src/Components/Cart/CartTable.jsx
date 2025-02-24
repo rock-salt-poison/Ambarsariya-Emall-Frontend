@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { removeProduct } from "../../store/cartSlice";
 import { useParams } from "react-router-dom";
 import Button2 from "../Home/Button2";
-import { getCategoryName } from "../../API/fetchExpressAPI";
+import { convertDriveLink, getCategoryName } from "../../API/fetchExpressAPI";
 import CustomSnackbar from "../CustomSnackbar";
 
 const columns = [
@@ -249,7 +249,7 @@ export default function CartTable({ rows }) {
                     <TableCell className="product_cell">
                       <Box
                         component="img"
-                        src={row.product_images[0]}
+                        src={convertDriveLink(row.product_images[0])}
                         alt="product_image"
                         className="product_image"
                       />
