@@ -4,7 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import Button2 from "../../Components/Home/Button2";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
-import { get_product, getShopUserData } from "../../API/fetchExpressAPI";
+import { convertDriveLink, get_product, getShopUserData } from "../../API/fetchExpressAPI";
 import UserBadge from "../../UserBadge";
 
 function ProductDetails() {
@@ -36,7 +36,10 @@ function ProductDetails() {
     fetchData();
   }, [token, product_id]);
 
-  const RenderComponent = ({ title, bgColor }) => {
+  console.log(data);
+  
+
+  const RenderComponent = ({ title, bgColor, linkTo, target }) => {
     return (
       <Box className="points">
         <Box className="point">
@@ -44,7 +47,7 @@ function ProductDetails() {
           <Box className="line"></Box>
           <Box className="small_circle" sx={{ background: bgColor }}></Box>
         </Box>
-        <Link>
+        <Link target={target} to={linkTo}>
           <Typography variant="h2" sx={{ background: bgColor }}>
             {title}
           </Typography>
@@ -105,7 +108,7 @@ function ProductDetails() {
               >
                 {data?.product_images.map((img, index) => (
                   <SwiperSlide key={index} className="card">
-                    <Box component="img" src={img} />
+                    <Box component="img" src={convertDriveLink(img)} />
                   </SwiperSlide>
                 ))}
               </Swiper>
@@ -116,10 +119,14 @@ function ProductDetails() {
                 <RenderComponent
                   bgColor="linear-gradient(to right, #1B98BA, #0BC8AF)"
                   title="Brand Catalogue"
+                  target="_blank"
+                  linkTo={data?.brand_catalog}
                 />
                 <RenderComponent
                   bgColor="linear-gradient(to right, #6E0080, #E1008B)"
                   title="Product Catalogue"
+                  target="_blank"
+                  linkTo={data?.product_catalog}
                 />
                 <RenderComponent
                   bgColor="linear-gradient(to right, #E72D75, #FCBE0B)"

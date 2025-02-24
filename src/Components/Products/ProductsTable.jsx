@@ -15,7 +15,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addProduct, removeProduct } from "../../store/cartSlice";
 import axios from "axios";
-import { get_products, getShopUserData } from "../../API/fetchExpressAPI";
+import { convertDriveLink, get_products, getShopUserData } from "../../API/fetchExpressAPI";
 
 const columns = [
   { id: "product", label_1: "Product", label_2: "Brand" },
@@ -192,7 +192,7 @@ export default function CustomPaginationTable({rows}) {
       return (
         <Box
           component="img"
-          src={row.product_images[0]}
+          src={convertDriveLink(row.product_images[0])}
           alt="product_image"
           className="product_image"
           onClick={(e) => handleClick(e, row.product_id)}

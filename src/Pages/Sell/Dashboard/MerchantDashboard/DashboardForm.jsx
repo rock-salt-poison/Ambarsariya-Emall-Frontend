@@ -368,12 +368,14 @@ console.log(categories)
                 variation_3: product["Variation 3"],
                 variation_4: product["Variation 4"],
                 selling_price: product["Selling Price"],
-                product_catalog: product["product_catalog"],
+                product_catalog: product["Product Catalog"],
+                brand_catalog: product["Brand Catalog"],
               };
             });
             
             const data = { products: processedData };  
             try{
+              setLoading(true);
               const resp = await post_products(data);
               
               setSnackbar({
@@ -388,6 +390,8 @@ console.log(categories)
                 message: e.response.data.error,
                 severity: "error",
               });
+            }finally{
+              setLoading(false);
             }
           },
           error: (err) => {

@@ -3,6 +3,7 @@ import axios from 'axios';
 const link = `${process.env.REACT_APP_EXPRESS_API_LINK}/api/ambarsariya`;
 const admin_link = `${process.env.REACT_APP_EXPRESS_API_LINK}/admin/api`;
 const drive_link = `${process.env.REACT_APP_EXPRESS_API_LINK}/api/drive`;
+const photo_link = `${process.env.REACT_APP_EXPRESS_API_LINK}/api/google-photo`;
 
 export const fetchDomains = async () => {
     const response = await axios.get(`${link}/domains`);
@@ -355,3 +356,30 @@ export const get_checkDriveAccess = async (email) => {
 export const get_requestDriveAccess = () => {
   window.location.href = `${drive_link}/request-drive-access`;
 };
+
+
+// export const post_convertGooglePhotos = async (data) => {
+//   try{
+//     console.log(data);
+    
+//     if(data){
+//       const response = await axios.post(`${photo_link}/convert-google-photos`, data);
+//       return response.data;
+//     }
+//   }catch(e){
+//     throw e;
+//   }
+// }
+
+export const convertDriveLink = (link) => {
+  if (link.includes("drive.google.com")) {
+    const match = link.match(/\/d\/([^\/?]+)/); // Extract File ID
+    if (match) {
+      const fileId = match[1];
+      return `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media&key=${process.env.REACT_APP_GOOGLE_MAPS_API}`;
+    }
+  }
+  return link; // Return original link if it's not a Drive link
+};
+
+
