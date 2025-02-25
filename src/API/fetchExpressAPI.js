@@ -376,7 +376,7 @@ export const convertDriveLink = (link) => {
     const match = link.match(/\/d\/([^\/?]+)/); // Extract File ID
     if (match) {
       const fileId = match[1];
-      return `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media&key=${process.env.REACT_APP_GOOGLE_MAPS_API}`;
+      return `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media&key=${process.env.REACT_APP_GOOGLE_API}`;
     }
   }
   return link; // Return original link if it's not a Drive link

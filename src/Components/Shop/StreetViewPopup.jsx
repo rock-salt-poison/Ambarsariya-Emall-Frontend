@@ -13,7 +13,7 @@ import CloseIcon from '@mui/icons-material/Close';
 function StreetViewPopup({ open, onClose, message, optionalCname, lat = 31.6356659, lng = 74.8787496 }) {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
-  const API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API;
+  const API_KEY = process.env.REACT_APP_GOOGLE_API;
   
   const [streetViewImg, setStreetViewImg] = useState("");
 
