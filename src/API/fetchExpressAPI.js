@@ -376,10 +376,36 @@ export const convertDriveLink = (link) => {
     const match = link.match(/\/d\/([^\/?]+)/); // Extract File ID
     if (match) {
       const fileId = match[1];
-      return `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media&key=${process.env.REACT_APP_GOOGLE_API}`;
+      
+      return `${drive_link}/image/${fileId}`; // Return backend-served link
     }
   }
-  return link; // Return original link if it's not a Drive link
+  return link; // Return original link if not a Google Drive link
+};
+
+
+export const get_sheetsData = async (link) => {
+  try {
+    if (link.includes("docs.google.com/spreadsheets")) {
+      const match = link.match(/\/d\/([^\/?]+)/); // Extract File ID
+      if (match) {
+        const sheetId = match[1];
+        if (sheetId) {
+          try{
+            const response = await axios.get(`${drive_link}/sheet/${sheetId}`);
+            return response.data;
+          }catch(e){  
+            throw e;
+          }
+        }
+      }
+    }
+    console.warn("⚠️ Invalid Google Sheets link:", link);
+    return link; // Return original link if it's not a valid Google Sheet link
+  } catch (error) {
+    console.error("❌ Error fetching sheet data:", error.message);
+    return null;
+  }
 };
 
 

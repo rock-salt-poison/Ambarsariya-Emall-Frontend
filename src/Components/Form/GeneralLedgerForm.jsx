@@ -5,7 +5,7 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
 import { DateRangePicker } from 'rsuite';
 
-function GeneralLedgerForm({ cName, description, handleSubmit, formfields, formData, onChange, errors, handleIncrement, handleDecrement, handleAddMore, submitBtnVisibility = true, submitButtonText, radioItems, handleDownload }) {
+function GeneralLedgerForm({ cName, description, handleSubmit, formfields, formData, onChange, errors, handleIncrement, handleDecrement, handleAddMore, submitBtnVisibility = true, submitButtonText, radioItems, handleDownload, noValidate = true }) {
 
     const { afterToday } = DateRangePicker;
     const handleNumeric = (e, behavior) => {
@@ -19,7 +19,7 @@ function GeneralLedgerForm({ cName, description, handleSubmit, formfields, formD
     return (
         <Box className={`container ${cName ? cName : ''}`}>
             {description && <Typography className='description'>{description}</Typography>}
-            <Box component="form" noValidate autoComplete="off" onSubmit={handleSubmit} >
+            <Box component="form" noValidate={noValidate} autoComplete="off" onSubmit={handleSubmit} >
                 {formfields.map((field) => {
                     const name = field.name;
                     const placeholder = field.placeholder ? field.placeholder : field.label;
