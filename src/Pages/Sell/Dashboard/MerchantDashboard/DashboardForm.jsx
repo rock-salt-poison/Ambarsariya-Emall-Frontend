@@ -125,8 +125,10 @@ console.log(categories)
         label: "Product Category (s)",
         name: "product_category",
         type: "select-check",
-        placeholder: "Select Category(s)",
+        placeholder: "Category(s)",
         options: categories.map((cat) => cat.name),
+        defaultCheckedOptions: true,
+        readOnly:true
       },
       {
         id: 2,
@@ -415,7 +417,7 @@ console.log(categories)
 
 
       const file = formData[formName].csv_file;
-      console.log(file);
+      
       try {
         const response = await get_sheetsData(file);
         if (response.success) {

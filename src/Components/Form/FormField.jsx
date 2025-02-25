@@ -29,7 +29,8 @@ const FormField = ({
   handleBlur, 
   adornmentValue, accept,rows,radioItems,
   additionalProps,
-  handleDownload, required
+  handleDownload, required,
+  defaultChecked
 }) => {
 
   const marks = getSliderMarks ? getSliderMarks(name) : [];
@@ -188,7 +189,7 @@ const FormField = ({
                   </MenuItem>
                   {options.map((option) => (
                     <MenuItem key={option} value={option} className='members_list'>
-                          <Checkbox checked={value.includes(option)} />
+                          <Checkbox checked={value.includes(option) || defaultChecked} />
                           <ListItemText primary={option} className='members_name' />
                         
                     </MenuItem>

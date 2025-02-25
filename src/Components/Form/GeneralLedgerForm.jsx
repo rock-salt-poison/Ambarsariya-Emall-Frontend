@@ -50,6 +50,7 @@ function GeneralLedgerForm({ cName, description, handleSubmit, formfields, formD
                                         radioItems={field.radioItems}
                                         accept={field.accept}
                                         handleDownload={handleDownload}
+                                        defaultChecked={field.defaultCheckedOptions}
                                     />
                                     {field.addMoreButton && <Button onClick={handleAddMore} className='add_more_button'>Add more</Button>}
                                 </React.Fragment>
