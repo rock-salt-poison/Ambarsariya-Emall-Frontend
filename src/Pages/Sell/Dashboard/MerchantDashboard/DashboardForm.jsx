@@ -128,7 +128,7 @@ console.log(categories)
         placeholder: "Category(s)",
         options: categories.map((cat) => cat.name),
         defaultCheckedOptions: true,
-        readOnly:true
+        readOnly:false
       },
       {
         id: 2,
@@ -422,25 +422,35 @@ console.log(categories)
         const response = await get_sheetsData(file);
         if (response.success) {
             const result = response.sheets;
+            console.log(result);
     
             let headers = []; // Declare headers outside
     
             const filteredData = result.map(sheet => {
+                console.log(sheet);
+    
                 headers = sheet.data[0]; // Extract headers (first row)
     
                 return sheet.data.slice(1).filter(row => {
                     const productNameIndex = headers.indexOf("Product Name");
-                    return row[productNameIndex] && row[productNameIndex].trim() !== "";
+                    const productTypeIndex = headers.indexOf("Product Type");
+                    const productDescriptionIndex = headers.indexOf("Product Description");
+    
+                    // Ensure none of the required fields are empty
+                    return row[productNameIndex]?.trim() !== "" &&
+                           row[productTypeIndex]?.trim() !== "" &&
+                           row[productDescriptionIndex]?.trim() !== "";
                 });
             }).flat();
     
             console.log(filteredData);
     
-            const processedData = filteredData.map(row => {
+            const processedData = filteredData.map((row, index) => {
+                const sheet = result[index]; // Get the current sheet from the result
                 const product = {};
     
                 headers.forEach((header, index) => {
-                    product[header] = row[index] || "";
+                    product[header] = row[index]?.trim() || ""; // Handle empty strings
                 });
     
                 const productImages = [
@@ -452,7 +462,7 @@ console.log(categories)
     
                 return {
                     shop_no: shopNo, // Ensure shopNo is defined elsewhere
-                    category: categories.find(cat => cat.name === product["Category"])?.id || null,
+                    category: categories.find(cat => cat.name === sheet.sheetName)?.id || null, // Now sheet is defined
                     product_name: product["Product Name"] || "",
                     product_type: product["Product Type"] || "",
                     product_description: product["Product Description"] || "",
@@ -488,20 +498,20 @@ console.log(categories)
                     brand_catalog: product["Brand Catalog"] || ""
                 };
             });
-            
-            const uniqueCategories = [...new Set(processedData.map(product => product.category))]
+    
+            const uniqueCategories = [...new Set(processedData.map(product => product.category))];
             const data = { products: processedData, categories: uniqueCategories };
+    
             try{
               setLoading(true);
               const resp = await post_products(data);
-              
               setSnackbar({
                 open: true,
                 message: resp.message,
                 severity: "success",
               });
             }catch(e){
-              console.log(e)
+              console.log(e);
               setSnackbar({
                 open: true,
                 message: e.response.data.error,
@@ -510,9 +520,9 @@ console.log(categories)
             }finally{
               setLoading(false);
             }
-
         }
-    } catch (e) {
+    } 
+    catch (e) {
         console.log(e);
     }
     

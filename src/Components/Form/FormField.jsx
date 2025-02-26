@@ -189,7 +189,7 @@ const FormField = ({
                   </MenuItem>
                   {options.map((option) => (
                     <MenuItem key={option} value={option} className='members_list'>
-                          <Checkbox checked={value.includes(option) || defaultChecked} />
+                          <Checkbox checked={value.includes(option)} />
                           <ListItemText primary={option} className='members_name' />
                         
                     </MenuItem>
