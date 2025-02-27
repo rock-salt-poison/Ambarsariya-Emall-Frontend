@@ -459,8 +459,13 @@ console.log(categories)
             console.log(filteredData);
     
             const processedData = filteredData.map((row, index) => {
-                const sheet = result[index]; // Get the current sheet from the result
-                const product = {};
+              const sheet = result.find(sheet => sheet.data.includes(row)); 
+
+              if (!sheet) {
+                  console.warn("Sheet not found for row:", row);
+                  return null; // Skip this row if no sheet is found
+              }
+               const product = {};
                 console.log(sheet);
                 
                 headers.forEach((header, index) => {
@@ -476,7 +481,7 @@ console.log(categories)
     
                 return {
                     shop_no: shopNo, // Ensure shopNo is defined elsewhere
-                    category: categories.find(cat => cat.name === sheet?.sheetName)?.id || null, // Now sheet is defined
+                    category: categories.find(cat => cat.name === sheet.sheetName)?.id || null, // Now sheet is defined
                     product_name: product["Product Name"] || "",
                     product_type: product["Product Type"] || "",
                     product_description: product["Product Description"] || "",
