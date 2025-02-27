@@ -3,7 +3,7 @@ import { Box, Button, CircularProgress } from "@mui/material";
 import GeneralLedgerForm from "../../../../Components/Form/GeneralLedgerForm";
 import ribbon from "../../../../Utils/images/Sell/dashboard/merchant_dashboard/ribbon.svg";
 import { useSelector } from "react-redux";
-import { get_checkDriveAccess, get_requestDriveAccess, get_sheetsData, getCategories, getShopUserData, getUser, post_open_file, post_products } from "../../../../API/fetchExpressAPI";
+import { get_checkDriveAccess, get_product_names, get_requestDriveAccess, get_sheetsData, getCategories, getShopUserData, getUser, post_open_file, post_products } from "../../../../API/fetchExpressAPI";
 import { useParams } from "react-router-dom";
 import product_csv from '../../../../Sheets/Ambarsariya Mall - Product CSV.csv'
 import item_csv from '../../../../Sheets/Ambarsariya Mall - Item CSV.csv'
@@ -47,6 +47,7 @@ function DashboardForm({data}) {
   const [formData, setFormData] = useState(initialData);
   const [errors, setErrors] = useState({});
   const [categories, setCategories] = useState([]);
+  const [productsData, setProductsData] = useState([]);
   const user_access_token = useSelector((state) => state.auth.userAccessToken);
   const [csvData, setCsvData] = useState([]);
   const [shopNo, setShopNo] = useState('');
@@ -61,16 +62,31 @@ function DashboardForm({data}) {
     try{
       const shopUsersData = (await getShopUserData(token))[0];
       if(shopUsersData){
+        
         setShopNo(shopUsersData.shop_no);
         const categoriesList = shopUsersData.category_name.map((category, index) => ({
           name: category,
           id: shopUsersData.category[index] // Assuming categories and ids are aligned in the same order
         }));
   
-        setCategories(categoriesList);      
+        setCategories(categoriesList);  
+        fetchProducts(shopUsersData.shop_no);    
       }
     }catch(e){
       console.log("Error while fetching : ", e);
+    }
+  }
+
+  const fetchProducts = async (shop_no) => {
+    try{
+      const resp = await get_product_names(shop_no);
+      if(resp.valid){
+        console.log(resp.data);
+        
+        setProductsData(resp.data);
+      }
+    }catch(e){
+      console.log("Error fetching products : ",e);
     }
   }
 
@@ -165,26 +181,25 @@ console.log(categories)
         name: "products",
         type: "select-check",
         placeholder: "Select Product(s)",
-        options: ["Electronics", "Clothing", "Home Goods"],
+        options: productsData.map((product)=>product.product_name),
       },
       {
         id: 2,
         label: "Upload Item CSV",
         name: "csv_file",
-        type: "file",
-        placeholder: "Choose file",
-        accept: ".csv",
+        type: "url",
+        placeholder: "Link",
       },
       {
         id: 3,
-        label: "Show price",
+        label: "Stock out - cost",
         name: "price",
         type: "text",
         behvaior:'numeric',
       },
       {
         id: 4,
-        label: "Upload Images/Videos",
+        label: "Select the stock",
         name: "images_or_videos",
         type: "file",
         placeholder: "Choose file",
@@ -210,9 +225,8 @@ console.log(categories)
         id: 2,
         label: "Upload SKU Id CSV",
         name: "csv_file",
-        type: "file",
-        placeholder: "Choose file",
-        accept: ".csv",
+        type: "url",
+        placeholder: "Link",
       },
       {
         id: 3,
@@ -248,9 +262,8 @@ console.log(categories)
         id: 2,
         label: "Upload RKU Id CSV",
         name: "csv_file",
-        type: "file",
-        placeholder: "Choose file",
-        accept: ".csv",
+        type: "url",
+        placeholder: "Link",
       },
       {
         id: 3,
@@ -448,7 +461,8 @@ console.log(categories)
             const processedData = filteredData.map((row, index) => {
                 const sheet = result[index]; // Get the current sheet from the result
                 const product = {};
-    
+                console.log(sheet);
+                
                 headers.forEach((header, index) => {
                     product[header] = row[index]?.trim() || ""; // Handle empty strings
                 });
@@ -462,7 +476,7 @@ console.log(categories)
     
                 return {
                     shop_no: shopNo, // Ensure shopNo is defined elsewhere
-                    category: categories.find(cat => cat.name === sheet.sheetName)?.id || null, // Now sheet is defined
+                    category: categories.find(cat => cat.name === sheet?.sheetName)?.id || null, // Now sheet is defined
                     product_name: product["Product Name"] || "",
                     product_type: product["Product Type"] || "",
                     product_description: product["Product Description"] || "",

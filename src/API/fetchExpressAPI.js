@@ -285,6 +285,17 @@ export const get_product = async (shop_no, product_id) => {
   }
 }
 
+export const get_product_names = async (shop_no) => {
+  try{
+    if(shop_no){
+      const response = await axios.get(`${link}/sell/product-names/${shop_no}`);
+      return response.data;
+    }
+  }catch(e){
+    throw e;
+  }
+}
+
 
 export const send_otp_to_email = async (data) => {
   try{
