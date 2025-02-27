@@ -535,7 +535,7 @@ console.log(categories)
               console.log(e);
               setSnackbar({
                 open: true,
-                message: e.response.data.error,
+                message: `Error : ${e.response.data.message.detail}`,
                 severity: "error",
               });
             }finally{
@@ -545,6 +545,7 @@ console.log(categories)
     } 
     catch (e) {
         console.log(e);
+        
     }
     
 
