@@ -11,15 +11,13 @@ const discountsSlice = createSlice({
   reducers: {
     addCoupon: (state, action) => {
         state.selectedCoupon = action.payload;
-      }
-    },
-    removeCoupon: (state) => {
-      if (state.selectedCoupon) {
+      },
+      removeCoupon: (state) => {
         state.selectedCoupon = null; // Remove the coupon
-      }
-    },
-    resetCoupons: (state) => {
-      state.selectedCoupon = null; // Reset the selected coupon
+      },
+      resetCoupons: (state) => {
+        state.selectedCoupon = null; // Reset the selected coupon
+      },
     },
 });
 

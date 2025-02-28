@@ -419,4 +419,13 @@ export const get_sheetsData = async (link) => {
   }
 };
 
-
+export const post_purchaseOrder = async (data) => {
+  try{
+    if(data){
+      const response = await axios.post(`${link}/purchase_order`, {data});
+      return response.data;
+    }
+  }catch(e){
+    throw e;
+  }
+}

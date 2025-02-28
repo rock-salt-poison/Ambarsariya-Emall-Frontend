@@ -22,6 +22,7 @@ import { useParams } from "react-router-dom";
 import Button2 from "../Home/Button2";
 import { convertDriveLink, getCategoryName } from "../../API/fetchExpressAPI";
 import CustomSnackbar from "../CustomSnackbar";
+import { removeCoupon } from "../../store/discountsSlice";
 
 const columns = [
   { id: "1", label_1: "S.No." },
@@ -32,7 +33,7 @@ const columns = [
   { id: "6", label_1: "Total Price" },
 ];
 
-export default function CartTable({ rows }) {
+function CartTable({ rows,setCartData, setSelectedCoupon }) {
   const dispatch = useDispatch();
   const { owner } = useParams();
   const [loading, setLoading] = useState(false);
@@ -47,6 +48,7 @@ export default function CartTable({ rows }) {
   const [categoryNames, setCategoryNames] = useState({}); // Map of category IDs to names
   const { selectedCoupon } = useSelector((state) => state.discounts);
 
+  
   // Fetch category names for all products
   useEffect(() => {
     const fetchCategories = async () => {
@@ -75,36 +77,45 @@ export default function CartTable({ rows }) {
       const total = calculateTotal();
       const totalQuantity = data.reduce((sum, item) => sum + item.quantity, 0);
   
-      const minOrder = Number(
-        selectedCoupon.conditions.find(
-          (c) => c.type === "minimum_order" || c.type === "last_purchase_above"
-        )?.value || 0
-      );
-      const percent = Number(
-        selectedCoupon.conditions.find(
-          (c) =>
-            c.type === "percentage" ||
-            c.type === "flat" ||
-            c.type === "unlock" ||
-            c.type === "save" ||
-            c.type === "percent_off" ||
-            c.type === "flat_percent"
-        )?.value || 0
-      );
-      const buy = Number(selectedCoupon.conditions.find((c) => c.type === "buy")?.value || 0);
-      const get = Number(selectedCoupon.conditions.find((c) => c.type === "get")?.value || 0);
+      const conditions = selectedCoupon.conditions || [];
+      const minOrder = Number(conditions.find((c) => ["minimum_order", "last_purchase_above"].includes(c.type))?.value || 0);
+      const percent = Number(conditions.find((c) => ["percentage", "percent_off", "flat_percent"].includes(c.type))?.value || 0);
+      const flatDiscount = Number(conditions.find((c) => ["flat", "unlock"].includes(c.type))?.value || 0);
+      const buy = Number(conditions.find((c) => c.type === "buy")?.value || 0);
+      const pay = Number(conditions.find((c) => c.type === "pay")?.value || 0);
+      const get = Number(conditions.find((c) => c.type === "get")?.value || 0);
   
-      if (selectedCoupon.coupon_type === "retailer_freebies") {
+      let shouldRemoveCoupon = false;
+  
+      if (selectedCoupon.coupon_type.includes("subscription") || selectedCoupon.coupon_type.includes('loyalty_by_customer')) {
+        shouldRemoveCoupon = true;
+      } else if (selectedCoupon.coupon_type === "retailer_freebies") {
         if (totalQuantity < buy) {
           setSnackbar({
             open: true,
             message: `Add ${buy - totalQuantity} more items to use Buy ${buy} Get ${get} coupon.`,
             severity: "error",
           });
+          shouldRemoveCoupon = true;
         } else {
           setSnackbar({
             open: true,
             message: `You qualify for the offer: Buy ${buy}, Get ${get}.`,
+            severity: "success",
+          });
+        }
+      } else if (selectedCoupon.coupon_type === "loyalty_prepaid") {
+        if (total < pay) {
+          setSnackbar({
+            open: true,
+            message: `Add ₹${(pay - total).toFixed(2)} more to use this coupon.`,
+            severity: "error",
+          });
+          shouldRemoveCoupon = true;
+        } else {
+          setSnackbar({
+            open: true,
+            message: `You saved ₹${(total - get).toFixed(2)}!`,
             severity: "success",
           });
         }
@@ -114,12 +125,18 @@ export default function CartTable({ rows }) {
           message: `Add ₹${(minOrder - total).toFixed(2)} more to use this coupon.`,
           severity: "error",
         });
-      } else {
+        shouldRemoveCoupon = true;
+      } else if(!selectedCoupon.coupon_type.includes('loyalty_by_customer')){
+        const discountValue = percent > 0 ? (total * percent) / 100 : flatDiscount;
         setSnackbar({
           open: true,
-          message: `You saved ₹${((total * percent) / 100).toFixed(2)}!`,
+          message: `You saved ₹${discountValue.toFixed(2)}!`,
           severity: "success",
         });
+      }
+  
+      if (shouldRemoveCoupon) {
+        dispatch(removeCoupon());
       }
     } else {
       setSnackbar({ open: false, message: "", severity: "success" }); // Reset snackbar when no coupon is selected
@@ -127,35 +144,48 @@ export default function CartTable({ rows }) {
   }, [selectedCoupon, data]); // Dependencies: re-run whenever selectedCoupon or cart data changes  
   
 
+  useEffect(()=>{
+    setCartData({
+      subtotal: calculateTotal().toFixed(2),
+      total: (calculateTotal() - calculateDiscount()).toFixed(2),
+      discount: calculateDiscount().toFixed(2),
+      cart : data
+    });
+  },[data])
+
+  useEffect(()=>{
+    setSelectedCoupon(selectedCoupon);
+  },[selectedCoupon])
+  
   const handleIncrement = (index) => {
     const newData = data.map((item, i) =>
       i === index ? { ...item, quantity: item.quantity + 1 } : item
     );
     setData(newData);
   };
-
+  
   const handleDecrement = (index) => {
     const newData = data
-      .map((item, i) =>
-        i === index
-          ? item.quantity > 1
-            ? { ...item, quantity: item.quantity - 1 }
-            : null
-          : item
-      )
-      .filter((item) => item !== null);
+    .map((item, i) =>
+      i === index
+    ? item.quantity > 1
+    ? { ...item, quantity: item.quantity - 1 }
+    : null
+    : item
+  )
+  .filter((item) => item !== null);
+  
+  if (data[index].quantity === 1) {
+    dispatch(removeProduct(data[index].id));
+  }
+  
+  setData(newData);
+};
 
-    if (data[index].quantity === 1) {
-      dispatch(removeProduct(data[index].id));
-    }
+const calculateTotal = () =>
+  data.reduce((acc, item) => acc + Number(item.price * item.quantity), 0);
 
-    setData(newData);
-  };
-
-  const calculateTotal = () =>
-    data.reduce((acc, item) => acc + Number(item.price * item.quantity), 0);
-
-  const calculateDiscount = () => {
+const calculateDiscount = () => {
     if (!selectedCoupon) return 0;
   
     const { coupon_type, conditions } = selectedCoupon;
@@ -193,18 +223,21 @@ export default function CartTable({ rows }) {
       case "loyalty_prepaid":
         const get = Number(conditions.find((c) => c.type === "get")?.value || 0);
         return total >= pay ? get : 0;
+
+      case "loyalty_bonus":
+      return ((total * percent) / 100);
   
-      case "subscription_daily":
-        return ((total * percent) / 100);
+      // case "subscription_daily":
+      //   return ((total * percent) / 100);
 
-      case "subscription_weekly":
-        return ((total * percent) / 100);
+      // case "subscription_weekly":
+      //   return ((total * percent) / 100);
 
-      case "subscription_monthly":
-        return ((total * percent) / 100);
+      // case "subscription_monthly":
+      //   return ((total * percent) / 100);
 
-      case "subscription_edit":
-        return ((total * percent) / 100);
+      // case "subscription_edit":
+      //   return ((total * percent) / 100);
       
       default:
         return 0;
@@ -317,7 +350,7 @@ export default function CartTable({ rows }) {
                     <Typography className="label">0 items added</Typography>
                     <Button2
                       text="Add Products"
-                      redirectTo={`../${owner}/products`}
+                      redirectTo={`../shop/${owner}/products`}
                     />
                   </TableCell>
                 </TableRow>
@@ -335,7 +368,7 @@ export default function CartTable({ rows }) {
               </TableRow>
               <TableRow>
                 <TableCell colSpan={5} align="right">
-                  <Typography className="text_1">Discount :</Typography>
+                  <Typography className="text_1">Discount {selectedCoupon && `(${(selectedCoupon.coupon_type)?.replace(/_/g,' ')})`} :</Typography>
                 </TableCell>
                 <TableCell className="text_2">
                   -&#8377;{calculateDiscount().toFixed(2)}
@@ -368,3 +401,5 @@ export default function CartTable({ rows }) {
     </Box>
   );
 }
+
+export default CartTable

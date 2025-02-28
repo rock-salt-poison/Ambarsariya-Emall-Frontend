@@ -87,10 +87,10 @@ function DashboardComponents({data}) {
                                 </TableCell>
                                 <TableCell>Cost Price</TableCell>
                                 <TableCell>Selling Price</TableCell>
-                                <TableCell>Price
-                                    <Typography component="span">(After coupons)</Typography>
+                                <TableCell>P.O Quantity
+                                    {/* <Typography component="span">(After coupons)</Typography> */}
                                 </TableCell>
-                                <TableCell>Offer Price</TableCell>
+                                <TableCell>Total Price</TableCell>
                                 <TableCell>List of services applied</TableCell>
                                 <TableCell>Final S.O.</TableCell>
                                 <TableCell>Payment status</TableCell>

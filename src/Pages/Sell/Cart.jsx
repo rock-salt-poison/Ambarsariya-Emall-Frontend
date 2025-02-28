@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Box, Typography } from "@mui/material";
+import React, { useEffect, useRef, useState } from "react";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import po_stamp from "../../Utils/images/Sell/cart/po_stamp.svg";
 import qr_code from "../../Utils/images/Sell/cart/qr_code.svg";
 import CartTable from "../../Components/Cart/CartTable";
@@ -18,8 +18,9 @@ import ServiceType from "../../Components/Cart/ServiceType/ServiceType";
 import Delivery from "../../Components/Cart/ServiceType/Delivery";
 import Visit from "../../Components/Cart/ServiceType/Visit";
 import CoHelper from "../../Components/Cart/CoHelper/CoHelper";
-import { getShopUserData } from "../../API/fetchExpressAPI";
+import { getMemberData, getShopUserData, getUser, post_purchaseOrder } from "../../API/fetchExpressAPI";
 import UserBadge from "../../UserBadge";
+import CustomSnackbar from "../../Components/CustomSnackbar";
 
 function Cart() {
   const sampleRows = useSelector((state) => state.cart.selectedProducts);
@@ -27,6 +28,19 @@ function Cart() {
   const navigate = useNavigate();
   const [shopData, setShopData] = useState();
   const { owner } = useParams();
+  const prevServiceRef = useRef(null);
+  const [cartData, setCartData] = useState([]); // Stores cart table data
+  const [selectedCoupon, setSelectedCoupon] = useState(null); // Stores selected coupon
+  const [submittedData, setSubmittedData] = useState(null);
+  const token = useSelector((state) => state.auth.userAccessToken);
+  const [buyerData, setBuyerData] = useState(null);
+  const [sellerData, setSellerData] = useState(null);
+  const [loading, setLoading] = useState(false);
+   const [snackbar, setSnackbar] = useState({
+      open: false,
+      message: "",
+      severity: "success",
+    });
 
   const handleClose = () => {
     setOpenPopup(false);
@@ -58,7 +72,7 @@ function Cart() {
     {
       id: 1,
       title: "Special Offers",
-      popupContent: <SpecialOffer />,
+      popupContent: <SpecialOffer setSubmittedData={setSubmittedData} />,
       cName: "special_offer_popup",
       openPopup: true,
     },
@@ -88,21 +102,21 @@ function Cart() {
 
   const service_type = [
     {
-      id: 1,
+      id: 3,
       imgSrc: pickup,
       service: "pickup",
       popupContent: <ServiceType />,
       cName: "service_type_popup",
     },
     {
-      id: 2,
+      id: 1,
       imgSrc: delivery,
       service: "delivery",
       popupContent: <Delivery />,
       cName: "service_type_popup delivery",
     },
     {
-      id: 3,
+      id: 2,
       imgSrc: home_visit,
       service: "home visit",
       popupContent: <Visit />,
@@ -110,26 +124,131 @@ function Cart() {
     },
   ];
 
-  const [selectedServices, setSelectedServices] = useState(new Set());
+  const [selectedServices, setSelectedServices] = useState();
   const [openServicePopup, setOpenServicePopup] = useState(null);
 
   const handleServiceTypeClick = (e, item) => {
     const target = e.target.closest(".service");
-    setSelectedServices((prevSelectedServices) => {
-      const newSelectedServices = new Set(prevSelectedServices);
-      if (newSelectedServices.has(item.id)) {
-        newSelectedServices.delete(item.id);
-      } else {
-        newSelectedServices.add(item.id);
+  
+    setSelectedServices((prev) => {
+      if (prev) {
+        // If there was a previous selection, remove the class
+        if (prevServiceRef.current) {
+          prevServiceRef.current.classList.remove("increase_scale");
+        }
       }
-      return newSelectedServices;
+      return item.id;
     });
-    setOpenServicePopup(item.id); // Open the popup for the clicked service
-    target.classList.toggle("increase_scale");
+  
+    // Add class to new selection
+    target.classList.add("increase_scale");
+  
+    // Store the new selected element in ref
+    prevServiceRef.current = target;
+  
+    setOpenServicePopup(item.id);
   };
+  
+
+  const handle_QR_Code_Click = async (e) => {
+    e.preventDefault();
+    try{
+      setLoading(true);
+      if(owner){
+        const resp = await getShopUserData(owner);
+        if(resp){
+          setSellerData(resp[0]);
+          console.log(resp[0]);
+          
+        }
+      }
+      if(token){
+        const get_logged_in_user = await getUser(token);
+        if(get_logged_in_user.length>0){
+          if(get_logged_in_user[0].user_type==='member'){
+            const memberData = await getMemberData(get_logged_in_user[0].user_access_token);
+            if(memberData.length>0){
+              setBuyerData(memberData[0]);
+              console.log(memberData[0]);
+              
+            }
+          }
+          else if(get_logged_in_user[0].user_type==='shop'){
+            const shopkeeperData = await getShopUserData(get_logged_in_user[0].shop_access_token);
+            if(shopkeeperData.length>0){
+              setBuyerData(shopkeeperData[0]);
+              console.log(shopkeeperData[0]);
+            }
+          }
+        }
+      }else{
+        navigate('../login');
+      }
+  
+      if(sellerData && buyerData && cartData){
+  
+        const products = cartData.cart.map((cart)=>{
+          return {
+            no:cart.product_id,
+            description: cart.product_description,
+            quantity:cart.quantity,
+            unit_price:cart.price,
+            total_price:parseInt(cart.price)*cart.quantity
+          }
+        })
+  
+        const special_offers = submittedData;
+        const discount_applied = selectedCoupon;
+        const data = {
+          buyer_id: buyerData.user_id,
+          buyer_type: buyerData.user_type,
+          seller_id: sellerData.shop_no,
+          buyer_gst_number: buyerData.gst || null,
+          seller_gst_number: sellerData.gst || null,
+          products,
+          subtotal:cartData.subtotal || 0,
+          shipping_address: buyerData.address,
+          shipping_method: selectedServices,
+          payment_method:'COD',
+          special_offers,
+          discount_applied,
+          taxes:null,
+          co_helper:null,
+          discount_amount:cartData.discount || 0,
+          pre_post_paid:null,
+          extra_charges:null,
+          total_amount:cartData.total || 0,
+          date_of_issue:new Date(),
+          delivery_terms : null,
+          additional_instructions:null,
+        }
+        try{ 
+          if(data){
+            const resp = await post_purchaseOrder(data);
+            console.log(resp);
+            setSnackbar({
+              open: true,
+              message: resp.message,
+              severity: "success",
+            });
+          }
+  
+        }catch(e){
+          console.log(e);
+        }
+      }
+    }catch(e){
+      console.error(e);
+    }
+    finally{
+      setLoading(false);
+    }
+    
+  }
 
   return (
     <Box className="cart_wrapper">
+      {loading && <Box className="loading"><CircularProgress/></Box> }
       <Box className="row">
         <Box className="col">
           <UserBadge
@@ -158,7 +277,8 @@ function Cart() {
             </Typography>
           </Typography>
 
-          <Link to={`../${owner}/order`}>
+          {/* <Link to={`../${owner}/order`}> */}
+          <Link onClick={(e)=>handle_QR_Code_Click(e)}>
             <Box
               component="img"
               src={qr_code}
@@ -169,7 +289,7 @@ function Cart() {
         </Box>
         <Box className="col">
           <Box className="sub_col"></Box>
-          <CartTable rows={sampleRows} />
+          <CartTable rows={sampleRows} setCartData={setCartData} setSelectedCoupon={setSelectedCoupon}/>
           <Box className="sub_col"></Box>
         </Box>
         <Box className="col">
@@ -236,6 +356,12 @@ function Cart() {
           </Box>
         </Box>
       </Box>
+      <CustomSnackbar
+        open={snackbar.open}
+        handleClose={() => setSnackbar({ ...snackbar, open: false })}
+        message={snackbar.message}
+        severity={snackbar.severity}
+      />
     </Box>
   );
 }

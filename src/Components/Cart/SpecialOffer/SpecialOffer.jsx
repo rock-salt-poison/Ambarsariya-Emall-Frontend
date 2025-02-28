@@ -6,7 +6,7 @@ import Subscribe_popupContent from './Subscribe_popupContent';
 import ScrollableTabsButton from '../../ScrollableTabsButton';
 import { useParams } from 'react-router-dom';
 
-function SpecialOffer() {
+function SpecialOffer({setSubmittedData}) {
 
     const themeProps = {
       scrollbarThumb: 'var(--brown)',
@@ -19,7 +19,7 @@ function SpecialOffer() {
     const { owner } = useParams();
 
     const tabsData = [
-      { id: 1, name: 'Subscribe', content: <Subscribe_popupContent/> },
+      { id: 1, name: 'Subscribe', content: <Subscribe_popupContent setSubmittedData ={setSubmittedData}/> },
       { id: 2, name: 'MOU', redirectTo:`../${owner}/mou` },
     ]
 

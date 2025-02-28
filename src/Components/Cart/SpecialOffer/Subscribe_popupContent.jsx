@@ -1,117 +1,105 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, ThemeProvider, Typography } from '@mui/material';
 import radio_icon from '../../../Utils/images/Sell/cart/special_offers/radio_circle.webp';
 import radio_button from '../../../Utils/images/Sell/cart/special_offers/radio_button.webp';
 import GeneralLedgerForm from '../../Form/GeneralLedgerForm';
 import createCustomTheme from '../../../styles/CustomSelectDropdownTheme';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
-function Subscribe_popupContent() {
+function Subscribe_popupContent({ setSubmittedData }) {
   const themeProps = {
     scrollbarThumb: 'var(--brown)',
     popoverBackgroundColor: 'var(--yellow)',
   };
 
   const theme = createCustomTheme(themeProps);
+  const products = useSelector((state) => state.cart.selectedProducts);
 
-  const initialData = {
-    item: '',
-    cost_per_unit: '',
-    no_of_items: '',
-  };
+  const initialData = { product: '', cost_per_unit: '', no_of_items: '' };
 
-  // State to manage data for each option
-  const [dailyData, setDailyData] = useState(initialData);
-  const [weeklyData, setWeeklyData] = useState(initialData);
-  const [monthlyData, setMonthlyData] = useState(initialData);
-  const [editData, setEditData] = useState(initialData);
+  const [formData, setFormData] = useState({
+    Daily: { ...initialData },
+    Weekly: { ...initialData },
+    Monthly: { ...initialData },
+    Edit: { ...initialData },
+  });
 
-  // State to track selected option (only one can be selected at a time)
-  const [selectedOption, setSelectedOption] = useState('Daily'); // Track selected option
+  const [selectedOption, setSelectedOption] = useState('Daily');
 
   const formFields = [
     {
       id: 1,
-      placeholder: 'Select Item',
-      name: 'item',
+      placeholder: 'Select Product',
+      name: 'product',
       type: 'select',
-      options: ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5', 'Item 6', 'Item 7'],
+      options: products.map((p) => p.product_name),
+      required: true,
     },
     {
       id: 2,
       placeholder: 'Cost per unit',
       name: 'cost_per_unit',
       type: 'text',
+      readOnly: true,
       behavior: 'number',
+      required: true,
     },
     {
       id: 3,
       placeholder: 'Min no. of units',
       name: 'no_of_items',
       type: 'number',
+      required: true,
     },
   ];
 
+  const isFormValid = (data) => Object.values(data).every((value) => value !== '');
+
   const handleChange = (event, option) => {
     const { name, value } = event.target;
-    switch (option) {
-      case 'Daily':
-        setDailyData({ ...dailyData, [name]: value });
-        break;
-      case 'Weekly':
-        setWeeklyData({ ...weeklyData, [name]: value });
-        break;
-      case 'Monthly':
-        setMonthlyData({ ...monthlyData, [name]: value });
-        break;
-      case 'Edit':
-        setEditData({ ...editData, [name]: value });
-        break;
-      default:
-        break;
-    }
-  };
+    let updatedData = { ...formData[option], [name]: value };
 
-  const handleClick = (option) => {
-    // Set the selected option to the clicked one, deselect others
-    setSelectedOption(option);
-  };
-
-  const handleSubmit = (event, option) => {
-    event.preventDefault(); // Prevent default form submission
-    let dataToSubmit;
-
-    // Determine which data to submit based on selected option
-    switch (option) {
-      case 'Daily':
-        dataToSubmit = dailyData;
-        break;
-      case 'Weekly':
-        dataToSubmit = weeklyData;
-        break;
-      case 'Monthly':
-        dataToSubmit = monthlyData;
-        break;
-      case 'Edit':
-        dataToSubmit = editData;
-        break;
-      default:
-        break;
+    if (name === 'product') {
+      const selectedProduct = products.find((p) => p.product_name === value);
+      updatedData.cost_per_unit = selectedProduct ? selectedProduct.price : '';
+      updatedData.subscription_type = option;
+      updatedData.product_id = selectedProduct.product_id ;
     }
 
-    console.log(dataToSubmit); // Output the data to console
-    // Proceed with further submission logic, e.g., API call
+    setFormData((prev) => ({ ...prev, [option]: updatedData }));
+  };
+
+  const handleClick = (event, option) => {
+    event.preventDefault();    
+
+    if (isFormValid(formData[selectedOption])) {
+      handleSubmit(formData[selectedOption]);
+      setSelectedOption(option);
+
+      if(option !== selectedOption){
+        setFormData((prev) => ({
+          ...prev,
+          [selectedOption]: { ...initialData },
+        }));
+      }
+     
+    } 
+  };
+
+  const handleSubmit = (dataToSubmit) => {
+    setSubmittedData(dataToSubmit);
+    console.log('Submitted Data:', dataToSubmit);
   };
 
   return (
     <ThemeProvider theme={theme}>
       <Box className="subscribe">
-        {/* Render each option as a separate box */}
         {['Daily', 'Weekly', 'Monthly', 'Edit'].map((option) => (
           <Link
             key={option}
-            className={`option ${selectedOption === option ? 'mask_none selected' : ''}`} // Apply mask_none and selected class only for the selected option
-            onClick={() => handleClick(option)} // Set selected option on click
+            className={`option ${selectedOption === option ? 'mask_none selected' : ''}`}
+            onClick={(event) => handleClick(event, option)}
           >
             <Box className="header">
               <Typography className="heading">{option}</Typography>
@@ -121,11 +109,11 @@ function Subscribe_popupContent() {
             <Box className="body">
               <GeneralLedgerForm
                 formfields={formFields}
-                handleSubmit={(e) => handleSubmit(e, option)} // Pass the selected option to handleSubmit
-                formData={option === 'Daily' ? dailyData : option === 'Weekly' ? weeklyData : option === 'Monthly' ? monthlyData : editData} // Pass appropriate formData
-                onChange={(e) => handleChange(e, option)} // Handle changes for the correct option
-                errors={{}} // You can add validation logic if needed
-                submitBtnVisibility={false} // Hide the submit button if needed
+                formData={formData[option]}
+                onChange={(e) => handleChange(e, option)}
+                errors={{}}
+                submitBtnVisibility={false}
+                noValidate={false}
               />
             </Box>
           </Link>

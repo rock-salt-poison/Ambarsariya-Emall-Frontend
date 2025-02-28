@@ -202,7 +202,7 @@ export default function CustomPaginationTable({rows}) {
 
     const primaryText =
       column.id === "variations"
-        ? renderVariations(row)
+        ? row.variant_group
         : column.id === "product"
         ? row.product_name
         : column.id === "price"
@@ -210,7 +210,7 @@ export default function CustomPaginationTable({rows}) {
         : "";
     const secondaryText =
       column.id === "variations"
-        ? row.product_type
+        ? row.variation_1
         : column.id === "product"
         ? row.brand
         : "";
@@ -228,7 +228,6 @@ export default function CustomPaginationTable({rows}) {
       </>
     );
   };
-console.log(rows);
 
   // Render variations for the given product
   const renderVariations = (row) => {

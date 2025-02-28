@@ -93,17 +93,17 @@ function ProductDetails() {
               <Swiper
                 slidesPerView={1}
                 spaceBetween={30}
-                loop={true}
-                autoplay={{
-                  delay: 400,
-                  disableOnInteraction: false,
-                }}
-                speed={2000}
+                // loop={true}
+                // autoplay={{
+                //   delay: 400,
+                //   disableOnInteraction: false,
+                // }}
+                // speed={2000}
                 pagination={{
                   clickable: true,
                 }}
                 navigation={true}
-                modules={[Autoplay, Navigation]}
+                modules={[Navigation]}
                 className="mySwiper"
               >
                 {data?.product_images.map((img, index) => (
@@ -143,18 +143,15 @@ function ProductDetails() {
                 <Typography variant="h3">
                   <Typography variant="span">
                     {[
-                      data?.brand,
                       data?.product_name,
-                      data?.variation_1,
-                      data?.variation_2,
-                      data?.variation_3,
-                      data?.variation_4,
+                      data?.brand,
+                      data?.product_type,
                     ]
                       .filter((item) => item) // Filter out falsy values (e.g., undefined, null, empty strings)
                       .join(", ")}{" "}
                     {/* Join the remaining values with a comma and space */}
                   </Typography>
-                  <Typography variant="span">&#8377; {data?.price}</Typography>
+                  <Typography variant="span price">&#8377; {data?.price}</Typography>
                 </Typography>
               </Box>
             </Box>

@@ -482,12 +482,12 @@ console.log(categories)
                 return {
                     shop_no: shopNo, // Ensure shopNo is defined elsewhere
                     category: categories.find(cat => cat.name === sheet.sheetName)?.id || null, // Now sheet is defined
-                    product_name: product["Product Name"] || "",
+                    product_name: product["Product Name"] || null,
                     product_type: product["Product Type"] || "",
                     product_description: product["Product Description"] || "",
                     price: product["Price"] || "0",
                     brand: product["Brand"] || "",
-                    iku: product["IKU (ITEM Keeping Unit)"] || "",
+                    iku: product["IKU (ITEM Keeping Unit)"] || null,
                     product_images: productImages.length > 0 ? productImages : [],
                     product_dimensions_width_in_cm: product["Product Dimension Width (in cm)"] || "0",
                     product_dimensions_height_in_cm: product["Product Dimension Height (in cm)"] || "0",
@@ -502,9 +502,9 @@ console.log(categories)
                     features: product["Attributes/Features"] || "",
                     keywords: product["Keywords/Tags Metadata"] || "",
                     warranty_or_guarantee: product["Warranty/Guarantee"] || "",
-                    expiry_date: product["Information/Expiry Date"] || "",
+                    expiry_date: product["Information/Expiry Date"] || null,
                     manufacturer_details: product["Manufacturer Details"] || "",
-                    manufacturing_date: product["Manufacturing Date"] || "",
+                    manufacturing_date: product["Manufacturing Date"] || null,
                     compliance_and_certifications: product["Compliance and Certifications"] || "",
                     return_policy: product["Return Policy"] || "",
                     customer_reviews_and_ratings: product["Customer Reviews and Ratings"] || "",
