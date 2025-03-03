@@ -152,107 +152,110 @@ function Cart() {
 
   const handle_QR_Code_Click = async (e) => {
     e.preventDefault();
-    try{
-      setLoading(true);
-      if(owner){
+    setLoading(true);
+  
+    try {
+      let sellerDataFetched = null;
+      let buyerDataFetched = null;
+  
+      if (owner) {
         const resp = await getShopUserData(owner);
-        if(resp){
-          setSellerData(resp[0]);
-          console.log(resp[0]);
-          
+        if (resp?.length > 0) {
+          sellerDataFetched = resp[0]; // Use local variable instead of setState immediately
+          setSellerData(resp[0]); // Still update state for UI purposes
         }
       }
-      if(token){
-        const get_logged_in_user = await getUser(token);
-        if(get_logged_in_user.length>0){
-          if(get_logged_in_user[0].user_type==='member'){
-            const memberData = await getMemberData(get_logged_in_user[0].user_access_token);
-            if(memberData.length>0){
-              setBuyerData(memberData[0]);
-              console.log(memberData[0]);
-              
-            }
-          }
-          else if(get_logged_in_user[0].user_type==='shop'){
-            const shopkeeperData = await getShopUserData(get_logged_in_user[0].shop_access_token);
-            if(shopkeeperData.length>0){
-              setBuyerData(shopkeeperData[0]);
-              console.log(shopkeeperData[0]);
-            }
-          }
-        }
-      }else{
+  
+      if (!token) {
         navigate('../login');
+        return;
       }
   
-      if(sellerData && buyerData && cartData){
-  
-        const products = cartData.cart.map((cart)=>{
-          return {
-            no:cart.product_id,
-            description: cart.product_description,
-            quantity:cart.quantity,
-            unit_price:cart.price,
-            total_price:parseInt(cart.price)*cart.quantity
+      const get_logged_in_user = await getUser(token);
+      if (get_logged_in_user.length > 0) {
+        const user = get_logged_in_user[0];
+        if (user.user_type === 'member') {
+          const memberData = await getMemberData(user.user_access_token);
+          if (memberData.length > 0) {
+            buyerDataFetched = memberData[0];
+            setBuyerData(memberData[0]);
           }
-        })
-  
-        const special_offers = submittedData;
-        const discount_applied = selectedCoupon;
-        const data = {
-          buyer_id: buyerData.user_id,
-          buyer_type: buyerData.user_type,
-          seller_id: sellerData.shop_no,
-          buyer_gst_number: buyerData.gst || null,
-          seller_gst_number: sellerData.gst || null,
-          products,
-          subtotal:cartData.subtotal || 0,
-          shipping_address: buyerData.address,
-          shipping_method: selectedServices,
-          payment_method:'COD',
-          special_offers,
-          discount_applied,
-          taxes:null,
-          co_helper:null,
-          discount_amount:cartData.discount || 0,
-          pre_post_paid:null,
-          extra_charges:null,
-          total_amount:cartData.total || 0,
-          date_of_issue:new Date(),
-          delivery_terms : null,
-          additional_instructions:null,
+        } else if (user.user_type === 'shop') {
+          const shopkeeperData = await getShopUserData(user.shop_access_token);
+          if (shopkeeperData.length > 0) {
+            buyerDataFetched = shopkeeperData[0];
+            setBuyerData(shopkeeperData[0]);
+          }
         }
-        try{ 
-          if(data){
-            const resp = await post_purchaseOrder(data);
-            console.log(resp);
-            setSnackbar({
-              open: true,
-              message: resp.message,
-              severity: "success",
-            });
-            setTimeout(()=>{
-              navigate(`../${resp.po_access_token}/order`)
-            }, 2500)
-          }
+      }
   
-        }catch(e){
-          console.log(e);
+      // Ensure all necessary data is available
+      if (!sellerDataFetched || !buyerDataFetched || !cartData) {
+        console.error("Missing data:", { sellerDataFetched, buyerDataFetched, cartData });
+        return;
+      }
+  
+      const products = cartData.cart.map((cart) => ({
+        no: cart.product_id,
+        description: cart.product_description,
+        quantity: cart.quantity,
+        unit_price: cart.price,
+        total_price: parseInt(cart.price) * cart.quantity
+      }));
+  
+      const data = {
+        buyer_id: buyerDataFetched.user_id,
+        buyer_type: buyerDataFetched.user_type,
+        seller_id: sellerDataFetched.shop_no,
+        buyer_gst_number: buyerDataFetched.gst || null,
+        seller_gst_number: sellerDataFetched.gst || null,
+        products,
+        subtotal: cartData.subtotal || 0,
+        shipping_address: buyerDataFetched.address,
+        shipping_method: selectedServices,
+        payment_method: 'COD',
+        special_offers: submittedData,
+        discount_applied: selectedCoupon,
+        taxes: null,
+        co_helper: null,
+        discount_amount: cartData.discount || 0,
+        pre_post_paid: null,
+        extra_charges: null,
+        total_amount: cartData.total || 0,
+        date_of_issue: new Date(),
+        delivery_terms: null,
+        additional_instructions: null,
+      };
+  
+      try {
+        if (data) {
+          const resp = await post_purchaseOrder(data);
+          console.log(resp);
           setSnackbar({
             open: true,
-            message: e.response.data.error,
-            severity: "error",
+            message: resp.message,
+            severity: "success",
           });
+  
+          setTimeout(() => {
+            navigate(`../${resp.po_access_token}/order`);
+          }, 2500);
         }
+      } catch (error) {
+        console.error(error);
+        setSnackbar({
+          open: true,
+          message: error.response?.data?.error || "Error processing order",
+          severity: "error",
+        });
       }
-    }catch(e){
-      console.error(e);
-    }
-    finally{
+    } catch (error) {
+      console.error("Unexpected error:", error);
+    } finally {
       setLoading(false);
     }
-    
-  }
+  };
+  
 
   return (
     <Box className="cart_wrapper">

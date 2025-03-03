@@ -71,10 +71,8 @@ function Subscribe_popupContent({ setSubmittedData }) {
   };
 
   const handleClick = (event, option) => {
-    event.preventDefault();    
-
-    if (isFormValid(formData[selectedOption])) {
-      handleSubmit(formData[selectedOption]);
+    event.preventDefault();
+    handleSubmit(formData[selectedOption]);
       setSelectedOption(option);
 
       if(option !== selectedOption){
@@ -82,9 +80,9 @@ function Subscribe_popupContent({ setSubmittedData }) {
           ...prev,
           [selectedOption]: { ...initialData },
         }));
-      }
-     
-    } 
+      }    
+
+    
   };
 
   const handleSubmit = (dataToSubmit) => {

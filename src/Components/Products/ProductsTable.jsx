@@ -15,7 +15,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addProduct, removeProduct } from "../../store/cartSlice";
 import axios from "axios";
-import { convertDriveLink, get_products, getShopUserData } from "../../API/fetchExpressAPI";
+import { convertDriveLink, get_products, getShopUserData, getUser } from "../../API/fetchExpressAPI";
 
 const columns = [
   { id: "product", label_1: "Product", label_2: "Brand" },
@@ -40,6 +40,8 @@ export default function CustomPaginationTable({rows}) {
   const { token } = useParams();
   const [shopNo, setShopNo] = useState("");
   const [loading, setLoading] = useState(false);
+  const loggedInUserToken = useSelector((state) => state.auth.userAccessToken);
+  const [canBuy, setCanBuy] = useState(true);
 
   useEffect(() => {
     const fetchShopUserData = async () => {
@@ -79,6 +81,24 @@ export default function CustomPaginationTable({rows}) {
 
     fetchShopUserData();
   }, [token]);
+
+  useEffect(()=>{
+    const validUser = async () => {
+      if(loggedInUserToken && token){
+        try{
+          const fetch_details = await getUser(loggedInUserToken);
+          if(fetch_details[0].shop_access_token){
+            if(fetch_details[0].shop_access_token === token){
+              setCanBuy(false);
+            }
+          }
+        }catch(e){
+          console.log(e);
+        }
+      }
+    }
+    validUser();
+  }, [loggedInUserToken])
 
   const activeData = filteredData.length > 0 ? filteredData : data;
 
@@ -339,11 +359,11 @@ export default function CustomPaginationTable({rows}) {
           onClick={handleNextPage}
           disabled={page >= totalPages - 1}
         />
-        <Button2
+        {canBuy && <Button2
           text="Buy"
           optionalcName={selectedProducts.length <= 0 ? "disabled_button" : ""}
           redirectTo={`../shop/${token}/cart`}
-        />
+        />}
       </Box>
     </Box>
   );
