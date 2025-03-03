@@ -1,7 +1,13 @@
-import React from 'react'
-import { Box, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react'
+import { Box, CircularProgress, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
+import { useParams } from 'react-router-dom';
+import { get_products } from '../../../../API/fetchExpressAPI';
 
 function DashboardComponents({data}) {
+
+    const [loading, setLoading] = useState(false);
+    const [products, setProducts] = useState([]);
+    const { token } = useParams();
 
     const card_data = [
         { id: 1, heading: 'Today\'s Sale Orders', value: '1249' },
@@ -14,6 +20,8 @@ function DashboardComponents({data}) {
         { id: 8, heading: 'S.O. Number', value: '1249' },
     ];
 
+    console.log(token);
+    
     function createData(id, products, qty, cost_price, selling_price, price_after_coupons, offer_price, services_applied, final_so, payment_status, final_status) {
         return { id, products, qty, cost_price, selling_price, price_after_coupons, offer_price, services_applied, final_so, payment_status, final_status };
     }
@@ -60,9 +68,34 @@ function DashboardComponents({data}) {
         ),
     ];
 
+    const fetch_products = async (shop_no) => {
+        try{
+            setLoading(false);
+            if(shop_no){
+                const resp = await get_products(shop_no);
+                if(resp.valid){
+                    setProducts(resp.data);
+                }
+            }
+
+        }catch(e){
+            console.log(e);
+            
+        }finally{
+            setLoading(false);
+        }
+    }
+    
+    useEffect(()=> {
+        if(data){
+            fetch_products(data.shop_no);
+        }
+    }, [data])
+
   return (
     <>
         <Box className="col">
+            {loading && <Box className="loading"><CircularProgress/></Box>}
                     <Box className="container">
                         {card_data.map((card) => {
                             return <Box className="card" key={card.id}>
@@ -81,7 +114,9 @@ function DashboardComponents({data}) {
                     <Table>
                         <TableHead>
                             <TableRow>
-                                <TableCell>Products</TableCell>
+                                <TableCell>S.No.</TableCell>
+                                <TableCell>Product Name</TableCell>
+                                <TableCell>Quantity</TableCell>
                                 <TableCell>Quantity
                                     <Typography component="span">(in stock)</Typography>
                                 </TableCell>
@@ -90,31 +125,31 @@ function DashboardComponents({data}) {
                                 <TableCell>P.O Quantity
                                     {/* <Typography component="span">(After coupons)</Typography> */}
                                 </TableCell>
-                                <TableCell>Total Price</TableCell>
+                                {/* <TableCell>Total Price</TableCell>
                                 <TableCell>List of services applied</TableCell>
                                 <TableCell>Final S.O.</TableCell>
                                 <TableCell>Payment status</TableCell>
-                                <TableCell>Final status</TableCell>
+                                <TableCell>Final status</TableCell> */}
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {rows.map((row) => (
+                            {products.map((row, index) => (
                                 <TableRow
-                                    key={row.id}
+                                    key={row.product_id}
                                     hover
                                 >
-                                    <TableCell>
-                                        {row.products}
-                                    </TableCell>
-                                    <TableCell>{row.qty}</TableCell>
-                                    <TableCell>₹ {row.cost_price}</TableCell>
-                                    <TableCell>₹ {row.selling_price}</TableCell>
-                                    <TableCell>₹ {row.price_after_coupons}</TableCell>
-                                    <TableCell>₹ {row.offer_price}</TableCell>
+                                    <TableCell>{index+1}</TableCell>
+                                    <TableCell>{row.product_name}</TableCell>
+                                    <TableCell>{row.inventory_or_stock_quantity}</TableCell>
+                                    <TableCell>{parseInt(row.inventory_or_stock_quantity) - parseInt(row.purchased_quantity)}</TableCell>
+                                    <TableCell>₹ {row.price}</TableCell>
+                                    <TableCell>₹ {(row.selling_price).split('$')?.[1]}</TableCell>
+                                    <TableCell>{row.purchased_quantity}</TableCell>
+                                    {/* <TableCell>₹ {row.offer_price}</TableCell>
                                     <TableCell>{row.services_applied}</TableCell>
                                     <TableCell>{row.final_so}</TableCell>
                                     <TableCell>{row.payment_status}</TableCell>
-                                    <TableCell>{row.final_status}</TableCell>
+                                    <TableCell>{row.final_status}</TableCell> */}
                                 </TableRow>
                             ))}
                         </TableBody>

@@ -25,6 +25,9 @@ const columns = [
 ];
 
 export default function CustomPaginationTable({rows}) {
+
+  console.log('rows : ', rows);
+  
   const [page, setPage] = useState(0);
   const [selectAll, setSelectAll] = useState(false);
   const [data, setData] = useState([]);
@@ -206,7 +209,7 @@ export default function CustomPaginationTable({rows}) {
         : column.id === "product"
         ? row.product_name
         : column.id === "price"
-        ? `₹ ${row.price}`
+        ? `₹ ${row.price} ${row.unit !== null ? row.unit : ''}`
         : "";
     const secondaryText =
       column.id === "variations"

@@ -231,10 +231,18 @@ function Cart() {
               message: resp.message,
               severity: "success",
             });
+            setTimeout(()=>{
+              navigate(`../${resp.po_access_token}/order`)
+            }, 2500)
           }
   
         }catch(e){
           console.log(e);
+          setSnackbar({
+            open: true,
+            message: e.response.data.error,
+            severity: "error",
+          });
         }
       }
     }catch(e){

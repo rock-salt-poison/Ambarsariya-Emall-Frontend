@@ -20,6 +20,17 @@ export const fetchDomainSectors = async (domain_id) => {
     return response.data;
 };
 
+export const fetchService = async (id) => {
+  try{
+    if(id){
+      const  response = await axios.get(`${link}/service/${id}`);
+      return response.data;
+    }
+  }catch(e){
+    throw e;
+  }
+}
+
 export const postEshop = async (eshopData) => {
     try {
         const response = await axios.post(`${link}/sell/eshop`, eshopData);
@@ -429,3 +440,14 @@ export const post_purchaseOrder = async (data) => {
     throw e;
   }
 }
+
+export const get_purchaseOrderDetails = async (po_access_token) => {
+  try{
+    if(po_access_token){
+      const resp = await axios.get(`${link}/purchase_order/${po_access_token}`);
+      return resp.data;
+    }
+  }catch(e){
+    throw e;
+  }
+} 

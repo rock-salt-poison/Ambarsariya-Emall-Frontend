@@ -20,7 +20,8 @@ const EshopForm = () => {
     date_of_establishment: "",
     usp_values: "",
     product_samples: "",
-    similar_options: [],
+    // similar_options: [],
+    upi_id: "",
     cost_sensitivity: 0,
     daily_walkin: 0,
     parking_availability: 0,
@@ -53,7 +54,7 @@ const EshopForm = () => {
     try {
       setLoading(true);
       const resp = await otherShops(token);
-      const shopUsersData = (await getShopUserData(token))[0];
+      const shopUsersData = (await getShopUserData(token))?.[0];
       if (resp) {
         setSimilarOptions(resp);
         setKeyPlayers(resp);
@@ -84,11 +85,11 @@ const EshopForm = () => {
           )
           .map((key_players) => key_players[0].business_name);
 
-        const selected_similar_options = shopUsersData.similar_options
-          ?.map((shop_no) =>
-            resp.filter((othershops) => othershops.shop_no === shop_no)
-          )
-          .map((options) => options[0].business_name);
+        // const selected_similar_options = shopUsersData.similar_options
+        //   ?.map((shop_no) =>
+        //     resp.filter((othershops) => othershops.shop_no === shop_no)
+        //   )
+        //   .map((options) => options[0].business_name);
 
         // const selected_key_players = selected_key_players_array.map((key_players)=>(key_players[0].business_name))
 
@@ -102,7 +103,8 @@ const EshopForm = () => {
           date_of_establishment: establishment_date_only || "",
           usp_values: shopUsersData.usp_values_url || "",
           product_samples: shopUsersData.product_sample_url || "",
-          similar_options: selected_similar_options || [],
+          // similar_options: selected_similar_options || [],
+          upi_id: shopUsersData.upi_id || "",
           cost_sensitivity: shopUsersData.cost_sensitivity || 0,
           daily_walkin: shopUsersData.daily_walkin || 0,
           parking_availability: shopUsersData.parking_availability || 0,
@@ -225,14 +227,14 @@ const EshopForm = () => {
         return category ? category.id : null;
       });
 
-      const selectedSimilarOptions = formData.similar_options
-        ? formData.similar_options.map((options) => {
-            const similarOption = similarOptions.find(
-              (option) => option.business_name === options
-            );
-            return similarOption.shop_no;
-          })
-        : [];
+      // const selectedSimilarOptions = formData.similar_options
+      //   ? formData.similar_options.map((options) => {
+      //       const similarOption = similarOptions.find(
+      //         (option) => option.business_name === options
+      //       );
+      //       return similarOption.shop_no;
+      //     })
+      //   : [];
 
       const selectedKeyPlayers = formData.key_players
         ? formData.key_players.map((options) => {
@@ -250,7 +252,7 @@ const EshopForm = () => {
         date_of_establishment: formData.date_of_establishment,
         usp_values: formData.usp_values, // Placeholder link, make sure to replace with actual URL if needed
         product_samples: formData.product_samples,
-        similar_options: selectedSimilarOptions,
+        upi_id: formData.upi_id,
         cost_sensitivity: formData.cost_sensitivity,
         daily_walkin: formData.daily_walkin,
         parking_availability: formData.parking_availability,
@@ -437,12 +439,17 @@ const EshopForm = () => {
           "Add gmeet link"
         )}
         <Box className="form-group2">
-          {renderFormField(
+          {/* {renderFormField(
             "Similar Options :",
             "similar_options",
             "select-check",
             similarOptions.map((option) => option.business_name),
             "Select"
+          )} */}
+          {renderFormField(
+            "UPI Id :",
+            "upi_id",
+            "text",
           )}
           {renderFormField(
             "Key players :",

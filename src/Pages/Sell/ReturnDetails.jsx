@@ -1,8 +1,9 @@
-import { Box, FormControlLabel, Typography } from "@mui/material";
-import React, { useState } from "react";
+import { Box, CircularProgress, FormControlLabel, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import Checkbox from "@mui/joy/Checkbox";
 import Close from "@mui/icons-material/Close";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { get_purchaseOrderDetails } from "../../API/fetchExpressAPI";
 
 // Reusable DetailRow component
 const DetailRow = ({ title, checked, onChange, name, disabled }) => (
@@ -42,7 +43,8 @@ function ReturnDetails() {
   };
 
   const { owner } = useParams();
-  const order_id = "00046597";
+  const [orderDetails, setOrderDetails] = useState(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleClick = (e) => {
@@ -56,14 +58,38 @@ function ReturnDetails() {
     }
   }
 
+
+  const fetchOrderDetails = async (access_token) => {
+      try {
+        setLoading(true);
+        if (access_token) {
+          const resp = await get_purchaseOrderDetails(access_token);
+          if (resp.valid) {
+            if (resp.data[0]) {
+              setOrderDetails(resp.data[0]);
+            }
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }finally{
+        setLoading(false);
+      }
+    };
  
+    useEffect(()=> {
+      if(owner){
+        fetchOrderDetails(owner);
+      }
+    }, [owner]);
 
   return (
     <Box className="details">
+      {loading && <Box className="loading"><CircularProgress/></Box>}
       <Typography variant="h3" className="order_id">
         Order Id:{" "}
         <Typography variant="span">
-          <Link to={`../${owner}/cart`}>{order_id}</Link>
+          <Link to={`../${owner}/cart`}>{orderDetails?.po_no}</Link>
         </Typography>
       </Typography>
       <DetailRow

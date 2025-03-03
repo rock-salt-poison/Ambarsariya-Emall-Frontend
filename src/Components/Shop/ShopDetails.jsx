@@ -27,7 +27,7 @@ function ShopDetails({ column }) {
         <Typography>Sector: </Typography>
         <Typography>{column.sector_name}</Typography>
       </Box>
-      {column.similar_options_name && (
+      {/* {column.similar_options_name && (
         <Box className="shop_details">
           <Typography>Similar Options: </Typography>
 
@@ -46,7 +46,7 @@ function ShopDetails({ column }) {
             ))}
           </Box>
         </Box>
-      )}
+      )} */}
 
       <Box className="shop_details">
         <Typography>Shop Type: </Typography>

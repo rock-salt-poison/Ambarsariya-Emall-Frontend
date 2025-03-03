@@ -151,7 +151,7 @@ function ProductDetails() {
                       .join(", ")}{" "}
                     {/* Join the remaining values with a comma and space */}
                   </Typography>
-                  <Typography variant="span price">&#8377; {data?.price}</Typography>
+                  <Typography variant="span price">&#8377; {data?.price} {data?.unit} </Typography>
                 </Typography>
               </Box>
             </Box>
