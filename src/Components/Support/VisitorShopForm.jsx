@@ -199,13 +199,13 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
   // Handle file change
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
-    if (selectedFile && (selectedFile.type === 'application/pdf' || selectedFile.type === 'image/gif')) {
+    if (selectedFile) {
       setFormData((prevData) => ({
         ...prevData,
         [event.target.name]: selectedFile,
-      })); // Update state with selected file
+      }));
     } else {
-      alert('Please upload a PDF or GIF file.');
+      alert('Please upload a file.');
     }
   };
 
@@ -344,7 +344,7 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
           )
         )}
       </Box>
-      <Tooltip title="Select pdf or gif file" className="tooltip" placement="bottom-end">
+      <Tooltip title="Select file" className="tooltip" placement="bottom-end">
                       <Box>
                         <FormField
                           type="file"
