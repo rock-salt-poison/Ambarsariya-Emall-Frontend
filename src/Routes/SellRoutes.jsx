@@ -29,6 +29,10 @@ import Life from '../Pages/Sell/Life';
 import MemberRelations from '../Pages/Sell/MemberRelations';
 import MerchantDashboard from '../Pages/Sell/Dashboard/MerchantDashboard/MerchantDashboard';
 import Preview from '../Pages/Sell/Dashboard/MerchantDashboard/Preview';
+import ProductInfo from '../Pages/Sell/ProductInfo';
+import ProductInfo2 from '../Pages/Sell/ProductInfo2';
+import ProductCatalog from '../Pages/Sell/ProductCatalog';
+import BrandCatalog from '../Pages/Sell/BrandCatalog';
 
 function SellRoutes() {
   const ConditionalRoute = () => {
@@ -62,6 +66,10 @@ function SellRoutes() {
       <Route path="support/shop/:token/dashboard/:edit/preview" element={<Preview />} />
       <Route path="shop/:token/products" element={<Products />} />
       <Route path="shop/:token/products/:product_id" element={<ProductDetails />} />
+      <Route path="shop/:token/products/detail/:product_id" element={<ProductInfo />} />
+      <Route path="shop/:token/products/specification/:product_id" element={<ProductInfo2 />} />
+      <Route path="shop/:token/products/product-catalog/:product_id" element={<ProductCatalog />} />
+      <Route path="shop/:token/products/brand-catalog/:product_id" element={<BrandCatalog />} />
       <Route path="shop/:owner/cart" element={<Cart />} />
       <Route path=":owner/subscribe" element={<Subscribe />} />
       <Route path=":owner/mou" element={<Mou />} />

@@ -34,6 +34,7 @@
     "react-dom": "^18.3.1",
     "react-draggable": "^4.4.6",
     "react-fast-marquee": "^1.6.4",
+    "react-iframe": "^1.8.5",
     "react-leaflet": "^4.2.1",
     "react-material-ui-carousel": "^3.4.2",
     "react-player": "^2.16.0",

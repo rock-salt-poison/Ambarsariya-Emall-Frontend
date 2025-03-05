@@ -117,16 +117,19 @@ function ProductDetails() {
                             </Box> */}
               <Box className="product_details">
                 <RenderComponent
+                    bgColor="linear-gradient(to right, #E72D75, #FCBE0B)"
+                    title="Product Specifications"
+                    linkTo={`../shop/${token}/products/specification/${product_id}`}
+                  />
+                <RenderComponent
                   bgColor="linear-gradient(to right, #1B98BA, #0BC8AF)"
                   title="Brand Catalogue"
-                  target="_blank"
-                  linkTo={data?.brand_catalog}
+                  linkTo={`../shop/${token}/products/brand-catalog/${product_id}`}
                 />
                 <RenderComponent
                   bgColor="linear-gradient(to right, #6E0080, #E1008B)"
                   title="Product Catalogue"
-                  target="_blank"
-                  linkTo={data?.product_catalog}
+                  linkTo={`../shop/${token}/products/product-catalog/${product_id}`}
                 />
                 <RenderComponent
                   bgColor="linear-gradient(to right, #E72D75, #FCBE0B)"
@@ -135,6 +138,7 @@ function ProductDetails() {
                 <RenderComponent
                   bgColor="linear-gradient(to right, #074589, #2C96C4)"
                   title="Variations"
+                  linkTo={`../shop/${token}/products/detail/${product_id}`}
                 />
               </Box>
             </Box>
