@@ -307,6 +307,17 @@ export const get_product_names = async (shop_no) => {
   }
 }
 
+export const get_product_variants = async (shop_no, variant_group) => {
+  try{
+    if(shop_no){
+      const response = await axios.get(`${link}/sell/product-variants/${shop_no}/${variant_group}`);
+      return response.data;
+    }
+  }catch(e){
+    throw e;
+  }
+}
+
 
 export const send_otp_to_email = async (data) => {
   try{
