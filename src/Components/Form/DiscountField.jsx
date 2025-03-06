@@ -3,6 +3,7 @@ import { Box, Checkbox, FormControlLabel, TextField, Typography } from '@mui/mat
 
 const DiscountField = ({
   name1,name2,
+  type,
   label,
   handleOnChange,
   handleCheckboxChange,
@@ -34,7 +35,7 @@ const DiscountField = ({
                   hiddenLabel
                   variant="outlined"
                   name={name1}
-                  type="text"
+                  type={type ? type : "number"}
                   onChange={handleOnChange}
                   required
                   className="input_field"
@@ -51,7 +52,7 @@ const DiscountField = ({
                       hiddenLabel
                       variant="outlined"
                       name={name2}
-                      type="text"
+                      type={type? type : "number"}
                       onChange={handleOnChange}
                       required
                       className="input_field"

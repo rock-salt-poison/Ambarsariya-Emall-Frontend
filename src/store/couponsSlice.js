@@ -5,6 +5,7 @@ const initialState = {
     loyalty: null,       // Store a single coupon instead of an array
     subscription: null,  // Store a single coupon instead of an array
     customizable: null,  // Store a single coupon instead of an array
+    rsTenPerDay: null,  // Store a single coupon instead of an array
 };
 
 const couponSlice = createSlice({

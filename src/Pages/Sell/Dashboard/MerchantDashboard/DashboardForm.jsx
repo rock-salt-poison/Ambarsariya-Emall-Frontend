@@ -148,17 +148,26 @@ console.log(categories)
       },
       {
         id: 2,
-        label: "Upload Product File",
+        label: "Create / Update",
+        btn_text: "Click here to open file",
+        name: "product_csv",
+        type: 'Download file',
+        handleDownload: handleDownload
+      },
+      {
+        id: 3,
+        label: "Upload sheet",
         name: "csv_file",
         type: "url",
         placeholder: "Link",
       },
       {
-        id: 3,
+        id: 4,
         label: "End of Trend / Exp Date",
         name: "trend_or_exp_date",
         type: "date",
       },
+
       // {
       //   id: 4,
       //   label: "Upload Catalogue",
@@ -166,13 +175,7 @@ console.log(categories)
       //   type: "file",
       //   placeholder: "Choose file",
       // },
-      {
-        id: 5,
-        label: "Click here to open file",
-        name: "product_csv",
-        type: 'Download file',
-        handleDownload: handleDownload
-      },
+      
     ],
     form2: [
       {
@@ -206,7 +209,8 @@ console.log(categories)
       },
       {
         id: 5,
-        label: "Click here to open file",
+        label: "Create / Update",
+        btn_text: "Click here to open file",
         name: "item_csv",
         type: 'Download file',
         handleDownload: handleDownload
@@ -243,7 +247,8 @@ console.log(categories)
       },
       {
         id: 5,
-        label: "Click here to open file",
+        label: "Create / Update",
+        btn_text: "Click here to open file",
         name: "sku_id_csv",
         type: 'Download file',
         handleDownload: handleDownload
@@ -280,7 +285,8 @@ console.log(categories)
       },
       {
         id: 5,
-        label: "Click here to open file",
+        label: "Create / Update",
+        btn_text: "Click here to open file",
         name: "rku_csv",
         type: 'Download file',
         handleDownload: handleDownload

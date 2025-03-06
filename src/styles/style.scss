@@ -8738,7 +8738,7 @@ a {
       }
 
       .text{
-        @include homepage-buttons("Bobby-Jones-Soft", 22px, $black, "none");
+        @include homepage-buttons("Bobby-Jones-Soft", 28px, $black, "none");
         @include hover-scale(1, 0s);
         text-align: center;
         line-height: 28px;
@@ -8839,7 +8839,7 @@ a {
 
       .col{
       .heading{
-        @include homepage-buttons("Gladiola", 40px, #5A3A29, "none");
+        @include homepage-buttons("Gladiola", 44px, #5A3A29, "none");
         @include hover-scale(1, 0s);
         line-height: 40px;
       }
@@ -8848,7 +8848,7 @@ a {
         @include flex-center(column, center);
         gap: 8px;
         span{
-          @include homepage-buttons("Bobby-Jones-Soft", 16px, $black, "none");
+          @include homepage-buttons("Bobby-Jones-Soft", 17px, $black, "none");
           @include hover-scale(1, 0s);
           text-align: center;
         }
@@ -15801,6 +15801,11 @@ body .MuiBackdrop-root {
   }
 }
 
+.rs-picker-popup{
+  top: auto !important;
+  bottom: 10px !important;
+}
+
 .rs-picker {
   background-color: transparent;
 
@@ -16089,6 +16094,14 @@ body .MuiBackdrop-root {
 
       .content_body {
         align-self: stretch;
+
+        .total{
+          @include flex-center(row, center);
+          gap: 4px;
+          svg{
+            font-size: 16px;
+          }
+        }
 
         .description {
           @include homepage-buttons(
@@ -20129,7 +20142,9 @@ textarea[readonly]{
                 gap: 20px;
 
                 .btn-download{
-                  padding: 0px;
+                  padding: 3px 15px 3px;
+                  background-color: #b16c3e69;
+                    border-radius: 10px;
                   @include homepage-buttons(
                     "Bobby-Jones-Soft",
                     17px,
@@ -20140,7 +20155,7 @@ textarea[readonly]{
                   margin-left: auto;
 
                   &:hover{
-                    background: transparent;
+                    // background: transparent;
                   }
                 }
 

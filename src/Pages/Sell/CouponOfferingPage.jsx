@@ -11,8 +11,9 @@ import LoyaltyPopupContent from '../../Components/CouponOffering/LoyaltyPopupCon
 import SubscriptionPopupContent from '../../Components/CouponOffering/SubscriptionPopupContent';
 import CustomizablePopupContent from '../../Components/CouponOffering/CustomizablePopupContent';
 import RsTenPerDayContent from '../../Components/CouponOffering/RsTenPerDayContent';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import UserBadge from '../../UserBadge';
+import { addCoupon } from '../../store/couponsSlice';
 
 const OFFER_TYPES = [
   { type: 'retailer', popup: true, popup_body_content: <RetailerPopupContent /> },
@@ -30,6 +31,8 @@ function CouponOfferingPage(props) {
   const navigate = useNavigate();
   const [total, setTotal] = useState(0);
   const [rsPerDay, setRsPerDay] = useState(0);
+  const dispatch = useDispatch();
+  const coupons = useSelector((state) => state.coupon);
 
   const retailerCoupon = useSelector((state) => state.coupon.retailer);
   const loyaltyCoupon = useSelector((state) => state.coupon.loyalty);
@@ -38,54 +41,12 @@ function CouponOfferingPage(props) {
 
   // Map checked coupons to increase height
   const calculateHeights = () => {
-    let updatedHeights = { ...graphHeights };
-
-    // Calculate retailer height
-    if (retailerCoupon) {
-      const retailerCheckedCount = Object.values(retailerCoupon.discounts)
-        .filter(discount => discount.checked).length;
-      updatedHeights['retailer'] = Math.min(retailerCheckedCount * 20, MAX_HEIGHT);
-    }
-
-    // Calculate subscription height
-    if (subscriptionCoupon) {
-      const subscriptionCheckedCount = Object.values(subscriptionCoupon.discounts)
-        .filter(discount => discount.checked).length;
-      updatedHeights['subscription'] = Math.min(subscriptionCheckedCount * 20, MAX_HEIGHT);
-    }
-
-    // Calculate loyalty height
-    if (loyaltyCoupon) {
-      const loyaltyCheckedCount = Object.values(loyaltyCoupon.discounts)
-        .filter(discount => discount.checked).length;
-      updatedHeights['loyalty'] = Math.min(loyaltyCheckedCount * 20, MAX_HEIGHT);
-    }
-
-    // Calculate customizable height (this could be more complex if there are more conditions)
-    if (customizableCoupon) {
-      const discountsValues = Object.values(customizableCoupon.discounts || {});
-      
-      // If needed, calculate the count of valid discounts
-      const validDiscounts = discountsValues.filter(
-        discount => discount.checked 
-      );
-          
-      // Update heights
-      updatedHeights['customizable'] = Math.min(validDiscounts.length * 20, MAX_HEIGHT);
-      console.log('Updated Heights:', updatedHeights);
-    }
     
-
-    // Update total height
-    const newTotal = Object.values(updatedHeights).reduce((acc, height) => acc + height, 0);
-    setTotal(newTotal);
-
-    setGraphHeights(updatedHeights);
   };
 
-  useEffect(() => {
-    calculateHeights();
-  }, [retailerCoupon, loyaltyCoupon, subscriptionCoupon, customizableCoupon]);
+  // useEffect(() => {
+  //   calculateHeights();
+  // }, [retailerCoupon, loyaltyCoupon, subscriptionCoupon, customizableCoupon]);
 
   const themeProps = {
     popoverBackgroundColor: props.popoverBackgroundColor || 'var(--text-color-light)',
@@ -95,43 +56,163 @@ function CouponOfferingPage(props) {
 
   const theme = createCustomTheme(themeProps);
 
+  // const handleClick = (e, type) => {
+  //   const offerBox = e.target.closest('.offer_box');
+  //   const rs_per_day = e.target.closest('.rs_per_day');
+  //   const makeAWish = e.target.closest('.make_a_wish');
+  
+  //   if (offerBox) {
+  //     offerBox.classList.add('reduceSize3');
+  
+  //     setTimeout(() => {
+  //       offerBox.classList.remove('reduceSize3');
+  //       if (makeAWish) {
+  //         setTimeout(() => navigate('../book-eshop'), 600);
+  //       }
+  //     }, 300);
+  
+  //     if (!makeAWish && !rs_per_day) {
+  //       let updatedHeights = { ...graphHeights };
+
+  //   // Calculate retailer height
+  //   if (retailerCoupon) {
+  //     const retailerCheckedCount = Object.values(retailerCoupon.discounts)
+  //       .filter(discount => discount.checked).length;
+  //     updatedHeights['retailer'] = Math.min(retailerCheckedCount * 25, MAX_HEIGHT);
+  //   }
+
+  //   // Calculate subscription height
+  //   if (subscriptionCoupon) {
+  //     const subscriptionCheckedCount = Object.values(subscriptionCoupon.discounts)
+  //       .filter(discount => discount.checked).length;
+  //     updatedHeights['subscription'] = Math.min(subscriptionCheckedCount * 25, MAX_HEIGHT);
+  //   }
+
+  //   // Calculate loyalty height
+  //   if (loyaltyCoupon) {
+  //     const loyaltyCheckedCount = Object.values(loyaltyCoupon.discounts)
+  //       .filter(discount => discount.checked).length;
+  //     updatedHeights['loyalty'] = Math.min(loyaltyCheckedCount * 25, MAX_HEIGHT);
+  //   }
+
+  //   // Calculate customizable height (this could be more complex if there are more conditions)
+  //   if (customizableCoupon) {
+  //     const discountsValues = Object.values(customizableCoupon.discounts || {});
+      
+  //     // If needed, calculate the count of valid discounts
+  //     const validDiscounts = discountsValues.filter(
+  //       discount => discount.checked 
+  //     );
+          
+  //     // Update heights
+  //     updatedHeights['customizable'] = Math.min(validDiscounts.length * 25, MAX_HEIGHT);
+  //     console.log('Updated Heights:', updatedHeights);
+  //   }
+    
+
+  //   // Update total height
+  //   const newTotal = Object.values(updatedHeights).reduce((acc, height) => acc + height, 0);
+  //   setTotal(newTotal);
+
+  //   setGraphHeights(updatedHeights);
+  //     }
+  
+  //     if (rs_per_day && rsPerDay < 10) {
+  //       setRsPerDay(10);
+  //     }
+  //   }
+  // };
+  
+
   const handleClick = (e, type) => {
     const offerBox = e.target.closest('.offer_box');
-    const rs_per_day = e.target.closest('.rs_per_day');
+    const rs_per_day = e.target && e.target.classList.contains('rs_per_day');
     const makeAWish = e.target.closest('.make_a_wish');
+    const graphBox = e.target.closest(`.${type}_graph`); // Check if clicked on a graph
 
-    if (offerBox) {
-      offerBox.classList.add('reduceSize3');
 
-      setTimeout(() => {
-        offerBox.classList.remove('reduceSize3');
-        if (makeAWish) {
-          setTimeout(() => navigate('../book-eshop'), 600);
+    let updatedHeights = { ...graphHeights };
+
+    if (graphBox) {
+        // Reduce height when clicking on the graph
+        if (updatedHeights[type] > 0) {
+            updatedHeights[type] = Math.max(updatedHeights[type] - 25, 0);
         }
-      }, 300);
+    } else if (offerBox) {
+        offerBox.classList.add('reduceSize3');
 
-      // if (!makeAWish && !rs_per_day) {
-      //   setGraphHeights((prevHeights) => {
-      //     const newHeight = prevHeights[type] + 25;
-      //     const updatedHeight = newHeight <= MAX_HEIGHT ? newHeight : MAX_HEIGHT;
+        setTimeout(() => {
+            offerBox.classList.remove('reduceSize3');
+            if (makeAWish) {
+                setTimeout(() => navigate('../book-eshop'), 600);
+            }
+        }, 300);
 
-      //     const updatedHeights = {
-      //       ...prevHeights,
-      //       [type]: updatedHeight,
-      //     };
+        if (!makeAWish && !rs_per_day) {
+            // Calculate the current total height
+            const currentTotal = Object.values(updatedHeights).reduce((acc, height) => acc + height, 0);
 
-      //     const newTotal = Object.values(updatedHeights).reduce((acc, height) => acc + height, 0);
-      //     setTotal(newTotal);
-      //     return updatedHeights;
-      //   });
-      // }
+            // Function to dynamically increase height per click (only if total is within 300)
+            const incrementHeight = (category, coupon) => {
+                if (coupon) {
+                    const checkedCount = Object.values(coupon.discounts || {}).filter(discount => discount.checked).length;
+                    
+                    if (checkedCount > 0) {
+                        const newHeight = (updatedHeights[category] || 0) + 25;
 
-      if (rs_per_day && rsPerDay < 10) {
-        setRsPerDay(10);
-      }
+                        // Ensure total height does not exceed 300
+                        if (currentTotal + 25 <= 300) {
+                            updatedHeights[category] = Math.min(newHeight, MAX_HEIGHT);
+                        }
+                    }
+                }
+            };
+
+            // Apply height increment logic for each coupon category
+            if (type === 'retailer') {
+                incrementHeight('retailer', retailerCoupon);
+            }
+            if (type === 'subscription') {
+                incrementHeight('subscription', subscriptionCoupon);
+            }
+            if (type === 'loyalty') {
+                incrementHeight('loyalty', loyaltyCoupon);
+            }
+            if (type === 'customizable') {
+                incrementHeight('customizable', customizableCoupon);
+            }
+        }
+
+        if (rs_per_day && rsPerDay < 10) {
+            setRsPerDay(10);
+        }
     }
-  };
 
+    console.log('Updated Heights:', updatedHeights);
+
+    // Update total height (ensure it does not exceed 300)
+    const newTotal = Object.values(updatedHeights).reduce((acc, height) => acc + height, 0);
+    setTotal(Math.min(newTotal, 300));
+    setGraphHeights(updatedHeights);
+
+    // Dispatch Redux update to sync `no_of_coupons` with `graphHeight`
+    dispatch(addCoupon({
+        type,
+        coupon: {
+            ...coupons[type], // Preserve existing coupon data
+            no_of_coupons: updatedHeights[type] // Set no_of_coupons equal to graphHeight
+        }
+    }));
+};
+
+const handleRsPerDay = () =>  {
+  setRsPerDay(10);
+}
+
+
+
+  console.log(useSelector((state) => state.coupon));
+  
   return (
     <ThemeProvider theme={theme}>
       <Box className="coupon_offering_wrapper">
@@ -159,7 +240,7 @@ function CouponOfferingPage(props) {
                 text={type}
                 popup={popup}
                 popup_body_content={popup_body_content}
-                onClick={(e) => handleClick(e, type)}
+                onClick={type === "Rs 10/per day" ? handleRsPerDay : (e) => handleClick(e, type) }
                 optionalCname={optionalCName}
               />
             ))}

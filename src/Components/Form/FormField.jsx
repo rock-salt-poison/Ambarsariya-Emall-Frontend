@@ -30,6 +30,7 @@ const FormField = ({
   adornmentValue, accept,rows,radioItems,
   additionalProps,
   handleDownload, required,
+  btn_text,
   defaultChecked
 }) => {
 
@@ -142,9 +143,12 @@ const FormField = ({
             </Box>
           </>
         ) : type==="Download file" ? (
-          <Button onClick={(e)=>handleDownload(e, name)} className='btn-download'>
-           {label}
+          <>
+          <Typography className="label">{label}</Typography>
+          <Button onClick={(e)=>handleDownload(e, name)} className='btn-download field_container'>
+           {btn_text}
           </Button>
+          </>
         ):(
           <>
             <Typography className={`label ${emailLabelClassname ? emailLabelClassname : ''}`}>
