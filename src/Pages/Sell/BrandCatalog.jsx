@@ -70,7 +70,6 @@ function BrandCatalog() {
             id="myId"
             className="myClassname"
             height="100%"
-            allowFullScreen
             styles={{height: "25px"}}/>
               </Box>
             </Box>
