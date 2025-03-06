@@ -65,7 +65,7 @@ function BrandCatalog() {
           {data?.product_catalog && (
             <Box className="image_frame">
               <Box className="frame_border">
-              <Iframe url={convertDriveLink(data?.product_catalog)}
+              <Iframe url={convertDriveLink(data?.brand_catalog)}
             width="100%"
             id="myId"
             className="myClassname"
