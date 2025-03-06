@@ -142,7 +142,7 @@ function ProductInfo() {
               modules={[Zoom]}
               className="mySwiper"
             >
-              {(selectedVariant?.product_images || data?.product_images || []).map((product_image, index) => (
+              {(selectedVariant?.product_images)?.map((product_image, index) => (
                 <SwiperSlide key={index} className="card">
                   <Box className="images swiper-zoom-container">
                     <Box component="img" src={convertDriveLink(product_image)} />
