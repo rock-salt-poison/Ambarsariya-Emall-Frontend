@@ -315,7 +315,7 @@ console.log(categories)
   const validateForm = (formName) => {
     const newErrors = {};
     formFields[formName].forEach((field) => {
-      if(field.type !== "Download file"){
+      if(field.type !== "Download file" && field.type !== 'select-check'){
         const name = field.name;
         if (!formData[formName][name]) {
           newErrors[name] = `${field.label} is required.`;

@@ -178,7 +178,8 @@ const FormField = ({
                 <Select
                   multiple
                   name={name}
-                  value={defaultChecked ? options : Array.isArray(value) ? value : []}                  onChange={!readOnly ? handleSelectChange : undefined}
+                  value={defaultChecked ? options : Array.isArray(value) ? value : []} 
+                  onChange={!readOnly ? handleSelectChange : undefined}
                   renderValue={(selected) => (
                     <Box>
                       {selected.length > 0 ? selected.join(', ') : placeholder}
