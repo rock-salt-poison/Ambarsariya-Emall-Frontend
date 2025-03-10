@@ -462,3 +462,14 @@ export const get_purchaseOrderDetails = async (po_access_token) => {
     throw e;
   }
 } 
+
+export const get_purchaseOrders = async (shop_no) => {
+  try{
+    if(shop_no){
+      const resp = await axios.get(`${link}/purchase_orders/${shop_no}`);
+      return resp.data;
+    }
+  }catch(e){
+    throw e;
+  }
+} 
