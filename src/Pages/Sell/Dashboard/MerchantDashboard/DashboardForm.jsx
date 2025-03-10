@@ -144,7 +144,7 @@ console.log(categories)
         placeholder: "Category(s)",
         options: categories.map((cat) => cat.name),
         defaultCheckedOptions: true,
-        readOnly:false
+        readOnly:true
       },
       {
         id: 2,
@@ -331,110 +331,7 @@ console.log(categories)
   const handleSubmit = async (event, formName) => {
     event.preventDefault();
     if (validateForm(formName)) {
-      // const file = formData[formName].csv_file;
-      // if (file && file.type === "text/csv") {
-      //   Papa.parse(file, {
-      //     header: true, // Automatically map the CSV headers to object keys
-      //     skipEmptyLines: true, // Skip empty lines
-      //     complete: async (result) => {
-      //       // Filter out rows where "Product Name" is empty
-      //       const filteredData = result.data.filter((row) => row["Product Name"] && row["Product Name"].trim() !== "");
-  
-      //       const processedData = filteredData.map((product) => {
-      //         // Process product images and ensure empty arrays are handled correctly
-      //         const productImages = [
-      //           product["Product Image 1"],
-      //           product["Product Image 2"],
-      //           product["Product Image 3"],
-      //           product["Product Image 4"],
-      //         ];
-            
-      //         // Ensure that product_images is an array, if no valid images, set as an empty array
-      //         const validProductImages = productImages.filter((image) => image && image.trim() !== "");
-      //         const finalProductImages = validProductImages.length > 0 ? validProductImages : [""];  // Empty array is treated as an empty string to be formatted as '{}'
-            
-      //         // Process the product data
-      //         return {
-      //           shop_no: shopNo,
-      //           category: categories.find((cat) => cat.name === product["Category"])?.id, 
-      //           product_name: product["Product Name"],
-      //           product_type: product["Product Type"],
-      //           product_description: product["Product Description"],
-      //           price: product["Price"],
-      //           brand: product["Brand"],
-      //           product_images: finalProductImages, // Ensure it's an empty array or an array with valid values
-      //           product_dimensions_width_in_cm: product["Product Dimension Width (in cm)"],
-      //           product_dimensions_height_in_cm: product["Product Dimension Height (in cm)"],
-      //           product_dimensions_breadth_in_cm: product["Product Dimension Breadth (in cm)"],
-      //           product_weight_in_kg: product["Product Weight (in kg)"],
-      //           packing: product["Packing"],
-      //           product_style: product["Product Style"],
-      //           inventory_or_stock_quantity: product["Inventory/Stock Quantity"],
-      //           shipping_information: product["Shipping Information"],
-      //           variant_group: product["Variant Group"],
-      //           features: product["Attributes/Features"],
-      //           keywords: product["Keywords/Tags Metadata"],
-      //           warranty_or_guarantee: product["Warranty/Guarantee"],
-      //           expiry_date: product["Information/Expiry Date"],
-      //           manufacturer_details: product["Manufacturer Details"],
-      //           manufacturing_date: product["Manufacturing Date"],
-      //           compliance_and_certifications: product["Compliance and Certifications"],
-      //           return_policy: product["Return Policy"],
-      //           customer_reviews_and_ratings: product["Customer Reviews and Ratings"],
-      //           promotion_information: product["Promotion Information"],
-      //           related_products: product["Related Products"] ? product["Related Products"] : [],  // Use empty array if missing
-      //           variation_1: product["Variation 1"],
-      //           variation_2: product["Variation 2"],
-      //           variation_3: product["Variation 3"],
-      //           variation_4: product["Variation 4"],
-      //           selling_price: product["Selling Price"],
-      //           product_catalog: product["Product Catalog"],
-      //           brand_catalog: product["Brand Catalog"],
-      //         };
-      //       });
-            
-      //       const data = { products: processedData };  
-      //       try{
-      //         setLoading(true);
-      //         const resp = await post_products(data);
-              
-      //         setSnackbar({
-      //           open: true,
-      //           message: resp.message,
-      //           severity: "success",
-      //         });
-      //       }catch(e){
-      //         console.log(e)
-      //         setSnackbar({
-      //           open: true,
-      //           message: e.response.data.error,
-      //           severity: "error",
-      //         });
-      //       }finally{
-      //         setLoading(false);
-      //       }
-      //     },
-      //     error: (err) => {
-      //       console.error("Error parsing CSV:", err);
-      //       setSnackbar({
-      //         open: true,
-      //         message: "Error parsing the CSV file. Please try again.",
-      //         severity: "error",
-      //       });
-      //       setErrors({ ...errors, field: "Error parsing the CSV file. Please try again." });
-      //     },
-      //   });
-      // } else {
-      //   console.log("Invalid file type. Please upload a CSV file.");
-      //   setSnackbar({
-      //     open: true,
-      //     message: "Invalid file type. Please upload a CSV file.",
-      //     severity: "error",
-      //   });
-      //   setErrors({ ...errors, field: "Invalid file type. Please upload a CSV file." });
-      // }
-
-
+      
       const file = formData[formName].csv_file;
       
       try {

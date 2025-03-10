@@ -46,7 +46,9 @@ function ProductInfo2() {
         <Box className="col">
         <Box className="heading">
             <Box></Box>
-            <Box></Box>
+            <Box className="container">
+              <Typography variant="h2">{data?.product_name}</Typography>
+            </Box>
             <UserBadge
                 handleBadgeBgClick={`../shop/${token}/products/${product_id}`}
                 handleLogin="login"
@@ -77,13 +79,26 @@ function ProductInfo2() {
               Product Dimensions
             </Typography>
             <Typography className="text">
-              {data?.product_dimensions_width_in_cm * data?.product_dimensions_height_in_cm * data?.product_dimensions_breadth_in_cm}
+              {data?.product_dimensions_width_in_cm} x {data?.product_dimensions_height_in_cm} x {data?.product_dimensions_breadth_in_cm}
             </Typography>
             <Typography variant="span">
               (length x breadth x height)
             </Typography>
           </Box>
         </Box>
+        {data?.product_dimensions_width_in_cm && data?.product_dimensions_height_in_cm && data?.product_dimensions_breadth_in_cm && <Box className="col">
+          <Box className="detail">
+            <Typography className="heading">
+              Area Size Lateral
+            </Typography>
+            <Typography className="text">
+              {2*(data?.product_dimensions_width_in_cm * data?.product_dimensions_breadth_in_cm + data?.product_dimensions_breadth_in_cm * data?.product_dimensions_height_in_cm + data?.product_dimensions_width_in_cm * data?.product_dimensions_height_in_cm)}
+            </Typography>
+            <Typography variant="span">
+              2 x (lb x bh x lh)
+            </Typography>
+          </Box>
+        </Box>}
         <Box className="col">
           <Box className="detail">
             <Typography className="heading">

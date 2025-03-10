@@ -178,8 +178,7 @@ const FormField = ({
                 <Select
                   multiple
                   name={name}
-                  value={Array.isArray(value) ? value : []}
-                  onChange={!readOnly ? handleSelectChange : undefined}
+                  value={defaultChecked ? options : Array.isArray(value) ? value : []}                  onChange={!readOnly ? handleSelectChange : undefined}
                   renderValue={(selected) => (
                     <Box>
                       {selected.length > 0 ? selected.join(', ') : placeholder}
@@ -193,7 +192,7 @@ const FormField = ({
                   </MenuItem>
                   {options.map((option) => (
                     <MenuItem key={option} value={option} className='members_list'>
-                          <Checkbox checked={value.includes(option)} />
+                          <Checkbox checked={defaultChecked ? true : value.includes(option)} />
                           <ListItemText primary={option} className='members_name' />
                         
                     </MenuItem>
