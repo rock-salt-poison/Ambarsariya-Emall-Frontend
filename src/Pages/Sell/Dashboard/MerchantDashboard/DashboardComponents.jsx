@@ -377,13 +377,13 @@ function DashboardComponents({ data }) {
                         handleToggleChange(index, newValue)
                       }
                     >
-                      <ToggleButton value="reject" className="toggle">
+                      <ToggleButton value="reject" className="toggle" disabled={toggleStates[index] === "accept" }>
                         Reject
                       </ToggleButton>
-                      <ToggleButton value="hold" className="toggle">
+                      <ToggleButton value="hold" className="toggle" disabled={toggleStates[index] === "accept" || toggleStates[index] === "reject"}>
                         Hold
                       </ToggleButton>
-                      <ToggleButton value="accept" className="toggle">
+                      <ToggleButton value="accept" className="toggle" disabled={toggleStates[index] === "reject" }>
                         Accept
                       </ToggleButton>
                     </ToggleButtonGroup>
