@@ -158,8 +158,8 @@ function DashboardComponents({ data }) {
   useEffect(() => {
     if (products.length > 0) {
       const initialStates = {};
-      products.forEach((_, index) => {
-        initialStates[index] = "hold"; // Default selection as "hold"
+      products.forEach((product, index) => {
+        initialStates[index] = product.status || "Hold"; // Default selection as "hold"
       });
       setToggleStates(initialStates);
     }
@@ -170,7 +170,7 @@ function DashboardComponents({ data }) {
       setToggleStates((prevState) => ({ ...prevState, [index]: newValue }));
       console.log(`Row ${index + 1} selected:`, newValue);
   
-      if (newValue === "accept") {
+      if (newValue === "Accept" || newValue === "Deny") {
         const selectedProduct = products[index];
         console.log(selectedProduct);
         
@@ -202,7 +202,7 @@ function DashboardComponents({ data }) {
         balance_credit: null,
         balance_credit_due_date: null,
         after_due_date_surcharges_per_day: null,
-        accept_or_deny : 'Accept',
+        accept_or_deny : newValue,
         send_qr_upi_bank_details: true
         };
   
@@ -297,7 +297,7 @@ function DashboardComponents({ data }) {
           </TableHead>
           <TableBody>
             {products.map((row, index) => {
-              const isHold = toggleStates[index] === "hold";
+              const isHold = toggleStates[index] === "Hold";
                 // fetch_product_variants(row.seller_id, row.variant_group);
               return (
                 <TableRow key={row.product_id} hover>
@@ -371,19 +371,19 @@ function DashboardComponents({ data }) {
                   {/* Toggle Button Group */}
                   <TableCell>
                     <ToggleButtonGroup
-                      value={toggleStates[index] || "hold"}
+                      value={row.status || toggleStates[index] || "Hold"}
                       exclusive
                       onChange={(event, newValue) =>
                         handleToggleChange(index, newValue)
                       }
                     >
-                      <ToggleButton value="reject" className="toggle" disabled={toggleStates[index] === "accept" }>
-                        Reject
+                      <ToggleButton value="Deny" className="toggle" disabled={toggleStates[index] === "Accept" }>
+                        Deny
                       </ToggleButton>
-                      <ToggleButton value="hold" className="toggle" disabled={toggleStates[index] === "accept" || toggleStates[index] === "reject"}>
+                      <ToggleButton value="Hold" className="toggle" disabled={toggleStates[index] === "Accept" || toggleStates[index] === "Deny"}>
                         Hold
                       </ToggleButton>
-                      <ToggleButton value="accept" className="toggle" disabled={toggleStates[index] === "reject" }>
+                      <ToggleButton value="Accept" className="toggle" disabled={toggleStates[index] === "Deny" }>
                         Accept
                       </ToggleButton>
                     </ToggleButtonGroup>
