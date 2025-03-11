@@ -452,6 +452,17 @@ export const post_purchaseOrder = async (data) => {
   }
 }
 
+export const post_saleOrder = async (data) => {
+  try{
+    if(data){
+      const response = await axios.post(`${link}/sale_order`,  {data});
+      return response.data;
+    }
+  }catch(e){
+    throw e;
+  }
+}
+
 export const get_purchaseOrderDetails = async (po_access_token) => {
   try{
     if(po_access_token){

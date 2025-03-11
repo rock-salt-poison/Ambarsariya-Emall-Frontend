@@ -197,6 +197,7 @@ function Cart() {
   
       const products = cartData.cart.map((cart) => ({
         no: cart.product_id,
+        name: cart.product_name,
         description: cart.product_description,
         quantity: cart.quantity,
         unit_price: cart.price,

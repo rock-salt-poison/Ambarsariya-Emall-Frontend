@@ -20098,6 +20098,12 @@ textarea[readonly]{
                 }
               }
 
+              .MuiInputAdornment-root{
+                .MuiTypography-root{
+                  color: $light-yellow;
+                }
+              }
+
               input, .MuiSelect-select{
                 padding: 0px;
                 text-align: center;
