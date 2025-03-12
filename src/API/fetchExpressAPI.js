@@ -474,10 +474,23 @@ export const get_purchaseOrderDetails = async (po_access_token) => {
   }
 } 
 
-export const get_purchaseOrders = async (shop_no) => {
+export const get_purchaseOrders = async (po_no) => {
   try{
-    if(shop_no){
-      const resp = await axios.get(`${link}/purchase_orders/${shop_no}`);
+    if(po_no){
+      console.log(po_no);
+      
+      const resp = await axios.get(`${link}/purchase_orders/${po_no}`);
+      return resp.data;
+    }
+  }catch(e){
+    throw e;
+  }
+} 
+
+export const get_purchaseOrderNo = async (shop_no, date) => {
+  try{
+    if(shop_no && date){      
+      const resp = await axios.get(`${link}/purchase_order_no/${shop_no}/${date}`);
       return resp.data;
     }
   }catch(e){

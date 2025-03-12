@@ -13,6 +13,7 @@ function MerchantDashboard(props) {
     const {token, edit} = useParams();
     const [details, setDetails] = useState([]);
     const [loading , setLoading] = useState(false);
+    const [selectedDate, setSelectedDate] = useState(new Date());
     
     const themeProps = {
         popoverBackgroundColor: props.popoverBackgroundColor || "var(--yellow)",
@@ -45,8 +46,8 @@ function MerchantDashboard(props) {
         {loading && <Box className="loading"><CircularProgress/></Box>}
         <Box className="merchant_dashboard_wrapper">
             <Box className="row">
-                <DashboardHeader optionalColCname="calendar" data={details?.[0]}/>
-                {edit ? <DashboardForm data={details?.[0]}/> : <DashboardComponents data={details?.[0]}/>}
+                <DashboardHeader optionalColCname="calendar" data={details?.[0]} setSelectedDate={setSelectedDate}/>
+                {edit ? <DashboardForm data={details?.[0]}/> : <DashboardComponents data={details?.[0]} date={selectedDate.toLocaleDateString()}/>}
                 <Box className="col">
                     {/* <Button2 text={edit ? "Back" : "Next"} redirectTo={edit ? -1 :'edit'} optionalcName={edit ? "" : 'align-right'}/> */}
                     <UserBadge handleBadgeBgClick={-1} handleLogin={'../login'} handleLogoutClick={'../../AmbarsariyaMall'} optionalcName={'align-right'}/>

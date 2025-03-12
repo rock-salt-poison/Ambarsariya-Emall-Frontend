@@ -15801,10 +15801,14 @@ body .MuiBackdrop-root {
   }
 }
 
-.rs-picker-popup{
+
+
+.rs-picker-popup-daterange{
   top: auto !important;
   bottom: 10px !important;
 }
+
+
 
 .rs-picker {
   background-color: transparent;
@@ -19997,6 +20001,44 @@ textarea[readonly]{
         @include flex-center(row, center);
         gap: 4px;
 
+        .mySwiper{
+          margin: 0;
+          width: 100%;
+          position: relative;
+          flex: 1;
+
+          .swiper-slide{
+            width: 100% !important;
+          }
+
+          .swiper-button-prev,
+          .swiper-button-next {
+            bottom: 0; /* Move to bottom */
+            top: auto; /* Override default top positioning */
+            transform: translateY(50%);
+            width: 30px;
+            height: 5px;
+            background: $white;
+            color: white;
+          }
+
+          .swiper-button-prev {
+            // left: 40%;
+
+            &:after{
+              content: '_';
+            }
+          }
+
+          .swiper-button-next {
+            // right: 40%;
+            
+            &:after{
+              content: '_';
+            }
+          }
+        }
+
         .card {
           @include flex-center(column, center);
           gap: 5px;
@@ -20004,6 +20046,10 @@ textarea[readonly]{
           background: #6b433680;
           border-radius: 10px;
           align-self: stretch;
+
+          &.w-6{
+            width: 6em !important;
+          }
 
           .heading {
             @include homepage-buttons("Bobby-Jones-Soft", 18px, $yellow, none);

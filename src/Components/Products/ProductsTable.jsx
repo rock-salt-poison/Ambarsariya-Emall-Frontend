@@ -43,6 +43,9 @@ export default function CustomPaginationTable({rows}) {
   const loggedInUserToken = useSelector((state) => state.auth.userAccessToken);
   const [canBuy, setCanBuy] = useState(true);
 
+
+  console.log(loggedInUserToken);
+  
   useEffect(() => {
     const fetchShopUserData = async () => {
       if (token) {
@@ -252,6 +255,21 @@ export default function CustomPaginationTable({rows}) {
     );
   };
 
+  const handleBuyClick = async (loggedInUserToken) => {
+    if(loggedInUserToken){
+      try{
+        const userType = (await getUser(loggedInUserToken))?.[0]?.user_type;
+        if(userType === 'member'){
+          navigate(`../shop/${token}/cart`);
+        }else{
+          navigate(`../login`);
+        }
+      }catch(e){
+        console.log(e);
+      }
+    }
+  }
+
   // Render variations for the given product
   const renderVariations = (row) => {
     const variationFields = getVariationFields(row);
@@ -362,7 +380,8 @@ export default function CustomPaginationTable({rows}) {
         {canBuy && <Button2
           text="Buy"
           optionalcName={selectedProducts.length <= 0 ? "disabled_button" : ""}
-          redirectTo={`../shop/${token}/cart`}
+          // redirectTo={`../shop/${token}/cart`}
+          onClick={()=>handleBuyClick(loggedInUserToken)}
         />}
       </Box>
     </Box>

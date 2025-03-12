@@ -7,11 +7,15 @@ import Calendar from '../../../../Components/Home/AQIPopupComponents/Calendar';
 import { useParams } from 'react-router-dom';
 import CardBoardPopup from '../../../../Components/CardBoardPopupComponents/CardBoardPopup';
 import EditShopForm_PopupContent from './EditShopForm_PopupContent';
+import EditableCalendar from '../../../../Components/Home/AQIPopupComponents/EditableCalendar';
 
-function DashboardHeader({data}) {
+function DashboardHeader({data, setSelectedDate}) {
     const { token, edit } = useParams();
     const [ openPopup, setOpenPopup ] = useState(false);
+    
 
+    console.log('Header -----------------------', data);
+    
     const handleClose = () => {
         setOpenPopup(false);
     }
@@ -45,7 +49,7 @@ function DashboardHeader({data}) {
         </Box>
     </Box>
     <Box className={edit ? `sub-col`: 'sub-col calendar'}>
-        {!edit ? <Calendar display="dateMonth"/>: 
+        {!edit ? <EditableCalendar business_establishment_date={new Date(data?.establishment_date)} setDate={setSelectedDate}/>: 
             <Link className='align-right' onClick={handleClick}>
                 <Tooltip title="Edit">
                     <Box component="img" className='icon' src={edit_form_icon} alt="edit shop form"/>

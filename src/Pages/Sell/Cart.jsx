@@ -9,7 +9,7 @@ import pickup from "../../Utils/images/Sell/shop_details/pickup.svg";
 import delivery from "../../Utils/images/Sell/shop_details/delivery.webp";
 import home_visit from "../../Utils/images/Sell/shop_details/home_visit.svg";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import CardBoardPopup from "../../Components/CardBoardPopupComponents/CardBoardPopup";
 import SpecialOffer from "../../Components/Cart/SpecialOffer/SpecialOffer";
 import PrepaidPostpaid from "../../Components/Cart/Prepaid_Postpaid/PrepaidPostpaid";
@@ -21,10 +21,12 @@ import CoHelper from "../../Components/Cart/CoHelper/CoHelper";
 import { getMemberData, getShopUserData, getUser, post_purchaseOrder } from "../../API/fetchExpressAPI";
 import UserBadge from "../../UserBadge";
 import CustomSnackbar from "../../Components/CustomSnackbar";
+import { clearCart } from "../../store/cartSlice";
 
 function Cart() {
   const sampleRows = useSelector((state) => state.cart.selectedProducts);
   const [openPopup, setOpenPopup] = useState(null);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [shopData, setShopData] = useState();
   const { owner } = useParams();
@@ -180,13 +182,7 @@ function Cart() {
             buyerDataFetched = memberData[0];
             setBuyerData(memberData[0]);
           }
-        } else if (user.user_type === 'shop') {
-          const shopkeeperData = await getShopUserData(user.shop_access_token);
-          if (shopkeeperData.length > 0) {
-            buyerDataFetched = shopkeeperData[0];
-            setBuyerData(shopkeeperData[0]);
-          }
-        }
+        } 
       }
   
       // Ensure all necessary data is available
@@ -237,6 +233,8 @@ function Cart() {
             message: resp.message,
             severity: "success",
           });
+
+          dispatch(clearCart());
   
           setTimeout(() => {
             navigate(`../${resp.po_access_token}/order`);
