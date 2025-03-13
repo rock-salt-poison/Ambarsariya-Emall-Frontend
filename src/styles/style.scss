@@ -20102,6 +20102,41 @@ textarea[readonly]{
 
               text-align: center;
               border-bottom: 0px;
+
+              .MuiToggleButtonGroup-firstButton{
+                border-top-left-radius: 50px;
+                border-bottom-left-radius: 50px;
+              }
+              .MuiToggleButtonGroup-lastButton{
+                border-top-right-radius: 50px;
+                border-bottom-right-radius: 50px;
+              }
+
+              
+              .toggle{
+                border: 1px solid $brown-4;
+                line-height: normal;
+                padding: 4px 8px;
+                @include homepage-buttons(
+                  "Bobby-Jones-Soft",
+                  14px,
+                  $brown-4,
+                  none
+                );
+                @include hover-scale(1, 0s);
+
+                &.Mui-selected{
+                  background-color: #6d4437b3;
+                  color: $yellow;
+                }
+
+                &.Mui-disabled{
+                  background: #6d44377a;
+                  color: #FFFBF4d6 !important;
+                  cursor: not-allowed;
+                  pointer-events: visible;
+                }
+              }
             }
           }
         }
@@ -20119,6 +20154,19 @@ textarea[readonly]{
               @include hover-scale(1, 0s);
               text-align: center;
               border-bottom: 0px;
+
+              .btn-submit{
+                background-color: #f9e0b399;
+                @include homepage-buttons(
+                  "Bobby-Jones-Soft",
+                  14px,
+                  $brown-4,
+                  none
+                );
+                @include hover-scale(1, 0s);
+                padding: 2px 12px;
+              }
+
 
               .MuiToggleButtonGroup-firstButton{
                 border-top-left-radius: 50px;

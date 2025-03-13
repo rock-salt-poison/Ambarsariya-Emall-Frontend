@@ -497,3 +497,27 @@ export const get_purchaseOrderNo = async (shop_no, date) => {
     throw e;
   }
 } 
+
+
+export const get_saleOrderNo = async (shop_no) => {
+  try{
+    if(shop_no){      
+      const resp = await axios.get(`${link}/sale_order_no/${shop_no}`);
+      return resp.data;
+    }
+  }catch(e){
+    throw e;
+  }
+} 
+
+
+export const get_saleOrders = async (shop_no) => {
+  try{
+    if(shop_no){      
+      const resp = await axios.get(`${link}/sale_orders/${shop_no}`);
+      return resp.data;
+    }
+  }catch(e){
+    throw e;
+  }
+} 
