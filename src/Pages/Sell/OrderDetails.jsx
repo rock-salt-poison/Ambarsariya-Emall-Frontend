@@ -14,7 +14,7 @@ const DetailRow = ({ title, description, isReturn = false, isReview = false, isC
       {isReturn || isReview ? (
         <Switch_On_Off checked={switchChecked} onChange={handleSwitchChange} />
       ) : isClickable ? (
-        <Link to={`../${owner}/cart`} className="clickable-link">
+        <Link to={`../esale/life`} className="clickable-link">
           <Typography className="description">{description}</Typography>
         </Link>
       ) : (

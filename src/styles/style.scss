@@ -17490,6 +17490,65 @@ body .MuiBackdrop-root {
             place-items: normal;
             gap: 20px;
 
+            .order_details_info{
+              @include flex-center(column, flex-start);
+              gap: 20px;
+
+              .col_group{
+                @include flex-center(column, flex-start);
+                gap: 10px;
+                align-self: stretch;
+              }
+
+              .col{
+                width: 100%;
+                .text{
+                  font-size: 20px;
+                  color: $black;
+                }
+                .heading{
+                  font-size: 18px;
+                  color: $yellow;
+                }
+              }
+            }
+
+            .heading{
+              @include homepage-buttons("Bobby-Jones-Soft", 22px, $light-yellow, none);
+              @include hover-scale(1, 0s);  
+              line-height: 22px;                 
+            }
+            
+            .text{
+              @include homepage-buttons("Bobby-Jones-Soft", 18px, $yellow, none);
+              @include hover-scale(1, 0s);    
+              line-height: 18px;
+            }
+
+            .card{
+              display: grid;
+              grid-template-columns: 40px 1fr 100px;
+              gap: 10px;
+              cursor: pointer;
+
+              .col.icon{
+                background-color: #F9DEB1b0;
+                @include flex-center(row, center);
+              }
+
+              .col.order_details{
+                @include flex-center(column, flex-start);
+                place-items: flex-start;
+                gap: 5px;
+                
+              }
+              
+
+              .col.status{
+                justify-content: flex-end;
+              }
+            }
+
             .list {
               @include flex-center(column, flex-start);
               gap: 10px;
