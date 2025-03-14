@@ -1,33 +1,15 @@
 import React, { useEffect, useState } from "react";
 import {
   Box,
-  Button,
   CircularProgress,
-  InputAdornment,
-  MenuItem,
-  Select,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
-  TextField,
-  ToggleButton,
-  ToggleButtonGroup,
-  Typography,
 } from "@mui/material";
-import { useParams } from "react-router-dom";
-import {
-  get_product_variants,
-  get_products,
-  get_purchaseOrderNo,
-  get_purchaseOrders,
-  get_saleOrders,
-  post_saleOrder,
-} from "../../../../API/fetchExpressAPI";
+import { get_saleOrders } from "../../../../API/fetchExpressAPI";
 import CustomSnackbar from "../../../../Components/CustomSnackbar";
-import { Navigation } from "swiper/modules";
-import { Swiper, SwiperSlide } from "swiper/react";
 
 function SaleOrderTable({ seller_id }) {
   const [loading, setLoading] = useState(false);
@@ -121,7 +103,6 @@ function SaleOrderTable({ seller_id }) {
 
                   {/* Quantity Column - Input if on Hold */}
                   <TableCell>
-                   
                       Pending
                   </TableCell>
 
@@ -129,7 +110,7 @@ function SaleOrderTable({ seller_id }) {
                     {row.balance_credit !== null ? row.balance_credit : '-'}
                   </TableCell>
                   <TableCell width="100px">
-                    {row.delivery_type}
+                    {row.service}
                   </TableCell>
                   <TableCell>Pending</TableCell>
                   <TableCell>

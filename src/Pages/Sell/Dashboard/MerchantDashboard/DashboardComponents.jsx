@@ -4,7 +4,6 @@ import {
   CircularProgress,
   Typography,
 } from "@mui/material";
-import { Link } from "react-router-dom";
 import {
   get_purchaseOrderNo,
   get_saleOrderNo,
@@ -106,7 +105,7 @@ function DashboardComponents({ data, date }) {
                   >
                     {purchasedOrders.map((order, index) => (
                       <SwiperSlide key={index}>
-                        <Typography className="number">
+                        <Typography className="number" sx={{cursor:'pointer'}}>
                           {order.po_no.split("_")[2]}
                         </Typography>
                       </SwiperSlide>
@@ -116,7 +115,7 @@ function DashboardComponents({ data, date }) {
                   <Typography className="number">-</Typography>
                 )
               ) : (
-                <Typography className="number">{card.value}</Typography>
+                <Typography className="number" sx={{cursor:'pointer'}}>{card.value}</Typography>
               )}
             </Box>
           ))}

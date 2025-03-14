@@ -19,14 +19,10 @@ import {
 import { useParams } from "react-router-dom";
 import {
   get_product_variants,
-  get_products,
-  get_purchaseOrderNo,
   get_purchaseOrders,
   post_saleOrder,
 } from "../../../../API/fetchExpressAPI";
 import CustomSnackbar from "../../../../Components/CustomSnackbar";
-import { Navigation } from "swiper/modules";
-import { Swiper, SwiperSlide } from "swiper/react";
 
 function PurchasedOrderTable({ purchasedOrders, selectedPO }) {
   const [loading, setLoading] = useState(false);
