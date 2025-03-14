@@ -1,22 +1,27 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Typography, Button, CircularProgress } from "@mui/material";
 import { get_allPurchaseOrderDetails, get_purchaseOrderDetails, get_purchaseOrders, getUser } from "../../../../API/fetchExpressAPI";
 import { useSelector } from "react-redux";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
+import { Divider } from "rsuite";
 
 function OrderDetails_tab_content({ title }) {
     const [purchasedOrders, setPurchasedOrders] = useState([]);
     const [selectedOrder, setSelectedOrder] = useState([]); // Store selected order
     const token = useSelector((state) => state.auth.userAccessToken);
+    const [loading, setLoading] = useState(false);
 
     const fetchPurchasedOrder = async (buyer_id) => {
         try {
+            setLoading(true);
             const resp = await get_allPurchaseOrderDetails(buyer_id);
             if (resp.valid) {
                 setPurchasedOrders(resp.data);
             }
         } catch (e) {
             console.log(e);
+        }finally{
+            setLoading(false);
         }
     };
 
@@ -24,6 +29,7 @@ function OrderDetails_tab_content({ title }) {
         if (token) {
             const fetchUserType = async () => {
                 try {
+                    setLoading(true);
                     const userData = (await getUser(token))?.[0];
 
                     if (userData.user_type === "member") {
@@ -31,6 +37,8 @@ function OrderDetails_tab_content({ title }) {
                     }
                 } catch (e) {
                     console.log(e);
+                } finally{
+                    setLoading(false);
                 }
             };
             fetchUserType();
@@ -40,12 +48,15 @@ function OrderDetails_tab_content({ title }) {
     const fetchPurchasedOrderDetails = async (po_no) => {
         if(po_no){
             try{
+                setLoading(true);
                 const resp = await get_purchaseOrders(po_no);
                 if(resp.valid){
                     setSelectedOrder(resp.data);
                 }
             }catch(e){
                 console.log(e);
+            }finally{
+                setLoading(false);
             }
         }
     }
@@ -61,6 +72,7 @@ function OrderDetails_tab_content({ title }) {
 
     return (
         <Box className="tab_content">
+            {loading && <Box className="loading"><CircularProgress/></Box> }
             {selectedOrder.length>0 ? <Typography sx={{cursor:'pointer'}} className="title" onClick={()=>setSelectedOrder([])}>{title}</Typography>: <Typography className="title">{title}</Typography>}
             <Box className="content">
                 {/* If an order is selected, show its details */}
@@ -79,7 +91,8 @@ function OrderDetails_tab_content({ title }) {
                             <Typography className="heading">Total Amount</Typography>
                             <Typography className="text">{order.total_amount}</Typography>
                         </Box>
-                    
+                        
+                        <Divider/>
                     </Box>))}
                     </Box>
                 
