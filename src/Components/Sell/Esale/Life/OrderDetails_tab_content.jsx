@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography, Button, CircularProgress } from "@mui/material";
+import { Box, Typography, Button, CircularProgress, Divider } from "@mui/material";
 import { get_allPurchaseOrderDetails, get_purchaseOrderDetails, get_purchaseOrders, getUser } from "../../../../API/fetchExpressAPI";
 import { useSelector } from "react-redux";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
-import { Divider } from "rsuite";
 
 function OrderDetails_tab_content({ title }) {
     const [purchasedOrders, setPurchasedOrders] = useState([]);
