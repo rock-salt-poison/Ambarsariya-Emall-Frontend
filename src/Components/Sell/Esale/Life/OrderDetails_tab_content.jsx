@@ -90,7 +90,6 @@ function OrderDetails_tab_content({ title }) {
                             <Typography className="text">{order.total_amount}</Typography>
                         </Box>
                         
-                        <Divider/>
                     </Box>))}
                     </Box>
                 
