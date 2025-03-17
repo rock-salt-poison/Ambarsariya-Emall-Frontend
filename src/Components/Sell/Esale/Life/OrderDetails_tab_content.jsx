@@ -69,7 +69,6 @@ function OrderDetails_tab_content({ title }) {
 
     console.log(selectedOrder);
     
-
     return (
         <Box className="tab_content">
             {loading && <Box className="loading"><CircularProgress/></Box> }
