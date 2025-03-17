@@ -347,7 +347,7 @@ console.log(categories)
     
                 headers = sheet.data[0]; // Extract headers (first row)
     
-                return sheet.data.slice(1).filter(row => {
+                return sheet.data.slice(2).filter(row => {
                     const productNameIndex = headers.indexOf("Product Name");
                     const productTypeIndex = headers.indexOf("Product Type");
                     const productDescriptionIndex = headers.indexOf("Product Description");
@@ -384,6 +384,7 @@ console.log(categories)
     
                 return {
                     shop_no: shopNo, // Ensure shopNo is defined elsewhere
+                    product_no: product["Product No"] || null,
                     category: categories.find(cat => cat.name === sheet.sheetName)?.id || null, // Now sheet is defined
                     product_name: product["Product Name"] || null,
                     product_type: product["Product Type"] || null,
