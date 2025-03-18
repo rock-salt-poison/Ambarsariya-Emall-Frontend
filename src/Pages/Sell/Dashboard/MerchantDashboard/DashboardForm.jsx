@@ -185,36 +185,39 @@ console.log(categories)
         type: "select-check",
         placeholder: "Select Product(s)",
         options: productsData.map((product)=>product.product_name),
+        defaultCheckedOptions: true,
+        readOnly:true
       },
       {
         id: 2,
-        label: "Upload Item CSV",
-        name: "csv_file",
-        type: "url",
-        placeholder: "Link",
-      },
-      {
-        id: 3,
-        label: "Stock out - cost",
-        name: "price",
-        type: "text",
-        behvaior:'numeric',
-      },
-      {
-        id: 4,
-        label: "Select the stock",
-        name: "images_or_videos",
-        type: "file",
-        placeholder: "Choose file",
-      },
-      {
-        id: 5,
         label: "Create / Update",
         btn_text: "Click here to open file",
         name: "item_csv",
         type: 'Download file',
         handleDownload: handleDownload
       },
+      {
+        id: 3,
+        label: "Upload Item CSV",
+        name: "csv_file",
+        type: "url",
+        placeholder: "Link",
+      },
+      {
+        id: 4,
+        label: "Stock out - cost",
+        name: "price",
+        type: "text",
+        behvaior:'numeric',
+      },
+      {
+        id: 5,
+        label: "Select the stock",
+        name: "images_or_videos",
+        type: "file",
+        placeholder: "Choose file",
+      },
+      
     ],
     form3: [
       {
