@@ -185,6 +185,7 @@ function PurchasedOrderTable({ purchasedOrders, selectedPO }) {
           balance_credit: null,
           balance_credit_due_date: null,
           after_due_date_surcharges_per_day: null,
+          status:headerToggleState, 
           send_qr_upi_bank_details: true,
         };
 
