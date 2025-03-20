@@ -374,6 +374,17 @@ export const post_open_file = async (email)=>{
   }
 }
 
+export const post_open_items_csv_file = async (email, shop_no)=>{
+  try{
+    if(email && shop_no){
+      const response = await axios.post(`${drive_link}/open-items-file/${email}/${shop_no}`);
+      return response.data; 
+    }
+  }catch(e){
+    throw e;
+  }
+}
+
 
 export const get_checkDriveAccess = async (email) => {
   try{

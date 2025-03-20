@@ -3,7 +3,7 @@ import { Box, Button, CircularProgress } from "@mui/material";
 import GeneralLedgerForm from "../../../../Components/Form/GeneralLedgerForm";
 import ribbon from "../../../../Utils/images/Sell/dashboard/merchant_dashboard/ribbon.svg";
 import { useSelector } from "react-redux";
-import { get_checkDriveAccess, get_product_names, get_requestDriveAccess, get_sheetsData, getCategories, getShopUserData, getUser, post_open_file, post_products } from "../../../../API/fetchExpressAPI";
+import { get_checkDriveAccess, get_product_names, get_requestDriveAccess, get_sheetsData, getCategories, getShopUserData, getUser, post_open_file, post_open_items_csv_file, post_products } from "../../../../API/fetchExpressAPI";
 import { useParams } from "react-router-dom";
 import product_csv from '../../../../Sheets/Ambarsariya Mall - Product CSV.csv'
 import item_csv from '../../../../Sheets/Ambarsariya Mall - Item CSV.csv'
@@ -126,10 +126,20 @@ function DashboardForm({data}) {
       }
     }
     if(name==="item_csv"){
-      const link = document.createElement("a");
-      link.href = item_csv;  // File URL or path
-      link.download = "Item CSV.csv";  // Specify the downloaded file name
-      link.click();
+      try{
+        setLoading(true);
+        const response = await post_open_items_csv_file(data?.username, data?.shop_no);
+        if (response.success) {
+          window.open(response.url, "_blank");
+        } else {
+          console.error("❌ Error:", response.message);
+        }
+
+      }catch(e){
+        console.log(e);
+      }finally{
+        setLoading(false);
+      }
     }
   };
 console.log(categories)
@@ -205,17 +215,38 @@ console.log(categories)
       },
       {
         id: 4,
-        label: "Stock out - cost",
-        name: "price",
-        type: "text",
-        behvaior:'numeric',
+        label: "No. of rack",
+        name: "no_of_rack",
+        type: "number",
+        placeholder: "Enter no of rack",
       },
       {
         id: 5,
-        label: "Select the stock",
-        name: "images_or_videos",
-        type: "file",
-        placeholder: "Choose file",
+        label: "No. of shelves",
+        name: "no_of_shelves",
+        type: "number",
+        placeholder: "No. of shelves in each rack",
+      },
+      {
+        id: 6,
+        label: "Shelf Length",
+        name: "shelf_length",
+        type: "number",
+        placeholder: "Enter shelf length",
+      },
+      {
+        id: 7,
+        label: "Shelf Breadth",
+        name: "shelf_breadth",
+        type: "number",
+        placeholder: "Enter shelf breadth",
+      },
+      {
+        id: 8,
+        label: "Shelf Height",
+        name: "shelf_height",
+        type: "number",
+        placeholder: "Enter shelf height",
       },
       
     ],
@@ -384,7 +415,7 @@ console.log(categories)
                     product["Product Image 3"],
                     product["Product Image 4"]
                 ].filter(image => image && image.trim() !== "");
-    
+                const iku =  product['IKU (ITEM Keeping Unit)'].split(', ');
                 return {
                     shop_no: shopNo, // Ensure shopNo is defined elsewhere
                     product_no: product["Product No"] || null,
@@ -395,7 +426,7 @@ console.log(categories)
                     price: product["Price"] || 0,
                     unit: product["Unit"] || null,
                     brand: product["Brand"] || null,
-                    iku: product["IKU (ITEM Keeping Unit)"] || null,
+                    iku: iku || [],
                     product_images: productImages.length > 0 ? productImages : [],
                     product_dimensions_width_in_cm: product["Product Dimension Width (in cm)"] || 0,
                     product_dimensions_height_in_cm: product["Product Dimension Height (in cm)"] || 0,
@@ -430,7 +461,8 @@ console.log(categories)
     
             const uniqueCategories = [...new Set(processedData.map(product => product.category))];
             const data = { products: processedData, categories: uniqueCategories };
-    
+            console.log(data);
+            
             try{
               setLoading(true);
               const resp = await post_products(data);
