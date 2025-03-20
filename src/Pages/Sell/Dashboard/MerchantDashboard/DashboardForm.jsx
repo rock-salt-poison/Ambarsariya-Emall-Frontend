@@ -3,7 +3,7 @@ import { Box, Button, CircularProgress } from "@mui/material";
 import GeneralLedgerForm from "../../../../Components/Form/GeneralLedgerForm";
 import ribbon from "../../../../Utils/images/Sell/dashboard/merchant_dashboard/ribbon.svg";
 import { useSelector } from "react-redux";
-import { get_checkDriveAccess, get_product_names, get_requestDriveAccess, get_sheetsData, getCategories, getShopUserData, getUser, post_open_file, post_open_items_csv_file, post_products } from "../../../../API/fetchExpressAPI";
+import { get_checkDriveAccess, get_product_names, get_requestDriveAccess, get_sheetsData, getCategories, getShopUserData, getUser, post_items, post_open_file, post_open_items_csv_file, post_products } from "../../../../API/fetchExpressAPI";
 import { useParams } from "react-router-dom";
 import product_csv from '../../../../Sheets/Ambarsariya Mall - Product CSV.csv'
 import item_csv from '../../../../Sheets/Ambarsariya Mall - Item CSV.csv'
@@ -364,9 +364,9 @@ console.log(categories)
   
   const handleSubmit = async (event, formName) => {
     event.preventDefault();
-    if (validateForm(formName)) {
+    if (validateForm('form1')) {
       
-      const file = formData[formName].csv_file;
+      const file = formData['form1'].csv_file;
       
       try {
         const response = await get_sheetsData(file);
@@ -466,6 +466,116 @@ console.log(categories)
             try{
               setLoading(true);
               const resp = await post_products(data);
+              setSnackbar({
+                open: true,
+                message: resp.message,
+                severity: "success",
+              });
+            }catch(e){
+              console.log(e);
+              setSnackbar({
+                open: true,
+                message: `Error : ${e.response.data.message.detail}`,
+                severity: "error",
+              });
+            }finally{
+              setLoading(false);
+            }
+        }
+    } 
+    catch (e) {
+        console.log(e);
+        
+    }
+    
+
+    } 
+    if (validateForm('form2')) {
+      
+      const file = formData['form2'].csv_file;
+      
+      try {
+        const response = await get_sheetsData(file);
+        if (response.success) {
+            const result = response.sheets;
+            console.log(result);
+    
+            let headers = []; // Declare headers outside
+    
+            const filteredData = result.map(sheet => {
+                console.log(sheet);
+    
+                headers = sheet.data[0]; // Extract headers (first row)
+    
+                return sheet.data.slice(1).filter(row => {
+                    const noOfItemsIndex = headers.indexOf("No of Items");
+                    const weightOfItemKgsIndex = headers.indexOf("Weight of item kgs");
+                    const sellingPriceIndex = headers.indexOf("Selling Price");
+                    const costPriceIndex = headers.indexOf("Cost Price");
+                    const quantityInStockIndex = headers.indexOf("Quantity in stock");
+                    const maxItemQuantityIndex = headers.indexOf("Max Item Quantity");
+
+    
+                    // Ensure none of the required fields are empty
+                    return row[noOfItemsIndex]?.trim() !== "" &&
+                           row[weightOfItemKgsIndex]?.trim() !== "" &&
+                           row[sellingPriceIndex]?.trim() !== "" &&
+                           row[costPriceIndex]?.trim() !== "" &&
+                           row[quantityInStockIndex]?.trim() !== "" &&
+                           row[maxItemQuantityIndex]?.trim() !== "";
+                });
+            }).flat();
+    
+            console.log(filteredData);
+    
+            const processedData = filteredData.map((row, index) => {
+              const sheet = result.find(sheet => sheet.data.includes(row)); 
+
+              if (!sheet) {
+                  console.warn("Sheet not found for row:", row);
+                  return null; // Skip this row if no sheet is found
+              }
+               const items = {};
+                console.log(sheet);
+                
+                headers.forEach((header, index) => {
+                    items[header] = row[index]?.trim() || ""; // Handle empty strings
+                });
+    
+                return {
+                  product_id : items["Product ID"] || null,
+                  no_of_items : items["No of Items"] || null,
+                  weight_of_item : items["Weight of item kgs"] || null,
+                  item_area : items["Item area"] || null, 
+                  make_material: items["Make Material"] || null,
+                  storage_requirements : items["Storage Requirements"] || null,
+                  selling_price : items["Selling Price"] || null,
+                  cost_price : items["Cost Price"] || null,
+                  quantity_in_stock : items["Quantity in stock"] || null,
+                  max_item_quantity : items["Max Item Quantity"] || null,
+                  subscribe : items["Subscribe"] || null,
+                  weekly_min_quantity : items["Weekly  (Min Quantity)"] || null,
+                  monthly_min_quantity : items["Monthly  (Min Quantity)"] || null,
+                  daily_min_quantity : items["Daily (Min Quantity)"] || null,
+                  editable_min_quantity : items["Editable (Min Quantity)"] || null,
+                  item_package_dimensions : items["ITEM package Dimensions"] || null,
+                  color : items["Color"] || null,
+                  specification_1 : items["Specification 1"] || null,
+                  specification_2 : items["Specification 2"] || null,
+                  specification_3 : items["Specification 3"] || null,
+                  specification_4 : items["Specification 4"] || null,
+                  sku_id : items["SKU ID"] || null,
+                  shop_no: shopNo,  
+                };
+            });
+    
+            // const uniqueCategories = [...new Set(processedData.map(product => product.category))];
+            const data = { items: processedData };
+            console.log(data);
+            
+            try{
+              setLoading(true);
+              const resp = await post_items(data);
               setSnackbar({
                 open: true,
                 message: resp.message,

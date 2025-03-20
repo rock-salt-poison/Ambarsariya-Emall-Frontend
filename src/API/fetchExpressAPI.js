@@ -274,6 +274,15 @@ export const post_products = async (data) => {
   }
 }
 
+export const post_items = async (data) => {
+  try{
+    const response = await axios.post(`${link}/sell/items`, data);
+    return response.data;
+  }catch(e){
+    throw e;
+  }
+}
+
 export const get_products = async (shop_no) => {
   try{
     if(shop_no){
