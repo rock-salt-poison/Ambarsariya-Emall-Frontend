@@ -20348,6 +20348,9 @@ textarea[readonly]{
               width: 100%;
             }
 
+            .label.w-100{
+              display:none;
+            }
             .sub_fields{
               @include flex-center(row, flex-start);
 
@@ -20360,7 +20363,8 @@ textarea[readonly]{
                   );
                   @include hover-scale(1, 0s);
                   width: 40%;
-              }
+
+                }
 
               .form-control{
                 margin-right: 10px;

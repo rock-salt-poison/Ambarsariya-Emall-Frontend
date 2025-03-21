@@ -27,14 +27,19 @@ function DashboardForm({data}) {
     form2: {
       products: "",
       csv_file: "",
-      price: 0,
-      images_or_videos: "",
+      no_of_rack:'',
+      no_of_shelves:'',
+      shelf_size:'',
+      shelf_length:'',
+      shelf_breadth:'',
+      shelf_height:'',
     },
     form3: {
       items: "",
       csv_file: "",
-      quantity: 0,
-      variation_specifications_images: "",
+      no_of_walls_of_rack: "",
+      no_of_racks_per_wall : "" ,
+      max_product_packing_size: "",
     },
     form4: {
       sku_id: "",
@@ -216,7 +221,6 @@ console.log(categories)
       {
         id: 4,
         label: "No. of rack",
-        type:'',
         innerField : [
           {id: 1,
             name: "no_of_rack",
@@ -232,7 +236,6 @@ console.log(categories)
       {
         id: 5,
         label: "Shelf Size",
-        type:'',
         innerField : [
           {id: 1,
           name: "shelf_length",
@@ -261,31 +264,43 @@ console.log(categories)
       },
       {
         id: 2,
+        label: "Create / Update",
+        btn_text: "Click here to open file",
+        name: "sku_id_csv",
+        type: 'Download file',
+        handleDownload: handleDownload
+      },
+      {
+        id: 3,
         label: "Upload SKU Id CSV",
         name: "csv_file",
         type: "url",
         placeholder: "Link",
       },
       {
-        id: 3,
-        label: "Show Quantity",
-        name: "quantity",
-        type: "number",
-      },
-      {
         id: 4,
-        label: "Upload Variation and specifications images",
-        name: "variation_specifications_images",
-        type: "file",
-        placeholder: "Choose file",
+        label: "Walls of Rack",
+        innerField: [
+          {id:1 ,
+            label:'No. of walls of rack',
+          name: "no_of_walls_of_rack",
+          type: "number",
+          placeholder:'No. of walls of rack',
+          },
+          {id:2 ,
+            label:'No. of racks in each wall',
+            name: "no_of_racks_per_wall",
+            type: "number",
+            placeholder:'No. of racks in each wall',
+            }
+        ]
       },
       {
         id: 5,
-        label: "Create / Update",
-        btn_text: "Click here to open file",
-        name: "sku_id_csv",
-        type: 'Download file',
-        handleDownload: handleDownload
+        label: "Max Product Packing Size",
+        name: "max_product_packing_size",
+        type: "number",
+        placeholder: "Max lateral Area",
       },
     ],
     form4: [
@@ -360,10 +375,15 @@ console.log(categories)
     return Object.keys(newErrors).length === 0;
   };
 
+  console.log(errors);
+  
+  
   console.log(formData["form1"].product_category);
   
   const handleSubmit = async (event, formName) => {
     event.preventDefault();
+    console.log(formName);
+    
     if (formName === 'form1' && validateForm('form1')) {
       
       const file = formData['form1'].csv_file;
@@ -490,7 +510,7 @@ console.log(categories)
     
 
     } 
-    if (formName === 'form2' && validateForm('form2')) {
+    else if (formName === 'form2' ) {
       
       const file = formData['form2'].csv_file;
       
@@ -543,6 +563,7 @@ console.log(categories)
                 });
     
                 return {
+                  item_no : items["Item No"] || null,
                   product_id : items["Product ID"] || null,
                   no_of_items : items["No of Items"] || null,
                   weight_of_item : items["Weight of item kgs"] || null,
