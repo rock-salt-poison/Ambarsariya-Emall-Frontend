@@ -216,37 +216,37 @@ console.log(categories)
       {
         id: 4,
         label: "No. of rack",
-        name: "no_of_rack",
+        type:'',
+        innerField : [
+          {id: 1,
+            name: "no_of_rack",
+            type: "number",
+            placeholder: "Enter no of rack",},
+          {id: 2,
+            name: "no_of_shelves",
         type: "number",
-        placeholder: "Enter no of rack",
+        placeholder: "No. of shelves in each rack"},
+        ]
+        
       },
       {
         id: 5,
-        label: "No. of shelves",
-        name: "no_of_shelves",
-        type: "number",
-        placeholder: "No. of shelves in each rack",
-      },
-      {
-        id: 6,
-        label: "Shelf Length",
-        name: "shelf_length",
-        type: "number",
-        placeholder: "Enter shelf length",
-      },
-      {
-        id: 7,
-        label: "Shelf Breadth",
-        name: "shelf_breadth",
-        type: "number",
-        placeholder: "Enter shelf breadth",
-      },
-      {
-        id: 8,
-        label: "Shelf Height",
-        name: "shelf_height",
-        type: "number",
-        placeholder: "Enter shelf height",
+        label: "Shelf Size",
+        type:'',
+        innerField : [
+          {id: 1,
+          name: "shelf_length",
+          type: "number",
+          placeholder: "Length",},
+          {id: 2,
+            name: "shelf_breadth",
+            type: "number",
+            placeholder: "Breadth",},
+          {id: 3,
+            name: "shelf_height",
+            type: "number",
+            placeholder: "Height",}
+        ]
       },
       
     ],
@@ -364,7 +364,7 @@ console.log(categories)
   
   const handleSubmit = async (event, formName) => {
     event.preventDefault();
-    if (validateForm('form1')) {
+    if (formName === 'form1' && validateForm('form1')) {
       
       const file = formData['form1'].csv_file;
       
@@ -490,7 +490,7 @@ console.log(categories)
     
 
     } 
-    if (validateForm('form2')) {
+    if (formName === 'form2' && validateForm('form2')) {
       
       const file = formData['form2'].csv_file;
       

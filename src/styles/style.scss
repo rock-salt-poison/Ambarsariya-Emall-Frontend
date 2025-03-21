@@ -15436,7 +15436,7 @@ a {
         7px 16px
       );
 
-      &:first-child{
+      &.header:first-child{
         display: grid;
         grid-template-columns: 120px 1fr 120px;
       }
@@ -20348,6 +20348,39 @@ textarea[readonly]{
               width: 100%;
             }
 
+            .sub_fields{
+              @include flex-center(row, flex-start);
+
+              .label{
+                @include homepage-buttons(
+                    "Bobby-Jones-Soft",
+                    17px,
+                    $brown-4,
+                    "none"
+                  );
+                  @include hover-scale(1, 0s);
+                  width: 40%;
+              }
+
+              .form-control{
+                margin-right: 10px;
+                flex: 1;
+
+                &:last-child {
+                  margin-right: 0; // Removes space after the last element
+                }
+                .form-row{
+                  .label{
+                    display: none;
+                  }
+                  .field_container{
+                    width: 100%;
+                  
+                  }
+                }
+              }
+            }
+
             .form-control {
               align-self: stretch;
 
@@ -20613,6 +20646,18 @@ textarea[readonly]{
           }
         }
         &.eshop{
+          .sub_fields{
+            flex-wrap: wrap;
+            gap: 10px;
+            .label{
+              width: 100% !important;
+            }
+
+            .form-control{
+              flex: auto !important;
+              margin-right: 0px !important;
+            }
+          }
           .form_col{
             width: 100%;
           }
