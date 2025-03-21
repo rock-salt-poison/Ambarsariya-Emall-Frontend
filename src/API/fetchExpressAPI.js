@@ -140,6 +140,19 @@ export const getCategoryName = async (category_id) => {
   return response.data;
 };
 
+export const getCategoryId = async (category_name) => {
+  try {
+    const response = await axios.get(
+      `${link}/category/name/${category_name}`
+    );
+    return response.data?.[0]?.category_id || null;
+  } catch (error) {
+    console.error("Error fetching category ID:", error);
+    return null;
+  }
+};
+
+
 export const postMemberData = async (userData) => {
   try {
       const response = await axios.post(`${link}/sell/member`, userData, {
@@ -320,6 +333,18 @@ export const get_product_variants = async (shop_no, variant_group) => {
   try{
     if(shop_no){
       const response = await axios.get(`${link}/sell/product-variants/${shop_no}/${variant_group}`);
+      return response.data;
+    }
+  }catch(e){
+    throw e;
+  }
+}
+
+
+export const get_items = async (shop_no) => {
+  try{
+    if(shop_no){
+      const response = await axios.get(`${link}/sell/items/${shop_no}`);
       return response.data;
     }
   }catch(e){

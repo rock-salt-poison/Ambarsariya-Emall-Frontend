@@ -3,7 +3,7 @@ import { Box, Button, CircularProgress } from "@mui/material";
 import GeneralLedgerForm from "../../../../Components/Form/GeneralLedgerForm";
 import ribbon from "../../../../Utils/images/Sell/dashboard/merchant_dashboard/ribbon.svg";
 import { useSelector } from "react-redux";
-import { get_checkDriveAccess, get_product_names, get_requestDriveAccess, get_sheetsData, getCategories, getShopUserData, getUser, post_items, post_open_file, post_open_items_csv_file, post_products } from "../../../../API/fetchExpressAPI";
+import { get_checkDriveAccess, get_items, get_product_names, get_requestDriveAccess, get_sheetsData, getCategories, getCategoryId, getShopUserData, getUser, post_items, post_open_file, post_open_items_csv_file, post_products } from "../../../../API/fetchExpressAPI";
 import { useParams } from "react-router-dom";
 import product_csv from '../../../../Sheets/Ambarsariya Mall - Product CSV.csv'
 import item_csv from '../../../../Sheets/Ambarsariya Mall - Item CSV.csv'
@@ -53,6 +53,8 @@ function DashboardForm({data}) {
   const [errors, setErrors] = useState({});
   const [categories, setCategories] = useState([]);
   const [productsData, setProductsData] = useState([]);
+  const [itemsData, setItemsData] = useState([]);
+  const [skuData, setSKUData] = useState([]);
   const user_access_token = useSelector((state) => state.auth.userAccessToken);
   const [csvData, setCsvData] = useState([]);
   const [shopNo, setShopNo] = useState('');
@@ -76,6 +78,7 @@ function DashboardForm({data}) {
   
         setCategories(categoriesList);  
         fetchProducts(shopUsersData.shop_no);    
+        fetchItems(shopUsersData.shop_no);    
       }
     }catch(e){
       console.log("Error while fetching : ", e);
@@ -95,13 +98,24 @@ function DashboardForm({data}) {
     }
   }
 
+  const fetchItems = async (shop_no) => {
+    try{
+      const resp = await get_items(shop_no);
+      if(resp.valid){
+        console.log(resp.data);
+        setItemsData(resp.data);
+      }
+    }catch(e){
+      console.log("Error fetching products : ",e);
+    }
+  }
+
   useEffect(()=>{
     const fetchShopToken = async () => {
       const shop_token = (await getUser(user_access_token))[0].shop_access_token;
       if(shop_token === token){
         fetchData(shop_token);
       }
-
     }
     fetchShopToken();
   }, [user_access_token])
@@ -201,7 +215,8 @@ console.log(categories)
         placeholder: "Select Product(s)",
         options: productsData.map((product)=>product.product_name),
         defaultCheckedOptions: true,
-        readOnly:true
+        readOnly:true,
+        disable:productsData.length<=0,
       },
       {
         id: 2,
@@ -209,7 +224,8 @@ console.log(categories)
         btn_text: "Click here to open file",
         name: "item_csv",
         type: 'Download file',
-        handleDownload: handleDownload
+        handleDownload: handleDownload,
+        disable:productsData.length<=0,
       },
       {
         id: 3,
@@ -217,6 +233,7 @@ console.log(categories)
         name: "csv_file",
         type: "url",
         placeholder: "Link",
+        disable:productsData.length<=0,
       },
       {
         id: 4,
@@ -225,11 +242,15 @@ console.log(categories)
           {id: 1,
             name: "no_of_rack",
             type: "number",
-            placeholder: "Enter no of rack",},
+            placeholder: "Enter no of rack",
+            disable:productsData.length<=0,
+          },
           {id: 2,
             name: "no_of_shelves",
-        type: "number",
-        placeholder: "No. of shelves in each rack"},
+            type: "number",
+            placeholder: "No. of shelves in each rack",
+            disable:productsData.length<=0,
+          },
         ]
         
       },
@@ -240,15 +261,21 @@ console.log(categories)
           {id: 1,
           name: "shelf_length",
           type: "number",
-          placeholder: "Length",},
+          placeholder: "Length",
+          disable:productsData.length<=0,
+        },
           {id: 2,
             name: "shelf_breadth",
             type: "number",
-            placeholder: "Breadth",},
+            placeholder: "Breadth",
+            disable:productsData.length<=0,
+          },
           {id: 3,
             name: "shelf_height",
             type: "number",
-            placeholder: "Height",}
+            placeholder: "Height",
+            disable:productsData.length<=0,
+          }
         ]
       },
       
@@ -260,7 +287,10 @@ console.log(categories)
         name: "items",
         type: "select-check",
         placeholder: "Select Item(s)",
-        options: ["Electronics", "Clothing", "Home Goods"],
+        options: itemsData.map((item)=>item.item_id),
+        disable: itemsData.length<=0,
+        defaultCheckedOptions: true,
+        readOnly:true,
       },
       {
         id: 2,
@@ -268,6 +298,7 @@ console.log(categories)
         btn_text: "Click here to open file",
         name: "sku_id_csv",
         type: 'Download file',
+        disable: itemsData.length<=0,
         handleDownload: handleDownload
       },
       {
@@ -276,6 +307,7 @@ console.log(categories)
         name: "csv_file",
         type: "url",
         placeholder: "Link",
+        disable: itemsData.length<=0
       },
       {
         id: 4,
@@ -286,12 +318,14 @@ console.log(categories)
           name: "no_of_walls_of_rack",
           type: "number",
           placeholder:'No. of walls of rack',
+          disable: itemsData.length<=0,
           },
           {id:2 ,
             label:'No. of racks in each wall',
             name: "no_of_racks_per_wall",
             type: "number",
             placeholder:'No. of racks in each wall',
+            disable: itemsData.length<=0,
             }
         ]
       },
@@ -301,6 +335,7 @@ console.log(categories)
         name: "max_product_packing_size",
         type: "number",
         placeholder: "Max lateral Area",
+        disable: itemsData.length<=0,
       },
     ],
     form4: [
@@ -311,35 +346,41 @@ console.log(categories)
         type: "select",
         placeholder: "Select SKU Id",
         options: ["Electronics", "Clothing", "Home Goods"],
+        disable:skuData.length<=0,
       },
       {
         id: 2,
-        label: "Upload RKU Id CSV",
-        name: "csv_file",
-        type: "url",
-        placeholder: "Link",
-      },
-      {
-        id: 3,
-        label: "Stock space (Available in rack)",
-        name: "stock_space",
-        type: "number",
-      },
-      {
-        id: 4,
-        label: "Upload",
-        name: "upload",
-        type: "file",
-        placeholder: "Choose file",
-      },
-      {
-        id: 5,
         label: "Create / Update",
         btn_text: "Click here to open file",
         name: "rku_csv",
         type: 'Download file',
-        handleDownload: handleDownload
+        handleDownload: handleDownload,
+        disable:skuData.length<=0,
       },
+      {
+        id: 3,
+        label: "Upload RKU Id CSV",
+        name: "csv_file",
+        type: "url",
+        placeholder: "Link",
+        disable:skuData.length<=0,
+      },
+      {
+        id: 4,
+        label: "Stock space (Available in rack)",
+        name: "stock_space",
+        type: "number",
+        disable:skuData.length<=0,
+      },
+      {
+        id: 5,
+        label: "Upload",
+        name: "upload",
+        type: "file",
+        placeholder: "Choose file",
+        disable:skuData.length<=0,
+      },
+      
     ],
   };
 
@@ -415,7 +456,7 @@ console.log(categories)
     
             console.log(filteredData);
     
-            const processedData = filteredData.map((row, index) => {
+            const processedData = await Promise.all(filteredData.map(async (row, index) => {
               const sheet = result.find(sheet => sheet.data.includes(row)); 
 
               if (!sheet) {
@@ -436,10 +477,12 @@ console.log(categories)
                     product["Product Image 4"]
                 ].filter(image => image && image.trim() !== "");
                 const iku =  product['IKU (ITEM Keeping Unit)'].split(', ');
+
+                const categoryId = await getCategoryId(sheet?.sheetName);
                 return {
                     shop_no: shopNo, // Ensure shopNo is defined elsewhere
                     product_no: product["Product No"] || null,
-                    category: categories.find(cat => cat.name === sheet.sheetName)?.id || null, // Now sheet is defined
+                    category: categoryId || null,
                     product_name: product["Product Name"] || null,
                     product_type: product["Product Type"] || null,
                     product_description: product["Product Description"] || null,
@@ -477,7 +520,7 @@ console.log(categories)
                     product_catalog: product["Product Catalog"] || null,
                     brand_catalog: product["Brand Catalog"] || null
                 };
-            });
+            }));
     
             const uniqueCategories = [...new Set(processedData.map(product => product.category))];
             const data = { products: processedData, categories: uniqueCategories };
@@ -504,8 +547,7 @@ console.log(categories)
         }
     } 
     catch (e) {
-        console.log(e);
-        
+      console.log(e);
     }
     
 

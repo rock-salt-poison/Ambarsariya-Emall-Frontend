@@ -31,7 +31,8 @@ const FormField = ({
   additionalProps,
   handleDownload, required,
   btn_text,
-  defaultChecked
+  defaultChecked,
+  disable=false
 }) => {
 
   const marks = getSliderMarks ? getSliderMarks(name) : [];
@@ -109,9 +110,10 @@ const FormField = ({
                 type="file"
                 name={name}
                 onChange={!readOnly ? onChange : undefined}
+                disabled={disable}
               />
               <label htmlFor={name} className='file_label'>
-                <Button variant="contained" color="primary" component="span" className={`file_button ${className}`}  disabled={readOnly}>
+                <Button variant="contained" color="primary" component="span" className={`file_button ${className}`}  disabled={readOnly || disable}>
                   {icon ? uploadFileText : uploadFileIcon ?
                     <Box component="img" src={uploadFileIcon} alt="upload_file" className='upload_file' />
                     : placeholder ? placeholder : "Choose File"}
@@ -145,7 +147,7 @@ const FormField = ({
         ) : type==="Download file" ? (
           <>
           <Typography className="label">{label}</Typography>
-          <Button onClick={(e)=>handleDownload(e, name)} className='btn-download field_container'>
+          <Button disabled={disable} onClick={(e)=>handleDownload(e, name)} className='btn-download field_container'>
            {btn_text}
           </Button>
           </>
@@ -164,6 +166,7 @@ const FormField = ({
                   className={`input_field ${className}`}
                   {...(error && { error: true })}
                   required={required}
+                  disabled={disable}
                 >
                   <MenuItem value="" disabled key={0}>
                     {placeholder}
@@ -187,6 +190,7 @@ const FormField = ({
                   )}
                   displayEmpty
                   className={`input_field ${className}`}
+                  disabled={disable}
                 >
                   <MenuItem value="" disabled>
                     {placeholder}
@@ -254,6 +258,7 @@ const FormField = ({
                   autoComplete="false"
                   spellCheck="false"
                   {...additionalProps}
+                  disabled={disable}
                 />
               )}
             </Box>
