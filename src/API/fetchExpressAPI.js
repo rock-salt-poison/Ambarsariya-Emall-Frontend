@@ -408,10 +408,10 @@ export const post_open_file = async (email)=>{
   }
 }
 
-export const post_open_items_csv_file = async (email, shop_no)=>{
+export const post_open_items_csv_file = async (email, shop_no, rackData)=>{
   try{
-    if(email && shop_no){
-      const response = await axios.post(`${drive_link}/open-items-file/${email}/${shop_no}`);
+    if(email && shop_no && rackData){
+      const response = await axios.post(`${drive_link}/open-items-file/${email}/${shop_no}`, rackData);
       return response.data; 
     }
   }catch(e){

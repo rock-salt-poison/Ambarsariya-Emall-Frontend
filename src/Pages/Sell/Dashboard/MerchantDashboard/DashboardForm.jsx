@@ -147,7 +147,14 @@ function DashboardForm({data}) {
     if(name==="item_csv"){
       try{
         setLoading(true);
-        const response = await post_open_items_csv_file(data?.username, data?.shop_no);
+        const rackData = {
+          no_of_racks:formData.form2.no_of_rack,
+          no_of_shelves:formData.form2.no_of_shelves,
+          shelf_length:formData.form2.shelf_length,
+          shelf_breadth:formData.form2.shelf_breadth,
+          shelf_height:formData.form2.shelf_height,
+        }
+        const response = await post_open_items_csv_file(data?.username, data?.shop_no, rackData);
         if (response.success) {
           window.open(response.url, "_blank");
         } else {
@@ -220,23 +227,6 @@ console.log(categories)
       },
       {
         id: 2,
-        label: "Create / Update",
-        btn_text: "Click here to open file",
-        name: "item_csv",
-        type: 'Download file',
-        handleDownload: handleDownload,
-        disable:productsData.length<=0,
-      },
-      {
-        id: 3,
-        label: "Upload Item CSV",
-        name: "csv_file",
-        type: "url",
-        placeholder: "Link",
-        disable:productsData.length<=0,
-      },
-      {
-        id: 4,
         label: "No. of rack",
         innerField : [
           {id: 1,
@@ -255,8 +245,8 @@ console.log(categories)
         
       },
       {
-        id: 5,
-        label: "Shelf Size",
+        id: 3,
+        label: "Shelf Size (in cm)",
         innerField : [
           {id: 1,
           name: "shelf_length",
@@ -278,6 +268,24 @@ console.log(categories)
           }
         ]
       },
+      {
+        id: 4,
+        label: "Create / Update",
+        btn_text: "Click here to open file",
+        name: "item_csv",
+        type: 'Download file',
+        handleDownload: handleDownload,
+        disable:productsData.length<=0,
+      },
+      {
+        id: 5,
+        label: "Upload Item CSV",
+        name: "csv_file",
+        type: "url",
+        placeholder: "Link",
+        disable:productsData.length<=0,
+      },
+      
       
     ],
     form3: [
@@ -294,23 +302,6 @@ console.log(categories)
       },
       {
         id: 2,
-        label: "Create / Update",
-        btn_text: "Click here to open file",
-        name: "sku_id_csv",
-        type: 'Download file',
-        disable: itemsData.length<=0,
-        handleDownload: handleDownload
-      },
-      {
-        id: 3,
-        label: "Upload SKU Id CSV",
-        name: "csv_file",
-        type: "url",
-        placeholder: "Link",
-        disable: itemsData.length<=0
-      },
-      {
-        id: 4,
         label: "Walls of Rack",
         innerField: [
           {id:1 ,
@@ -330,13 +321,31 @@ console.log(categories)
         ]
       },
       {
-        id: 5,
-        label: "Max Product Packing Size",
-        name: "max_product_packing_size",
-        type: "number",
-        placeholder: "Max lateral Area",
-        disable: itemsData.length<=0,
+        id: 3,
+        label: "Location of the store",
+        name: "location",
+        type: "address",
+        placeholder: "store location",
+        disable: itemsData.length<=0
       },
+      {
+        id: 4,
+        label: "Create / Update",
+        btn_text: "Click here to open file",
+        name: "sku_id_csv",
+        type: 'Download file',
+        disable: itemsData.length<=0,
+        handleDownload: handleDownload
+      },
+      {
+        id: 5,
+        label: "Upload SKU Id CSV",
+        name: "csv_file",
+        type: "url",
+        placeholder: "Link",
+        disable: itemsData.length<=0
+      },
+      
     ],
     form4: [
       {
@@ -611,7 +620,7 @@ console.log(categories)
                   weight_of_item : items["Weight of item kgs"] || null,
                   item_area : items["Item area"] || null, 
                   make_material: items["Make Material"] || null,
-                  storage_requirements : items["Storage Requirements"] || null,
+                  storage_requirements : items["Storage Occupied"] || null,
                   selling_price : items["Selling Price"] || null,
                   cost_price : items["Cost Price"] || null,
                   quantity_in_stock : items["Quantity in stock"] || null,
@@ -621,12 +630,17 @@ console.log(categories)
                   monthly_min_quantity : items["Monthly  (Min Quantity)"] || null,
                   daily_min_quantity : items["Daily (Min Quantity)"] || null,
                   editable_min_quantity : items["Editable (Min Quantity)"] || null,
-                  item_package_dimensions : items["ITEM package Dimensions"] || null,
+                  item_package_dimensions : items["ITEM ID Package Dimensions"] || null,
                   color : items["Color"] || null,
                   specification_1 : items["Specification 1"] || null,
                   specification_2 : items["Specification 2"] || null,
                   specification_3 : items["Specification 3"] || null,
                   specification_4 : items["Specification 4"] || null,
+                  no_of_racks: items["Number of Racks"] || null,
+                  no_of_shelves: items["Number of Shelves"] || null,
+                  shelf_length: items["Length of Shelf"] || null,
+                  shelf_breadth: items["Breadth of Shelf"] || null,
+                  shelf_height: items["Height of Shelf"] || null,
                   sku_id : items["SKU ID"] || null,
                   shop_no: shopNo,  
                 };
@@ -639,6 +653,8 @@ console.log(categories)
             try{
               setLoading(true);
               const resp = await post_items(data);
+              console.log(resp);
+              
               setSnackbar({
                 open: true,
                 message: resp.message,
