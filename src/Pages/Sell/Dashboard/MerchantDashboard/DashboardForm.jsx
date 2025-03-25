@@ -3,7 +3,7 @@ import { Box, Button, CircularProgress } from "@mui/material";
 import GeneralLedgerForm from "../../../../Components/Form/GeneralLedgerForm";
 import ribbon from "../../../../Utils/images/Sell/dashboard/merchant_dashboard/ribbon.svg";
 import { useSelector } from "react-redux";
-import { get_checkDriveAccess, get_items, get_product_names, get_requestDriveAccess, get_sheetsData, getCategories, getCategoryId, getShopUserData, getUser, post_items, post_open_file, post_open_items_csv_file, post_products } from "../../../../API/fetchExpressAPI";
+import { get_checkDriveAccess, get_items, get_product_names, get_requestDriveAccess, get_sheetsData, getCategories, getCategoryId, getShopUserData, getUser, post_items, post_open_file, post_open_items_csv_file, post_open_sku_csv_file, post_products } from "../../../../API/fetchExpressAPI";
 import { useParams } from "react-router-dom";
 import product_csv from '../../../../Sheets/Ambarsariya Mall - Product CSV.csv'
 import item_csv from '../../../../Sheets/Ambarsariya Mall - Item CSV.csv'
@@ -39,7 +39,7 @@ function DashboardForm({data}) {
       csv_file: "",
       no_of_walls_of_rack: "",
       no_of_racks_per_wall : "" ,
-      max_product_packing_size: "",
+      store_location: "",
     },
     form4: {
       sku_id: "",
@@ -155,6 +155,28 @@ function DashboardForm({data}) {
           shelf_height:formData.form2.shelf_height,
         }
         const response = await post_open_items_csv_file(data?.username, data?.shop_no, rackData);
+        if (response.success) {
+          window.open(response.url, "_blank");
+        } else {
+          console.error("❌ Error:", response.message);
+        }
+
+      }catch(e){
+        console.log(e);
+      }finally{
+        setLoading(false);
+      }
+    }
+
+    if(name==="sku_id_csv"){
+      try{
+        setLoading(true);
+        const rackWallData = {
+          no_of_walls_of_rack : formData.form3.no_of_walls_of_rack,
+          no_of_racks_per_wall : formData.form3.no_of_racks_per_wall,
+          store_location : formData.form3.store_location,
+        }
+        const response = await post_open_sku_csv_file(data?.username, data?.shop_no, rackWallData);
         if (response.success) {
           window.open(response.url, "_blank");
         } else {
@@ -323,7 +345,7 @@ console.log(categories)
       {
         id: 3,
         label: "Location of the store",
-        name: "location",
+        name: "store_location",
         type: "address",
         placeholder: "store location",
         disable: itemsData.length<=0

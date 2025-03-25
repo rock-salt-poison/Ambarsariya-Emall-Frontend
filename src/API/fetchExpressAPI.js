@@ -419,6 +419,17 @@ export const post_open_items_csv_file = async (email, shop_no, rackData)=>{
   }
 }
 
+export const post_open_sku_csv_file = async (email, shop_no, rackWallData)=>{
+  try{
+    if(email && shop_no && rackWallData){
+      const response = await axios.post(`${drive_link}/open-sku-file/${email}/${shop_no}`, rackWallData);
+      return response.data; 
+    }
+  }catch(e){
+    throw e;
+  }
+}
+
 
 export const get_checkDriveAccess = async (email) => {
   try{
