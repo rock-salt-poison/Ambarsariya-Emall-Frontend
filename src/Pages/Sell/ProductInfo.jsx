@@ -20,7 +20,7 @@ function ProductInfo() {
   const { product_id, token } = useParams();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [variants, setVariants] = useState([]);
+  const [variants, setVariants] = useState(0);
   const [selectedVariant, setSelectedVariant] = useState(null);
 
   useEffect(() => {
@@ -29,24 +29,15 @@ function ProductInfo() {
 
       try {
         setLoading(true);
-        const shopData = await getShopUserData(token);
-        const get_shop_no = shopData?.[0]?.shop_no;
-
-        if (!get_shop_no) return;
-
-        const productResponse = await get_product(get_shop_no, product_id);
-        const get_product_details = productResponse?.data?.[0];
-
-        if (!get_product_details) return;
-
-        setData(get_product_details);
 
         // Fetch product variants
-        const resp = await get_product_variants(get_product_details.shop_no, get_product_details.variant_group);
-
+        const resp = await get_product_variants(product_id);
+        console.log(resp.data);
+        
+        
         if (resp?.valid && Array.isArray(resp.data)) {
-          setVariants(resp.data);
-          setSelectedVariant(resp.data[0]); // Default selection
+          setData(resp.data);
+          setSelectedVariant(0); // Default selection
         }
       } catch (e) {
         console.error("Error fetching product data:", e);
@@ -59,9 +50,15 @@ function ProductInfo() {
   }, [token, product_id]);
 
   const handleVariantChange = (event) => {
-    const selected = variants.find(variant => variant.product_id === event.target.value);
-    setSelectedVariant(selected);
+    const selectedIndex = data.findIndex(
+      (variant) => variant.item_id === event.target.value
+    );
+    if (selectedIndex !== -1) {
+      setSelectedVariant(selectedIndex); // Store only the index
+    }
   };
+ 
+  
 
   return (
     <Box className="product_details_wrapper">
@@ -72,7 +69,7 @@ function ProductInfo() {
           <Box className="heading">
             <Box></Box>
             <Box className="container">
-              <Typography variant="h2">{selectedVariant?.product_name || data?.product_name}</Typography>
+              <Typography variant="h2">{data?.[0]?.product_name}</Typography>
             </Box>
             <UserBadge
               handleBadgeBgClick={`../shop/${token}/products/${product_id}`}
@@ -86,11 +83,11 @@ function ProductInfo() {
           <Box className="details">
             <Typography className="text">
               <Typography variant="span" className="light">Type : </Typography>
-              {selectedVariant?.product_type || data?.product_type}
+              {data?.[0].product_type}
             </Typography>
             <Typography className="text">
               <Typography variant="span" className="light">Description : </Typography>
-              {selectedVariant?.product_description || data?.product_description}
+              {data?.[0].product_description}
             </Typography>
           </Box>
         </Box>
@@ -99,28 +96,28 @@ function ProductInfo() {
           <Box className="details2">
             <Typography className="text">
               <Typography variant="span" className="light">Brand : </Typography>
-              {selectedVariant?.brand || data?.brand}
+              {data?.[0].brand}
             </Typography>
             <Typography className="text">
               <Typography variant="span" className="light">Style : </Typography>
-              {selectedVariant?.product_style || data?.product_style}
+              {data?.[0].product_style}
             </Typography>
           </Box>
         </Box>
 
         {/* Variant Selection */}
         <Box className="col">
-          {variants.length > 0 && (
+          {data?.length > 0 && (
             <FormControl component="fieldset">
               <RadioGroup
                 row
-                value={selectedVariant?.product_id || ""}
+                value={data?.[selectedVariant]?.item_id || ""}
                 onChange={handleVariantChange}
               >
-                {variants.map((variant, index) => (
+                {data?.map((variant, index) => (
                   <FormControlLabel
-                    key={variant.product_id}
-                    value={variant.product_id}
+                    key={variant.item_id}
+                    value={variant.item_id}
                     control={<Radio />}
                     label={`Variant ${index + 1}`}
                     className="variation"
@@ -142,18 +139,26 @@ function ProductInfo() {
               modules={[Zoom]}
               className="mySwiper"
             >
-              {(selectedVariant?.product_images)?.map((product_image, index) => (
-                <SwiperSlide key={index} className="card">
+              
+                <SwiperSlide  className="card">
                   <Box className="images swiper-zoom-container">
-                    <Box component="img" src={convertDriveLink(product_image)} />
+                    <Box component="img" src={
+                      data?.[selectedVariant]?.product_images?.length > 0
+                      && convertDriveLink(
+                          data?.[selectedVariant]?.product_images?.[
+                            data?.[selectedVariant]?.product_images?.[selectedVariant] // Check for valid image based on variant
+                              ? selectedVariant
+                              : 0
+                          ]
+                        )
+                    } />
                   </Box>
                 </SwiperSlide>
-              ))}
             </Swiper>
             <Typography className="text">
               <Typography variant="span" className="light">Price : </Typography>
-              {selectedVariant?.price || data?.price} {selectedVariant?.unit || data?.unit}
-            </Typography>
+              {data?.[selectedVariant]?.selling_price} {data?.[selectedVariant]?.unit}
+              </Typography>
           </Box>
         </Box>
 
@@ -164,7 +169,7 @@ function ProductInfo() {
         </Box>
 
         <Box className="col ticket_container">
-          <Link className="image_container_3" to={selectedVariant?.promotion_information || data?.promotion_information} target="_blank">
+          <Link className="image_container_3" to={data?.promotion_information} target="_blank">
             <Box component="img" src={ticket} className="ticket" />
           </Link>
         </Box>

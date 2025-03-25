@@ -329,10 +329,10 @@ export const get_product_names = async (shop_no) => {
   }
 }
 
-export const get_product_variants = async (shop_no, variant_group) => {
+export const get_product_variants = async (product_id) => {
   try{
-    if(shop_no){
-      const response = await axios.get(`${link}/sell/product-variants/${shop_no}/${variant_group}`);
+    if(product_id){
+      const response = await axios.get(`${link}/sell/product-variants/${product_id}`);
       return response.data;
     }
   }catch(e){
