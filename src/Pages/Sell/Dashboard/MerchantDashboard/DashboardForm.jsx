@@ -118,7 +118,7 @@ function DashboardForm({data}) {
       }
     }
     fetchShopToken();
-  }, [user_access_token])
+  }, [user_access_token, productsData, itemsData])
 
   const handleDownload = async (e, name) => {
     if(name==="product_csv"){
@@ -652,7 +652,7 @@ console.log(categories)
                   monthly_min_quantity : items["Monthly  (Min Quantity)"] || null,
                   daily_min_quantity : items["Daily (Min Quantity)"] || null,
                   editable_min_quantity : items["Editable (Min Quantity)"] || null,
-                  item_package_dimensions : items["ITEM ID Package Dimensions"] || null,
+                  item_package_dimensions : items["ITEM ID Package Dimensions (max)"] || null,
                   color : items["Color"] || null,
                   specification_1 : items["Specification 1"] || null,
                   specification_2 : items["Specification 2"] || null,
