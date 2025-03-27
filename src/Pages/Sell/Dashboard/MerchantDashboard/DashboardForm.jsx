@@ -3,7 +3,7 @@ import { Box, Button, CircularProgress } from "@mui/material";
 import GeneralLedgerForm from "../../../../Components/Form/GeneralLedgerForm";
 import ribbon from "../../../../Utils/images/Sell/dashboard/merchant_dashboard/ribbon.svg";
 import { useSelector } from "react-redux";
-import { get_checkDriveAccess, get_items, get_product_names, get_requestDriveAccess, get_sheetsData, getCategories, getCategoryId, getShopUserData, getUser, post_items, post_open_file, post_open_items_csv_file, post_open_sku_csv_file, post_products } from "../../../../API/fetchExpressAPI";
+import { get_checkDriveAccess, get_items, get_product_names, get_requestDriveAccess, get_sheetsData, get_sku, getCategoryId, getShopUserData, getUser, post_items, post_open_file, post_open_items_csv_file, post_open_rku_csv_file, post_open_sku_csv_file, post_products, post_sku } from "../../../../API/fetchExpressAPI";
 import { useParams } from "react-router-dom";
 import product_csv from '../../../../Sheets/Ambarsariya Mall - Product CSV.csv'
 import item_csv from '../../../../Sheets/Ambarsariya Mall - Item CSV.csv'
@@ -79,6 +79,7 @@ function DashboardForm({data}) {
         setCategories(categoriesList);  
         fetchProducts(shopUsersData.shop_no);    
         fetchItems(shopUsersData.shop_no);    
+        fetchSKU(shopUsersData.shop_no);    
       }
     }catch(e){
       console.log("Error while fetching : ", e);
@@ -110,6 +111,19 @@ function DashboardForm({data}) {
     }
   }
 
+  const fetchSKU = async (shop_no) => {
+    try{
+      const resp = await get_sku(shop_no);
+      if(resp.valid){
+        console.log(resp.data);
+        setSKUData(resp.data);
+      }
+    }catch(e){
+      console.log("Error fetching products : ",e);
+    }
+  }
+
+
   useEffect(()=>{
     const fetchShopToken = async () => {
       const shop_token = (await getUser(user_access_token))[0].shop_access_token;
@@ -118,7 +132,7 @@ function DashboardForm({data}) {
       }
     }
     fetchShopToken();
-  }, [user_access_token, productsData, itemsData])
+  }, [user_access_token])
 
   const handleDownload = async (e, name) => {
     if(name==="product_csv"){
@@ -177,6 +191,23 @@ function DashboardForm({data}) {
           store_location : formData.form3.store_location,
         }
         const response = await post_open_sku_csv_file(data?.username, data?.shop_no, rackWallData);
+        if (response.success) {
+          window.open(response.url, "_blank");
+        } else {
+          console.error("❌ Error:", response.message);
+        }
+
+      }catch(e){
+        console.log(e);
+      }finally{
+        setLoading(false);
+      }
+    }
+    if(name==="rku_id_csv"){
+      try{
+        setLoading(true);
+        
+        const response = await post_open_rku_csv_file(data?.username, data?.shop_no);
         if (response.success) {
           window.open(response.url, "_blank");
         } else {
@@ -374,16 +405,18 @@ console.log(categories)
         id: 1,
         label: "SKU Id",
         name: "sku_id",
-        type: "select",
+        type: "select-check",
         placeholder: "Select SKU Id",
-        options: ["Electronics", "Clothing", "Home Goods"],
+        options: skuData.map((sku)=>sku.sku_id),
         disable:skuData.length<=0,
+        defaultCheckedOptions: true,
+        readOnly:true,
       },
       {
         id: 2,
         label: "Create / Update",
         btn_text: "Click here to open file",
-        name: "rku_csv",
+        name: "rku_id_csv",
         type: 'Download file',
         handleDownload: handleDownload,
         disable:skuData.length<=0,
@@ -697,6 +730,120 @@ console.log(categories)
     catch (e) {
         console.log(e);
         
+    }
+    
+
+    } 
+    else if (formName === 'form3' ) {
+      
+      const file = formData['form3'].csv_file;
+      
+      try {
+        const response = await get_sheetsData(file);
+        if (response.success) {
+            const result = response.sheets;
+            console.log(result);
+    
+            let headers = []; // Declare headers outside
+    
+            const filteredData = result.map(sheet => {
+                console.log(sheet);
+    
+                headers = sheet.data[0]; // Extract headers (first row)
+    
+                return sheet.data.slice(1).filter(row => {
+                    const minStockIndex = headers.indexOf("Min Stock");
+                    
+                    // Ensure none of the required fields are empty
+                    return row[minStockIndex]?.trim() !== "" ;
+                });
+            }).flat();
+    
+            console.log(filteredData);
+    
+            const processedData = filteredData.map((row, index) => {
+              const sheet = result.find(sheet => sheet.data.includes(row)); 
+
+              if (!sheet) {
+                  console.warn("Sheet not found for row:", row);
+                  return null; // Skip this row if no sheet is found
+              }
+               const sku = {};
+                console.log(sheet);
+                
+                headers.forEach((header, index) => {
+                    sku[header] = row[index]?.trim() || ""; // Handle empty strings
+                });
+    
+                return {
+                  sku_id : sku["SKU Code (SKU ID)"] || null,
+                  product_id : sku["Product ID"] || null,
+                  // product_name : sku["Product Name"] || null,
+                  // category : sku["Category"] || null,
+                  // brandor_manufacturer : sku["Brand or Manufacturer"] || null,
+                  model_or_product_code : sku["Model or Product Code*"] || null, 
+                  color: sku["Color"] || null,
+                  max_stock_size : sku["Max Stock Size"] || null,
+                  // product_type : sku["Product Type"] || null,
+                  location : sku["Location"] || null,
+                  // manufacturing_date : sku["Batch or Manufacturing Date (Optional)"] || null,
+                  // expiry_date : sku["End of Batch/Expiry Date (Optional)"] || null,
+                  // quantity : sku["Quantity"] || null,
+                  // weight_in_kg : sku["Weight in kgs"] || null,
+                  no_of_walls_of_rack : sku["No of Walls of Rack(s)"] || null,
+                  no_of_racks_in_a_wall : sku["No of Racks in a (Wall)"] || null,
+                  min_stock : sku["Min Stock"] || null,
+                  stock_level : sku["Stock Level"] || null,
+                  low_stock : sku["Low Stock"] || null,
+                  medium_stock : sku["Medium Stock"] || null,
+                  high_stock : sku["High Stock"] || null,
+                  // number_of_racks : sku["Number of Racks"] || null,
+                  // number_of_shelves : sku["Number of Shelves "] || null,
+                  // shelf_length: sku["Length of Shelf"] || null,
+                  // shelf_breadth: sku["Breadth of Shelf"] || null,
+                  // shelf_height: sku["Height of Shelf"] || null,
+                  total_area_of_shelf: sku["Total Area of Shelf"] || null,
+                  total_shelf_area_in_rack: sku["Total Shelf Area in Rack"] || null,
+                  max_area_of_stock : sku["Max Area of Stock"] || null,
+                  total_shelves : sku["Total Shelves"] || null,
+                  max_racks : sku["Max Racks"] || null,
+                  shelves_extra : sku["Shelves extra"] || null,
+                  items_per_shelf : sku["Items Per Shelf"] || null,
+                  max_rack : sku["Max Rack"] || null,
+                  max_shelves : sku["Max Shelves"] || null,
+                  rku_id : sku["RKU ID"] || null,
+                  shop_no: shopNo,  
+                };
+            });
+    
+            // const uniqueCategories = [...new Set(processedData.map(product => product.category))];
+            const data = { sku_data: processedData };
+            console.log(data);
+            
+            try{
+              setLoading(true);
+              const resp = await post_sku(data);
+              console.log(resp);
+              
+              setSnackbar({
+                open: true,
+                message: resp.message,
+                severity: "success",
+              });
+            }catch(e){
+              console.log(e);
+              setSnackbar({
+                open: true,
+                message: `Error : ${e.response.data.message.detail}`,
+                severity: "error",
+              });
+            }finally{
+              setLoading(false);
+            }
+        }
+    } 
+    catch (e) {
+        console.log(e);
     }
     
 

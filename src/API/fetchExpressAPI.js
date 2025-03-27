@@ -296,6 +296,15 @@ export const post_items = async (data) => {
   }
 }
 
+export const post_sku = async (data) => {
+  try{
+    const response = await axios.post(`${link}/sell/sku`, data);
+    return response.data;
+  }catch(e){
+    throw e;
+  }
+}
+
 export const get_products = async (shop_no) => {
   try{
     if(shop_no){
@@ -345,6 +354,18 @@ export const get_items = async (shop_no) => {
   try{
     if(shop_no){
       const response = await axios.get(`${link}/sell/items/${shop_no}`);
+      return response.data;
+    }
+  }catch(e){
+    throw e;
+  }
+}
+
+
+export const get_sku = async (shop_no) => {
+  try{
+    if(shop_no){
+      const response = await axios.get(`${link}/sell/sku/${shop_no}`);
       return response.data;
     }
   }catch(e){
@@ -423,6 +444,17 @@ export const post_open_sku_csv_file = async (email, shop_no, rackWallData)=>{
   try{
     if(email && shop_no && rackWallData){
       const response = await axios.post(`${drive_link}/open-sku-file/${email}/${shop_no}`, rackWallData);
+      return response.data; 
+    }
+  }catch(e){
+    throw e;
+  }
+}
+
+export const post_open_rku_csv_file = async (email, shop_no)=>{
+  try{
+    if(email && shop_no ){
+      const response = await axios.post(`${drive_link}/open-rku-file/${email}/${shop_no}`);
       return response.data; 
     }
   }catch(e){
