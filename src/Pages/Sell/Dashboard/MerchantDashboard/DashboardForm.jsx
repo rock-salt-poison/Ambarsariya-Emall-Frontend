@@ -94,6 +94,7 @@ function DashboardForm({data}) {
     }
   }, [formData.form3.no_of_walls_of_rack, formData.form3.no_of_racks_per_wall, formData.form2.no_of_rack]);
 
+
   const fetchData = async (token) => {
     try{
       const shopUsersData = (await getShopUserData(token))[0];
@@ -219,7 +220,7 @@ function DashboardForm({data}) {
         if (response.success) {
           window.open(response.url, "_blank");
         } else {
-          console.error("❌ Error:", response.message);
+          console.error("Error:", response.message);
         }
 
       }catch(e){
@@ -696,6 +697,7 @@ function DashboardForm({data}) {
     
                 return {
                   item_no : items["Item No"] || null,
+                  itemID : items["Item ID"] || null,
                   product_id : items["Product ID"] || null,
                   no_of_items : items["No of Items"] || null,
                   weight_of_item : items["Weight of item kgs"] || null,
@@ -800,6 +802,8 @@ function DashboardForm({data}) {
                 headers.forEach((header, index) => {
                     sku[header] = row[index]?.trim() || ""; // Handle empty strings
                 });
+                
+                const rku =  sku['RKU ID'].split(',');
     
                 return {
                   sku_id : sku["SKU Code (SKU ID)"] || null,
@@ -837,7 +841,7 @@ function DashboardForm({data}) {
                   items_per_shelf : sku["Items Per Shelf"] || null,
                   max_rack : sku["Max Rack"] || null,
                   max_shelves : sku["Max Shelves"] || null,
-                  rku_id : sku["RKU ID"] || null,
+                  rku_id : rku || [],
                   shop_no: shopNo,  
                 };
             });
