@@ -393,6 +393,7 @@ function DashboardForm({data}) {
             label:'No. of walls of rack',
           name: "no_of_walls_of_rack",
           type: "number",
+          value: formData?.form3?.no_of_walls_of_rack || skuData?.[0]?.no_of_walls_of_rack || '',
           placeholder:'No. of walls of rack',
           disable: itemsData.length<=0,
           },
@@ -400,6 +401,7 @@ function DashboardForm({data}) {
             label:'No. of racks in each wall',
             name: "no_of_racks_per_wall",
             type: "number",
+            value: formData?.form3?.no_of_racks_per_wall || skuData?.[0]?.no_of_racks_in_a_wall || '',
             placeholder:'No. of racks in each wall',
             disable: itemsData.length<=0,
             }
