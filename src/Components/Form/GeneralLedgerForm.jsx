@@ -114,7 +114,7 @@ function GeneralLedgerForm({
                               label={innerField.label}
                               name={innerName}
                               type={innerField.type}
-                              value={formData[innerName]}
+                              value={innerField.value ? innerField.value : formData[innerName]}
                               onChange={(e) => {
                                 onChange(e);
                                 handleNumeric(e, innerField.behavior);

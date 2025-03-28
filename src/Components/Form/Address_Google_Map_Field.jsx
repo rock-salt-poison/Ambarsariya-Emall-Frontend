@@ -26,7 +26,7 @@ function loadScript(src, position, id) {
 const autocompleteService = { current: null };
 const placesService = { current: null };
 
-export default function Address_Google_Map_Field({ value, label, onChange, placeholder }) {
+export default function Address_Google_Map_Field({ value, label, onChange, placeholder, disable }) {
   const [inputValue, setInputValue] = React.useState('');
   const [updatedValue, setUpdatedValue] = React.useState('');
   const [options, setOptions] = React.useState([]);
@@ -158,6 +158,7 @@ export default function Address_Google_Map_Field({ value, label, onChange, place
       freeSolo={true}
       noOptionsText="No locations"
       className="input_field"
+      disabled={disable}
       isOptionEqualToValue={(option, value) => 
         option?.description === value?.description
       }

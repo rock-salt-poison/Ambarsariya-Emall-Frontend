@@ -12,9 +12,11 @@ import CustomSnackbar from "../../../../Components/CustomSnackbar";
 
 function DashboardForm({data}) {
 
-  console.log(data);
-
   const [loading, setLoading] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [productsData, setProductsData] = useState([]);
+  const [itemsData, setItemsData] = useState([]);
+  const [skuData, setSKUData] = useState([]);
   
   // Initial form data and errors for 4 forms
   const initialData = {
@@ -51,10 +53,8 @@ function DashboardForm({data}) {
 
   const [formData, setFormData] = useState(initialData);
   const [errors, setErrors] = useState({});
-  const [categories, setCategories] = useState([]);
-  const [productsData, setProductsData] = useState([]);
-  const [itemsData, setItemsData] = useState([]);
-  const [skuData, setSKUData] = useState([]);
+  const [isRackValid, setIsRackValid] = useState(false);
+  
   const user_access_token = useSelector((state) => state.auth.userAccessToken);
   const [csvData, setCsvData] = useState([]);
   const [shopNo, setShopNo] = useState('');
@@ -64,6 +64,35 @@ function DashboardForm({data}) {
     message: "",
     severity: "success",
   });
+
+  useEffect(() => {
+    if(formData.form3.no_of_walls_of_rack && formData.form3.no_of_racks_per_wall){
+      const noOfWalls = parseInt(formData.form3.no_of_walls_of_rack);
+      const noOfRacksPerWall = parseInt(formData.form3.no_of_racks_per_wall);
+      const totalRacks = noOfWalls * noOfRacksPerWall;
+      const availableRacks = itemsData?.[0]?.no_of_racks || 0;
+    
+      console.log('total racks', totalRacks);
+      console.log('available racks', availableRacks);
+      
+      // Check if total racks do not exceed available racks
+      if (totalRacks === availableRacks && noOfWalls > 0 && noOfRacksPerWall > 0) {
+        setIsRackValid(true);
+        setSnackbar({
+          open: true,
+          message: 'Valid racks',
+          severity: "success",
+        });
+      } else {
+        setIsRackValid(false);
+        setSnackbar({
+          open: true,
+          message: 'Total racks exceed available racks',
+          severity: "error",
+        });
+      }
+    }
+  }, [formData.form3.no_of_walls_of_rack, formData.form3.no_of_racks_per_wall, formData.form2.no_of_rack]);
 
   const fetchData = async (token) => {
     try{
@@ -89,9 +118,7 @@ function DashboardForm({data}) {
   const fetchProducts = async (shop_no) => {
     try{
       const resp = await get_product_names(shop_no);
-      if(resp.valid){
-        console.log(resp.data);
-        
+      if(resp.valid){      
         setProductsData(resp.data);
       }
     }catch(e){
@@ -103,7 +130,6 @@ function DashboardForm({data}) {
     try{
       const resp = await get_items(shop_no);
       if(resp.valid){
-        console.log(resp.data);
         setItemsData(resp.data);
       }
     }catch(e){
@@ -115,7 +141,6 @@ function DashboardForm({data}) {
     try{
       const resp = await get_sku(shop_no);
       if(resp.valid){
-        console.log(resp.data);
         setSKUData(resp.data);
       }
     }catch(e){
@@ -221,7 +246,9 @@ function DashboardForm({data}) {
       }
     }
   };
-console.log(categories)
+
+
+  console.log(itemsData.length<=0 && isRackValid)
   // Form fields configuration (for each form)
   const formFields = {
     form1: [
@@ -285,12 +312,14 @@ console.log(categories)
           {id: 1,
             name: "no_of_rack",
             type: "number",
+            value: formData?.form2?.no_of_rack || itemsData?.[0]?.no_of_racks || '',
             placeholder: "Enter no of rack",
             disable:productsData.length<=0,
           },
           {id: 2,
             name: "no_of_shelves",
             type: "number",
+            value: formData?.form2?.no_of_shelves || itemsData?.[0]?.no_of_shelves || '',
             placeholder: "No. of shelves in each rack",
             disable:productsData.length<=0,
           },
@@ -304,18 +333,21 @@ console.log(categories)
           {id: 1,
           name: "shelf_length",
           type: "number",
+          value: formData?.form2?.shelf_length || itemsData?.[0]?.shelf_length || '',
           placeholder: "Length",
           disable:productsData.length<=0,
         },
           {id: 2,
             name: "shelf_breadth",
             type: "number",
+            value: formData?.form2?.shelf_breadth || itemsData?.[0]?.shelf_breadth || '',
             placeholder: "Breadth",
             disable:productsData.length<=0,
           },
           {id: 3,
             name: "shelf_height",
             type: "number",
+            value: formData?.form2?.shelf_height || itemsData?.[0]?.shelf_height || '',
             placeholder: "Height",
             disable:productsData.length<=0,
           }
@@ -379,7 +411,7 @@ console.log(categories)
         name: "store_location",
         type: "address",
         placeholder: "store location",
-        disable: itemsData.length<=0
+        disable: !isRackValid
       },
       {
         id: 4,
@@ -387,7 +419,7 @@ console.log(categories)
         btn_text: "Click here to open file",
         name: "sku_id_csv",
         type: 'Download file',
-        disable: itemsData.length<=0,
+        disable: !isRackValid,
         handleDownload: handleDownload
       },
       {
@@ -396,7 +428,7 @@ console.log(categories)
         name: "csv_file",
         type: "url",
         placeholder: "Link",
-        disable: itemsData.length<=0
+        disable: !isRackValid
       },
       
     ],
@@ -480,14 +512,9 @@ console.log(categories)
     return Object.keys(newErrors).length === 0;
   };
 
-  console.log(errors);
-  
-  
-  console.log(formData["form1"].product_category);
   
   const handleSubmit = async (event, formName) => {
     event.preventDefault();
-    console.log(formName);
     
     if (formName === 'form1' && validateForm('form1')) {
       
@@ -502,7 +529,6 @@ console.log(categories)
             let headers = []; // Declare headers outside
     
             const filteredData = result.map(sheet => {
-                console.log(sheet);
     
                 headers = sheet.data[0]; // Extract headers (first row)
     
@@ -517,9 +543,7 @@ console.log(categories)
                            row[productDescriptionIndex]?.trim() !== "";
                 });
             }).flat();
-    
-            console.log(filteredData);
-    
+        
             const processedData = await Promise.all(filteredData.map(async (row, index) => {
               const sheet = result.find(sheet => sheet.data.includes(row)); 
 

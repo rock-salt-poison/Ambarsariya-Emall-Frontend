@@ -96,6 +96,7 @@ const FormField = ({
               onChange={(data) => {onChange({ target: { name, value: data } });console.log(data);
             }}
             placeholder={placeholder}
+            disable={disable}
             />
             </Box>
           </>
