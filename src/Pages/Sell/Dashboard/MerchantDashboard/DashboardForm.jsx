@@ -3,7 +3,7 @@ import { Box, Button, CircularProgress } from "@mui/material";
 import GeneralLedgerForm from "../../../../Components/Form/GeneralLedgerForm";
 import ribbon from "../../../../Utils/images/Sell/dashboard/merchant_dashboard/ribbon.svg";
 import { useSelector } from "react-redux";
-import { get_checkDriveAccess, get_items, get_product_names, get_requestDriveAccess, get_sheetsData, get_sku, getCategoryId, getShopUserData, getUser, post_items, post_open_file, post_open_items_csv_file, post_open_rku_csv_file, post_open_sku_csv_file, post_products, post_sku } from "../../../../API/fetchExpressAPI";
+import { get_checkDriveAccess, get_items, get_product_names, get_requestDriveAccess, get_sheetsData, get_sku, getCategoryId, getShopUserData, getUser, post_items, post_open_file, post_open_items_csv_file, post_open_rku_csv_file, post_open_sku_csv_file, post_products, post_rku, post_sku } from "../../../../API/fetchExpressAPI";
 import { useParams } from "react-router-dom";
 import product_csv from '../../../../Sheets/Ambarsariya Mall - Product CSV.csv'
 import item_csv from '../../../../Sheets/Ambarsariya Mall - Item CSV.csv'
@@ -853,6 +853,99 @@ function DashboardForm({data}) {
             try{
               setLoading(true);
               const resp = await post_sku(data);
+              console.log(resp);
+              
+              setSnackbar({
+                open: true,
+                message: resp.message,
+                severity: "success",
+              });
+            }catch(e){
+              console.log(e);
+              setSnackbar({
+                open: true,
+                message: `Error : ${e.response.data.message.detail}`,
+                severity: "error",
+              });
+            }finally{
+              setLoading(false);
+            }
+        }
+    } 
+    catch (e) {
+        console.log(e);
+    }
+    
+
+    } 
+
+    else if (formName === 'form4' ) {
+      
+      const file = formData['form4'].csv_file;
+      
+      try {
+        const response = await get_sheetsData(file);
+        if (response.success) {
+            const result = response.sheets;
+            console.log(result);
+    
+            let headers = []; // Declare headers outside
+    
+            const filteredData = result.map(sheet => {
+                console.log(sheet);
+    
+                headers = sheet.data[0]; // Extract headers (first row)
+    
+                return sheet.data.slice(1).filter(row => {
+                    const quantitySaleIndex = headers.indexOf("Quantity Sale");
+                    const quantityPurchaseIndex = headers.indexOf("Quantity Purchase");
+                    
+                    // Ensure none of the required fields are empty
+                    return row[quantitySaleIndex]?.trim() !== "" && row[quantityPurchaseIndex]?.trim() !== "" ;
+                });
+            }).flat();
+    
+            console.log(filteredData);
+    
+            const processedData = filteredData.map((row, index) => {
+              const sheet = result.find(sheet => sheet.data.includes(row)); 
+
+              if (!sheet) {
+                  console.warn("Sheet not found for row:", row);
+                  return null; // Skip this row if no sheet is found
+              }
+               const rku = {};
+                console.log(sheet);
+                
+                headers.forEach((header, index) => {
+                    rku[header] = row[index]?.trim() || ""; // Handle empty strings
+                });
+                
+                // const rku =  sku['RKU ID'].split(',');
+    
+                return {
+                  RKU_ID: rku["RKU ID"] || null,
+                  product : rku["Product"] || null,
+                  item : rku["Item"] || null,
+                  rack_no : rku["Rack No (RKU ID)"] || null,
+                  shelf_no : rku["Shelf No (Product ID)"] || null,
+                  product_id : rku["Product ID"] || null,
+                  placement_max : rku["Placement (max)"] || null,
+                  quantity_sale : rku["Quantity Sale"] || null,
+                  placement_for_so : rku["Placement for S.O"] || null,
+                  update_quantity : rku["Update Quantity"] || null,
+                  quantity_purchase : rku["Quantity Purchase"] || null,
+                  placement_for_po : rku["Placement for P.O"] || null,
+                  shop_no: shopNo,  
+                };
+            });
+    
+            const data = { rku_data: processedData };
+            console.log(data);
+            
+            try{
+              setLoading(true);
+              const resp = await post_rku(data);
               console.log(resp);
               
               setSnackbar({

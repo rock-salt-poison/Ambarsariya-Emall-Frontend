@@ -305,6 +305,15 @@ export const post_sku = async (data) => {
   }
 }
 
+export const post_rku = async (data) => {
+  try{
+    const response = await axios.post(`${link}/sell/rku`, data);
+    return response.data;
+  }catch(e){
+    throw e;
+  }
+}
+
 export const get_products = async (shop_no) => {
   try{
     if(shop_no){
