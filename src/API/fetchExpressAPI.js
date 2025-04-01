@@ -1,9 +1,23 @@
 import axios from 'axios';
+import { io } from 'socket.io-client';
 
 const link = `${process.env.REACT_APP_EXPRESS_API_LINK}/api/ambarsariya`;
 const admin_link = `${process.env.REACT_APP_EXPRESS_API_LINK}/admin/api`;
 const drive_link = `${process.env.REACT_APP_EXPRESS_API_LINK}/api/drive`;
 const photo_link = `${process.env.REACT_APP_EXPRESS_API_LINK}/api/google-photo`;
+const SOCKET_SERVER_URL = process.env.REACT_APP_EXPRESS_API_LINK;
+
+export const initializeWebSocket = () => {
+  // Establish WebSocket connection using Socket.io
+  const socket = io(SOCKET_SERVER_URL);
+
+  // Listen for messages from the server
+  socket.on('message', (message) => {
+    console.log('Received message:', message);
+  });
+
+  return socket;
+};
 
 export const fetchDomains = async () => {
     const response = await axios.get(`${link}/domains`);

@@ -3,7 +3,7 @@ import { Box, Button, CircularProgress } from "@mui/material";
 import GeneralLedgerForm from "../../../../Components/Form/GeneralLedgerForm";
 import ribbon from "../../../../Utils/images/Sell/dashboard/merchant_dashboard/ribbon.svg";
 import { useSelector } from "react-redux";
-import { get_checkDriveAccess, get_items, get_product_names, get_requestDriveAccess, get_sheetsData, get_sku, getCategoryId, getShopUserData, getUser, post_items, post_open_file, post_open_items_csv_file, post_open_rku_csv_file, post_open_sku_csv_file, post_products, post_rku, post_sku } from "../../../../API/fetchExpressAPI";
+import { get_checkDriveAccess, get_items, get_product_names, get_requestDriveAccess, get_sheetsData, get_sku, getCategoryId, getShopUserData, getUser, initializeWebSocket, post_items, post_open_file, post_open_items_csv_file, post_open_rku_csv_file, post_open_sku_csv_file, post_products, post_rku, post_sku } from "../../../../API/fetchExpressAPI";
 import { useParams } from "react-router-dom";
 import product_csv from '../../../../Sheets/Ambarsariya Mall - Product CSV.csv'
 import item_csv from '../../../../Sheets/Ambarsariya Mall - Item CSV.csv'
@@ -17,6 +17,22 @@ function DashboardForm({data}) {
   const [productsData, setProductsData] = useState([]);
   const [itemsData, setItemsData] = useState([]);
   const [skuData, setSKUData] = useState([]);
+
+  useEffect(() => {
+    const socket = initializeWebSocket();
+
+    socket.on('message', (newMessage) => {
+      setSnackbar({
+        open: true,
+        message: newMessage,
+        severity: "info", 
+      });
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []); 
   
   // Initial form data and errors for 4 forms
   const initialData = {
@@ -163,24 +179,42 @@ function DashboardForm({data}) {
   const handleDownload = async (e, name) => {
     if(name==="product_csv"){
       console.log(`Checking Drive access for: ${data?.username}`);
-
+      setSnackbar({
+        open: true,
+        message: `Checking Drive access for: ${data?.username}`,
+        severity: "info",
+      });
       setLoading(true);
+      
       // Step 1: Check if user has access
       const checkAccess = await get_checkDriveAccess(data?.username);
       if (!checkAccess.accessGranted) {
-        console.warn("🔄 Redirecting for Google Drive access...");
+        setSnackbar({
+          open: true,
+          message: `Redirecting for Google Drive access`,
+          severity: "info",
+        });
         get_requestDriveAccess();
         return;
       }
-      
+      setSnackbar({
+        open: true,
+        message: `Access granted, opening file`,
+        severity: "success",
+      });
       // Step 2: Open Google Drive file
-      console.log("Access granted, opening file");
       const response = await post_open_file(data?.username);
+      console.log(response);
       
       setLoading(false);
       if (response.success) {
         window.open(response.url, "_blank");
       } else {
+        setSnackbar({
+          open: true,
+          message: `${response.message}`,
+          severity: "error",
+        });
         console.error("❌ Error:", response.message);
       }
     }
@@ -196,8 +230,21 @@ function DashboardForm({data}) {
         }
         const response = await post_open_items_csv_file(data?.username, data?.shop_no, rackData);
         if (response.success) {
-          window.open(response.url, "_blank");
+          setSnackbar({
+            open: true,
+            message: `Opening File`,
+            severity: "success",
+          });
+          setTimeout(()=>{
+            window.open(response.url, "_blank")
+          },2000);
+          
         } else {
+          setSnackbar({
+            open: true,
+            message: `${response.message}`,
+            severity: "error",
+          });
           console.error("❌ Error:", response.message);
         }
 
