@@ -82,9 +82,9 @@ function DashboardForm({data}) {
   });
 
   useEffect(() => {
-    if(formData.form3.no_of_walls_of_rack && formData.form3.no_of_racks_per_wall){
-      const noOfWalls = parseInt(formData.form3.no_of_walls_of_rack);
-      const noOfRacksPerWall = parseInt(formData.form3.no_of_racks_per_wall);
+    if((formData.form3.no_of_walls_of_rack && formData.form3.no_of_racks_per_wall) || (skuData?.[0]?.no_of_walls_of_rack &&  skuData?.[0]?.no_of_racks_in_a_wall)){
+      const noOfWalls = skuData?.[0]?.no_of_walls_of_rack || parseInt(formData.form3.no_of_walls_of_rack);
+      const noOfRacksPerWall = skuData?.[0]?.no_of_racks_in_a_wall || parseInt(formData.form3.no_of_racks_per_wall);
       const totalRacks = noOfWalls * noOfRacksPerWall;
       const availableRacks = itemsData?.[0]?.no_of_racks || 0;
     
@@ -108,7 +108,7 @@ function DashboardForm({data}) {
         });
       }
     }
-  }, [formData.form3.no_of_walls_of_rack, formData.form3.no_of_racks_per_wall, formData.form2.no_of_rack]);
+  }, [formData.form3.no_of_walls_of_rack, formData.form3.no_of_racks_per_wall, formData.form2.no_of_rack, skuData]);
 
 
   const fetchData = async (token) => {
