@@ -7529,7 +7529,7 @@ a {
         }
 
         .shop_name {
-          @include homepage-buttons("Bobby-Jones-Soft", 25px, $green-3, "none");
+          @include homepage-buttons("Bobby-Jones-Soft", 22px, $green-3, "none");
           @include hover-scale(1, 0s);
           position: relative;
           text-align: center;
