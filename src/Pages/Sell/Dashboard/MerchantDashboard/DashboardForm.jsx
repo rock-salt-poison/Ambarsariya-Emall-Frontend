@@ -891,30 +891,40 @@ function DashboardForm({data}) {
                   rku_id : rku || [],
                   shop_no: shopNo,  
                 };
-            });
+            }).filter(item => item !== null);
     
-            // const uniqueCategories = [...new Set(processedData.map(product => product.category))];
+            if (processedData.length === 0) {
+              console.warn("No valid data to send. Skipping API call.");
+              setSnackbar({
+                open: true,
+                message: "No valid data to send. Skipping API call. Min stock should not be empty.",
+                severity: "error",
+              });
+              
+              return; 
+            }
+      
             const data = { sku_data: processedData };
             console.log(data);
-            
-            try{
+      
+            try {
               setLoading(true);
               const resp = await post_sku(data);
               console.log(resp);
-              
+      
               setSnackbar({
                 open: true,
                 message: resp.message,
                 severity: "success",
               });
-            }catch(e){
+            } catch (e) {
               console.log(e);
               setSnackbar({
                 open: true,
-                message: `Error : ${e.response.data.message.detail}`,
+                message: `Error : ${e.response?.data?.message?.detail || "Unknown error"}`,
                 severity: "error",
               });
-            }finally{
+            } finally {
               setLoading(false);
             }
         }
@@ -926,98 +936,136 @@ function DashboardForm({data}) {
 
     } 
 
-    else if (formName === 'form4' ) {
-      
-      const file = formData['form4'].csv_file;
-      
+    else if (formName === "form4") {
+      const file = formData["form4"].csv_file;
+    
       try {
         const response = await get_sheetsData(file);
         if (response.success) {
-            const result = response.sheets;
-            console.log(result);
+          const result = response.sheets;
+          console.log(result);
     
-            let headers = []; // Declare headers outside
+          let headers = [];
     
-            const filteredData = result.map(sheet => {
-                console.log(sheet);
+          const filteredData = result
+            .map((sheet) => {
+              console.log(sheet);
     
-                headers = sheet.data[0]; // Extract headers (first row)
+              headers = sheet.data[0]; // Extract headers (first row)
     
-                return sheet.data.slice(1).filter(row => {
-                    const quantitySaleIndex = headers.indexOf("Quantity Sale");
-                    const quantityPurchaseIndex = headers.indexOf("Quantity Purchase");
-                    
-                    // Ensure none of the required fields are empty
-                    return row[quantitySaleIndex]?.trim() !== "" && row[quantityPurchaseIndex]?.trim() !== "" ;
+              // Ensure required headers exist
+              if (!headers.includes("Quantity Sale") || !headers.includes("Quantity Purchase")) {
+                setSnackbar({
+                  open: true,
+                  message: "Missing required headers: Quantity Sale or Quantity Purchase",
+                  severity: "error",
                 });
-            }).flat();
-    
-            console.log(filteredData);
-    
-            const processedData = filteredData.map((row, index) => {
-              const sheet = result.find(sheet => sheet.data.includes(row)); 
-
-              if (!sheet) {
-                  console.warn("Sheet not found for row:", row);
-                  return null; // Skip this row if no sheet is found
+                return []; // Stop processing
               }
-               const rku = {};
-                console.log(sheet);
-                
-                headers.forEach((header, index) => {
-                    rku[header] = row[index]?.trim() || ""; // Handle empty strings
+    
+              const quantitySaleIndex = headers.indexOf("Quantity Sale");
+              const quantityPurchaseIndex = headers.indexOf("Quantity Purchase");
+    
+              let missingFields = new Set(); // Use Set to store unique messages
+    
+              const validRows = sheet.data.slice(1).filter((row, rowIndex) => {
+                const quantitySale = row[quantitySaleIndex]?.trim();
+                const quantityPurchase = row[quantityPurchaseIndex]?.trim();
+    
+                if (!quantitySale) missingFields.add(`Quantity Sale is required`);
+                if (!quantityPurchase) missingFields.add(`Quantity Purchase is required`);
+    
+                return quantitySale !== "" && quantityPurchase !== "";
+              });
+    
+              if (missingFields.size > 0) {
+                setSnackbar({
+                  open: true,
+                  message: Array.from(missingFields).join("\n"), // Convert Set to Array
+                  severity: "error",
                 });
-                
-                // const rku =  sku['RKU ID'].split(',');
+    
+                return new Promise((resolve) => setTimeout(() => resolve(validRows), 2000)); // Wait 2 sec before continuing
+              }
+    
+              return validRows;
+            });
+    
+          Promise.all(filteredData).then((allFilteredData) => {
+            const finalFilteredData = allFilteredData.flat();
+    
+            console.log(finalFilteredData);
+    
+            if (finalFilteredData.length === 0) {
+              console.warn("No valid data to send. Skipping API call.");
+              setSnackbar({
+                open: true,
+                message: "No valid data to send. Skipping API call.",
+                severity: "error",
+              });
+              return;
+            }
+    
+            const processedData = finalFilteredData
+              .map((row) => {
+                const rku = {};
+                headers.forEach((header, index) => {
+                  rku[header] = row[index]?.trim() || ""; // Handle empty values
+                });
     
                 return {
                   RKU_ID: rku["RKU ID"] || null,
-                  product : rku["Product"] || null,
-                  item : rku["Item"] || null,
-                  rack_no : rku["Rack No (RKU ID)"] || null,
-                  shelf_no : rku["Shelf No (Product ID)"] || null,
-                  product_id : rku["Product ID"] || null,
-                  placement_max : rku["Placement (max)"] || null,
-                  quantity_sale : rku["Quantity Sale"] || null,
-                  placement_for_so : rku["Placement for S.O"] || null,
-                  update_quantity : rku["Update Quantity"] || null,
-                  quantity_purchase : rku["Quantity Purchase"] || null,
-                  placement_for_po : rku["Placement for P.O"] || null,
-                  shop_no: shopNo,  
+                  product: rku["Product"] || null,
+                  item: rku["Item"] || null,
+                  rack_no: rku["Rack No (RKU ID)"] || null,
+                  shelf_no: rku["Shelf No (Product ID)"] || null,
+                  product_id: rku["Product ID"] || null,
+                  placement_max: rku["Placement (max)"] || null,
+                  quantity_sale: rku["Quantity Sale"] || null,
+                  placement_for_so: rku["Placement for S.O"] || null,
+                  update_quantity: rku["Update Quantity"] || null,
+                  quantity_purchase: rku["Quantity Purchase"] || null,
+                  placement_for_po: rku["Placement for P.O"] || null,
+                  shop_no: shopNo,
                 };
-            });
+              })
+              .filter((item) => item !== null);
     
             const data = { rku_data: processedData };
             console.log(data);
-            
-            try{
+    
+            try {
               setLoading(true);
-              const resp = await post_rku(data);
-              console.log(resp);
-              
-              setSnackbar({
-                open: true,
-                message: resp.message,
-                severity: "success",
-              });
-            }catch(e){
+              post_rku(data)
+                .then((resp) => {
+                  console.log(resp);
+    
+                  setSnackbar({
+                    open: true,
+                    message: resp.message,
+                    severity: "success",
+                  });
+                })
+                .catch((e) => {
+                  console.log(e);
+                  setSnackbar({
+                    open: true,
+                    message: `Error : ${e.response.data.message.detail}`,
+                    severity: "error",
+                  });
+                })
+                .finally(() => setLoading(false));
+            } catch (e) {
               console.log(e);
-              setSnackbar({
-                open: true,
-                message: `Error : ${e.response.data.message.detail}`,
-                severity: "error",
-              });
-            }finally{
-              setLoading(false);
             }
+          });
         }
-    } 
-    catch (e) {
+      } catch (e) {
         console.log(e);
+      }
     }
     
-
-    } 
+    
   };
   
 
@@ -1047,6 +1095,7 @@ function DashboardForm({data}) {
               handleClose={() => setSnackbar({ ...snackbar, open: false })}
               message={snackbar.message}
               severity={snackbar.severity}
+              disableAutoHide={true}
             />
       </Box>
   );

@@ -8,11 +8,12 @@ export default function CustomSnackbar({
   severity,
   open,
   handleClose,
+  disableAutoHide = false, 
 }) {
   return (
       <Snackbar
         open={open}
-        autoHideDuration={2000}
+        autoHideDuration={disableAutoHide ? null : 2000}
         onClose={handleClose}
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       >
