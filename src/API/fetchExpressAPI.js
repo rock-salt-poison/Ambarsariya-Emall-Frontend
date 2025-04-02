@@ -71,6 +71,18 @@ export const updateEshopData = async (eshopData, shopAccessToken) => {
     }
 };
 
+export const updateEshopLocation = async (eshopData) => {
+  try {
+    const response = await axios.put(
+      `${link}/sell/eshop/update-location`, 
+      eshopData
+    );
+    return response.data;
+  } catch (error) {
+    throw error; 
+  }
+};
+
 export const getShopUserData = async (shopAccessToken) => {
     try{
       const response = await axios.get(`${link}/sell/shop-user-data?shop_access_token=${shopAccessToken}`);

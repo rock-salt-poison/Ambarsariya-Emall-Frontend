@@ -5,10 +5,11 @@ import contact_img from "../../Utils/images/Sell/shop_details/contact_us.svg";
 import home_img from "../../Utils/images/Sell/shop_details/home.svg";
 import { Link } from "react-router-dom";
 import StreetViewPopup from "./StreetViewPopup";
+import PinDropPopup from "./PinDropPopup";
 
 function GetInTouch({ data }) {
-  const [openDialog, setOpenDialog] = useState(false);
-
+  const [openStreetView, setOpenStreetView] = useState(false);
+  const [openPinDrop, setOpenPinDrop] = useState(false);
   console.log(data);
   
   const details = [
@@ -16,7 +17,7 @@ function GetInTouch({ data }) {
       id: 1,
       icon: map_img,
       text: data.address,
-      onClick: () => setOpenDialog(true), // Open dialog when clicked
+      onClick: () => setOpenStreetView(true), // Open dialog when clicked
     },
     {
       id: 2,
@@ -28,8 +29,9 @@ function GetInTouch({ data }) {
       id: 3,
       icon: home_img,
       text: data.address,
-      redirectTo: `https://www.google.com/maps?q=${data.address}`,
-      target: "_blank",
+      onClick: () => setOpenPinDrop(true), // Open dialog when clicked
+      // redirectTo: `https://www.google.com/maps?q=${data.address}`,
+      // target: "_blank",
     },
   ];
 
@@ -72,12 +74,22 @@ function GetInTouch({ data }) {
 
       {/* Dialog */}
       <StreetViewPopup
-        open={openDialog}
-        onClose={() => setOpenDialog(false)}
+        open={openStreetView}
+        onClose={() => setOpenStreetView(false)}
         message="Are you sure you want to logout?"
-        optionalCname="street-view-dialog"
+        optionalCname="map-popup-dialog"
         lat={data.latitude}
         lng={data.longitude}
+      />
+
+      <PinDropPopup
+        open={openPinDrop}
+        onClose={() => setOpenPinDrop(false)}
+        lat={parseFloat(data.latitude)}
+        lng={parseFloat(data.longitude)}
+        optionalCname="map-popup-dialog"
+        shop_access_token={data.shop_access_token}
+        distance_from_pin={data.distance_from_pin}
       />
     </Box>
   );
