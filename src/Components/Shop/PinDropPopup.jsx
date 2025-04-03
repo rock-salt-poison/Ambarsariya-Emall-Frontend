@@ -10,14 +10,12 @@ import {
   CircularProgress,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { GoogleMap, Marker, Circle, useLoadScript } from "@react-google-maps/api";
+import { GoogleMap, Marker, useLoadScript, Polyline } from "@react-google-maps/api";
 import FormField from "../Form/FormField";
-import Button2 from "../Home/Button2";
 import { updateEshopLocation } from "../../API/fetchExpressAPI";
 import CustomSnackbar from "../CustomSnackbar";
 
 const API_KEY = process.env.REACT_APP_GOOGLE_API;
-
 const mapContainerStyle = { width: "100%", height: "350px" };
 
 function PinDropPopup({
@@ -29,96 +27,122 @@ function PinDropPopup({
   onLocationSelect,
   shop_access_token,
   distance_from_pin,
+  location_pin_drop,
 }) {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
-
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: "",
-    severity: "success",
-  });
-
-  const [selectedLocation, setSelectedLocation] = useState(null);
-  const [radius, setRadius] = useState("");
   const [loading, setLoading] = useState(false);
+  const [location, setLocation] = useState({});
+  const [radius, setRadius] = useState(""); // Pre-filled with distance_from_pin
+  const [points, setPoints] = useState([]); // Stores clicked points
+  const [totalDistance, setTotalDistance] = useState(0);
 
-  const circleRef = useRef(null); // Reference for the Circle instance
-  const mapRef = useRef(null); // Reference for the Google Map instance
+  const mapRef = useRef(null);
 
   // Load Google Maps API
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: API_KEY,
+    libraries: ["geometry"],
   });
 
   useEffect(() => {
-    setSelectedLocation({ lat, lng });
+    console.log("location_pin_drop received:", location_pin_drop); // Debugging log
+
+    if (lat && lng) {
+      setLocation({ lat, lng });
+      if (mapRef.current) {
+        mapRef.current.panTo({ lat, lng });
+      }
+    }
+
+    // Set initial radius if distance_from_pin exists
     if (distance_from_pin) {
-      setRadius(distance_from_pin);
+      setRadius(distance_from_pin.toFixed(2));
+      setTotalDistance(distance_from_pin);
     }
-  }, [lat, lng, distance_from_pin]);
 
+    // Ensure location_pin_drop is an array before setting points
+    if (Array.isArray(location_pin_drop) && location_pin_drop.length > 0) {
+      setPoints(location_pin_drop.map((point) => ({ lat: point.lat, lng: point.lng })));
+    }
+  }, [lat, lng, distance_from_pin, location_pin_drop]);
+
+  console.log("Markers to be displayed:", points); // Debugging log
+
+  // Calculate total distance when points change
   useEffect(() => {
-    if (circleRef.current) {
-      // Remove the previous circle if it exists
-      circleRef.current.setMap(null);
-      circleRef.current = null;
+    if (isLoaded && window.google?.maps?.geometry?.spherical && points.length > 0) {
+      const { computeDistanceBetween } = window.google.maps.geometry.spherical;
+      let distance = 0;
+      const firstMarkerLatLng = new window.google.maps.LatLng(lat, lng);
+
+      points.forEach((point) => {
+        distance += computeDistanceBetween(
+          firstMarkerLatLng,
+          new window.google.maps.LatLng(point.lat, point.lng)
+        );
+      });
+
+      const cappedDistance = Math.min(distance, 100);
+      setTotalDistance(cappedDistance.toFixed(2));
+    }
+  }, [isLoaded, points, lat, lng]);
+
+  // Handle map click to add points dynamically
+  const onMapClick = useCallback((event) => {
+    if (!window.google?.maps?.geometry?.spherical) {
+      console.warn("Google Maps geometry library not loaded yet.");
+      return;
     }
 
-    if (radius && mapRef.current) {
-      const validRadius = Number(radius);
-      if (validRadius > 0) {
-        // Create a new circle with the updated radius
-        circleRef.current = new window.google.maps.Circle({
-          center: selectedLocation,
-          radius: validRadius,
-          fillColor: "rgba(255, 0, 0, 0.33)",
-          strokeColor: "red",
-          map: mapRef.current, // Attach circle to the map
-        });
-      }
+    const newPoint = { lat: event.latLng.lat(), lng: event.latLng.lng() };
+    const newPoints = [...points, newPoint];
+    const { computeDistanceBetween } = window.google.maps.geometry.spherical;
+
+    let newDistance = 0;
+    const firstMarkerLatLng = new window.google.maps.LatLng(lat, lng);
+
+    newPoints.forEach((point) => {
+      newDistance += computeDistanceBetween(
+        firstMarkerLatLng,
+        new window.google.maps.LatLng(point.lat, point.lng)
+      );
+    });
+
+    if (newDistance <= 100) {
+      setPoints(newPoints);
     }
-  }, [radius, selectedLocation]); // Depend on radius and location
+  }, [points, lat, lng]);
 
-  const onMapClick = useCallback(
-    (event) => {
-      const newLocation = {
-        lat: event.latLng.lat(),
-        lng: event.latLng.lng(),
-      };
+  const onMarkerDragEnd = useCallback((index, event) => {
+    const newPoints = [...points];
+    newPoints[index] = { lat: event.latLng.lat(), lng: event.latLng.lng() };
+    setPoints(newPoints);
+  }, [points]);
 
-      setSelectedLocation(newLocation);
-
-      if (onLocationSelect) {
-        onLocationSelect(newLocation);
-      }
-    },
-    [onLocationSelect]
-  );
+  const onMarkerClick = useCallback((index) => {
+    setPoints((prevPoints) => prevPoints.filter((_, i) => i !== index));
+  }, []);
 
   const handleOnChange = (e) => {
-    setRadius(e.target.value);
+    let value = e.target.value;
+    if (value > 100) {
+      value = 100;
+    }
+    setRadius(value);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (radius && selectedLocation && shop_access_token) {
+    if (totalDistance && points.length > 0 && shop_access_token) {
       try {
         setLoading(true);
         const data = {
-          location_pin_drop: selectedLocation,
-          distance_from_pin: radius,
+          location_pin_drop: points,
+          distance_from_pin: parseFloat(totalDistance),
           shop_access_token,
         };
-        const resp = await updateEshopLocation(data);
-        console.log(resp);
-        setSnackbar({
-          open: true,
-          message: "E-shop location successfully updated.",
-          severity: "success",
-        });
-      } catch (e) {
-        console.error(e);
+        await updateEshopLocation(data);
       } finally {
         setLoading(false);
       }
@@ -129,14 +153,7 @@ function PinDropPopup({
   if (!isLoaded) return <p>Loading maps...</p>;
 
   return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      fullScreen={fullScreen}
-      fullWidth
-      maxWidth="sm"
-      className={optionalCname}
-    >
+    <Dialog open={open} onClose={onClose} fullScreen={fullScreen} fullWidth maxWidth="sm" className={optionalCname}>
       {loading && <Box className="loading"><CircularProgress /></Box>}
       <DialogContent className="content">
         <Box id="confirm-message">
@@ -148,12 +165,33 @@ function PinDropPopup({
 
         <GoogleMap
           mapContainerStyle={mapContainerStyle}
-          zoom={14}
-          center={selectedLocation || { lat, lng }} // Ensure the map centers on the default position
+          zoom={15}
+          center={{ lat: location.lat, lng: location.lng }}
           onClick={onMapClick}
-          onLoad={(map) => (mapRef.current = map)} // Store map reference
+          onLoad={(map) => (mapRef.current = map)}
         >
-          {selectedLocation && <Marker key={`${selectedLocation.lat}-${selectedLocation.lng}`} position={selectedLocation} />}
+          <Marker position={{ lat: location.lat, lng: location.lng }} draggable={false} />
+
+          {points.length > 0 && points.map((point, index) => (
+            <Marker
+              key={index}
+              position={point}
+              draggable
+              onDragEnd={(event) => onMarkerDragEnd(index, event)}
+              onClick={() => onMarkerClick(index)}
+            />
+          ))}
+
+          {points.length > 0 && (
+            <Polyline
+              path={points}
+              options={{
+                strokeColor: "black",
+                strokeOpacity: 1.0,
+                strokeWeight: 2,
+              }}
+            />
+          )}
         </GoogleMap>
 
         <Box component="form" onSubmit={handleSubmit}>
@@ -168,20 +206,17 @@ function PinDropPopup({
             className="input_field"
             placeholder="Enter radius in meters"
             fullWidth
+            inputProps={{
+              min: 0,
+              max: 100,
+            }}
           />
 
-          <Button type="submit" className="submitBtn" onClick={handleSubmit}>
+          <Button type="submit" className="submitBtn">
             Submit
           </Button>
         </Box>
       </DialogContent>
-
-      <CustomSnackbar
-        open={snackbar.open}
-        handleClose={() => setSnackbar({ ...snackbar, open: false })}
-        message={snackbar.message}
-        severity={snackbar.severity}
-      />
     </Dialog>
   );
 }

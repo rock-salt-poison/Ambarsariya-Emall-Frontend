@@ -29,6 +29,8 @@ function ShopDesign({ data }) {
       setOpenDashboard(false);
     }
   }
+  
+  
 
   return (
     <Link className="shop_container" to={`../shop/${data.shop_access_token}/products`}>

@@ -1,16 +1,36 @@
 import { Box, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import map_img from "../../Utils/images/Sell/shop_details/map.svg";
 import contact_img from "../../Utils/images/Sell/shop_details/contact_us.svg";
 import home_img from "../../Utils/images/Sell/shop_details/home.svg";
 import { Link } from "react-router-dom";
 import StreetViewPopup from "./StreetViewPopup";
 import PinDropPopup from "./PinDropPopup";
+import { useSelector } from "react-redux";
+import { getUser } from "../../API/fetchExpressAPI";
 
 function GetInTouch({ data }) {
   const [openStreetView, setOpenStreetView] = useState(false);
   const [openPinDrop, setOpenPinDrop] = useState(false);
   console.log(data);
+
+  const token = useSelector((state) => state.auth.userAccessToken);
+  const [openDashboard, setOpenDashboard] = useState(false);
+
+  useEffect(()=> {
+    if(token){
+      fetch_user(token);
+    }
+  },[token]);
+
+  const fetch_user = async (token) => {
+    const res = await getUser(token);
+    if(data.shop_access_token === res[0].shop_access_token){
+      setOpenDashboard(true);
+    }else {
+      setOpenDashboard(false);
+    }
+  }
   
   const details = [
     {
@@ -25,14 +45,20 @@ function GetInTouch({ data }) {
       text: data.phone_no_1,
       redirectTo: `tel:${data.phone_no_1}`,
     },
-    {
-      id: 3,
-      icon: home_img,
-      text: data.address,
-      onClick: () => setOpenPinDrop(true), // Open dialog when clicked
-      // redirectTo: `https://www.google.com/maps?q=${data.address}`,
-      // target: "_blank",
-    },
+    openDashboard
+    ? {
+        id: 3,
+        icon: home_img,
+        text: data.address,
+        onClick: () => setOpenPinDrop(true), // Open PinDrop dialog when clicked
+      }
+    : {
+        id: 3,
+        icon: home_img,
+        text: data.address,
+        redirectTo: `https://www.google.com/maps?q=${data.address}`, // Redirect to Google Maps when clicked
+        target: "_blank",
+      },
   ];
 
   console.log(data);
@@ -90,6 +116,7 @@ function GetInTouch({ data }) {
         optionalCname="map-popup-dialog"
         shop_access_token={data.shop_access_token}
         distance_from_pin={data.distance_from_pin}
+        location_pin_drop={data.location_pin_drop}
       />
     </Box>
   );
