@@ -6,6 +6,7 @@ import {
   fetchDomainSectors,
   fetchSectors,
   get_visitorData,
+  initializeWebSocket,
   put_visitorData,
 } from "../../API/fetchExpressAPI";
 import CustomSnackbar from "../CustomSnackbar";
@@ -42,6 +43,22 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
   
 
   const [formFieldData, setFormFieldData] = useState([]); // Initialize formFieldData
+
+  useEffect(() => {
+      const socket = initializeWebSocket();
+  
+      socket.on('message', (newMessage) => {
+        setSnackbar({
+          open: true,
+          message: newMessage,
+          severity: "info", 
+        });
+      });
+  
+      return () => {
+        socket.disconnect();
+      };
+    }, []); 
 
   // Fetch domains once and set initial form field data
   useEffect(() => {
@@ -275,7 +292,6 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
         });
 
 
-        setLoading(false);
         showReplyField(true);
         setSnackbar({ open: true, message: resp.message, severity: "success" });
         setFormData((prevData) => ({
@@ -291,9 +307,11 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
         setSnackbar({
           open: true,
           message: e.response.data.message,
-          severity: "success",
+          severity: "error",
         });
         setFormSubmitted(false);
+      }finally{
+        setLoading(false);
       }
 
       // Update formFieldData to remove domain and sector fields after submission
@@ -404,6 +422,7 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
         handleClose={() => setSnackbar({ ...snackbar, open: false })}
         message={snackbar.message}
         severity={snackbar.severity}
+        disableAutoHide={true}
       />
     </Box>
   );
