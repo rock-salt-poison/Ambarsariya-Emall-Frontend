@@ -108,6 +108,7 @@ function Support(props) {
       setLoading(false);
     }
   }
+console.log(shopData);
 
   useEffect(() => {
     if(token){
@@ -204,7 +205,7 @@ function Support(props) {
                   </Box> */}
                 </Box>
                 <Box className="col-3">
-                  <VisitorFormBox visitorData={visitorData ? visitorData : shopData ? shopData : memberData ? memberData : null}/>
+                  <VisitorFormBox visitorData={visitorData ? visitorData : shopData ? shopData : memberData ? memberData : null} shopNo ={shopData?.shop_no}/>
                 </Box>
               </>
             )}

@@ -4018,6 +4018,111 @@ a {
               @include full-absolute(-65px, 0px, auto, 0px);
               z-index: 3;
               margin: 0 auto;
+              @include flex-center(row, center);
+
+              .badge_bg{
+                .MuiBadge-badge{
+                  padding: 2px 5px;
+                  height: max-content !important;
+                  background-color: $yellow;
+                  // color: $red;
+                  @include homepage-buttons('Bobby-Jones-Soft', 15px, $red2, 'none');
+                  @include hover-scale(1, 0s);
+                }
+                svg{
+                  font-size: 30px;
+                  fill: $light-yellow;
+                }
+              }
+            }
+
+            .list{
+              @include flex-center(column, flex-start);
+              gap: 10px;
+            
+              .card{
+                padding: 10px 15px;
+                align-self: stretch;
+                border-radius: 10px;
+                background: #D4983250;
+                @include flex-center(row, flex-start);
+                place-items: normal;
+                gap: 10px;
+                
+                &:nth-child(even){
+                }
+                
+                .col{
+                  @include flex-center(column, flex-start);
+                  place-items: normal;
+                  gap: 5px;
+
+                  &:last-child{
+                    flex: 1;
+                  }
+
+                  .MuiAvatar-root{
+                    background-color: #984a1b;
+                    font-size: 18px;
+                    width: 35px;
+                    height: 35px;
+                  }
+
+                  .header{
+                    @include flex-center(row,space-between);
+                    gap: 5px;
+
+                    svg{
+                      font-size: 20px;
+                      color: $red;
+                    }
+                  }
+
+                  h3{
+                    @include homepage-buttons(
+                      "Bobby-Jones-Soft",
+                      20px,
+                      #984a1b,
+                      "none"
+                    );
+                    line-height: 18px;
+                    @include hover-scale(1, 0s);
+                  }
+
+                  .message{
+                    @include homepage-buttons(
+                      "Bobby-Jones-Soft",
+                      16px,
+                      $black,
+                      "none"
+                    );
+                    line-height: 16px;
+                    @include hover-scale(1, 0s);
+                    display: -webkit-box;         // Use the flexible box layout for truncation
+                    -webkit-box-orient: vertical; // Set the box orientation to vertical
+                    overflow: hidden;             // Hide overflowing content
+                    -webkit-line-clamp: 1;
+                  }
+
+                  .time{
+                    @include homepage-buttons(
+                      "Bobby-Jones-Soft",
+                      14px,
+                      $gray2,
+                      "none"
+                    );
+                    line-height: 16px;
+                    @include hover-scale(1, 0s);
+                  }
+
+                }
+
+  
+                // &:nth-child(odd){
+                //   background: #b67d1c50;
+                // }
+              }
+              
             }
 
             .content {

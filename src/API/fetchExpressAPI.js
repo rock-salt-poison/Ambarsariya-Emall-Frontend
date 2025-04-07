@@ -654,3 +654,24 @@ export const get_saleOrders = async (shop_no) => {
     throw e;
   }
 } 
+
+export const get_supportChatNotifications = async (shop_no) => {
+  try{
+    const response = await axios.get(`${link}/sell/support-chat-notifications/${shop_no}`);
+    return response.data;
+  }catch(e){
+    throw e;
+  }
+}
+
+
+export const delete_supportChatNotification = async (id) => {
+    try{
+        if(id){
+            const response = await  axios.delete(`${link}/sell/support-chat-notifications/${id}`);
+            return response.data;
+        }
+    }catch(e){
+        throw e;
+    }
+} 

@@ -132,8 +132,7 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
             label: "Message:",
             name: "message",
             type: "textarea",
-            value: formData.reply || formData.message || visitorData?.message || "",
-            readOnly: replyField,
+            value: formData.message || visitorData?.message || "",
             required: true,
           },
         ];
@@ -285,19 +284,16 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
           domain: selectedDomain?.domain_id,
           sector: selectedSector?.sector_id,
           purpose: formData.purpose,
-          message: formData.reply ? formData.reply : formData.message,
+          message: formData.message,
           file: formData.file,
           access_token: token,
           user_type: visitorData.user_type 
         });
 
 
-        showReplyField(true);
         setSnackbar({ open: true, message: resp.message, severity: "success" });
         setFormData((prevData) => ({
           ...prevData,
-          message: formData.reply ? formData.reply : formData.message, // Update the message with reply
-          reply: "", // Reset reply field
         }));
         onSubmitSuccess(formData.domain, formData.sector, true);
         setFormSubmitted(true);
@@ -324,6 +320,8 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
       setFormFieldData(updatedFields);
     }
   };
+
+  
 
   return (
     <Box component="form" autoComplete="off" onSubmit={handleSubmit}>
@@ -396,21 +394,6 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
         </Box>
       )}
 
-      {formSubmitted && replyField && (
-        <Box className="form-group">
-          <FormField
-            label="Reply:"
-            name="reply"
-            type="textarea"
-            value={"" || formData["reply"]}
-            onChange={handleChange}
-            error={errors["reply"]}
-            errorMessage={errorMessages["reply"]}
-            className="input_field"
-            required={true}
-          />
-        </Box>
-      )}
       <Box className="submit_button_container">
         <Button type="submit" variant="contained" className="submit_button">
           Submit
