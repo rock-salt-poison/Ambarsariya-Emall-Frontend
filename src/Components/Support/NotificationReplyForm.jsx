@@ -7,38 +7,32 @@ import {
   fetchSectors,
   get_visitorData,
   initializeWebSocket,
+  patch_merchantResponse,
   put_visitorData,
 } from "../../API/fetchExpressAPI";
 import CustomSnackbar from "../CustomSnackbar";
 import { Link } from "react-router-dom";
 
-const NotificationReplyForm = ({ visitorData, onSubmitSuccess, selectedNotification }) => {
+const NotificationReplyForm = ({ visitorData, selectedNotification }) => {
   const [formData, setFormData] = useState({
     name: "",
     domain: "",
     sector: "",
     purpose: "",
     message: "",
-    file: '',
     reply: "",
   });
 
-
-  console.log(selectedNotification);
   
   const [errors, setErrors] = useState({});
   const [errorMessages, setErrorMessages] = useState({});
   const [loading, setLoading] = useState(false);
-
-  const token = visitorData?.access_token || "";
 
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
     severity: "success",
   });
-
-  
 
   const [formFieldData, setFormFieldData] = useState([]); // Initialize formFieldData
 
@@ -66,8 +60,8 @@ const NotificationReplyForm = ({ visitorData, onSubmitSuccess, selectedNotificat
         
         setFormData({
           name: selectedNotification?.name || "",
-          domain: selectedNotification?.domain_id || "",
-          sector: selectedNotification?.sector_id || "",
+          domain: selectedNotification?.domain_name || "",
+          sector: selectedNotification?.sector_name || "",
           purpose: selectedNotification?.notification_purpose || "",
           message: selectedNotification?.notification || "",
         });
@@ -84,7 +78,7 @@ const NotificationReplyForm = ({ visitorData, onSubmitSuccess, selectedNotificat
             label: "Domain:",
             name: "domain",
             type: "text",
-            value: selectedNotification?.domain_id || "",
+            value: selectedNotification?.domain_name || "",
             required: true,
             readOnly: true,
           },
@@ -92,7 +86,7 @@ const NotificationReplyForm = ({ visitorData, onSubmitSuccess, selectedNotificat
             label: "Sector:",
             name: "sector",
             type: "text",
-            value: selectedNotification?.sector_id || "",
+            value: selectedNotification?.sector_name || "",
             required: true,
             readOnly: true,
           },
@@ -165,8 +159,6 @@ const NotificationReplyForm = ({ visitorData, onSubmitSuccess, selectedNotificat
     const newErrors = {};
     const newErrorMessages = {};
 
-    
-
     if (!formData.reply) {
       newErrors.reply = true;
       newErrorMessages.reply = "Reply is required";
@@ -177,60 +169,48 @@ const NotificationReplyForm = ({ visitorData, onSubmitSuccess, selectedNotificat
     setErrorMessages(newErrorMessages);
     return valid;
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
       try {
         setLoading(true);
-        const selectedDomain = (await fetchDomains()).find(
-          (domain) => domain.domain_name === formData.domain
-        );
-        const selectedSector = (await fetchSectors()).find(
-          (sector) => sector.sector_name === formData.sector
-        );
+        
+        const merchantResponse = {
+          shop_no: visitorData.shop_no,
+          response :formData.reply,
+          business_name: visitorData.business_name,
+          shop_access_token: visitorData.shop_access_token,
+          timestamp :new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }) 
+        }        
 
+        console.log(merchantResponse);
+        
+        const resp = await patch_merchantResponse(selectedNotification.support_id, merchantResponse);
 
-        const resp = await put_visitorData({
-          name: visitorData.full_name || visitorData.name || formData.name,
-          phone_no: visitorData.phone_no_1 || visitorData.phone_no,
-          domain: selectedDomain?.domain_id,
-          sector: selectedSector?.sector_id,
-          purpose: formData.purpose,
-          message: formData.reply ? formData.reply : formData.message,
-          file: formData.file,
-          access_token: token,
-          user_type: visitorData.user_type 
-        });
-
-
+        console.log(resp);
+        
         setSnackbar({ open: true, message: resp.message, severity: "success" });
-        setFormData((prevData) => ({
-          ...prevData,
-          message: formData.reply ? formData.reply : formData.message, // Update the message with reply
-          reply: "", // Reset reply field
-        }));
-        onSubmitSuccess(formData.domain, formData.sector, true);
+        
+        
+        // setFormData((prevData) => ({
+        //   ...prevData,
+        //   message: formData.reply ? formData.reply : formData.message, // Update the message with reply
+        //   reply: "", // Reset reply field
+        // }));
+        // onSubmitSuccess(formData.domain, formData.sector, true);
       } catch (e) {
         console.log(e);
 
-        setSnackbar({
-          open: true,
-          message: e.response.data.message,
-          severity: "error",
-        });
+        // setSnackbar({
+        //   open: true,
+        //   message: e.response.data.message,
+        //   severity: "error",
+        // });
       }finally{
         setLoading(false);
       }
-
-      // Update formFieldData to remove domain and sector fields after submission
-      const updatedFields = formFieldData.filter(
-        (field) =>
-          field.name !== "domain" &&
-          field.name !== "sector" &&
-          field.name !== "purpose"
-      );
-      setFormFieldData(updatedFields);
     }
   };
 

@@ -41,7 +41,8 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
   });
 
   
-
+  console.log(visitorData);
+  
   const [formFieldData, setFormFieldData] = useState([]); // Initialize formFieldData
 
   useEffect(() => {
@@ -106,7 +107,7 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
                   label: "Domain:",
                   name: "domain",
                   type: "select",
-                  placeholder: "Select your domain",
+                  placeholder: "Choose domain",
                   options: domainList.map((d) => d.domain_name),
                   required: true,
                 },
@@ -114,7 +115,7 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
                   label: "Sector:",
                   name: "sector",
                   type: "select",
-                  placeholder: "Select your sector",
+                  placeholder: "Choose sector",
                   options: sectorList,
                   required: true,
                 },
@@ -122,7 +123,7 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
                   label: "Purpose for:",
                   name: "purpose",
                   type: "select",
-                  placeholder: "Select your purpose",
+                  placeholder: "Sell / Buy",
                   options: ["Sell", "Buy"],
                   required: true,
                 },
@@ -361,36 +362,32 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
         )}
       </Box>
       <Tooltip title="Select file" className="tooltip" placement="bottom-end">
-                      <Box>
-                        <FormField
-                          type="file"
-                          name="file"
-                          value={formData.file}
-                          onChange={handleFileChange} // Handle file selection
-                          placeholder="Choose File"
-                          uploadFileIcon={attachment_icon}
-                          className="attachment_icon"
-                        />
-                      </Box>
-                    </Tooltip>
+        <Box>
+          <FormField
+            type="file"
+            name="file"
+            value={formData.file}
+            onChange={handleFileChange} // Handle file selection
+            placeholder="Choose File"
+            uploadFileIcon={attachment_icon}
+            className="attachment_icon"
+          />
+        </Box>
+      </Tooltip>
 
-      {formSubmitted && replyField && (
+      {visitorData?.response?.length>0 && (
         <Box className="notifications">
-          <Link>
+          {
+            visitorData.response.map((merchant, index)=>{
+            return <Link key={index}>
             <Typography variant="h3">
-              Merchant 1230:
-              <Typography variant="span">Hi, I am from UCB</Typography>
-              <Typography variant="span">Shop from Trilium Mall</Typography>
+              <Link to={`./shop?token=${merchant.shop_access_token}`}>{merchant.business_name} : </Link>
+              <Typography variant="span">{merchant.response}</Typography>
             </Typography>
           </Link>
+          })
 
-          <Link>
-            <Typography variant="h3">
-              Merchant 1230:
-              <Typography variant="span">Hi, I am from UCB</Typography>
-              <Typography variant="span">Shop from Trilium Mall</Typography>
-            </Typography>
-          </Link>
+          }
         </Box>
       )}
 

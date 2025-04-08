@@ -31,12 +31,17 @@ const VisitorFormBox = ({ visitorData, shopNo }) => {
   };
 
   const handleNotificationClick = async (shopNo) => {
-    if (shopNo && !notificationOpen) {
+    if (shopNo) {
       try {
         setLoading(true);
         const response = await get_supportChatNotifications(shopNo);
         if (response.valid) {
-          setNotifications(response.data);
+          // Deduplicate before setting
+          const unique = response.data.filter(
+            (item, index, self) =>
+              index === self.findIndex((t) => t.id === item.id)
+          );
+          setNotifications(unique);
           setNotificationOpen(true);
         }
       } catch (e) {
@@ -46,10 +51,12 @@ const VisitorFormBox = ({ visitorData, shopNo }) => {
         setLoading(false);
       }
     } else {
-      setNotificationOpen((prev) => !prev); // Toggle the notification state
+      setNotificationOpen(false);
+      setNotifications([]);
     }
   };
-
+  
+  
   const handleRemove = async (e, id) => {
     e.preventDefault();
     if (id) {
@@ -69,44 +76,39 @@ const VisitorFormBox = ({ visitorData, shopNo }) => {
 
   const handleCardClick = (msg) => {
     setSelectedNotification(msg);
-  };
-
-  // Memoizing the notifications array to avoid unnecessary re-renders
-  const memoizedNotifications = useMemo(() => {
-    return notifications.filter(
-      (value, index, self) =>
-        index === self.findIndex((t) => t.id === value.id)
-    );
-  }, [notifications]); 
+  };  
 
   useEffect(() => {
     if (shopNo) {
       handleNotificationClick(shopNo);
     }
   }, [shopNo]);
+  
+  
+console.log(notifications);
 
   return (
     <Box className="container">
       {loading && <Box className="loading"><CircularProgress /></Box>}
       <Box className="circle">
-      {memoizedNotifications.length > 0 ? (
+      {notifications?.length > 0 ? (
           notificationOpen ? (
-            !selectedNotification ? (
-              <Link onClick={() => setNotificationOpen(false)}>
+            selectedNotification === null ? (
+              <Link onClick={() => {setNotificationOpen(false);setSelectedNotification(null);}}>
                 <Badge className="badge_bg">
                   <ForumIcon className="notification_icon" />
                 </Badge>
               </Link>
             ) : (
-              <Link onClick={() => { handleNotificationClick(shopNo); setSelectedNotification(null) }}>
-                <Badge className="badge_bg" badgeContent={memoizedNotifications?.length}>
+              <Link onClick={() => { setNotificationOpen(true); setSelectedNotification(null) }}>
+                <Badge className="badge_bg" badgeContent={notifications?.length}>
                   <NotificationsIcon className="notification_icon" />
                 </Badge>
               </Link>
             )
           ) : (
-            <Link onClick={() => handleNotificationClick(shopNo)}>
-              <Badge className="badge_bg" badgeContent={memoizedNotifications?.length}>
+            <Link onClick={() => { handleNotificationClick(shopNo); setSelectedNotification(null) }}>
+              <Badge className="badge_bg" badgeContent={notifications?.length}>
                 <NotificationsIcon className="notification_icon" />
               </Badge>
             </Link>
@@ -114,10 +116,10 @@ const VisitorFormBox = ({ visitorData, shopNo }) => {
         ) : null}
       </Box>
 
-      {memoizedNotifications?.length > 0 && notificationOpen && !selectedNotification ? (
+      {notifications?.length > 0 && notificationOpen && selectedNotification === null ? (
         <Box className="list content">
-          {memoizedNotifications?.map((msg) => (
-            <Link key={msg.support_id} className="card" onClick={() => handleCardClick(msg)}>
+          {notifications?.map((msg) => (
+            <Link key={msg.id} className="card" onClick={() => handleCardClick(msg)}>
               <Box className="col">
                 <Avatar alt={msg.name} src="/broken-image.jpg" />
               </Box>
@@ -134,7 +136,7 @@ const VisitorFormBox = ({ visitorData, shopNo }) => {
             </Link>
           ))}
         </Box>
-      ) : selectedNotification ? (
+      ) : selectedNotification !== null ? (
         <Box className="content">
           <Box className="form_container">
             <NotificationReplyForm
@@ -144,7 +146,7 @@ const VisitorFormBox = ({ visitorData, shopNo }) => {
             />
           </Box>
         </Box>
-      ) : !notificationOpen && (
+      ) : !notificationOpen && selectedNotification === null && (
         <Box className="content">
           <Typography variant="h2">
             E-Ambarsariya:
