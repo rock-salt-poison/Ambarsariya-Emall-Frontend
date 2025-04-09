@@ -1,264 +1,181 @@
-import React, { useEffect, useState } from "react";
-import { Box, Button, CircularProgress, Tooltip, Typography } from "@mui/material";
-import FormField from "../Form/FormField";
+import React, { useEffect, useState, useRef } from "react";
 import {
-  fetchDomains,
-  fetchDomainSectors,
-  fetchSectors,
+  Box,
+  Button,
+  CircularProgress,
+  TextField,
+  Typography,
+  Paper,
+} from "@mui/material";
+import {
   get_visitorData,
   initializeWebSocket,
-  patch_merchantResponse,
-  put_visitorData,
+  fetchChatMessagesBySupportId,
+  sendSupportMessage,
+  get_supportChatMessages,
 } from "../../API/fetchExpressAPI";
 import CustomSnackbar from "../CustomSnackbar";
-import { Link } from "react-router-dom";
+import FormField from "../Form/FormField";
 
 const NotificationReplyForm = ({ visitorData, selectedNotification }) => {
-  const [formData, setFormData] = useState({
-    name: "",
-    domain: "",
-    sector: "",
-    purpose: "",
-    message: "",
-    reply: "",
-  });
-
-  
-  const [errors, setErrors] = useState({});
-  const [errorMessages, setErrorMessages] = useState({});
   const [loading, setLoading] = useState(false);
+  const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState("");
+  const messageEndRef = useRef(null);
 
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: "",
-    severity: "success",
-  });
+  const currentUser = {
+    id: visitorData.shop_id || visitorData.visitor_id || visitorData.member_id, // dynamically assign this based on logged-in user
+    type: visitorData.user_type,
+  };
 
-  const [formFieldData, setFormFieldData] = useState([]); // Initialize formFieldData
-
-  useEffect(() => {
-      const socket = initializeWebSocket();
+  console.log(visitorData);
   
-      socket.on('message', (newMessage) => {
-        setSnackbar({
-          open: true,
-          message: newMessage,
-          severity: "info", 
-        });
-      });
-  
-      return () => {
-        socket.disconnect();
-      };
-    }, []); 
-
-  // Fetch domains once and set initial form field data
+  // Auto scroll to latest message
   useEffect(() => {
-    const fetchInitialData = async () => {
-      setLoading(true);
+    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  // Fetch previous chat messages
+  useEffect(() => {
+    const fetchMessages = async () => {
       try {
-        
-        setFormData({
-          name: selectedNotification?.name || "",
-          domain: selectedNotification?.domain_name || "",
-          sector: selectedNotification?.sector_name || "",
-          purpose: selectedNotification?.notification_purpose || "",
-          message: selectedNotification?.notification || "",
-        });
-  
-        const formFields = [
-          {
-            label: visitorData ? `${visitorData?.user_type}:` : "Visitor",
-            name: "name",
-            type: "text",
-            value: selectedNotification?.name || "",
-            readOnly: true,
-          },
-          {
-            label: "Domain:",
-            name: "domain",
-            type: "text",
-            value: selectedNotification?.domain_name || "",
-            required: true,
-            readOnly: true,
-          },
-          {
-            label: "Sector:",
-            name: "sector",
-            type: "text",
-            value: selectedNotification?.sector_name || "",
-            required: true,
-            readOnly: true,
-          },
-          {
-            label: "Purpose for:",
-            name: "purpose",
-            type: "text",
-            value: selectedNotification?.notification_purpose || "",
-            required: true,
-            readOnly: true,
-          },
-          {
-            label: "Message:",
-            name: "message",
-            type: "textarea",
-            value: selectedNotification?.notification || "",
-            readOnly: true,
-            readOnly: true,
-          },
-
-          {
-            label: "Reply:",
-            name: "reply",
-            type: "textarea",
-            required: true,
-          },
-        ];
-  
-        setFormFieldData(formFields);
-
-      } catch (error) {
+        const resp = await get_supportChatMessages(selectedNotification.support_id);
+        if(resp.valid){
+          setMessages(resp.data);
+        }
+      } catch (err) {
         setSnackbar({
           open: true,
-          message: error?.response?.data?.message || "Error fetching data",
+          message: "Failed to load chat",
           severity: "error",
         });
-      } finally {
-        setLoading(false);
       }
     };
-  
-    fetchInitialData();
-  }, [visitorData]);
-  
 
-
-  // Handle change in form fields
-  const handleChange = async (e) => {
-    const { name, value } = e.target;
-
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-
-    setErrors((prevErrors) => ({
-      ...prevErrors,
-      [name]: false,
-    }));
-
-    setErrorMessages((prevMessages) => ({
-      ...prevMessages,
-      [name]: "",
-    }));
-  };
-
-
-  const validate = () => {
-    let valid = true;
-    const newErrors = {};
-    const newErrorMessages = {};
-
-    if (!formData.reply) {
-      newErrors.reply = true;
-      newErrorMessages.reply = "Reply is required";
-      valid = false;
+    if (selectedNotification?.support_id) {
+      fetchMessages();
     }
+  }, [selectedNotification]);
 
-    setErrors(newErrors);
-    setErrorMessages(newErrorMessages);
-    return valid;
+  // WebSocket for real-time updates
+  useEffect(() => {
+    const socket = initializeWebSocket();
+
+    socket.on("message", (msg) => {
+      setMessages((prev) => [...prev, msg]);
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
+  const handleSendMessage = async () => {
+     // try{
+    //   setLoading(true);
+    //   const data = {
+    //     visitor_id: msg.visitor_id,
+    //     notification_id: msg.id,
+    //     support_id: msg.support_id,
+    //     sender_id: msg.visitor_id,
+    //     sender_type: msg.user_type,
+    //     receiver_id: msg.sent_to,
+    //     receiver_type: 'shop',
+    //     message: msg.message,
+    //   };
+    //   const resp = await post_supportChatMessage(data);
+    //   if(resp.message==='Chat created successfully'){
+    //     setSelectedNotification(msg);
+    //   }      
+    // }catch(e){
+    //   console.log(e);
+    // }finally{
+    //   setLoading(false);
+    // }
+  //   if (!newMessage.trim()) return;
+
+  //   const msgPayload = {
+  //     support_id: selectedNotification.support_id,
+  //     sender_id: currentUser.id,
+  //     sender_type: currentUser.type,
+  //     receiver_id: visitorData?.user_id,
+  //     receiver_type: "visitor",
+  //     message: newMessage.trim(),
+  //   };
+
+  //   try {
+  //     await sendSupportMessage(msgPayload); // backend API call
+  //     setMessages((prev) => [...prev, { ...msgPayload, sent_at: new Date() }]);
+  //     setNewMessage("");
+  //   } catch (err) {
+  //     setSnackbar({
+  //       open: true,
+  //       message: "Failed to send message",
+  //       severity: "error",
+  //     });
+  //   }
   };
-  
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (validate()) {
-      try {
-        setLoading(true);
-        
-        const merchantResponse = {
-          shop_no: visitorData.shop_no,
-          response :formData.reply,
-          business_name: visitorData.business_name,
-          shop_access_token: visitorData.shop_access_token,
-          timestamp :new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }) 
-        }        
-
-        console.log(merchantResponse);
-        
-        const resp = await patch_merchantResponse(selectedNotification.support_id, merchantResponse);
-
-        console.log(resp);
-        
-        setSnackbar({ open: true, message: resp.message, severity: "success" });
-        
-        
-        // setFormData((prevData) => ({
-        //   ...prevData,
-        //   message: formData.reply ? formData.reply : formData.message, // Update the message with reply
-        //   reply: "", // Reset reply field
-        // }));
-        // onSubmitSuccess(formData.domain, formData.sector, true);
-      } catch (e) {
-        console.log(e);
-
-        // setSnackbar({
-        //   open: true,
-        //   message: e.response.data.message,
-        //   severity: "error",
-        // });
-      }finally{
-        setLoading(false);
-      }
-    }
-  };
-
-  
 
   return (
-    <Box component="form" autoComplete="off" onSubmit={handleSubmit}>
+    <Box className="chat_container">
       {loading && (
         <Box className="loading">
           <CircularProgress />
         </Box>
       )}
-      <Box className="form-group">
-        {formFieldData.map(
-          ({
-            label,
-            name,
-            type,
-            value,
-            readOnly,
-            placeholder,
-            options,
-            required,
-          }) => (
-            <FormField
-              key={name}
-              label={label}
-              name={name}
-              type={type}
-              value={formData[name] || ""}
-              onChange={handleChange}
-              error={errors[name]}
-              errorMessage={errorMessages[name]}
-              placeholder={placeholder}
-              options={options}
-              className="input_field"
-              readOnly={readOnly}
-              required={required}
-            />
-          )
-        )}
-      </Box>
-     
 
-      <Box className="submit_button_container">
-        <Button type="submit" variant="contained" className="submit_button">
-          Submit
-        </Button>
+      <Box className="chat">
+        {messages?.map((msg, index) => {
+          const isMyMsg = msg.sender_id === currentUser.id && msg.sender_type === currentUser.type;
+          return (
+            <Box
+              key={index}
+              sx={{
+                display: "flex",
+                justifyContent: isMyMsg ? "flex-end" : "flex-start",
+                mb: 1,
+              }}
+            >
+              <Paper
+                elevation={1}
+                sx={{
+                  p: 1,
+                  bgcolor: isMyMsg ? "#e0ffe0" : "#f5f5f5",
+                  maxWidth: "70%",
+                  borderRadius: "10px",
+                }}
+              >
+                <Typography variant="body2">{msg.message}</Typography>
+                <Typography variant="caption" color="textSecondary">
+                  {msg.sender_type} - {new Date(msg.sent_at).toLocaleTimeString()}
+                </Typography>
+              </Paper>
+            </Box>
+          );
+        })}
+        <div ref={messageEndRef} />
+      </Box>
+
+      <Box className="sendMessagaeForm" autoComplete="off" component="form" onSubmit={handleSendMessage}>
+        <Box className="form-group form-group2">
+          <FormField
+            type="text"
+            name="reply"
+            multiline
+            rows={2}
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)} // Handle file selection
+            placeholder="Type your message..."
+            className="input_field"
+          />
+        </Box>
+        <Box className="submit_button_container">
+          <Button type="submit" variant="contained" className="submit_button">
+            Submit
+          </Button>
+        </Box>
+
       </Box>
 
       <CustomSnackbar

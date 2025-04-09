@@ -278,12 +278,16 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
           (sector) => sector.sector_name === formData.sector
         );
 
+        
+
 
         const resp = await put_visitorData({
           name: visitorData.full_name || visitorData.name || formData.name,
           phone_no: visitorData.phone_no_1 || visitorData.phone_no,
           domain: selectedDomain?.domain_id,
+          domain_name: formData.domain,
           sector: selectedSector?.sector_id,
+          sector_name: formData.sector,
           purpose: formData.purpose,
           message: formData.message,
           file: formData.file,
@@ -291,7 +295,8 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
           user_type: visitorData.user_type 
         });
 
-
+        console.log(resp);
+        
         setSnackbar({ open: true, message: resp.message, severity: "success" });
         setFormData((prevData) => ({
           ...prevData,

@@ -3,7 +3,7 @@ import { Avatar, Badge, Box, CircularProgress, Typography } from "@mui/material"
 import VisitorShopForm from "./VisitorShopForm";
 import { Link, useNavigate } from "react-router-dom";
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import { delete_supportChatNotification, get_supportChatNotifications } from "../../API/fetchExpressAPI";
+import { delete_supportChatNotification, get_supportChatNotifications, post_supportChatMessage } from "../../API/fetchExpressAPI";
 import ClearIcon from '@mui/icons-material/Clear';
 import ForumIcon from '@mui/icons-material/Forum';
 import dayjs from 'dayjs';
@@ -19,7 +19,7 @@ const VisitorFormBox = ({ visitorData, shopNo }) => {
   const [showFields, setShowFields] = useState(true);
   const [loading, setLoading] = useState(false);
   const [selectedNotification, setSelectedNotification] = useState(null);
-  const navigate = useNavigate();
+  const navigate = useNavigate();  
 
   const handleFormSubmitSuccess = (domain, sector, submit) => {
     setFormSubmitted(submit);
@@ -74,8 +74,30 @@ const VisitorFormBox = ({ visitorData, shopNo }) => {
     }
   };
 
-  const handleCardClick = (msg) => {
+  const handleCardClick = async (msg) => {
+    // try{
+    //   setLoading(true);
+    //   const data = {
+    //     visitor_id: msg.visitor_id,
+    //     notification_id: msg.id,
+    //     support_id: msg.support_id,
+    //     sender_id: msg.visitor_id,
+    //     sender_type: msg.user_type,
+    //     receiver_id: msg.sent_to,
+    //     receiver_type: 'shop',
+    //     message: msg.message,
+    //   };
+    //   const resp = await post_supportChatMessage(data);
+    //   if(resp.message==='Chat created successfully'){
+    //     setSelectedNotification(msg);
+    //   }      
+    // }catch(e){
+    //   console.log(e);
+    // }finally{
+    //   setLoading(false);
+    // }
     setSelectedNotification(msg);
+
   };  
 
   useEffect(() => {
@@ -137,8 +159,8 @@ console.log(notifications);
           ))}
         </Box>
       ) : selectedNotification !== null ? (
-        <Box className="content">
-          <Box className="form_container">
+        <Box className="content chatContent">
+          <Box className="form_container chatBox">
             <NotificationReplyForm
               visitorData={visitorData}
               onSubmitSuccess={handleFormSubmitSuccess}

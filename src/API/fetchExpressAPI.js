@@ -664,6 +664,15 @@ export const get_supportChatNotifications = async (shop_no) => {
   }
 }
 
+export const get_supportChatMessages = async (support_id) => {
+  try {
+    const response = await axios.get(`${link}/sell/support-chat-messages/${support_id}`);
+    return response.data;
+  } catch (e) {
+    throw e;
+  }
+}
+
 
 export const delete_supportChatNotification = async (id) => {
   try {
@@ -686,3 +695,14 @@ export const patch_merchantResponse = async (supportId, response) => {
     throw error;
   }
 };
+
+export const post_supportChatMessage = async (data) => {
+  try {
+    if (data) {
+      const response = await axios.post(`${link}/sell/support/chat`, { data });
+      return response.data;
+    }
+  } catch (e) {
+    throw e;
+  }
+}

@@ -4133,6 +4133,10 @@ a {
               overflow-y: scroll;
               padding-right: 10px;
 
+              &.chatContent{
+                overflow-y: hidden;
+              }
+
               &::-webkit-scrollbar-thumb{
                 background: $brown;
               }
@@ -4160,10 +4164,57 @@ a {
               .form_container {
                 width: 100%;
 
+                &.chatBox{
+                  flex: 1;
+                  @include flex-center(row, flex-start);
+                  place-items: normal;
+                  height: 100%;
+
+                  .chat_container{
+                    @include flex-center(column, flex-start);
+                    place-items: normal;
+                    gap: 15px;
+                    flex: 1;
+
+                    .chat{
+                      flex: 1;
+                      max-height: 80%;
+                      overflow-y: scroll;
+                    }
+
+                    .sendMessageForm{
+
+                    }
+                  }
+                }
+
                 form {
                   width: 100%;
                   @include flex-center(column, center);
                   place-items: normal;
+
+                  &.sendMessagaeForm{
+                    @include flex-center(row,flex-start);
+                    align-self: stretch;
+                    gap: 10px;
+
+                    .form-group{
+                      width: 100%;
+
+                      p.label{
+                        display: none;
+                      }
+                    }
+
+                    .submit_button_container{
+                      margin: 0px;
+
+                      .submit_button{
+                        padding: 2px 4px;
+                        font-size: 14px;
+                      }
+                    }
+                  }
 
                   .tooltip{
                     width: max-content;
@@ -4212,6 +4263,12 @@ a {
                     @include flex-center(column, flex-start);
                     gap: 10px;
 
+                    &.form-group2{
+                      .field_container{
+                        width: 100%;
+                      }
+                    }
+
                     .form-control {
                       @include flex-center(column, flex-start);
                       gap: 8px;
@@ -4250,6 +4307,8 @@ a {
                         .MuiInputBase-root.MuiOutlinedInput-root {
                           padding: 0px;
                         }
+
+                       
                       }
 
                       .MuiTextField-root {
@@ -4276,6 +4335,10 @@ a {
                         @include hover-scale(1, 0s);
                         padding: 4px 10px;
                         border: 0px;
+
+                        &::placeholder{
+                          opacity: 0.8;
+                        }
                       }
                     }
 
