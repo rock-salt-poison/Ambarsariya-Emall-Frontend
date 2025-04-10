@@ -11,7 +11,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import NotificationReplyForm from "./NotificationReplyForm";
 dayjs.extend(relativeTime);
 
-const VisitorFormBox = ({ visitorData, shopNo }) => {
+const VisitorFormBox = ({ visitorData, shopNo, currentUser }) => {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [value, setValue] = useState({ domain: "domain", sector: "sector" });
   const [notifications, setNotifications] = useState([]);
@@ -35,6 +35,8 @@ const VisitorFormBox = ({ visitorData, shopNo }) => {
       try {
         setLoading(true);
         const response = await get_supportChatNotifications(shopNo);
+        console.log(response);
+        
         if (response.valid) {
           // Deduplicate before setting
           const unique = response.data.filter(
@@ -46,12 +48,12 @@ const VisitorFormBox = ({ visitorData, shopNo }) => {
         }
       } catch (e) {
         console.error("Error: ", e);
-        setNotificationOpen(false);
+        // setNotificationOpen(false);
       } finally {
         setLoading(false);
       }
     } else {
-      setNotificationOpen(false);
+      // setNotificationOpen(false);
       setNotifications([]);
     }
   };
@@ -75,30 +77,14 @@ const VisitorFormBox = ({ visitorData, shopNo }) => {
   };
 
   const handleCardClick = async (msg) => {
-    // try{
-    //   setLoading(true);
-    //   const data = {
-    //     visitor_id: msg.visitor_id,
-    //     notification_id: msg.id,
-    //     support_id: msg.support_id,
-    //     sender_id: msg.visitor_id,
-    //     sender_type: msg.user_type,
-    //     receiver_id: msg.sent_to,
-    //     receiver_type: 'shop',
-    //     message: msg.message,
-    //   };
-    //   const resp = await post_supportChatMessage(data);
-    //   if(resp.message==='Chat created successfully'){
-    //     setSelectedNotification(msg);
-    //   }      
-    // }catch(e){
-    //   console.log(e);
-    // }finally{
-    //   setLoading(false);
-    // }
+    console.log(msg);
     setSelectedNotification(msg);
-
   };  
+
+  const handleSelectedNotification = async (msg) =>{
+    console.log(msg);
+    setSelectedNotification(msg);
+  }
 
   useEffect(() => {
     if (shopNo) {
@@ -113,7 +99,7 @@ console.log(notifications);
     <Box className="container">
       {loading && <Box className="loading"><CircularProgress /></Box>}
       <Box className="circle">
-      {notifications?.length > 0 ? (
+      {notifications ? (
           notificationOpen ? (
             selectedNotification === null ? (
               <Link onClick={() => {setNotificationOpen(false);setSelectedNotification(null);}}>
@@ -129,7 +115,7 @@ console.log(notifications);
               </Link>
             )
           ) : (
-            <Link onClick={() => { handleNotificationClick(shopNo); setSelectedNotification(null) }}>
+            <Link onClick={() => { handleNotificationClick(shopNo);  setNotificationOpen(true);setSelectedNotification(null) }}>
               <Badge className="badge_bg" badgeContent={notifications?.length}>
                 <NotificationsIcon className="notification_icon" />
               </Badge>
@@ -138,57 +124,69 @@ console.log(notifications);
         ) : null}
       </Box>
 
-      {notifications?.length > 0 && notificationOpen && selectedNotification === null ? (
-        <Box className="list content">
-          {notifications?.map((msg) => (
-            <Link key={msg.id} className="card" onClick={() => handleCardClick(msg)}>
-              <Box className="col">
-                <Avatar alt={msg.name} src="/broken-image.jpg" />
-              </Box>
-              <Box className="col">
-                <Box className="header">
-                  <Typography variant="h3">{msg.name}</Typography>
-                  <Link onClick={(e) => handleRemove(e, msg.id)}><ClearIcon /></Link>
-                </Box>
-                <Typography className="message">{msg.notification}</Typography>
-                <Typography className="time">
-                  {dayjs(msg.notification_received_at).fromNow()}
-                </Typography>
-              </Box>
-            </Link>
-          ))}
-        </Box>
-      ) : selectedNotification !== null ? (
-        <Box className="content chatContent">
-          <Box className="form_container chatBox">
-            <NotificationReplyForm
-              visitorData={visitorData}
-              onSubmitSuccess={handleFormSubmitSuccess}
-              selectedNotification={selectedNotification}
-            />
+      {notificationOpen && selectedNotification === null ? (
+  notifications?.length === 0 ? (
+    <Box className="content noNotification">
+      <Typography variant="h2">No new notifications</Typography>
+    </Box>
+  ) : (
+    <Box className="list content">
+      {notifications.map((msg) => (
+        <Link key={msg.id} className="card" onClick={() => handleCardClick(msg)}>
+          <Box className="col">
+            <Avatar alt={msg.name} src="/broken-image.jpg" />
           </Box>
-        </Box>
-      ) : !notificationOpen && selectedNotification === null && (
-        <Box className="content">
-          <Typography variant="h2">
-            E-Ambarsariya:
-            <Link onClick={handleHeadingClick}>
-              <Typography variant="span">
-                {formSubmitted && visitorData?.domain_name && visitorData?.sector_name
-                  ? `${visitorData.domain_name} - ${visitorData.sector_name}`
-                  : `${value.domain} - ${value.sector}`}
-              </Typography>
-            </Link>
-          </Typography>
-          <Box className="form_container">
-            <VisitorShopForm
-              visitorData={visitorData}
-              onSubmitSuccess={handleFormSubmitSuccess}
-              showFields={showFields}
-            />
+          <Box className="col">
+            <Box className="header">
+              <Typography variant="h3">{msg.name}</Typography>
+              <Link onClick={(e) => handleRemove(e, msg.id)}>
+                <ClearIcon />
+              </Link>
+            </Box>
+            <Typography className="message">{msg.notification}</Typography>
+            <Typography className="time">
+              {dayjs(msg.notification_received_at).fromNow()}
+            </Typography>
           </Box>
-        </Box>
-      )}
+        </Link>
+      ))}
+    </Box>
+  )
+) : selectedNotification !== null ? (
+  <Box className="content chatContent">
+    <Box className="form_container chatBox">
+      <NotificationReplyForm
+        visitorData={visitorData}
+        onSubmitSuccess={handleFormSubmitSuccess}
+        selectedNotification={selectedNotification}
+        currentUser={currentUser}
+      />
+    </Box>
+  </Box>
+) : !notificationOpen && selectedNotification === null && (
+  <Box className="content">
+    <Typography variant="h2">
+      E-Ambarsariya:
+      <Link onClick={handleHeadingClick}>
+        <Typography variant="span">
+          {formSubmitted && visitorData?.domain_name && visitorData?.sector_name
+            ? `${visitorData.domain_name} - ${visitorData.sector_name}`
+            : `${value.domain} - ${value.sector}`}
+        </Typography>
+      </Link>
+    </Typography>
+    <Box className="form_container">
+      <VisitorShopForm
+        visitorData={visitorData}
+        onSubmitSuccess={handleFormSubmitSuccess}
+        showFields={showFields}
+        setSelectedNotification={handleSelectedNotification}
+        currentUser={currentUser}
+      />
+    </Box>
+  </Box>
+)}
+
     </Box>
   );
 };

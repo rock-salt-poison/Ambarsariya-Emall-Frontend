@@ -97,9 +97,6 @@ const formattedTime = updatedAt
             <Date_Time_Weather
               text1="Last Updated Currency"
               text2={formattedTime}
-
-              
-              
             />
 
           }

@@ -20,6 +20,7 @@ function Support(props) {
   const [shopData, setShopData] = useState(null);
   const [memberData, setMemberData] = useState(null);
   const [userLoggedIn , setUserLoggedIn] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
 
   const [loading, setLoading] = useState(false);
   
@@ -39,10 +40,10 @@ function Support(props) {
   const theme = createCustomTheme(themeProps);
 
 
-  const fetchData = async (visitor_token) => {
+  const fetchData = async (visitor_token, sender_id) => {
     try {
       setLoading(true);
-      const resp = (await get_visitorData(visitor_token));
+      const resp = (await get_visitorData(visitor_token, sender_id));
       if (resp.valid) {
         setVisitorData(resp.data[0]);
         setLoading(false);
@@ -114,6 +115,9 @@ console.log(shopData);
     if(token){
       const verifyUser = async () => {
         const user = (await getUser(token))[0];
+        console.log(user);
+        
+        setCurrentUser(user);
         // console.log(user);
         
           // if(user.support_id && user.visitor_id){
@@ -123,7 +127,7 @@ console.log(shopData);
           if(user.shop_access_token && user.user_type === 'shop'){
             fetchShopData(user.shop_access_token, user.user_access_token);
             if(user.support_id && user.visitor_id){
-              fetchData(user.user_access_token);
+              fetchData(user.user_access_token, user.shop_no);
             }
             setUserLoggedIn(true);
           }
@@ -131,14 +135,14 @@ console.log(shopData);
           else if(user.user_access_token && user.user_type === 'member'){
             fetchMemberData(user.user_access_token)
             if(user.support_id && user.visitor_id){
-              fetchData(user.user_access_token);
+              fetchData(user.user_access_token, user.user_id);
             }
             setUserLoggedIn(true);
           }
 
           else if(user.user_access_token && user.user_type === 'visitor'){
             setUserLoggedIn(true);
-            fetchData(user.user_access_token);
+            fetchData(user.user_access_token, user.visitor_id);
           } 
 
           else{
@@ -205,7 +209,10 @@ console.log(shopData);
                   </Box> */}
                 </Box>
                 <Box className="col-3">
-                  <VisitorFormBox visitorData={visitorData ? visitorData : shopData ? shopData : memberData ? memberData : null} shopNo ={shopData?.shop_no}/>
+                  <VisitorFormBox 
+                    visitorData={visitorData ? visitorData : shopData ? shopData : memberData ? memberData : null} 
+                    shopNo ={shopData?.shop_no}
+                    currentUser={currentUser} />
                 </Box>
               </>
             )}

@@ -4027,7 +4027,10 @@ a {
                   background-color: $yellow;
                   // color: $red;
                   @include homepage-buttons('Bobby-Jones-Soft', 15px, $red2, 'none');
-                  @include hover-scale(1, 0s);
+                  
+                  &:hover{
+                    transform: scale(1) translate(50%, -50%);
+                  }
                 }
                 svg{
                   font-size: 30px;
@@ -4180,6 +4183,11 @@ a {
                       flex: 1;
                       max-height: 80%;
                       overflow-y: scroll;
+
+                      .caption{
+                        @include flex-center(row, space-between);
+                        gap: 10px;
+                      }
                     }
 
                     .sendMessageForm{

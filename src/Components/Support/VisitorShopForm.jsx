@@ -13,7 +13,7 @@ import CustomSnackbar from "../CustomSnackbar";
 import { Link } from "react-router-dom";
 import attachment_icon from '../../Utils/images/Sell/support/attachment_icon.png';
 
-const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
+const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields, setSelectedNotification, currentUser }) => {
   const [formData, setFormData] = useState({
     name: "",
     domain: "",
@@ -40,6 +40,18 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
     severity: "success",
   });
 
+  const getCurrentUserId = () => {
+    switch (currentUser.user_type) {
+      case 'shop':
+        return currentUser.shop_no;
+      case 'member':
+        return currentUser.member_id;
+      case 'visitor':
+        return currentUser.visitor_id;
+      default:
+        return null;
+    }
+  };
   
   console.log(visitorData);
   
@@ -290,6 +302,7 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
           sector_name: formData.sector,
           purpose: formData.purpose,
           message: formData.message,
+          sending_from: getCurrentUserId(),
           file: formData.file,
           access_token: token,
           user_type: visitorData.user_type 
@@ -384,10 +397,16 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields }) => {
         <Box className="notifications">
           {
             visitorData.response.map((merchant, index)=>{
-            return <Link key={index}>
+              const selectedNotification = {
+                visitor_id: visitorData.visitor_id,
+                support_id: visitorData.support_id,
+                id: merchant.notification_id,
+                user_type: visitorData.user_type,
+              }
+            return <Link key={index}  onClick={()=>setSelectedNotification(selectedNotification)}>
             <Typography variant="h3">
               <Link to={`./shop?token=${merchant.shop_access_token}`}>{merchant.business_name} : </Link>
-              <Typography variant="span">{merchant.response}</Typography>
+              <Typography variant="span">{merchant.sender_response}</Typography>
             </Typography>
           </Link>
           })

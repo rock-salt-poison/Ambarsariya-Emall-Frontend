@@ -210,9 +210,9 @@ export const post_support_name_password = async (data) => {
   }
 }
 
-export const get_visitorData = async (access_token) => {
+export const get_visitorData = async (access_token, sender_id) => {
   try {
-    const response = await axios.get(`${link}/sell/support/${access_token}`);
+    const response = await axios.get(`${link}/sell/support/${access_token}/${sender_id}`);
     return response.data;
   } catch (e) {
     throw e;
@@ -664,9 +664,9 @@ export const get_supportChatNotifications = async (shop_no) => {
   }
 }
 
-export const get_supportChatMessages = async (support_id) => {
+export const get_supportChatMessages = async (support_id, notification_id) => {
   try {
-    const response = await axios.get(`${link}/sell/support-chat-messages/${support_id}`);
+    const response = await axios.get(`${link}/sell/support-chat-messages/${support_id}/${notification_id}`);
     return response.data;
   } catch (e) {
     throw e;
