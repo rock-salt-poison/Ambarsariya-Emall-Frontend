@@ -8,7 +8,6 @@ import {
   Paper,
 } from "@mui/material";
 import {
-  get_visitorData,
   initializeWebSocket,
   fetchChatMessagesBySupportId,
   sendSupportMessage,
@@ -199,7 +198,7 @@ const NotificationReplyForm = ({ visitorData, selectedNotification, currentUser 
         visitor_id: selectedNotification.visitor_id,
         notification_id: selectedNotification.id,
         support_id: selectedNotification.support_id,
-        sender_id: currentUser.user_type === 'shop' ? currentUser.shop_no : currentUser.user_type === 'member' ? currentUser.member_id : currentUser === 'visitor' ? currentUser.visitor_id :  null,
+        sender_id: currentUser.user_type === 'shop' ? currentUser.shop_no : currentUser.user_type === 'member' ? currentUser.member_id : currentUser.user_type === 'visitor' ? currentUser.visitor_id :  null,
         sender_type: currentUser.user_type,
         receiver_id: selectedNotification.sent_from,
         receiver_type: selectedNotification.user_type,
@@ -259,6 +258,8 @@ const NotificationReplyForm = ({ visitorData, selectedNotification, currentUser 
         return null;
     }
   };
+  console.log(currentUser);
+  
 
   return (
     <Box className="chat_container">
@@ -270,21 +271,17 @@ const NotificationReplyForm = ({ visitorData, selectedNotification, currentUser 
           </Box>
         )}
         {messages?.map((msg, index) => {
-          
-          
+          console.log(msg);
+
           const isMyMsg = msg.sender_id === getCurrentUserId() && msg.sender_type === currentUser.user_type;
           
           console.log('isMyMsg : ', isMyMsg);
           // Determine sender name
           let senderName = "";
-          if (msg.sender_type === "shop" && msg.sender_id === currentUser.shop_no) {
-            senderName = currentUser.name || "You";
-          } else if (msg.sender_type === "member" && msg.sender_id === currentUser.member_id) {
-            senderName = currentUser.name || "You";
-          } else if (msg.sender_type === "visitor" && msg.sender_id === visitorData?.visitor_id) {
-            senderName = visitorData?.name || "Visitor";
-          } else {
-            senderName = msg.name || "User";
+          if (msg.sender_id === currentUser.shop_no || msg.sender_id === currentUser.member_id || msg.sender_id === visitorData?.visitor_id) {
+            senderName = "You";
+          }  else {
+            senderName =  msg.receiver_name;
           }
           
           return (

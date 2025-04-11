@@ -135,7 +135,7 @@ console.log(shopData);
           else if(user.user_access_token && user.user_type === 'member'){
             fetchMemberData(user.user_access_token)
             if(user.support_id && user.visitor_id){
-              fetchData(user.user_access_token, user.user_id);
+              fetchData(user.user_access_token, user.member_id);
             }
             setUserLoggedIn(true);
           }

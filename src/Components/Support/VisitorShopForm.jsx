@@ -5,7 +5,6 @@ import {
   fetchDomains,
   fetchDomainSectors,
   fetchSectors,
-  get_visitorData,
   initializeWebSocket,
   put_visitorData,
 } from "../../API/fetchExpressAPI";
@@ -39,6 +38,9 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields, setSelected
     message: "",
     severity: "success",
   });
+
+  console.log(currentUser);
+  
 
   const getCurrentUserId = () => {
     switch (currentUser.user_type) {
@@ -397,7 +399,7 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields, setSelected
         <Box className="notifications">
           {
             visitorData.response.map((merchant, index)=>{
-              console.log(merchant);
+              console.log(merchant.sender_id);
               console.log(visitorData);
               
               const selectedNotification = {
