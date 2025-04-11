@@ -183,6 +183,13 @@ function Cart() {
             setBuyerData(memberData[0]);
           }
         } 
+        if (user.user_type === 'shop') {
+          const shopData = await getShopUserData(user.shop_access_token);
+          if (shopData.length > 0) {
+            buyerDataFetched = shopData[0];
+            setBuyerData(shopData[0]);
+          }
+        } 
       }
   
       // Ensure all necessary data is available

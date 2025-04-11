@@ -259,7 +259,7 @@ export default function CustomPaginationTable({rows}) {
     if(loggedInUserToken){
       try{
         const userType = (await getUser(loggedInUserToken))?.[0]?.user_type;
-        if(userType === 'member'){
+        if(userType === 'member' || userType ==='shop'){
           navigate(`../shop/${token}/cart`);
         }else{
           navigate(`../login`);

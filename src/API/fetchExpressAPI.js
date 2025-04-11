@@ -706,3 +706,14 @@ export const post_supportChatMessage = async (data) => {
     throw e;
   }
 }
+
+export const post_memberEmotional = async (data, member_id) => {
+  try {
+    if (data) {
+      const response = await axios.post(`${link}/sell/emotional/${member_id}`, { data });
+      return response.data;
+    }
+  } catch (e) {
+    throw e;
+  }
+}

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Box, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Box, CircularProgress, Typography } from '@mui/material';
 import Button2 from '../../Components/Home/Button2';
 import emotionalIcon from '../../Utils/images/Sell/esale/emotional/emotional.png';
 import emotional_range from '../../Utils/images/Sell/esale/emotional/emotional_range.webp';
@@ -14,15 +14,20 @@ import Switch_On_Off from '../../Components/Form/Switch_On_Off';
 import clock from '../../Utils/images/Sell/esale/emotional/clock.png'
 import timetable from '../../Utils/images/Sell/esale/emotional/timetable.png'
 import UserBadge from '../../UserBadge';
+import { getUser, post_memberEmotional } from '../../API/fetchExpressAPI';
+import { useSelector } from 'react-redux';
 
 function Esale_emotional() {
   const [joyBarCount, setJoyBarCount] = useState(1);
   const [sadnessBarCount, setSadnessBarCount] = useState(1);
-  
+  const token = useSelector((state) => state.auth.userAccessToken);
+  const [memberId, setMemberId] = useState('');
+  const [loading , setLoading] = useState(false);
+
   // State to manage like/dislike for each question
   const [selectedIcons, setSelectedIcons] = useState({
-    advice: null,
-    share: null,
+    advice: false,
+    share: false,
   });
 
   // State to manage switch on/off states
@@ -40,6 +45,60 @@ function Esale_emotional() {
       setter(currentCount - 1);
     }
   };
+
+   // Prepare data for API call
+   const prepareData = () => {
+    return {
+      emotional_range_joy_to_excitement: joyBarCount,
+      emotional_range_sadness_to_anger: sadnessBarCount,
+      emotional_reactivity_like_advice: selectedIcons.advice,
+      emotional_reactivity_share_experiences: selectedIcons.share,
+      emotional_regulations_recall_adverse_emotions: stressSwitch,
+      emotional_regulations_control_anger_and_crying: angerSwitch,
+    };
+  };
+
+  // Call the API when state changes
+  useEffect(() => {
+
+    if(memberId){
+      const sendEmotionalData = async () => {
+        const payload = prepareData();
+        console.log(payload);
+        
+        try {
+          setLoading(true);
+          const response = await post_memberEmotional(payload, memberId);
+          console.log('Emotional data submitted:', response);
+        } catch (error) {
+          console.error('Failed to submit emotional data:', error);
+        }finally{
+          setLoading(false);
+        }
+      };
+  
+      // Trigger API call on any state change
+      sendEmotionalData();
+    }
+  }, [joyBarCount, sadnessBarCount, selectedIcons, stressSwitch, angerSwitch]); 
+
+
+  const fetchCurrentUserData = async (token) => {
+    if(token){
+      const resp = await getUser(token);
+      if(resp?.[0].user_type === "member"){
+        setMemberId(resp?.[0]?.member_id);
+        console.log(resp?.[0]?.member_id);
+        
+      }
+    }
+  }
+
+  useEffect (()=>{
+    if(token){
+      fetchCurrentUserData(token);
+    }
+  },[token])
 
   const renderBars = (barCount) => (
     <Box className="bars_container">
@@ -61,6 +120,7 @@ function Esale_emotional() {
 
   return (
     <Box className="esale_emotional_wrapper">
+      {loading && <Box className="loading"><CircularProgress/></Box> }
       <Box className="row">
         <Box className="col">
           <Box className="container">
@@ -147,16 +207,16 @@ function Esale_emotional() {
                       src={thumb_up}
                       alt="thumb-up"
                       className="thumb_icon"
-                      style={{ opacity: selectedIcons.advice === 'like' ? 1 : 0.7 }} // Update based on selection
-                      onClick={() => handleIconClick('advice', 'like')}
+                      style={{ opacity: selectedIcons.advice === 'true' ? 1 : 0.7 }}
+                      onClick={() => handleIconClick('advice', 'true')}
                     />
                     <Box
                       component="img"
                       src={thumb_down}
                       alt="thumb-down"
                       className="thumb_icon"
-                      style={{ opacity: selectedIcons.advice === 'dislike' ? 1 : 0.7 }} // Update based on selection
-                      onClick={() => handleIconClick('advice', 'dislike')}
+                      style={{ opacity: selectedIcons.advice === 'false' ? 1 : 0.7 }} // Update based on selection
+                      onClick={() => handleIconClick('advice', 'false')}
                     />
                   </Box>
                 </Box>
@@ -168,16 +228,16 @@ function Esale_emotional() {
                       src={thumb_up}
                       alt="thumb-up"
                       className="thumb_icon"
-                      style={{ opacity: selectedIcons.share === 'like' ? 1 : 0.85 }} // Update based on selection
-                      onClick={() => handleIconClick('share', 'like')}
+                      style={{ opacity: selectedIcons.share === 'true' ? 1 : 0.85 }} // Update based on selection
+                      onClick={() => handleIconClick('share', 'true')}
                     />
                     <Box
                       component="img"
                       src={thumb_down}
                       alt="thumb-down"
                       className="thumb_icon"
-                      style={{ opacity: selectedIcons.share === 'dislike' ? 1 : 0.85 }} // Update based on selection
-                      onClick={() => handleIconClick('share', 'dislike')}
+                      style={{ opacity: selectedIcons.share === 'false' ? 1 : 0.85 }} // Update based on selection
+                      onClick={() => handleIconClick('share', 'false')}
                     />
                   </Box>
                 </Box>
