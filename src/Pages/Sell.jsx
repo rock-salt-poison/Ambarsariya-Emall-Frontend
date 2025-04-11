@@ -33,6 +33,8 @@ function Sell() {
           setLoading(true);
           const resp = await getUser(token);
           if (resp.length > 0) {
+            console.log(resp[0]);
+            
             if (resp[0].shop_access_token) {
               const shopData = await getShopUserData(resp[0].shop_access_token);
               if (shopData?.length > 0) {
@@ -44,7 +46,7 @@ function Sell() {
                   setShopToken(shopData[0].shop_access_token);
                 }
               }
-            } else if (resp[0].user_type === "member" && !resp[0].visitor_id) {
+            } else if (resp[0].user_type === "member") {
               setValidMember(true);
             }
           }

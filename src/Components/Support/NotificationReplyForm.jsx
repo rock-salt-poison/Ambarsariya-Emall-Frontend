@@ -3,16 +3,12 @@ import {
   Box,
   Button,
   CircularProgress,
-  TextField,
   Typography,
   Paper,
 } from "@mui/material";
 import {
   initializeWebSocket,
-  fetchChatMessagesBySupportId,
-  sendSupportMessage,
   get_supportChatMessages,
-  getUser,
   post_supportChatMessage,
 } from "../../API/fetchExpressAPI";
 import CustomSnackbar from "../CustomSnackbar";
@@ -27,122 +23,6 @@ const NotificationReplyForm = ({ visitorData, selectedNotification, currentUser 
   const messageEndRef = useRef(null);
 
   const token = useSelector((state) => state.auth.userAccessToken);
-  
-    
-  
-  //   const fetchData = async (visitor_token) => {
-  //     try {
-  //       setLoading(true);
-  //       const resp = (await get_visitorData(visitor_token));
-  //       if (resp.valid) {
-  //         setVisitorData(resp.data[0]);
-  //         setLoading(false);
-  //       } else {
-  //         console.error(resp);
-  //         setVisitorData(null);
-  //         setLoading(false);
-  //         setSnackbar({ open: true, message: resp.message, severity: 'error' });
-  //       }
-  //     } catch (error) {
-  //       console.error(error);
-        
-  //       setLoading(false);
-  //       setSnackbar({ open: true, message: error.response.data.message, severity: 'error' });
-  //       setVisitorData(null);
-  //     }
-  //   };
-  
-  //   const fetchShopData = async (shop_token, user_token) => {
-  //     try{
-  //       setLoading(true);
-  //       const resp = await getShopUserData(shop_token);
-  //       const shopUserData = resp?.[0] || {}; // Ensure an object even if API returns nothing
-  
-  //     // console.log(shopUserData);
-  
-  //     if (Object.keys(shopUserData).length > 0) {
-  //       setShopData((prev) => ({
-  //         ...shopUserData,
-  //         user_type: "shop",
-  //         access_token: user_token
-  //       }));
-  //     }
-  //     }catch(e){
-  //       console.log(e);
-  //       setSnackbar({ open: true, message: e.response.data.message, severity: 'error' });
-  //       setVisitorData(null);
-  //       setShopData(null);
-  //     }finally{
-  //       setLoading(false);
-  //     }
-  //   }
-  
-  //   const fetchMemberData = async (user_access_token) => {
-  //     try{
-  //       setLoading(true);
-  //       const resp = await getMemberData(user_access_token);
-  //       const memberUserData = resp?.[0] || {}; // Ensure an object even if API returns nothing
-        
-  //       if (Object.keys(memberUserData).length > 0) {
-  //       setMemberData((prev) => ({
-  //         ...memberUserData,
-  //         user_type: "member",
-  //         access_token : user_access_token
-  //       }));
-  //     } 
-  //     }catch(e){
-  //       console.log(e);
-  //       setSnackbar({ open: true, message: e.response.data.message, severity: 'error' });
-  //       setVisitorData(null);
-  //       setShopData(null);
-  //     }finally{
-  //       setLoading(false);
-  //     }
-  //   }
-  // console.log(shopData);
-  
-  // useEffect(() => {
-  //   if(token){
-  //     const verifyUser = async () => {
-  //       const user = (await getUser(token))[0];
-  //       console.log(user);
-        
-  //         // if(user.support_id && user.visitor_id){
-  //         //   fetchData(user.user_access_token);
-  //         // }
-
-  //         // if(user.shop_access_token && user.user_type === 'shop'){
-  //         //   fetchShopData(user.shop_access_token, user.user_access_token);
-  //         //   if(user.support_id && user.visitor_id){
-  //         //     fetchData(user.user_access_token);
-  //         //   }
-  //         //   setUserLoggedIn(true);
-  //         // }
-
-  //         // else if(user.user_access_token && user.user_type === 'member'){
-  //         //   fetchMemberData(user.user_access_token)
-  //         //   if(user.support_id && user.visitor_id){
-  //         //     fetchData(user.user_access_token);
-  //         //   }
-  //         //   setUserLoggedIn(true);
-  //         // }
-
-  //         // else if(user.user_access_token && user.user_type === 'visitor'){
-  //         //   setUserLoggedIn(true);
-  //         //   fetchData(user.user_access_token);
-  //         // } 
-
-  //         // else{
-  //         //   setUserLoggedIn(false);
-  //         // }
-  //     }
-  //     verifyUser();
-  //   }
-  // }, [token]);
-
-  console.log('userData' , visitorData);
-  console.log('selectedNotification' , selectedNotification);
-  console.log('currentUser' , currentUser);
   
   // Auto scroll to latest message
   useEffect(() => {
@@ -204,8 +84,6 @@ const NotificationReplyForm = ({ visitorData, selectedNotification, currentUser 
         receiver_type: selectedNotification.user_type,
         message: newMessage
       };
-
-      console.log(data);
       
       const resp = await post_supportChatMessage(data);
       if(resp.message==='Chat created successfully'){
@@ -223,28 +101,7 @@ const NotificationReplyForm = ({ visitorData, selectedNotification, currentUser 
       setLoading(false);
     }
 
-    // const msgPayload = {
-    //   support_id: selectedNotification.support_id,
-    //   sender_id: currentUser.id,
-    //   sender_type: currentUser.type,
-    //   receiver_id: visitorData?.user_id,
-    //   receiver_type: "visitor",
-    //   message: newMessage.trim(),
-    // };
-
-    // try {
-    //   await sendSupportMessage(msgPayload); // backend API call
-    //   setMessages((prev) => [...prev, { ...msgPayload, sent_at: new Date() }]);
-    //   setNewMessage("");
-    // } catch (err) {
-    //   setSnackbar({
-    //     open: true,
-    //     message: "Failed to send message",
-    //     severity: "error",
-    //   });
-    // }
   };
-  console.log('messages : ', messages);
   
   const getCurrentUserId = () => {
     switch (currentUser.user_type) {
@@ -258,7 +115,6 @@ const NotificationReplyForm = ({ visitorData, selectedNotification, currentUser 
         return null;
     }
   };
-  console.log(currentUser);
   
 
   return (
@@ -271,11 +127,9 @@ const NotificationReplyForm = ({ visitorData, selectedNotification, currentUser 
           </Box>
         )}
         {messages?.map((msg, index) => {
-          console.log(msg);
 
           const isMyMsg = msg.sender_id === getCurrentUserId() && msg.sender_type === currentUser.user_type;
           
-          console.log('isMyMsg : ', isMyMsg);
           // Determine sender name
           let senderName = "";
           if (msg.sender_id === currentUser.shop_no || msg.sender_id === currentUser.member_id || msg.sender_id === visitorData?.visitor_id) {

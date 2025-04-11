@@ -35,7 +35,6 @@ const VisitorFormBox = ({ visitorData, shopNo, currentUser }) => {
       try {
         setLoading(true);
         const response = await get_supportChatNotifications(shopNo);
-        console.log(response);
         
         if (response.valid) {
           // Deduplicate before setting
@@ -77,12 +76,10 @@ const VisitorFormBox = ({ visitorData, shopNo, currentUser }) => {
   };
 
   const handleCardClick = async (msg) => {
-    console.log(msg);
     setSelectedNotification(msg);
   };  
 
   const handleSelectedNotification = async (msg) =>{
-    console.log(msg);
     setSelectedNotification(msg);
   }
 
@@ -93,7 +90,6 @@ const VisitorFormBox = ({ visitorData, shopNo, currentUser }) => {
   }, [shopNo]);
   
   
-console.log(notifications);
 
   return (
     <Box className="container">

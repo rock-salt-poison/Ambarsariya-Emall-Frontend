@@ -39,7 +39,6 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields, setSelected
     severity: "success",
   });
 
-  console.log(currentUser);
   
 
   const getCurrentUserId = () => {
@@ -55,7 +54,6 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields, setSelected
     }
   };
   
-  console.log(visitorData);
   
   const [formFieldData, setFormFieldData] = useState([]); // Initialize formFieldData
 
@@ -399,8 +397,6 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields, setSelected
         <Box className="notifications">
           {
             visitorData.response.map((merchant, index)=>{
-              console.log(merchant.sender_id);
-              console.log(visitorData);
               
               const selectedNotification = {
                 visitor_id: visitorData.visitor_id,

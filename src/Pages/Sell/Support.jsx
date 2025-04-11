@@ -109,13 +109,11 @@ function Support(props) {
       setLoading(false);
     }
   }
-console.log(shopData);
 
   useEffect(() => {
     if(token){
       const verifyUser = async () => {
         const user = (await getUser(token))[0];
-        console.log(user);
         
         setCurrentUser(user);
         // console.log(user);
