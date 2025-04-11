@@ -397,10 +397,14 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields, setSelected
         <Box className="notifications">
           {
             visitorData.response.map((merchant, index)=>{
+              console.log(merchant);
+              console.log(visitorData);
+              
               const selectedNotification = {
                 visitor_id: visitorData.visitor_id,
                 support_id: visitorData.support_id,
                 id: merchant.notification_id,
+                sent_from:merchant.sender_id,
                 user_type: visitorData.user_type,
               }
             return <Link key={index}  onClick={()=>setSelectedNotification(selectedNotification)}>
