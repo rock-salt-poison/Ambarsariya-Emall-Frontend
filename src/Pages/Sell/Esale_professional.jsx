@@ -19,6 +19,7 @@ function Esale_professional() {
 
   const initialFormData = {
     name: '',
+    address: '',
     phone_number: '',
     email: '',
     linkedin_profile:'',
@@ -176,6 +177,7 @@ function Esale_professional() {
   const fieldData = [
     { id: 1, label: 'Name and Contact Information', name: 'name_and_contact_information', showDialog: true, dialogFields: [
         { name: 'name', label: 'Name', type: 'text' },
+        { name: 'address', label: 'Address', type: 'text' },
         { name: 'phone_number', label: 'Phone Number', type: 'tel' },
         { name: 'email', label: 'Email', type: 'email' },
         { name: 'linkedin_profile', label: 'LinkedIn', type: 'text' },
