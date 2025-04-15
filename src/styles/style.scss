@@ -3564,6 +3564,20 @@ a {
           }
         }
 
+        .btn-wrapper{
+          position: relative;
+
+          button{
+            @include full-absolute(-10px, -10px, auto auto);
+            width: max-content;
+            min-width: max-content;
+            margin-left: auto;
+            padding: 0px;
+            color: $light-yellow;
+            font-size: 16px;
+          }
+        }
+
         .file_name {
           @include homepage-buttons("Bobby-Jones-Soft", 16px, $yellow, "none");
           @include hover-scale(1, 0s);

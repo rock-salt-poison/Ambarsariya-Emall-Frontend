@@ -4,12 +4,15 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 import form_field_bg from '../../Utils/images/Sell/esale/personal/form_field_bg.png';
 import form_field_bg_dark from '../../Utils/images/Sell/esale/personal/form_field_bg_dark.webp';
 import { Link } from 'react-router-dom';
+import { Close } from '@mui/icons-material';
 
 function EsalePersonalForm({
-    id, label, type, name, value, onChange, placeholder, readOnly, maxLength, dialogErrors,error, tooltip, onFileUpload, fileName, showSpeedDial, showTooltip, showDialog, dialogFields, onDialogSubmit, handleDialogChange, addmoreButton, handleAddMoreButton
+    id, label, type, name, value, onChange, placeholder, readOnly, maxLength, dialogErrors,error, tooltip, onFileUpload, fileName, showSpeedDial, showTooltip, showDialog, dialogFields, onDialogSubmit, handleDialogChange, addmoreButton, handleAddMoreButton, onFieldReset
 }) {
     const [isSpeedDialVisible, setIsSpeedDialVisible] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [filename, setFileName] = useState(fileName || ''); // Manage file name with state
+
 
     const handleMouseEnter = () => setIsSpeedDialVisible(true);
     const handleMouseLeave = () => setIsSpeedDialVisible(false);
@@ -24,6 +27,25 @@ function EsalePersonalForm({
         }
     }
     const handleClick = () => setIsDialogOpen(true);
+
+    const handleFileRemove = () => {
+        setFileName('');
+      
+        // Clear uploaded file data in parent
+        onFileUpload(`${name}_file`, '');
+      
+        // Also clear the related field value in parent
+        if (onFieldReset) {
+          onFieldReset(`${name}_file`, '');
+        }
+        console.log(`${name}_file`);
+        
+      
+        // Clear the actual input
+        const input = document.getElementById(`file-upload-${name}`);
+        if (input) input.value = '';
+      };
+      
     
     const formGroupTextField = (form_field_bg, field) => (
         <>
@@ -73,8 +95,10 @@ function EsalePersonalForm({
                     type="file"
                     id={`file-upload-${name}`}
                     className="file-upload"
-                    onChange={(e) => onFileUpload(name, e.target.files[0])}
-                />
+                    onChange={(e) => {
+                        onFileUpload(name, e.target.files[0]);
+                        setFileName(e.target.files[0].name); // Update fileName state
+                    }}/>
             </Box>
             )}
 
@@ -85,7 +109,12 @@ function EsalePersonalForm({
         <Box className="form-group" key={id}>
             {formGroupTextField(form_field_bg, { name, label, type, placeholder }, onChange)}
 
-            {fileName && <Typography className="file_name">Uploaded file: {fileName}</Typography>}
+            {filename && <Box className="btn-wrapper">
+                <Typography className="file_name">Uploaded file: {filename}</Typography>
+                <Button onClick={handleFileRemove} size="small">
+                    <Close/>
+                </Button>
+            </Box>}
 
             {showDialog && (
                 <Dialog open={isDialogOpen} onClose={handleDialogClose} className="professional_field_dialog">

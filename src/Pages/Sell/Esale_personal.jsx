@@ -57,16 +57,24 @@ function Esale_personal(props) {
 
   const fetchCurrentUserData = async (token) => {
     if(token){
-      const resp = await getUser(token);
-      if(resp?.[0].user_type === "member"){
-        setMemberId(resp?.[0]?.member_id);
-        console.log(resp?.[0]?.member_id);
-
-        const personalresp = await get_memberPersonal(resp?.[0]?.member_id);
-        if(personalresp?.valid){
-          setData(personalresp?.data?.[0]);
-          console.log(personalresp?.data?.[0]);
+      try{
+        setLoading(true);
+        const resp = await getUser(token);
+        if(resp?.[0].user_type === "member"){
+          setMemberId(resp?.[0]?.member_id);
+          console.log(resp?.[0]?.member_id);
+          
+          const personalresp = await get_memberPersonal(resp?.[0]?.member_id);
+          
+          if(personalresp?.valid){
+            setData(personalresp?.data?.[0]);
+            console.log(personalresp?.data?.[0]);
+          }
         }
+      }catch(e){
+        console.error(e);
+      }finally{
+        setLoading(false);
       }
     }
   }
@@ -89,6 +97,16 @@ function Esale_personal(props) {
     }
   },[token])
 
+  const handleFieldReset = (fieldName, value) => {
+    console.log(`${fieldName}`);
+    
+    setFileData(prev => ({
+      ...prev,
+      [`${fieldName}`]: value,
+    }));
+  };
+  
+
   const renderField = (id, label, name, placeholder, tooltip) => {
     return (
       <EsalePersonalForm
@@ -101,6 +119,7 @@ function Esale_personal(props) {
         error={false}
         tooltip={tooltip}
         onFileUpload={handleFileUpload}
+        onFieldReset={handleFieldReset}
         fileName={fileData[`${name}_file`]?.name}
         showSpeedDial={true}
         showTooltip={true}
@@ -133,6 +152,9 @@ function Esale_personal(props) {
     }
 
   };
+
+  console.log(fileData);
+  
 
   const fieldData = [
     {id:1, label:'Personal Traits', name :'personal_traits', tooltip:'Personality traits like outgoing, empathetic, creative, and analytical define you.'},
