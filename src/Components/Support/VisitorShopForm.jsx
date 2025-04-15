@@ -316,8 +316,16 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields, setSelected
         }));
         onSubmitSuccess(formData.domain, formData.sector, true);
         setFormSubmitted(true);
+        // Update formFieldData to remove domain and sector fields after submission
+        const updatedFields = formFieldData.filter(
+          (field) =>
+            field.name !== "domain" &&
+            field.name !== "sector" &&
+            field.name !== "purpose"
+        );
+        setFormFieldData(updatedFields);
       } catch (e) {
-        console.log(e);
+        console.error(e);
 
         setSnackbar({
           open: true,
@@ -329,14 +337,6 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields, setSelected
         setLoading(false);
       }
 
-      // Update formFieldData to remove domain and sector fields after submission
-      const updatedFields = formFieldData.filter(
-        (field) =>
-          field.name !== "domain" &&
-          field.name !== "sector" &&
-          field.name !== "purpose"
-      );
-      setFormFieldData(updatedFields);
     }
   };
 
