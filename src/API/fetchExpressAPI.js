@@ -728,3 +728,29 @@ export const get_memberEmotional = async (member_id) => {
     }
   }
 }
+
+export const post_memberPersonal = async (memberData, member_id) => {
+  if(memberData){
+    try {
+      const response = await axios.post(`${link}/sell/personal/${member_id}`, memberData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw error
+    }
+  }
+};
+
+export const get_memberPersonal = async (member_id) => {
+  if(member_id){
+    try {
+      const response = await axios.get(`${link}/sell/personal/${member_id}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+}

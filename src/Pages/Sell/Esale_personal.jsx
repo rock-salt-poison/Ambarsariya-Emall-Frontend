@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
-import { Box, Button, ThemeProvider, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Box, Button, CircularProgress, ThemeProvider, Typography } from '@mui/material';
 import Button2 from '../../Components/Home/Button2';
 import personalIcon from '../../Utils/images/Sell/esale/personal_care.svg';
 import EsalePersonalForm from '../../Components/Form/EsalePersonalForm';
 import createCustomTheme from '../../styles/CustomSelectDropdownTheme';
 import UserBadge from '../../UserBadge';
+import { get_memberPersonal, getUser, post_memberPersonal } from '../../API/fetchExpressAPI';
+import { useSelector } from 'react-redux';
+import CustomSnackbar from '../../Components/CustomSnackbar';
 
 function Esale_personal(props) {
 
@@ -28,6 +31,12 @@ function Esale_personal(props) {
 
   const [formData, setFormData] = useState(initialFormData);
   const [fileData, setFileData] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [memberId, setMemberId] = useState('');
+  const [data, setData] = useState(null);
+  const token = useSelector((state) => state.auth.userAccessToken); 
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+   
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -41,10 +50,44 @@ function Esale_personal(props) {
     if (file) {
       setFileData({
         ...fileData,
-        [fieldName]: file.name,
+        [`${fieldName}_file`]: file,
       });
     }
   };
+
+  const fetchCurrentUserData = async (token) => {
+    if(token){
+      const resp = await getUser(token);
+      if(resp?.[0].user_type === "member"){
+        setMemberId(resp?.[0]?.member_id);
+        console.log(resp?.[0]?.member_id);
+
+        const personalresp = await get_memberPersonal(resp?.[0]?.member_id);
+        if(personalresp?.valid){
+          setData(personalresp?.data?.[0]);
+          console.log(personalresp?.data?.[0]);
+        }
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (data) {
+      setFormData(prev => ({
+        ...prev,
+        ...Object.fromEntries(
+          Object.entries(data).filter(([key]) => key in initialFormData)
+        )
+      }));
+    }
+  }, [data]);
+  
+
+  useEffect (()=>{
+    if(token){
+      fetchCurrentUserData(token);
+    }
+  },[token])
 
   const renderField = (id, label, name, placeholder, tooltip) => {
     return (
@@ -52,22 +95,43 @@ function Esale_personal(props) {
         key={id}
         label={label}
         name={name}
-        value={formData[name]}
+        value={formData.hasOwnProperty(name) ? formData[name] : data?.[name] || ""}
         onChange={handleOnChange}
         placeholder={placeholder}
         error={false}
         tooltip={tooltip}
         onFileUpload={handleFileUpload}
-        fileName={fileData[name]}
+        fileName={fileData[`${name}_file`]?.name}
         showSpeedDial={true}
         showTooltip={true}
       />
     );
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Form Submitted", formData, fileData);
+    
+    const memberData = {
+      ...formData,
+      ...fileData
+    }
+
+    console.log(memberData);
+    if(memberData){
+      try{
+        setLoading(true);
+        const resp = await post_memberPersonal(memberData, memberId);
+        console.log(resp);
+        setSnackbar({ open: true, message: resp.message, severity: 'success' });
+      }catch(e){
+        console.log(e);
+        setSnackbar({ open: true, message: e.response.data.message, severity: 'error' });
+      }finally{
+        setLoading(false);
+      }
+    }
+
   };
 
   const fieldData = [
@@ -90,6 +154,9 @@ function Esale_personal(props) {
 
   return (
     <ThemeProvider theme={theme}>
+      {
+        loading && <Box className="loading"><CircularProgress/></Box>
+      }
       <Box className="esale_personal_wrapper">
         <Box className="row">
           <Box className="col">
@@ -139,6 +206,12 @@ function Esale_personal(props) {
           </Box>
         </Box>
       </Box>
+      <CustomSnackbar
+        open={snackbar.open}
+        handleClose={() => setSnackbar({ ...snackbar, open: false })}
+        message={snackbar.message}
+        severity={snackbar.severity}
+      />
     </ThemeProvider>
   );
 }
