@@ -14,10 +14,11 @@ import Switch_On_Off from '../../Components/Form/Switch_On_Off';
 import clock from '../../Utils/images/Sell/esale/emotional/clock.png'
 import timetable from '../../Utils/images/Sell/esale/emotional/timetable.png'
 import UserBadge from '../../UserBadge';
-import { getUser, post_memberEmotional } from '../../API/fetchExpressAPI';
+import { get_memberEmotional, getUser, post_memberEmotional } from '../../API/fetchExpressAPI';
 import { useSelector } from 'react-redux';
 
 function Esale_emotional() {
+  const [data, setData] = useState(null);
   const [joyBarCount, setJoyBarCount] = useState(1);
   const [sadnessBarCount, setSadnessBarCount] = useState(1);
   const token = useSelector((state) => state.auth.userAccessToken);
@@ -90,10 +91,29 @@ function Esale_emotional() {
         setMemberId(resp?.[0]?.member_id);
         console.log(resp?.[0]?.member_id);
         
+
+        const emotionalresp = await get_memberEmotional(resp?.[0]?.member_id);
+        if(emotionalresp?.valid){
+          setData(emotionalresp?.data?.[0]);
+          console.log(emotionalresp?.data?.[0]);
+        }
       }
     }
   }
 
+  useEffect(() => {
+    if (data) {
+      setJoyBarCount(data.emotional_range_joy_to_excitement || 1);
+      setSadnessBarCount(data.emotional_range_sadness_to_anger || 1);
+      setSelectedIcons({
+        advice: data.emotional_reactivity_like_advice || false,
+        share: data.emotional_reactivity_share_experiences || false,
+      });
+      setStressSwitch(data.emotional_regulations_recall_adverse_emotions || false);
+      setAngerSwitch(data.emotional_regulations_control_anger_and_crying || false);
+    }
+  }, [data]);
+  
   useEffect (()=>{
     if(token){
       fetchCurrentUserData(token);
@@ -207,16 +227,16 @@ function Esale_emotional() {
                       src={thumb_up}
                       alt="thumb-up"
                       className="thumb_icon"
-                      style={{ opacity: selectedIcons.advice === 'true' ? 1 : 0.7 }}
-                      onClick={() => handleIconClick('advice', 'true')}
+                      style={{ opacity: selectedIcons.advice === true ? 1 : 0.5 }}
+                      onClick={() => handleIconClick('advice', true)}
                     />
                     <Box
                       component="img"
                       src={thumb_down}
                       alt="thumb-down"
                       className="thumb_icon"
-                      style={{ opacity: selectedIcons.advice === 'false' ? 1 : 0.7 }} // Update based on selection
-                      onClick={() => handleIconClick('advice', 'false')}
+                      style={{ opacity: selectedIcons.advice === false ? 1 : 0.5 }} // Update based on selection
+                      onClick={() => handleIconClick('advice', false)}
                     />
                   </Box>
                 </Box>
@@ -228,16 +248,16 @@ function Esale_emotional() {
                       src={thumb_up}
                       alt="thumb-up"
                       className="thumb_icon"
-                      style={{ opacity: selectedIcons.share === 'true' ? 1 : 0.85 }} // Update based on selection
-                      onClick={() => handleIconClick('share', 'true')}
+                      style={{ opacity: selectedIcons.share === true ? 1 : 0.5 }} // Update based on selection
+                      onClick={() => handleIconClick('share', true)}
                     />
                     <Box
                       component="img"
                       src={thumb_down}
                       alt="thumb-down"
                       className="thumb_icon"
-                      style={{ opacity: selectedIcons.share === 'false' ? 1 : 0.85 }} // Update based on selection
-                      onClick={() => handleIconClick('share', 'false')}
+                      style={{ opacity: selectedIcons.share === false ? 1 : 0.5 }} // Update based on selection
+                      onClick={() => handleIconClick('share', false)}
                     />
                   </Box>
                 </Box>

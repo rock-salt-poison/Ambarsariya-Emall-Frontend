@@ -717,3 +717,14 @@ export const post_memberEmotional = async (data, member_id) => {
     throw e;
   }
 }
+
+export const get_memberEmotional = async (member_id) => {
+  if(member_id){
+    try {
+      const response = await axios.get(`${link}/sell/emotional/${member_id}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+}
