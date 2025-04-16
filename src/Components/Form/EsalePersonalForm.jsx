@@ -7,12 +7,13 @@ import { Link } from 'react-router-dom';
 import { Close } from '@mui/icons-material';
 
 function EsalePersonalForm({
-    id, label, type, name, value, onChange, placeholder, readOnly, maxLength, dialogErrors,error, tooltip, onFileUpload, fileName, showSpeedDial, showTooltip, showDialog, dialogFields, onDialogSubmit, handleDialogChange, addmoreButton, handleAddMoreButton, onFieldReset
+    id, label, type, name, value, onChange, placeholder, readOnly, maxLength, dialogErrors,error, tooltip, onFileUpload, fileName, showSpeedDial, showTooltip, showDialog, dialogFields, onDialogSubmit, handleDialogChange, addmoreButton, handleAddMoreButton, onFieldReset, handleRemoveButton, fieldsPerGroup
 }) {
     const [isSpeedDialVisible, setIsSpeedDialVisible] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [filename, setFileName] = useState(fileName || ''); // Manage file name with state
 
+    
 
     const handleMouseEnter = () => setIsSpeedDialVisible(true);
     const handleMouseLeave = () => setIsSpeedDialVisible(false);
@@ -121,31 +122,48 @@ function EsalePersonalForm({
                     <DialogTitle className="heading">{label}</DialogTitle>
                     <DialogContent className="content">
                         <Box component="form" noValidate autoComplete="off" className="esale_personal_form" onSubmit={onDialogSubmit}>
-                            {dialogFields && dialogFields.map((field, index) => (
-                                <Box key={index} className="form-group">
-                                    <Typography className="label">{field.label || label}</Typography>
-                                    <Box className="input_field_bg" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} onClick={handleClick}>
-                                     <Box component="img" src={form_field_bg_dark} alt="form_field_bg" className="form_field_bg" />
-                                    <TextField
-                                        hiddenLabel
-                                        variant="outlined"
-                                        name={field.name}
-                                        type={field.type}
-                                        value={field.value }
-                                        onChange={handleDialogChange} 
-                                        placeholder={field.label}
-                                        inputProps={{ readOnly, maxLength }}
-                                        {...(error && { error: true })} // Show error message
-                                        multiline={field.type === "textarea" } 
-                                        rows={field.type === "textarea" ? 4 : undefined}
-                                        className="input_field"
-                                        autoComplete="off"
-                                    />
-                                    </Box>
+                        {dialogFields && Array.from(fieldsPerGroup ? {length: Math.ceil(dialogFields.length / fieldsPerGroup)} : {length :dialogFields?.length} ).map((_, groupIndex) => {
+   const startIndex = fieldsPerGroup ? groupIndex * fieldsPerGroup : groupIndex;
+   const endIndex = fieldsPerGroup ? startIndex + fieldsPerGroup : startIndex + 1;
+   const groupFields = dialogFields.slice(startIndex, endIndex);
 
-                                    {dialogErrors && <Typography className='error_message'>{dialogErrors[field.name]}</Typography>} {/* Show dialog field error */}
-                                </Box>
-                            ))}
+  return (
+    <React.Fragment key={groupIndex} >
+      {groupFields.map((field, index) => (
+        <Box key={index} className="form-group">
+          <Typography className="label">{field.label || label}</Typography>
+          <Box className="input_field_bg" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} onClick={handleClick}>
+            <Box component="img" src={form_field_bg_dark} alt="form_field_bg" className="form_field_bg" />
+            <TextField
+              hiddenLabel
+              variant="outlined"
+              name={field.name}
+              type={field.type}
+              value={field.value}
+              onChange={handleDialogChange}
+              placeholder={field.label}
+              inputProps={{ readOnly: field.readOnly, maxLength }}
+              {...(error && { error: true })}
+              multiline={field.type === "textarea"}
+              rows={field.type === "textarea" ? 4 : undefined}
+              className="input_field"
+              autoComplete="off"
+            />
+          </Box>
+          {dialogErrors && <Typography className="error_message">{dialogErrors[field.name]}</Typography>}
+        </Box>
+      ))}
+
+      {/* Remove button for groups except the first */}
+      {fieldsPerGroup && groupIndex !== 0 && (
+        <Link className="add_more_link" onClick={() => handleRemoveButton(name, groupIndex + 1)}>
+          <Typography className="add_more">Remove</Typography>
+        </Link>
+      )}
+    </React.Fragment>
+  );
+})}
+
                         {
                             addmoreButton && <Link className='add_more_link' onClick={handleAddMoreButton}>
                                     <Typography className='add_more'>
@@ -153,6 +171,8 @@ function EsalePersonalForm({
                                     </Typography>
                                 </Link>
                         }
+
+                        
                         
 
                             <Box className="submit_button_container">
