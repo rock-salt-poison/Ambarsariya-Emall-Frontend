@@ -60,10 +60,10 @@ export default function Cards() {
           spaceBetween={30}
           loop={true}
           autoplay={{
-            delay: 400,
+            delay: 1200,
             disableOnInteraction: false,
           }}
-          speed={2000}
+          speed={1500}
           pagination={{
             clickable: true,
           }}
