@@ -17,7 +17,7 @@ function MemberRelations() {
     {id:6, name:'All Buddies', content:<Tab_content relation="all_buddies"/>},
     {id:7, name:'Direct Friends', content:<Tab_content relation="direct_friends"/>},
     {id:8, name:'Recommended People', content:<Tab_content relation="recommended_people"/>},
-    {id:9, name:'Create your relation', content:<Tab_content relation="create_your_relation"/>},
+    {id:9, name:'Create your relation', content:''},
   ];
 
   return (
