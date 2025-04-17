@@ -35,8 +35,8 @@ function Esale_professional() {
     education: [],
     institution_1: '',
     qualification_1: '',
-    start_date_1: '',
-    end_date_1: '',
+    startDate_1: '',
+    endDate_1: '',
     certification_and_licenses: '',
     certification_name: '',
     license_number: '',
@@ -47,7 +47,7 @@ function Esale_professional() {
     professional_affiliations: '',
     publications_and_presentations: '',
     projects_and_portfolios: [],
-    project_name_1: '',
+    projectName_1: '',
     description_1: '',
     link_1: '',
     reference: '',
@@ -78,8 +78,8 @@ function Esale_professional() {
       id: 6, label: 'Education', name: 'education', showDialog: true, dialogFields: [
         { name: 'institution_1', label: 'Institution', type: 'text' },
         { name: 'qualification_1', label: 'Qualification', type: 'text' },
-        { name: 'start_date_1', label: 'Start Date', type: 'date' },
-        { name: 'end_date_1', label: 'End Date', type: 'date' }
+        { name: 'startDate_1', label: 'Start Date', type: 'date' },
+        { name: 'endDate_1', label: 'End Date', type: 'date' }
       ], addmoreButton: true,
     },
     {
@@ -96,7 +96,7 @@ function Esale_professional() {
     { id: 11, label: 'Publications And Presentations', name: 'publications_and_presentations', showDialog: false },
     {
       id: 12, label: 'Projects and Portfolios', name: 'projects_and_portfolios', showDialog: true, dialogFields: [
-        { name: 'project_name_1', label: 'Project Name', type: 'text' },
+        { name: 'projectName_1', label: 'Project Name', type: 'text' },
         { name: 'description_1', label: 'Description', type: 'textarea' },
         { name: 'link_1', label: 'Link to Project', type: 'url' }
       ], addmoreButton: true,
@@ -130,13 +130,22 @@ function Esale_professional() {
         setLoading(true);
         const resp = await getUser(token);
         if (resp?.[0].user_type === "member") {
-          setUser(resp?.[0]);
-
-
-          const emotionalresp = await get_memberProfessional(resp?.[0]?.member_id, resp?.[0]?.user_id);
-          if (emotionalresp?.valid) {
-            setData(emotionalresp?.data?.[0]);
-            console.log(emotionalresp?.data?.[0]);
+          const userData = resp?.[0];
+          setUser(userData);
+  
+          const professionalresp = await get_memberProfessional(userData?.member_id, userData?.user_id);
+          if (professionalresp?.valid) {
+            const fetchedData = professionalresp?.data?.[0];
+            setData(fetchedData);
+            console.log(fetchedData);
+            
+  
+            // Update fields based on fetched data
+            const updatedFields = generateDynamicFields(fetchedData);
+            setFields(updatedFields);
+  
+            // Fill formData as well
+            setFormData((prev) => ({ ...prev, ...fetchedData }));
           }
         }
       } catch (e) {
@@ -145,13 +154,56 @@ function Esale_professional() {
         setLoading(false);
       }
     }
-  }
+  };
+
+  useEffect(() => {
+    if (data && Object.keys(data).length > 0) {
+      const updatedFields = generateDynamicFields(data);
+      setFields(updatedFields);
+    }
+  }, [data]);
+  
+  
 
   useEffect(() => {
     if (token) {
       fetchCurrentUserData(token);
     }
   }, [token])
+
+  const generateDynamicFields = (data) => {
+    const updatedFields = [...fieldData];
+  
+    updatedFields.forEach((field) => {
+      if (field.name === 'education' && data.education?.length > 0) {
+        field.dialogFields = [];
+        data.education.forEach((_, index) => {
+          const idx = index + 1;
+          field.dialogFields.push(
+            { name: `institution_${idx}`, label: 'Institution', type: 'text' },
+            { name: `qualification_${idx}`, label: 'Qualification', type: 'text' },
+            { name: `startDate_${idx}`, label: 'Start Date', type: 'date' },
+            { name: `endDate_${idx}`, label: 'End Date', type: 'date' }
+          );
+        });
+      }
+  
+      if (field.name === 'projects_and_portfolios' && data.projects_and_portfolios?.length > 0) {
+        field.dialogFields = [];
+        data.projects_and_portfolios.forEach((_, index) => {
+          const idx = index + 1;
+          field.dialogFields.push(
+            { name: `projectName_${idx}`, label: 'Project Name', type: 'text' },
+            { name: `description_${idx}`, label: 'Description', type: 'textarea' },
+            { name: `link_${idx}`, label: 'Link to Project', type: 'url' }
+          );
+        });
+      }
+    });
+  
+    return updatedFields;
+  };
+  
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -174,6 +226,8 @@ function Esale_professional() {
 
   const handleDialogChange = (e) => {
     const { name, value } = e.target;
+    console.log(name);
+    
     setDialogData({
       ...dialogData,
       [name]: value
@@ -202,12 +256,12 @@ function Esale_professional() {
         newDialogField = [
           { name: `institution_${nextIndex}`, label: 'Institution', type: 'text' },
           { name: `qualification_${nextIndex}`, label: 'Qualification', type: 'text' },
-          { name: `start_date_${nextIndex}`, label: 'Start Date', type: 'date' },
-          { name: `end_date_${nextIndex}`, label: 'End Date', type: 'date' },
+          { name: `startDate_${nextIndex}`, label: 'Start Date', type: 'date' },
+          { name: `endDate_${nextIndex}`, label: 'End Date', type: 'date' },
         ];
       } else if (fieldName === 'projects_and_portfolios') {
         newDialogField = [
-          { name: `project_name_${nextIndex}`, label: 'Project Name', type: 'text' },
+          { name: `projectName_${nextIndex}`, label: 'Project Name', type: 'text' },
           { name: `description_${nextIndex}`, label: 'Description', type: 'textarea' },
           { name: `link_${nextIndex}`, label: 'Link to Project', type: 'url' },
         ];
@@ -298,17 +352,19 @@ function Esale_professional() {
 
     // Group fields by index (e.g., 1, 2, 3)
     const grouped = {};
+
     dialogFields.forEach(field => {
-      const match = field.name.match(/(.*)_(\d+)$/); // e.g. institute_1
+      const match = field.name.match(/(.*)_(\d+)$/);
       if (match) {
-        const key = match[1]; // "institute"
-        const index = match[2]; // "1"
-
-        if (!grouped[index]) {
-          grouped[index] = {};
-        }
-
+        const key = match[1];
+        const index = match[2];
+    
+        if (!grouped[index]) grouped[index] = {};
         grouped[index][key] = dialogData[field.name] || '';
+      } else {
+        // If no _index is found, treat as a single group
+        if (!grouped[0]) grouped[0] = {};
+        grouped[0][field.name] = dialogData[field.name] || '';
       }
     });
 
@@ -318,48 +374,89 @@ function Esale_professional() {
     setFormData(prevData => {
       const newFormData = {
         ...prevData,
-        ...updatedData,
-        [name]: groupedArray
+        ...(groupedArray.length === 0 ? updatedData : {}), // Spread updatedData only if groupedArray is empty
+        [name]: groupedArray 
       };
       console.log("Updated formData:", newFormData);
       return newFormData;
     });
 
     setDialogErrors({});
-  };
+};
 
 
 
-  const renderField = (id, label, type, name, showDialog, dialogFields, addmoreButton, removeButton, readOnly) => {
-    const value = formData.hasOwnProperty(name) ? formData[name] : data?.[name] || "";
-    return (
-      <EsalePersonalForm
-        key={id}
-        label={label}
-        type={type}
-        name={name}
-        value={value}
-        onChange={handleOnChange}
-        placeholder={label}
-        error={dialogErrors[name]}
-        showDialog={showDialog}
-        dialogFields={dialogFields && dialogFields.map(field => ({
-          ...field,
-          value: dialogData[field.name] || formData[field.name] || '',
-          readOnly: field.readOnly
-        }))}
-        readOnly={readOnly}
-        handleDialogChange={handleDialogChange}
-        onDialogSubmit={(e) => handleDialogSubmit(e, dialogFields, name)}
-        dialogErrors={dialogErrors}
-        addmoreButton={addmoreButton}
-        removeButton={removeButton}
-        fieldsPerGroup={name === 'projects_and_portfolios' ? 3 : name === 'education' && 4}
-        handleAddMoreButton={(e) => handleAddMoreButton(e, name, dialogFields)}
-        handleRemoveButton={(e, groupIndex) => handleRemoveButton(name, groupIndex)}
-      />
-    );
-  };
+
+const renderField = (id, label, type, name, showDialog, dialogFields, addmoreButton, removeButton, readOnly) => {
+  const value = formData.hasOwnProperty(name) ? formData[name] : data?.[name] || "";
+
+  let mappedDialogFields = [];
+
+  if (name === 'certification_and_licenses') {
+    mappedDialogFields = dialogFields?.map((field, index) => ({
+      ...field,
+      value: dialogData.hasOwnProperty(field.name)
+        ? dialogData[field.name]
+        : data?.certification_and_licenses?.[0]?.[field.name] || formData[field.name] || '',
+      readOnly: field.readOnly ,
+    }));
+  } else if (name === 'reference') {
+    mappedDialogFields = dialogFields?.map((field) => ({
+      ...field,
+      value: dialogData.hasOwnProperty(field.name)
+        ? dialogData[field.name]
+        : data?.reference?.[0]?.[field.name] || formData[field.name] || "",
+      readOnly: field.readOnly ,
+    }));
+  } else if (name === 'education' || name === 'projects_and_portfolios') {
+    mappedDialogFields = dialogFields?.map((field) => {
+      const baseKey = field.name.split('_')[0];
+      const fieldIndex = parseInt(field.name.split('_')[1]) || 0;
+      console.log(name, baseKey, fieldIndex, data?.[name]?.[fieldIndex-1]?.[baseKey]);
+      
+      return {
+        ...field,
+        value: dialogData.hasOwnProperty(field.name)
+          ? dialogData[field.name]
+          : data?.[name]?.[fieldIndex-1]?.[baseKey] || formData[field.name] || "",
+        readOnly: field.readOnly,
+      };
+    });
+  } else {
+    mappedDialogFields = dialogFields?.map((field) => ({
+      ...field,
+      value: dialogData.hasOwnProperty(field.name)
+        ? dialogData[field.name]
+        : data?.[field.name] || formData[field.name] || "",
+      readOnly: field.readOnly ,
+    }));
+  }
+
+  return (
+    <EsalePersonalForm
+      key={id}
+      label={label}
+      type={type}
+      name={name}
+      value={value}
+      onChange={handleOnChange}
+      placeholder={label}
+      error={dialogErrors[name]}
+      showDialog={showDialog}
+      dialogFields={mappedDialogFields}
+      readOnly={readOnly}
+      handleDialogChange={handleDialogChange}
+      onDialogSubmit={(e) => handleDialogSubmit(e, dialogFields, name)}
+      dialogErrors={dialogErrors}
+      addmoreButton={addmoreButton}
+      removeButton={removeButton}
+      fieldsPerGroup={name === 'projects_and_portfolios' ? 3 : name === 'education' && 4}
+      handleAddMoreButton={(e) => handleAddMoreButton(e, name, dialogFields)}
+      handleRemoveButton={(e, groupIndex) => handleRemoveButton(name, groupIndex)}
+    />
+  );
+};
+
 
 
 
@@ -377,20 +474,20 @@ function Esale_professional() {
         skills: formData.skills,
         work_experience_in_years: formData.work_experience_in_years,
         education: JSON.stringify(formData.education),
-        certification_and_licenses: JSON.stringify[{
+        certification_and_licenses: JSON.stringify(formData.certification_and_licenses || [{
           certification_name: formData.certification_name,
           license_number: formData.license_number,
           issuing_organization: formData.issuing_organization,
           issue_date: formData.issue_date,
-        }],
+        }]),
         personal_attributes: formData.personal_attributes,
         achievements_and_awards: formData.achievements_and_awards,
         professional_affiliations: formData.professional_affiliations,
         publications_and_presentations: formData.publications_and_presentations,
         projects_and_portfolios: JSON.stringify(formData.projects_and_portfolios),
-        reference: JSON.stringify[{name: formData.reference_name,
+        reference: JSON.stringify(formData.reference || {name: formData.reference_name,
           contact: formData.reference_contact,
-          relation: formData.reference_relation}],
+          relation: formData.reference_relation}),
         language: formData.languages,
         volunteer_experience: formData.volunteer_experience,
         professional_goals: formData.professional_goals
