@@ -9,15 +9,15 @@ import Tab_content from '../../Components/Sell/Esale/Relations/Tab_content'
 function MemberRelations() {
 
   const tabsData = [
-    {id:1, name:'Couples', content:<Tab_content />},
-    {id:2, name:'Siblings', content:<Tab_content />},
-    {id:3, name:'Children', content:<Tab_content />},
-    {id:4, name:'Parents', content:<Tab_content />},
-    {id:5, name:'Neighbors', content:<Tab_content />},
-    {id:6, name:'All Buddies', content:<Tab_content />},
-    {id:7, name:'Direct Friends', content:<Tab_content />},
-    {id:8, name:'Recommended People', content:<Tab_content />},
-    {id:9, name:'Create your relation', content:<Tab_content />},
+    {id:1, name:'Couples', content:<Tab_content relation="couples"/>},
+    {id:2, name:'Siblings', content:<Tab_content relation="siblings"/>},
+    {id:3, name:'Children', content:<Tab_content relation="children"/>},
+    {id:4, name:'Parents', content:<Tab_content relation="parents"/>},
+    {id:5, name:'Neighbors', content:<Tab_content relation="neighbors"/>},
+    {id:6, name:'All Buddies', content:<Tab_content relation="all_buddies"/>},
+    {id:7, name:'Direct Friends', content:<Tab_content relation="direct_friends"/>},
+    {id:8, name:'Recommended People', content:<Tab_content relation="recommended_people"/>},
+    {id:9, name:'Create your relation', content:<Tab_content relation="create_your_relation"/>},
   ];
 
   return (

@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import GeneralLedgerForm from '../../../Form/GeneralLedgerForm';
-import { ThemeProvider } from '@mui/material';
+import { Box, CircularProgress, ThemeProvider } from '@mui/material';
 import createCustomTheme from '../../../../styles/CustomSelectDropdownTheme';
+import { getUser, post_memberRelations } from '../../../../API/fetchExpressAPI';
+import CustomSnackbar from '../../../CustomSnackbar';
+import { useSelector } from 'react-redux';
 
-function Tab_content() {
+function Tab_content({relation}) {
 
     const themeProps = {
         popoverBackgroundColor: '#f8e3cc',
@@ -20,7 +23,7 @@ function Tab_content() {
         people:'',
         group:'',
         mentor:'',
-        member_no:'',
+        member_phone_no:'',
         people_list:'',
         community:'',
         last_topic:'',
@@ -34,15 +37,34 @@ function Tab_content() {
 
     const [formData, setFormData] = useState(initialData);
     const [errors, setErrors] = useState({});
+    const [loading, setLoading] = useState(false);
+    const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+    const token = useSelector((state) => state.auth.userAccessToken);
+    const [user, setUser] = useState({});
 
-    const handleButtonClick = () =>{
-        console.log('clicked')
-    }
-
-    const handleSkuFocus = (e) => {
-        console.log('hi')
-        e.target.style.cursor='pointer'
-    }
+    const fetchCurrentUserData = async (token) => {
+        if (token) {
+          try {
+            setLoading(true);
+            const resp = await getUser(token);
+            if (resp?.[0].user_type === "member") {
+              const userData = resp?.[0];
+              setUser(userData);
+      
+            }
+          } catch (e) {
+            console.error(e);
+          } finally {
+            setLoading(false);
+          }
+        }
+      };      
+    
+      useEffect(() => {
+        if (token) {
+          fetchCurrentUserData(token);
+        }
+      }, [token])
 
     const formFields = [
         {
@@ -54,9 +76,9 @@ function Tab_content() {
         },
         {
             id: 2,
-            label: 'Address of location and pin drop on map',
+            label: 'Address',
             name: 'address',
-            type: 'text',
+            type: 'address',
             placeholder:'Address',
         },
         {
@@ -93,12 +115,12 @@ function Tab_content() {
             label: 'Mentor',
             name: 'mentor',
             type: 'text',
-            placeholder:'mentor_name',
+            placeholder:'mentor name',
         },
         {
             id: 8,
-            label: 'Member no.',
-            name: 'member_no',
+            label: 'Member phone no.',
+            name: 'member_phone_no',
             type: 'phone_number',
         },
         {
@@ -168,6 +190,7 @@ function Tab_content() {
 
     const handleChange = (event) => {
         const { name, value } = event.target;
+        console.log(name, value)
         setFormData({ ...formData, [name]: value });
 
         // Clear any previous error for this field
@@ -189,11 +212,49 @@ function Tab_content() {
         return Object.keys(newErrors).length === 0; // Return true if no errors
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault(); // Prevent default form submission
         if (validateForm()) {
-            console.log(formData);
-            // Proceed with further submission logic, e.g., API call
+            console.log(relation, formData);
+            if(relation){
+                try{
+                    setLoading(true);
+                    const data = {
+                        member_id: user.member_id,
+                        user_id: user.user_id, 
+                        relation: relation,
+                        place_name: formData.place_name,
+                        address: formData.address.description,
+                        latitude: formData.address.latitude,
+                        longitude: formData.address.longitude,
+                        work_yrs: formData.work_yrs,
+                        ongoing_or_left: formData.ongoing_or_left,
+                        people: formData.people,
+                        name_group: formData.group,
+                        mentor: formData.mentor,
+                        member_phone_no: formData.member_phone_no,
+                        people_list: formData.people_list,
+                        community: formData.community,
+                        last_topic: formData.last_topic,
+                        last_event: formData.last_event,
+                        total_score: formData.total_score,
+                        position_score: formData.position_score,
+                        arrange_event: formData.arrange_event,
+                        next_event: formData.next_event,
+                        passed_event: formData.passed_event
+                    };
+
+                    const resp = await post_memberRelations(user.member_id, user.user_id, data);
+                    console.log(resp);
+                    setSnackbar({ open: true, message: resp.message, severity: 'success' });                   
+                }catch(e){
+                    console.error(e);
+                    setSnackbar({ open: true, message: e.response.data.message, severity: 'error' });
+
+                }finally{
+                    setLoading(false);
+                }
+            }
         } else {
             console.log(errors);
         }
@@ -201,14 +262,21 @@ function Tab_content() {
 
     return (
         <ThemeProvider theme={theme}>
+            {loading && <Box className="loading"><CircularProgress/></Box> }
         <GeneralLedgerForm
             formfields={formFields}
             handleSubmit={handleSubmit}
             formData={formData}
             onChange={handleChange}
             errors={errors}
-            submitBtnVisibility={false}
-            // submit button text payment detail
+            submitBtnVisibility={true}
+            // submit button text 
+        />
+        <CustomSnackbar
+            open={snackbar.open}
+            handleClose={() => setSnackbar({ ...snackbar, open: false })}
+            message={snackbar.message}
+            severity={snackbar.severity}
         />
         </ThemeProvider>
     );

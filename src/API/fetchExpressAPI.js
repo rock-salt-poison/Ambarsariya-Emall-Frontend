@@ -776,3 +776,14 @@ export const post_memberProfessional = async (member_id, user_id, data) => {
     }
   }
 };
+
+export const post_memberRelations = async (member_id, user_id, data) => {
+  if(member_id, user_id, data){
+    try {
+      const response = await axios.post(`${link}/sell/relations/${member_id}/${user_id}`, {data});
+      return response.data;
+    } catch (error) {
+      throw error
+    }
+  }
+};

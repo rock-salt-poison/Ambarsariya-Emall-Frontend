@@ -226,10 +226,12 @@ const FormField = ({
                     />
               : type==="radio" ? (
                 <RadioGroup
-                  aria-labelledby="demo-radio-buttons-group-label"
+                  aria-labelledby="radio-buttons-group-label"
                   defaultValue="female"
-                  name="radio-buttons-group"
+                  name={name}
+                  value={value}
                   className='radio_button'
+                  onChange={(e) => onChange(e)} 
                 >
                   {
                     radioItems.map((item)=>{

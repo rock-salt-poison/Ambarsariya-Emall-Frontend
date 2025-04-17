@@ -497,7 +497,6 @@ const renderField = (id, label, type, name, showDialog, dialogFields, addmoreBut
         const resp = await post_memberProfessional(user.member_id, user.user_id, data );
         setSnackbar({ open: true, message: resp.message, severity: 'success' });
         console.log(resp);
-        
       }
       console.log(data)
     } catch (e) {
