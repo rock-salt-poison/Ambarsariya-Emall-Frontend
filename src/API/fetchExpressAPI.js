@@ -509,8 +509,23 @@ export const get_checkDriveAccess = async (email) => {
   }
 }
 
+export const get_checkGoogleAccess = async (email) => {
+  try {
+    if (email) {
+      const response = await axios.get(`${drive_link}/check-google-access/${email}`);
+      return response.data;
+    }
+  } catch (e) {
+    throw e;
+  }
+}
+
 export const get_requestDriveAccess = () => {
   window.location.href = `${drive_link}/request-drive-access`;
+};
+
+export const get_requestGoogleAccess = (username) => {
+  window.location.href = `${drive_link}/request-google-access/${username}`;
 };
 
 
@@ -787,3 +802,14 @@ export const post_memberRelations = async (member_id, user_id, data) => {
     }
   }
 };
+
+export const get_memberRelations = async (member_id, user_id, relation) => {
+  if(member_id, user_id, relation){
+    try {
+      const response = await axios.get(`${link}/sell/relations/${member_id}/${user_id}/${relation}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+}

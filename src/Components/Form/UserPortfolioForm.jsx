@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Box, Typography, CircularProgress } from '@mui/material';
 import FormField from './FormField'; 
 import { useNavigate } from 'react-router-dom';
-import { getMemberData, getUser, postMemberData, send_otp_to_email } from '../../API/fetchExpressAPI';
+import { get_checkGoogleAccess, get_requestGoogleAccess, getMemberData, getUser, postMemberData, send_otp_to_email } from '../../API/fetchExpressAPI';
 import CustomSnackbar from '../CustomSnackbar';
 import { useDispatch, useSelector } from 'react-redux';
 import { setMemberToken, setMemberTokenValid, setUserToken, setUserTokenValid } from '../../store/authSlice';
@@ -194,7 +194,6 @@ const UserPortfolioForm = () => {
   
     let shouldShowPhoneOtp = formData.phoneNumber.length > 0 && initialPhoneNumber !== formData.phoneNumber;
   
-  
     setShowPhoneOtp(shouldShowPhoneOtp);
   
     // Send OTP for username if required and not already sent
@@ -233,6 +232,24 @@ const UserPortfolioForm = () => {
     if (validateOtp()) {
       try {
         setLoading(true);
+
+        const checkAccess = await get_checkGoogleAccess(formData?.username);
+              if (!checkAccess.accessGranted) {
+                setSnackbar({
+                  open: true,
+                  message: `Redirecting for Google Drive access`,
+                  severity: "info",
+                });
+                get_requestGoogleAccess(formData?.username);
+                return;
+              }
+              setSnackbar({
+                open: true,
+                message: `Access granted, opening file`,
+                severity: "success",
+              });
+        
+
         const userData = {
           name: formData.name,
           username: formData.username.toLowerCase(),

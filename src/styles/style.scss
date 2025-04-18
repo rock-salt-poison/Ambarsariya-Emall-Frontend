@@ -17978,6 +17978,86 @@ body .MuiBackdrop-root {
         border: 1px solid #f9e0b3cc;
         box-shadow: 0px 0px 10px 1px #00000033;
 
+        .no-record{
+          @include flex-center(row, center);
+          height: 100%;
+
+          .text1{
+            @include homepage-buttons(
+              "Bobby-Jones-Soft",
+              20px !important,
+              $brown-4,
+              none
+            );
+            @include hover-scale(1, 0s);
+          }
+        }
+
+        .cards_container{
+          @include flex-center(column, flex-start);
+          place-items: normal;
+
+          .card{
+            align-self: stretch;
+            @include flex-center(row, flex-start);
+            gap: 10px;
+            place-items: normal;
+            background: #f1eee86e;
+            border-radius: 8px;
+            padding: 10px;
+
+            .col{
+              @include flex-center(column, flex-center);
+              place-items: normal;
+              gap: 5px;
+
+              .MuiAvatar-root{
+                background-color: #683248;
+              }
+
+              &:last-child{
+                width: auto;
+                flex: 1;
+              }
+
+              .header{
+                @include flex-center(row, space-between);
+                gap: 10px;
+
+                h3{
+                  @include homepage-buttons(
+                    "Bobby-Jones-Soft",
+                    22px !important,
+                    #683248,
+                    none
+                  );
+                  @include hover-scale(1, 0s);
+                  align-self: center;
+                  line-height: 22px;
+                }
+
+                a{
+                  align-self: center;
+
+                  svg{
+                    fill: $red2;
+                  }
+                }
+              }
+              .message{
+                @include homepage-buttons(
+                  "Bobby-Jones-Soft",
+                  18px !important,
+                  $black,
+                  none
+                );
+                line-height: 18px;
+                @include hover-scale(1, 0s);
+              }
+            }
+          }
+        }
+
         .container {
           form {
             .form-row {

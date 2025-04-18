@@ -6,7 +6,7 @@ import { getUser, post_memberRelations } from '../../../../API/fetchExpressAPI';
 import CustomSnackbar from '../../../CustomSnackbar';
 import { useSelector } from 'react-redux';
 
-function Tab_content({relation}) {
+function Tab_content() {
 
     const themeProps = {
         popoverBackgroundColor: '#f8e3cc',
@@ -16,6 +16,8 @@ function Tab_content({relation}) {
       const theme = createCustomTheme(themeProps);
 
     const initialData = {
+        relation:'',
+        other_relation:'',
         place_name:'',
         address:'',
         work_yrs:'',
@@ -69,26 +71,41 @@ function Tab_content({relation}) {
     const formFields = [
         {
             id: 1,
+            label: 'Relation',
+            placeholder:'Select Relation',
+            name: 'relation',
+            type: 'select',
+            options: ['All Buddies', 'Children', 'Couples', 'Direct Friends', 'Neighbors', 'Parents', 'Siblings', 'Recommended People', 'Others']
+        },
+        ...(formData.relation === 'Others' ? [{
+            id: '1.1',
+            label: 'Specify Relation',
+            name: 'other_relation',
+            type: 'text',
+            placeholder: 'Enter custom relation'
+        }] : []),
+        {
+            id: 2,
             label: 'Name of the place',
             placeholder:'name',
             name: 'place_name',
             type: 'text',
         },
         {
-            id: 2,
+            id: 3,
             label: 'Address',
             name: 'address',
             type: 'address',
             placeholder:'Address',
         },
         {
-            id: 3,
+            id: 4,
             label: 'Work Years',
             name: 'work_yrs',
             type: 'number',
         },
         {
-            id: 4,
+            id: 5,
             label: 'On going / left',
             name: 'ongoing_or_left',
             type: 'radio',
@@ -98,41 +115,41 @@ function Tab_content({relation}) {
             ]
         }, 
         {
-            id: 5,
+            id: 6,
             label: 'People',
             name: 'people',
             type: 'text',
             placeholder:'Add from gmail contacts',
         },    
         {
-            id: 6,
+            id: 7,
             label: 'Name of group',
             name: 'group',
             type: 'text',
         },
         {
-            id: 7,
+            id: 8,
             label: 'Mentor',
             name: 'mentor',
             type: 'text',
             placeholder:'mentor name',
         },
         {
-            id: 8,
+            id: 9,
             label: 'Member phone no.',
             name: 'member_phone_no',
             type: 'phone_number',
         },
         {
-            id: 9,
+            id: 10,
             label: 'Show people',
             name: 'people_list',
-            type: 'select_check',
+            type: 'select-check',
             placeholder:'List of people',
             options:['Person 1','Person 2','Person 3','Person 4','Person 5'],
         },
         {
-            id: 10,
+            id: 11,
             label: 'Community',
             name: 'community',
             type: 'select',
@@ -140,45 +157,45 @@ function Tab_content({relation}) {
             options:['Community 1','Community 2','Community 3','Community 4','Create community'],
         },    
         {
-            id: 11,
+            id: 12,
             label: 'Last topic (s)',
             name: 'last_topic',
             type: 'select',
             options:['Cigarettes in office is necessity'],
         },    
         {
-            id: 12,
+            id: 13,
             label: 'Last event',
             name: 'last_event',
             type: 'text',
         },    
         {
-            id: 13,
+            id: 14,
             label: 'Total Score',
             name: 'total_score',
             type: 'text',
             behavior:'numeric',
         },    
         {
-            id: 14,
+            id: 15,
             label: 'Position Score',
             name: 'position_score',
             type: 'text',
         },  
         {
-            id: 15,
+            id: 16,
             label: 'Arrange Event',
             name: 'arrange_event',
             type: 'text',
         },  
         {
-            id: 16,
+            id: 17,
             label: 'Next Event',
             name: 'next_event',
             type: 'text',
         }, 
         {
-            id: 17,
+            id: 18,
             label: 'Passed Event',
             name: 'passed_event',
             type: 'text',
@@ -215,14 +232,14 @@ function Tab_content({relation}) {
     const handleSubmit = async (event) => {
         event.preventDefault(); // Prevent default form submission
         if (validateForm()) {
-            console.log(relation, formData);
-            if(relation){
+            console.log(formData);
                 try{
                     setLoading(true);
                     const data = {
                         member_id: user.member_id,
                         user_id: user.user_id, 
-                        relation: relation,
+                        relation: formData.relation,
+                        other_relation: formData.other_relation || null,
                         place_name: formData.place_name,
                         address: formData.address.description,
                         latitude: formData.address.latitude,
@@ -254,7 +271,6 @@ function Tab_content({relation}) {
                 }finally{
                     setLoading(false);
                 }
-            }
         } else {
             console.log(errors);
         }
