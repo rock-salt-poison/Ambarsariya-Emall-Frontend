@@ -528,6 +528,16 @@ export const get_requestGoogleAccess = (username) => {
   window.location.href = `${drive_link}/request-google-access/${username}`;
 };
 
+export const get_googleContacts = async (member_id, user_id) => {
+  try {
+    if (member_id && user_id) {
+      const resp = await axios.get(`${drive_link}/google/contacts/${member_id}/${user_id}`);
+      return resp.data;
+    }
+  } catch (e) {
+    throw e;
+  }
+}
 
 // export const post_convertGooglePhotos = async (data) => {
 //   try{

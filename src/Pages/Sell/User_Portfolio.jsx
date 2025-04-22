@@ -130,7 +130,7 @@ function User_Portfolio(props) {
               >
                 <Box
                   component="img"
-                  src={userData ? userData.profile_img : avatar}
+                  src={userData ? userData?.profile_img !== null ? userData?.profile_img : avatar : avatar}
                   className="avatar"
                   alt="image"
                 />

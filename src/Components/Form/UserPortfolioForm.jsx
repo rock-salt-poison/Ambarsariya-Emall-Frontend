@@ -231,24 +231,7 @@ const UserPortfolioForm = () => {
     // Validate OTP if both username and phone OTPs are required
     if (validateOtp()) {
       try {
-        setLoading(true);
-
-        const checkAccess = await get_checkGoogleAccess(formData?.username);
-              if (!checkAccess.accessGranted) {
-                setSnackbar({
-                  open: true,
-                  message: `Redirecting for Google Drive access`,
-                  severity: "info",
-                });
-                get_requestGoogleAccess(formData?.username);
-                return;
-              }
-              setSnackbar({
-                open: true,
-                message: `Access granted, opening file`,
-                severity: "success",
-              });
-        
+        setLoading(true);    
 
         const userData = {
           name: formData.name,
@@ -271,6 +254,24 @@ const UserPortfolioForm = () => {
           dispatch(setUserToken(response.user_access_token));
           localStorage.setItem('accessToken', response.user_access_token);
           dispatch(setUserTokenValid(true));
+
+          const checkAccess = await get_checkGoogleAccess(formData?.username);
+        console.log(checkAccess);
+        
+              if (!checkAccess.accessGranted) {
+                setSnackbar({
+                  open: true,
+                  message: `Redirecting for Google access`,
+                  severity: "info",
+                });
+                get_requestGoogleAccess(formData?.username);
+                return;
+              }
+              setSnackbar({
+                open: true,
+                message: `Access granted`,
+                severity: "success",
+              });
   
           setSnackbar({ open: true, message: response.message, severity: 'success' });
           setTimeout(() => navigate('../esale'), 2500);

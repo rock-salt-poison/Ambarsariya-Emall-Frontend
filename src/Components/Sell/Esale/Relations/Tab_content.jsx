@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import GeneralLedgerForm from '../../../Form/GeneralLedgerForm';
 import { Box, CircularProgress, ThemeProvider } from '@mui/material';
 import createCustomTheme from '../../../../styles/CustomSelectDropdownTheme';
-import { getUser, post_memberRelations } from '../../../../API/fetchExpressAPI';
+import { get_googleContacts, getUser, post_memberRelations } from '../../../../API/fetchExpressAPI';
 import CustomSnackbar from '../../../CustomSnackbar';
 import { useSelector } from 'react-redux';
 
@@ -43,6 +43,7 @@ function Tab_content() {
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
     const token = useSelector((state) => state.auth.userAccessToken);
     const [user, setUser] = useState({});
+    const [contacts, setContacts] = useState([]);
 
     const fetchCurrentUserData = async (token) => {
         if (token) {
@@ -61,12 +62,33 @@ function Tab_content() {
           }
         }
       };      
+
+      const fetch_googleContacts = async (member_id, user_id) => {
+        try{
+            setLoading(true);
+            const resp = await get_googleContacts(member_id, user_id);
+            if(resp.success){
+                setContacts(resp.contacts);
+                console.log(resp.contacts);
+            }            
+        }catch(e){
+            console.error(e);
+        }finally{
+            setLoading(false);
+        }
+      }
     
       useEffect(() => {
         if (token) {
           fetchCurrentUserData(token);
         }
       }, [token])
+
+      useEffect(()=>{
+        if(user){
+            fetch_googleContacts(user.member_id, user.user_id);
+        }
+      }, [user])
 
     const formFields = [
         {
@@ -118,7 +140,8 @@ function Tab_content() {
             id: 6,
             label: 'People',
             name: 'people',
-            type: 'text',
+            type: 'select-check',
+            options: contacts ? contacts.map((contact)=>`${contact.name}`) : [],
             placeholder:'Add from gmail contacts',
         },    
         {
@@ -203,8 +226,7 @@ function Tab_content() {
         
     ];
 
-    
-
+        
     const handleChange = (event) => {
         const { name, value } = event.target;
         console.log(name, value)
@@ -228,6 +250,7 @@ function Tab_content() {
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0; // Return true if no errors
     };
+    
 
     const handleSubmit = async (event) => {
         event.preventDefault(); // Prevent default form submission
@@ -235,6 +258,11 @@ function Tab_content() {
             console.log(formData);
                 try{
                     setLoading(true);
+
+                    const selectedPeople = formData.people.map((personName) => {
+                        return contacts.find((contact) => contact.name === personName);
+                      });
+                      
                     const data = {
                         member_id: user.member_id,
                         user_id: user.user_id, 
@@ -246,7 +274,7 @@ function Tab_content() {
                         longitude: formData.address.longitude,
                         work_yrs: formData.work_yrs,
                         ongoing_or_left: formData.ongoing_or_left,
-                        people: formData.people,
+                        people: JSON.stringify(selectedPeople),
                         name_group: formData.group,
                         mentor: formData.mentor,
                         member_phone_no: formData.member_phone_no,
