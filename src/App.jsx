@@ -11,6 +11,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/autoplay';
 import 'swiper/css/pagination';
 import Notice from './Pages/Notice';
+import SocializeRoutes from './Routes/SocializeRoutes';
 
 function App() {
   
@@ -25,6 +26,10 @@ function App() {
         <Route
           path="/AmbarsariyaMall/serve/*"
           element={<ServeRoutes /> }
+        />
+        <Route
+          path="/AmbarsariyaMall/socialize/*"
+          element={<SocializeRoutes /> }
         />
       </Routes>
     </>

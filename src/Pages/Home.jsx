@@ -88,6 +88,10 @@ export default function Home() {
                 else if (btnsParentElement.classList.contains('serve')) {
                     navigate(token ? '/AmbarsariyaMall/serve':'/AmbarsariyaMall/serve/login');
                 }
+
+                else if (btnsParentElement.classList.contains('socialize')) {
+                    navigate(token ? '/AmbarsariyaMall/socialize':'/AmbarsariyaMall/socialize/login');
+                }
             }, 1000);
         } else if (clockParentElement) {
             clockParentElement.parentElement.previousElementSibling.classList.add('reduceSize3');

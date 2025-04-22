@@ -175,9 +175,9 @@ function Esale_professional() {
     const updatedFields = [...fieldData];
   
     updatedFields.forEach((field) => {
-      if (field.name === 'education' && data.education?.length > 0) {
+      if (field.name === 'education' && data?.education?.length > 0) {
         field.dialogFields = [];
-        data.education.forEach((_, index) => {
+        data?.education.forEach((_, index) => {
           const idx = index + 1;
           field.dialogFields.push(
             { name: `institution_${idx}`, label: 'Institution', type: 'text' },
