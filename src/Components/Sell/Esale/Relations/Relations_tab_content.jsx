@@ -91,11 +91,11 @@ function Relations_tab_content({ relation }) {
                   onClick={() => handleCardClick(relation)}
                 >
                   <Box className="col">
-                    <Avatar alt={relation.people} src="/broken-image.jpg" />
+                    <Avatar alt={relation?.people.map((people)=>people.name)?.join(', ')} src="/broken-image.jpg" />
                   </Box>
                   <Box className="col">
                     <Box className="header">
-                      <Typography variant="h3">{relation.people}</Typography>
+                      <Typography variant="h3">{relation?.people.map((people)=>people.name)?.join(', ')}</Typography>
                       {/* <Link onClick={(e) => handleRemove(e, msg.id)}> */}
                       <Link >
                         <ClearIcon />
