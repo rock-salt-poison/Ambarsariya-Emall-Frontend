@@ -21999,11 +21999,12 @@ textarea[readonly]{
             @include flex-center(row, center);
             background: $brown-4;
             border-radius: 10px;
+            align-self: flex-end;
             padding: 12px 15px;
             .title{
               @include homepage-buttons(
                 "Bobby-Jones-Soft", 
-                24px, 
+                22px, 
                 $yellow, 
                 "black-shadow"
               );

@@ -5,6 +5,7 @@ import news_bg from '../../Utils/images/Socialize/city_feeds/news.webp'
 import notices_bg from '../../Utils/images/Socialize/city_feeds/notices.webp' 
 import selfies_room_bg from '../../Utils/images/Socialize/city_feeds/selfies_room.webp' 
 import suggestions_bg from '../../Utils/images/Socialize/city_feeds/suggestions.webp' 
+import { Link } from 'react-router-dom'
 
 function CityFeeds() {
 
@@ -42,9 +43,9 @@ function CityFeeds() {
                     <Box className="cards">
                         {cards?.map((card)=>{
                             return <Box className="card" key={card.id} sx={{background: `url(${card.bg_img}) no-repeat center`}}>
-                                <Box className="title_container">
+                                <Link className="title_container">
                                     <Typography className="title">{card.title}</Typography>
-                                </Box>
+                                </Link>
                             </Box>
                         })}
                     </Box>
