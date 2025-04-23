@@ -21821,3 +21821,100 @@ textarea[readonly]{
     }
   }
 }
+
+
+.socialize_wrapper {
+  position: relative;
+  min-height: 100vh;
+  @include background-center-no-repeat($socializeBgImg);
+  background-size: cover;
+  background-position: 20% center;
+  display: flex;
+
+  .row {
+    position: relative;
+    z-index: 1;
+    @include flex-center(column, space-between);
+    gap: 100px;
+    padding: 8px 25px;
+    width: 100%;
+
+    .col{
+      &:first-child{
+        display: grid;
+        grid-template-columns: 120px 1fr 120px;
+        align-self: stretch;
+
+        .heading_col{
+          @include flex-center(row, center);
+
+          .heading{
+            @include homepage-buttons(
+              "gladiola", 
+              60px, 
+              #ffe8d8, 
+              "none"
+            );
+            @include hover-scale(1, 0s);
+            text-shadow: -2px -2px 0 #6B4336, 2px -2px 0 #6B4336, -2px 2px 7px #6B4336, 2px 2px 0 #6B4336;          
+          }
+        }
+      }
+
+      &:last-child{
+        flex: 1;
+        width: 65%;
+        @include flex-center(column, center);
+        gap: 60px;
+
+        .col_2{
+          @include flex-center(row, space-between);
+          gap: 15px;
+          align-self: stretch;
+
+          .item{
+            position: relative;
+
+            .item_bg{
+              width: 180px;
+              filter: drop-shadow(2px 4px 6px #453A29);
+            }
+
+            .title_container{
+              @include full-absolute(0px,0px,0px,0px);
+              @include flex-center(row, center);
+
+              .title{
+                @include homepage-buttons(
+                  "Bobby-Jones-Soft", 
+                  24px, 
+                  $black, 
+                  "none"
+                );
+                @include hover-scale(1, 0s);
+              }
+            }
+          }
+        }
+
+
+        .col-auto{
+          .heading_col{
+
+          }
+          .heading{
+            @include homepage-buttons(
+              "EFCO", 
+              50px, 
+              #ffe8d8, 
+              "none"
+            );
+            @include hover-scale(1, 0s);
+            text-shadow: -2px -2px 0 #6B4336, 2px -2px 0 #6B4336, -2px 2px 7px #6B4336, 2px 2px 0 #6B4336;         
+          }
+        }
+
+      }
+    }
+  }
+}
