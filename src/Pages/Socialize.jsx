@@ -31,17 +31,11 @@ function Socialize() {
             target.classList.toggle('reduceSize3');
         },300)
 
-        // setTimeout(()=>{
-        //     if(target.classList.contains('emotional')){
-        //         navigate('../emotional')
-        //     }
-        //     else if(target.classList.contains('unexpected')){
-        //         navigate('../unexpected')
-        //     }
-        //     else if(target.classList.contains('simple')){
-        //         navigate('../simple')
-        //     }
-        // }, 600)
+        setTimeout(()=>{
+            if(target.classList.contains('feeds')){
+                navigate('../city-feeds')
+            }
+        }, 600)
     }
 }
 
