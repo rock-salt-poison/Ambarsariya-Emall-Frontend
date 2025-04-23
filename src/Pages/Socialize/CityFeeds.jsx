@@ -20,8 +20,8 @@ function CityFeeds() {
         <Box className="city_feeds_wrapper">
             <svg xmlns="http://www.w3.org/2000/svg">
         <rect
-          rx="4"
-          ry="4"
+          rx="20"
+          ry="20"
           className="line"
           height="100%"
           width="100%"

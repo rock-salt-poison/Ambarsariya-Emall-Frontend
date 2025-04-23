@@ -21937,6 +21937,7 @@ textarea[readonly]{
     @include full-absolute(15px,15px,15px,15px);
     width: 97.5%;
     height: 93.5%;
+    border-radius: 20px;
     z-index: 1;
   }
 
@@ -21947,7 +21948,7 @@ textarea[readonly]{
     fill: transparent;
     stroke: $yellow;
     animation: svgAnimation 3s linear infinite;
-    filter: drop-shadow(3px 6px 8px $yellow) drop-shadow(-12px -7px 8px $yellow);
+    filter: drop-shadow(3px 6px 8px $yellow) drop-shadow(-6px -6px 8px $yellow);
   }
   
   @keyframes svgAnimation {
