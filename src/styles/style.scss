@@ -21891,7 +21891,7 @@ textarea[readonly]{
                   $black, 
                   "none"
                 );
-                @include hover-scale(1, 0s);
+                // @include hover-scale(1, 0s);
               }
             }
           }
@@ -21909,7 +21909,7 @@ textarea[readonly]{
               #ffe8d8, 
               "none"
             );
-            @include hover-scale(1, 0s);
+            // @include hover-scale(1, 0s);
             text-shadow: -2px -2px 0 #6B4336, 2px -2px 0 #6B4336, -2px 2px 7px #6B4336, 2px 2px 0 #6B4336;         
           }
         }
