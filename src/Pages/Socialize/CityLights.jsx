@@ -1,20 +1,18 @@
 import React, { useState } from 'react'
 import { Box, Typography } from '@mui/material'
 import UserBadge from '../../UserBadge'
-import news_bg from '../../Utils/images/Socialize/city_feeds/news.webp' 
-import notices_bg from '../../Utils/images/Socialize/city_feeds/notices.webp' 
-import selfies_room_bg from '../../Utils/images/Socialize/city_feeds/selfies_room.webp' 
-import suggestions_bg from '../../Utils/images/Socialize/city_feeds/suggestions.webp' 
+import city_rocks_bg from '../../Utils/images/Socialize/city_lights/city_rocks.webp' 
+import city_events_bg from '../../Utils/images/Socialize/city_lights/city_events.webp' 
+import city_heart_beats_bg from '../../Utils/images/Socialize/city_lights/city_heart_beats.webp' 
 import { Link, useNavigate } from 'react-router-dom'
 import hornSound from '../../Utils/audio/horn-sound.mp3';
 
-function CityFeeds() {
+function CityLights() {
 
     const cards = [
-        {id:1, title:'News !', linkTo:'', bg_img:news_bg},
-        {id:2, title:'Selfies rooms !', linkTo:'', bg_img:selfies_room_bg},
-        {id:3, title:'Suggestions !', linkTo:'', bg_img:suggestions_bg},
-        {id:4, title:'Notices !', linkTo:'', bg_img:notices_bg},
+        {id:1, title:'City Rocks !', linkTo:'', img_src:city_rocks_bg},
+        {id:2, title:'City Events !', linkTo:'', img_src:city_events_bg},
+        {id:3, title:'City Heart Beats !', linkTo:'', img_src:city_heart_beats_bg},
     ]
 
     const navigate = useNavigate();
@@ -23,11 +21,11 @@ function CityFeeds() {
     const handleClick = (e, item) =>{
         const target = e.target.closest(".card");
         if(target){
-            target.classList.toggle('reduceSize3');
+            target.classList.toggle('reduceSize5');
             audio.play();
             
             setTimeout(()=>{
-                target.classList.toggle('reduceSize3');
+                target.classList.toggle('reduceSize5');
             },300)
     
             setTimeout(()=>{
@@ -39,8 +37,8 @@ function CityFeeds() {
     }
 
     return (
-        <Box className="city_feeds_wrapper">
-            <svg xmlns="http://www.w3.org/2000/svg" className='animated-border'>
+        <Box className="city_lights_wrapper">
+            {/* <svg xmlns="http://www.w3.org/2000/svg" className='animated-border'>
                 <rect
                     rx="20"
                     ry="20"
@@ -49,7 +47,7 @@ function CityFeeds() {
                     width="100%"
                     stroke-linejoin="round"
                 />
-            </svg>
+            </svg> */}
             <Box className="row">
                 <Box className="col">
                     
@@ -64,7 +62,8 @@ function CityFeeds() {
                 <Box className="col-auto">
                     <Box className="cards">
                         {cards?.map((card)=>{
-                            return <Link className="card" key={card.id} style={{background: `url(${card.bg_img}) no-repeat center`, backgroundSize:'cover'}} onClick={(e)=>handleClick(e)}>
+                            return <Link className="card" key={card.id} onClick={(e)=>handleClick(e)}>
+                                <Box component="img" src={card.img_src} className="card_img"/>
                                 <Box className="title_container">
                                     <Typography className="title">{card.title}</Typography>
                                 </Box>
@@ -75,7 +74,7 @@ function CityFeeds() {
                 <Box className="col-auto">
                     <Box className="heading_container">
                         <Typography className="heading">
-                            City Feeds
+                        City Life Around the Clock, Around the World !
                         </Typography>
                     </Box>
                 </Box>
@@ -84,4 +83,4 @@ function CityFeeds() {
     )
 }
 
-export default CityFeeds
+export default CityLights

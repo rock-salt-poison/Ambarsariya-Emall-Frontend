@@ -34,7 +34,9 @@ function Socialize() {
         setTimeout(()=>{
             if(target.classList.contains('feeds')){
                 navigate('../city-feeds')
-            }
+            }else if(target.classList.contains('updates')){
+              navigate('../updates')
+          }
         }, 600)
     }
 }
