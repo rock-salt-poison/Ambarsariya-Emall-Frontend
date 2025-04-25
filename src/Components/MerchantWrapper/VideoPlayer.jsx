@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactPlayer from 'react-player';
 
-const VideoPlayer = ({ url, autoplay=true, controls=true, muted=false, loop=true }) => {
+const VideoPlayer = ({ url, autoplay=true, controls=true, muted=false, loop=true, playing = autoplay }) => {
   return (
     <div className='player-wrapper'>
       <ReactPlayer
@@ -10,7 +10,7 @@ const VideoPlayer = ({ url, autoplay=true, controls=true, muted=false, loop=true
         width='100%'
         height='100%'
         controls={controls}
-        playing={autoplay}
+        playing={playing}
         muted={muted}
         loop={loop}
       />

@@ -33,6 +33,7 @@ import ProductInfo from '../Pages/Sell/ProductInfo';
 import ProductInfo2 from '../Pages/Sell/ProductInfo2';
 import ProductCatalog from '../Pages/Sell/ProductCatalog';
 import BrandCatalog from '../Pages/Sell/BrandCatalog';
+import Locations from '../Pages/Sell/Locations';
 
 function SellRoutes() {
   const ConditionalRoute = () => {
@@ -84,6 +85,7 @@ function SellRoutes() {
       <Route path=":owner/budget" element={<Budget />} />
       <Route path="esale/life" element={<Life />} />
       <Route path="esale/relations" element={<MemberRelations />} />
+      <Route path="esale/locations" element={<Locations />} />
     </Routes>
   );
 }

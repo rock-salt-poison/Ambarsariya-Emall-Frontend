@@ -36,7 +36,7 @@ const data = [
 const imgData = [
   { id: 1, imgSrc: life_img, linkTo: "life" },
   { id: 2, imgSrc: relationship_img, linkTo: "relations" },
-  { id: 3, imgSrc: location_img, linkTo: "" },
+  { id: 3, imgSrc: location_img, linkTo: "locations" },
 ];
 
 function Esale() {

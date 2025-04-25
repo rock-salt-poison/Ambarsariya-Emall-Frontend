@@ -18204,6 +18204,83 @@ body .MuiBackdrop-root {
   }
 }
 
+.member_locations_wrapper{
+  @extend .member_relations_wrapper;
+
+  background-image: url("#{$memberLocationsBgImg}");
+
+  .row{
+    .col{
+      &:last-child{
+        width: 100% !important;
+        justify-content: center !important;
+        .container{
+          @include flex-center(row, center);
+          width: 80%;
+          flex-wrap: wrap;
+          gap: 15px;
+
+          .card{
+            height: 250px;
+            width: 58%;
+            position: relative;
+            @include flex-center(row, flex-start);
+            opacity: .7;
+            border: 2px solid $yellow;
+            overflow: hidden;
+            transition: all .2s ease-in-out;
+            
+            &:hover {
+              opacity: .85;
+              .title_container::before {
+                transform: translateY(0);
+              }
+            }
+            
+            .player-wrapper{
+              align-self: stretch;
+              flex: 1;
+
+              video{
+                object-fit: cover;
+                box-shadow: 0px 0px 6px 2px #00000099;
+              }
+            }
+
+            &.card1{
+              width: 38%;
+            }
+            .title_container{
+              @include full-absolute(auto, 0px, 0px, 0px);
+              padding: 10px 10px;
+              z-index: 1;
+
+              &::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                bottom: 0;
+                width: 100%;
+                height: 100%;
+                background: #00000080;
+                transform: translateY(100%);
+                transition: transform 0.4s ease;
+                z-index: -2;
+              }
+              .title{
+                font-size: 2.2em;
+                font-family: 'gladiola';
+                color: $light-yellow;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+}
+
 .MuiSwitch-root {
   .MuiButtonBase-root.Mui-checked + .MuiSwitch-track {
     background-color: $green !important;
