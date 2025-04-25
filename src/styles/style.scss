@@ -18277,9 +18277,22 @@ body .MuiBackdrop-root {
         }
       }
     }
-  }
 
-}
+    @media (max-width: 768px) {
+      .col {
+          .container{
+            .card{
+              width: 100% !important;
+            }
+          }
+        }
+      }
+
+      
+
+    }
+    
+  }
 
 .MuiSwitch-root {
   .MuiButtonBase-root.Mui-checked + .MuiSwitch-track {
