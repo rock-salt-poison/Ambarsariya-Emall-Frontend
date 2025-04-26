@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Box, Typography, CircularProgress } from '@mui/material';
 import FormField from './FormField'; 
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { get_checkGoogleAccess, get_requestGoogleAccess, getMemberData, getUser, postMemberData, send_otp_to_email } from '../../API/fetchExpressAPI';
 import CustomSnackbar from '../CustomSnackbar';
 import { useDispatch, useSelector } from 'react-redux';
@@ -26,6 +26,7 @@ const UserPortfolioForm = () => {
 
   const dispatch = useDispatch();
   const [formData, setFormData] = useState(initialFormData);
+  const [memberData, setMemberData] = useState(null);
   const [errors, setErrors] = useState({});
   const [errorMessages, setErrorMessages] = useState({});
   const [selectedDisplayFileName, setSelectedDisplayFileName] = useState(''); 
@@ -48,6 +49,7 @@ const UserPortfolioForm = () => {
     console.log(user);
     
     if(user){
+      setMemberData(user[0]);
       setFormData({
         ...formData,
         name: user[0].full_name,
@@ -492,6 +494,9 @@ const UserPortfolioForm = () => {
       </Box>
 
       <Box className="submit_button_container">
+        {memberData !==null && <Button variant="contained" className="submit_button">
+          <Link to='../esale'>Dashboard</Link>
+        </Button>}
         <Button type="submit" variant="contained" className="submit_button">
           Submit
         </Button>

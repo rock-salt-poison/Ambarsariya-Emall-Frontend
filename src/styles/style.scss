@@ -7259,8 +7259,10 @@ a {
 
               .submit_button_container {
                 @include full-absolute(-36px, 0px, auto, auto);
+                @include flex-center(row, center);
+                gap: 5px;
 
-                .submit_button {
+                .submit_button{
                   background-color: $yellow;
                   box-shadow: none;
                   @include homepage-buttons(
@@ -7276,6 +7278,10 @@ a {
                   &:hover {
                     background-color: $yellow;
                     box-shadow: 0px 0px 4px 0.5px $dark-yellow;
+                  }
+
+                  a{
+                    color: inherit;
                   }
                 }
               }

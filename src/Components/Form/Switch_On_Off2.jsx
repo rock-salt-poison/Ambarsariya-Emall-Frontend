@@ -4,7 +4,6 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 
-
 const IOSSwitch = styled((props) => (
   <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
 ))(({ theme }) => ({
@@ -22,7 +21,7 @@ const IOSSwitch = styled((props) => (
         backgroundColor: '#65C466',
         opacity: 1,
         border: 0,
-        ...theme.applyStyles('dark', {
+        ...theme.applyStyles?.('dark', {
           backgroundColor: '#2ECA45',
         }),
       },
@@ -36,13 +35,13 @@ const IOSSwitch = styled((props) => (
     },
     '&.Mui-disabled .MuiSwitch-thumb': {
       color: theme.palette.grey[100],
-      ...theme.applyStyles('dark', {
+      ...theme.applyStyles?.('dark', {
         color: theme.palette.grey[600],
       }),
     },
     '&.Mui-disabled + .MuiSwitch-track': {
       opacity: 0.7,
-      ...theme.applyStyles('dark', {
+      ...theme.applyStyles?.('dark', {
         opacity: 0.3,
       }),
     },
@@ -59,20 +58,19 @@ const IOSSwitch = styled((props) => (
     transition: theme.transitions.create(['background-color'], {
       duration: 500,
     }),
-    ...theme.applyStyles('dark', {
+    ...theme.applyStyles?.('dark', {
       backgroundColor: '#39393D',
     }),
   },
 }));
 
-
-export default function Switch_On_Off2() {
+export default function Switch_On_Off2({ checked, onChange }) {
   return (
     <FormGroup>
       <FormControlLabel
-        control={<IOSSwitch sx={{ m: 1 }} defaultChecked={false} />}
+        control={<IOSSwitch sx={{ m: 1 }} checked={checked} onChange={onChange} />}
+        label=""
       />
-      
     </FormGroup>
   );
 }

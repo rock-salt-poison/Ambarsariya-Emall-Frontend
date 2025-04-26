@@ -539,6 +539,18 @@ export const get_googleContacts = async (member_id, user_id) => {
   }
 }
 
+
+export const get_userScopes = async (oauth_access_token, oauth_refresh_token) => {
+  try {
+    if (oauth_access_token && oauth_refresh_token) {
+      const resp = await axios.get(`${drive_link}/user-scopes?oauth_access_token=${oauth_access_token}&oauth_refresh_token=${oauth_refresh_token}`);
+      return resp.data;
+    }
+  } catch (e) {
+    throw e;
+  }
+}
+
 // export const post_convertGooglePhotos = async (data) => {
 //   try{
 //     console.log(data);
