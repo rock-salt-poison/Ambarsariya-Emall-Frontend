@@ -528,6 +528,21 @@ export const get_requestGoogleAccess = (username) => {
   window.location.href = `${drive_link}/request-google-access/${username}`;
 };
 
+export const post_requestDynamicGoogleAccess = async (data) => {
+    try{
+      if(data){
+          const resp = await axios.post(`${drive_link}/request-dynamic-google-access`, data, {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          return resp.data;
+      }
+    }catch(e){
+      throw e;
+    }
+};
+
 export const get_googleContacts = async (member_id, user_id) => {
   try {
     if (member_id && user_id) {

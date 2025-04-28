@@ -1,19 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { Box, CircularProgress, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Typography } from '@mui/material';
 import Switch_On_Off2 from '../Form/Switch_On_Off2';
-import { get_userScopes, getMemberData, getUser } from '../../API/fetchExpressAPI';
+import { get_userScopes, getMemberData, getUser, post_requestDynamicGoogleAccess } from '../../API/fetchExpressAPI';
 import { useSelector } from 'react-redux';
 
 function GmailServicesPopupContent(props) {
   const [scopes, setScopes] = useState([]);
   const [loading, setLoading] = useState(false);
   const token = useSelector((state) => state.auth.userAccessToken);
+  const [user, setUser] = useState(null);
 
   const [serviceSwitches, setServiceSwitches] = useState({
     contacts: false,
     maps: false,
     calendar: false,
     meet: false,
+    photos : false,
+    chat : false,
+    profile : false,
   });
 
   const serviceScopeMapping = {
@@ -22,12 +26,16 @@ function GmailServicesPopupContent(props) {
     calendar: 'https://www.googleapis.com/auth/calendar',
     meet: 'https://www.googleapis.com/auth/meetings.space.created',
     photos: 'https://www.googleapis.com/auth/photoslibrary.readonly',
-    chat: 'https://www.googleapis.com/auth/chat.bot',
+    chat: `https://www.googleapis.com/auth/chat.messages`,
+    profile: 'https://www.googleapis.com/auth/userinfo.profile'
   };
 
   const fetchMemberData = async (memberToken) => {
     setLoading(true);
     const user = await getMemberData(memberToken);
+    console.log(user);
+    
+    setUser(user?.[0]);
     if (user) {
       fetchUserScopes(user?.[0]?.oauth_access_token, user?.[0]?.oauth_refresh_token);
       setLoading(false);
@@ -64,6 +72,7 @@ function GmailServicesPopupContent(props) {
         meet: scopesArray.includes(serviceScopeMapping.meet),
         photos: scopesArray.includes(serviceScopeMapping.photos),
         chat: scopesArray.includes(serviceScopeMapping.chat),
+        profile: scopesArray.includes(serviceScopeMapping.profile),
       });
 
     } catch (e) {
@@ -81,6 +90,56 @@ function GmailServicesPopupContent(props) {
     }));
     console.log(`Switch for ${service} is now ${checked ? 'ON' : 'OFF'}`);
   };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log(serviceSwitches);
+    
+    // Filter out selected services
+    const selectedServices = Object.keys(serviceSwitches).filter(service => serviceSwitches[service]);
+  
+    console.log(selectedServices);
+    
+    // Check if at least one service is selected
+    if (selectedServices.length === 0) {
+      alert('Please select at least one service!');
+      return;
+    }
+  
+    // Prepare payload with username and selected services
+    const payload = {
+      username: user?.username,  // Replace with actual username if available
+      services: selectedServices
+    };
+  
+    // Check if username is available
+    if (!payload.username) {
+      alert('Username is required!');
+      return;
+    }
+  
+    try {
+      setLoading(true);
+      
+      // Post request to backend for dynamic Google access
+      const response = await post_requestDynamicGoogleAccess(payload);
+      console.log(response);
+      
+      // Redirect to Google auth URL if successful
+      if (response.success) {
+        window.location.href = response.authUrl;  // Redirect to Google's auth page
+      } else {
+        console.error(response.message);
+        alert(`Error: ${response.message}`);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('An error occurred while processing your request.');
+    } finally {
+      setLoading(false);
+    }
+  };
+  
 
   return (
     <Box className="gmail_service_container">
@@ -121,6 +180,16 @@ function GmailServicesPopupContent(props) {
           <Switch_On_Off2 checked={serviceSwitches.chat} onChange={handleSwitchChange('chat')} />
         </Box>
 
+        <Box className="service">
+          <Typography className='label'>Google Profile</Typography>
+          <Switch_On_Off2 checked={serviceSwitches.profile} onChange={handleSwitchChange('profile')} />
+        </Box>
+
+      </Box>
+      <Box className="submit_button_container" onClick={handleSubmit}>
+        <Button type="submit" variant="contained" className="submit_button">
+          Submit
+        </Button>
       </Box>
     </Box>
   );
