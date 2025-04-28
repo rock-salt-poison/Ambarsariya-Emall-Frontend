@@ -552,8 +552,7 @@ export const get_googleContacts = async (member_id, user_id) => {
   } catch (e) {
     throw e;
   }
-}
-
+};
 
 export const get_userScopes = async (oauth_access_token, oauth_refresh_token) => {
   try {
@@ -564,7 +563,7 @@ export const get_userScopes = async (oauth_access_token, oauth_refresh_token) =>
   } catch (e) {
     throw e;
   }
-}
+};
 
 // export const post_convertGooglePhotos = async (data) => {
 //   try{
@@ -847,6 +846,29 @@ export const get_memberRelations = async (member_id, user_id, relation) => {
       return response.data;
     } catch (error) {
       throw error;
+    }
+  }
+}
+
+export const put_member_share_level = async (data) => {
+  if(data){
+  try{
+      const resp = await axios.put(`${link}/sell/member-share-level`, data);
+      return resp.data;
+    }catch(e){
+      throw e;
+    }
+  }
+}
+
+
+export const get_member_share_level = async (member_id) => {
+  if(member_id){
+  try{
+      const resp = await axios.get(`${link}/sell/member-share-level/${member_id}`);
+      return resp.data;
+    }catch(e){
+      throw e;
     }
   }
 }
