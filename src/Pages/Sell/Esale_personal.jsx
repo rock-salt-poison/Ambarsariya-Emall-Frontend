@@ -20,13 +20,21 @@ function Esale_personal(props) {
 
   const initialFormData = {
     personal_traits: '',
+    personal_traits_file: '',
     values_and_beliefs: '',
-    hobby_and_interests: '',
+    values_and_beliefs_file: '',
+    hobbies_and_interests: '',
+    hobbies_and_interests_file: '',
     life_philosophy: '',
-    goals_and_aspirations: '',
+    life_philosophy_file: '',
+    goal_and_aspirations: '',
+    goal_and_aspirations_file: '',
     background_information: '',
-    favorite_quotes_or_mottos: '',
+    background_information_file: '',
+    favorite_quotes_and_mottos: '',
+    favorite_quotes_and_mottos_file: '',
     unique_personal_facts: '',
+    unique_personal_facts_file: '',
   };
 
   const [formData, setFormData] = useState(initialFormData);
@@ -107,7 +115,7 @@ function Esale_personal(props) {
   };
   
 
-  const renderField = (id, label, name, placeholder, tooltip) => {
+  const renderField = (id, label, name, placeholder, tooltip, innerFields) => {
     return (
       <EsalePersonalForm
         key={id}
@@ -123,6 +131,8 @@ function Esale_personal(props) {
         fileName={fileData[`${name}_file`]?.name}
         showSpeedDial={true}
         showTooltip={true}
+        innerFields={innerFields}
+        formData={formData}
       />
     );
   };
@@ -157,21 +167,45 @@ function Esale_personal(props) {
   
 
   const fieldData = [
-    {id:1, label:'Personal Traits', name :'personal_traits', tooltip:'Personality traits like outgoing, empathetic, creative, and analytical define you.'},
+    {id:1, label:'Personal Traits', tooltip:'Personality traits like outgoing, empathetic, creative, and analytical define you.', innerFields: [
+      {id:1, placeholder:'Personal Traits', name :'personal_traits', type:'text'},
+      {id:2, placeholder:'Personal Traits File', name :'personal_traits_file', type:'url'},
+    ]},
 
-    {id:2, label:'Values & Beliefs', name :'values_and_beliefs', tooltip:'Core principles like honesty, integrity, kindness, and sustainability.'},
+    {id:2, label:'Values & Beliefs', tooltip:'Core principles like honesty, integrity, kindness, and sustainability.', innerFields: [
+      {id:1, placeholder:'Values & Beliefs', name :'values_and_beliefs', type:'text'},
+      {id:2, placeholder:'Values & Beliefs File', name :'values_and_beliefs_file', type:'url'},
+    ]},
     
-    {id:3, label:'Hobbies & Interests', name :'hobby_and_interests', tooltip:'Activities you enjoy, such as hiking, reading mystery novels, painting, sports or cooking.'},
+    {id:3, label:'Hobbies & Interests', tooltip:'Activities you enjoy, such as hiking, reading mystery novels, painting, sports or cooking.', innerFields: [
+      {id:1, placeholder:'Hobbies & Interests', name :'hobbies_and_interests', type:'text'},
+      {id:2, placeholder:'Hobbies & Interests File', name :'hobbies_and_interests_file', type:'url'},
+    ]},
     
-    {id:4, label:'Life Philosophy', name :'life_philosophy', tooltip:'Your outlook on life, emphasizing continuous learning, personal growth or helping others.'},
+    {id:4, label:'Life Philosophy', tooltip:'Your outlook on life, emphasizing continuous learning, personal growth or helping others.',innerFields: [
+      {id:1, placeholder:'Life Philosophy', name :'life_philosophy', type:'text'},
+      {id:2, placeholder:'Life Philosophy File', name :'life_philosophy_file', type:'url'},
+    ]},
     
-    {id:5, label:'Goals and Aspirations', name :'goals_and_aspirations', tooltip:'Ambitions like traveling to new countries, learning a new language, or achieving a promotion at work.'},
+    {id:5, label:'Goals and Aspirations', tooltip:'Ambitions like traveling to new countries, learning a new language, or achieving a promotion at work.', innerFields: [
+      {id:1, placeholder:'Goals and Aspirations', name :'goal_and_aspirations', type:'text'},
+      {id:2, placeholder:'Goals and Aspirations File', name :'goal_and_aspirations_file', type:'url'},
+    ]},
     
-    {id:6, label:'Background Information', name :'background_information', tooltip:'Key details about your upbringing such as growing up in a small town or significant life experiences that have influenced who you are.'},
+    {id:6, label:'Background Information', tooltip:'Key details about your upbringing such as growing up in a small town or significant life experiences that have influenced who you are.', innerFields: [
+      {id:1, placeholder:'Background Information', name :'background_information', type:'text'},
+      {id:2, placeholder:'Background Information File', name :'background_information_file', type:'url'},
+    ]},
     
-    {id:7, label:'Favorite Quotes or Mottos', name :'favorite_quotes_or_mottos', tooltip:'A quote or personal motto that reflect your mindset.'},
+    {id:7, label:'Favorite Quotes or Mottos', tooltip:'A quote or personal motto that reflect your mindset.', innerFields: [
+      {id:1, placeholder:'Favorite Quotes or Mottos', name :'favorite_quotes_and_mottos', type:'text'},
+      {id:2, placeholder:'Favorite Quotes or Mottos File', name :'favorite_quotes_and_mottos_file', type:'url'},
+    ]},
     
-    {id:8, label:'Unique Personal Facts', name :'unique_personal_facts', tooltip:'Unique facts that make you stand out, including unusual talents and interesting experiences.'},
+    {id:8, label:'Unique Personal Facts', tooltip:'Unique facts that make you stand out, including unusual talents and interesting experiences.', innerFields: [
+      {id:1, placeholder:'Unique Personal Facts', name :'unique_personal_facts', type:'text'},
+      {id:2, placeholder:'Unique Personal Facts File', name :'unique_personal_facts_file', type:'url'},
+    ]},
   ]
 
   return (
@@ -208,9 +242,9 @@ function Esale_personal(props) {
                 <Box className="circle"></Box>
               </Box>
 
-              <Box component="form" noValidate autoComplete="off" className="esale_personal_form" onSubmit={handleSubmit}>
-                {fieldData.map(({id, label, name, tooltip})=>{
-                  return renderField(id, label, name, label, tooltip)
+              <Box component="form" autoComplete="off" className="esale_personal_form" onSubmit={handleSubmit}>
+                {fieldData.map(({id, label, name, tooltip, innerFields, placeholder})=>{
+                  return renderField(id, label, name, label || placeholder , tooltip, innerFields)
                 })}
 
                 <Box className="submit_button_container">

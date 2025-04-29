@@ -791,14 +791,25 @@ export const get_memberProfessional = async (member_id, user_id) => {
   }
 }
 
+// export const post_memberPersonal = async (memberData, member_id) => {
+//   if(memberData){
+//     try {
+//       const response = await axios.post(`${link}/sell/personal/${member_id}`, memberData, {
+//         headers: {
+//           'Content-Type': 'multipart/form-data',
+//         },
+//       });
+//       return response.data;
+//     } catch (error) {
+//       throw error
+//     }
+//   }
+// };
+
 export const post_memberPersonal = async (memberData, member_id) => {
   if(memberData){
     try {
-      const response = await axios.post(`${link}/sell/personal/${member_id}`, memberData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      const response = await axios.post(`${link}/sell/personal/${member_id}`, memberData);
       return response.data;
     } catch (error) {
       throw error

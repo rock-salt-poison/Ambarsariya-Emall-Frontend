@@ -7,13 +7,11 @@ import { Link } from 'react-router-dom';
 import { Close } from '@mui/icons-material';
 
 function EsalePersonalForm({
-    id, label, type, name, value, onChange, placeholder, readOnly, maxLength, dialogErrors,error, tooltip, onFileUpload, fileName, showSpeedDial, showTooltip, showDialog, dialogFields, onDialogSubmit, handleDialogChange, addmoreButton, handleAddMoreButton, onFieldReset, handleRemoveButton, fieldsPerGroup
+    id, label, type, name, value, onChange, placeholder, readOnly, maxLength, dialogErrors,error, tooltip, onFileUpload, fileName, showSpeedDial, showTooltip, showDialog, dialogFields, onDialogSubmit, handleDialogChange, addmoreButton, handleAddMoreButton, onFieldReset, handleRemoveButton, fieldsPerGroup, innerFields, formData
 }) {
     const [isSpeedDialVisible, setIsSpeedDialVisible] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [filename, setFileName] = useState(fileName || ''); // Manage file name with state
-
-    
+    const [filename, setFileName] = useState(fileName || ''); 
 
     const handleMouseEnter = () => setIsSpeedDialVisible(true);
     const handleMouseLeave = () => setIsSpeedDialVisible(false);
@@ -64,44 +62,65 @@ function EsalePersonalForm({
                 <Button className="label_btn">{label}</Button>
             </Box>
             )
-            :(
-
-            <Box className="input_field_bg" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} onClick={handleClick}>
-                <Box component="img" src={form_field_bg} alt="form_field_bg" className="form_field_bg" />
-                <TextField
-                    hiddenLabel
-                    variant="outlined"
-                    name={field.name || name}
-                    type={field.type || type || 'text'}
-                    value={field.value || value}
-                    onChange={onChange} 
-                    placeholder={field.label || placeholder}
-                    inputProps={{ readOnly, maxLength }}
-                    {...(error && { error: true })} // Show error message
-                    multiline={field.type === "textarea" || type === "textarea"} 
-                    rows={field.type === "textarea" || type === "textarea" ? 4 : undefined}
-                    className="input_field"
-                     autoComplete="off"
-                />
-                {showSpeedDial && isSpeedDialVisible && (
-                    <SpeedDial
-                        ariaLabel="SpeedDial for file upload"
-                        icon={<AttachFileIcon />}
-                        onClick={triggerFileUpload}
-                        className="speedDialLink"
-                        sx={{ position: 'absolute', right: 0 }}
+            :innerFields ? (
+                innerFields.map((innerField)=>{
+                    return <Box className="input_field_bg" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} onClick={handleClick}>
+                    <Box component="img" src={form_field_bg} alt="form_field_bg" className="form_field_bg" />
+                    <TextField
+                        hiddenLabel
+                        variant="outlined"
+                        name={innerField.name || name}
+                        type={innerField.type || type || 'text'}
+                        value={formData[innerField.name] || ''}
+                        onChange={onChange} 
+                        placeholder={innerField.label || innerField.placeholder}
+                        inputProps={{ readOnly, maxLength }}
+                        {...(error && { error: true })} // Show error message
+                        className="input_field"
+                        autoComplete="off"
                     />
+                    {/* {showSpeedDial && isSpeedDialVisible && (
+                        <SpeedDial
+                            ariaLabel="SpeedDial for file upload"
+                            icon={<AttachFileIcon />}
+                            onClick={triggerFileUpload}
+                            className="speedDialLink"
+                            sx={{ position: 'absolute', right: 0 }}
+                        />
+                    )} */}
+                    {/* <input
+                        type="file"
+                        id={`file-upload-${name}`}
+                        className="file-upload"
+                        onChange={(e) => {
+                            onFileUpload(name, e.target.files[0]);
+                            setFileName(e.target.files[0].name); // Update fileName state
+                        }}/>*/}
+                </Box> 
+                })
+            
+            ): (
+
+                <Box className="input_field_bg" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} onClick={handleClick}>
+                    <Box component="img" src={form_field_bg} alt="form_field_bg" className="form_field_bg" />
+                    <TextField
+                        hiddenLabel
+                        variant="outlined"
+                        name={field.name || name}
+                        type={field.type || type || 'text'}
+                        value={field.value || value}
+                        onChange={onChange} 
+                        placeholder={field.label || placeholder}
+                        inputProps={{ readOnly, maxLength }}
+                        {...(error && { error: true })} // Show error message
+                        multiline={field.type === "textarea" || type === "textarea"} 
+                        rows={field.type === "textarea" || type === "textarea" ? 4 : undefined}
+                        className="input_field"
+                         autoComplete="off"
+                    />
+                    
+                </Box> 
                 )}
-                <input
-                    type="file"
-                    id={`file-upload-${name}`}
-                    className="file-upload"
-                    onChange={(e) => {
-                        onFileUpload(name, e.target.files[0]);
-                        setFileName(e.target.files[0].name); // Update fileName state
-                    }}/>
-            </Box>
-            )}
 
         </>
     );
