@@ -49,10 +49,8 @@ function Sharelevel_tab_content({ title, communityData }) {
                 Relations: resp?.data?.[0]?.relations_public || false,
                 Locations: false,
               };
-    
               setCheckedStates(newCheckedStates);
           }
-
         } catch (e) {
           console.error(e);
         } finally {

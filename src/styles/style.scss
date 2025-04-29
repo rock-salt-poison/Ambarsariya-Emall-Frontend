@@ -11471,6 +11471,145 @@ a {
   }
 }
 
+.member_emotional_wrapper {
+  position: relative;
+  min-height: 100vh;
+  @include background-center-no-repeat($emotionalMemberBgImg);
+  background-size: cover;
+  background-position: top;
+  display: flex;
+
+  &::after {
+    content: "";
+    @include full-absolute(0px, 0px, 0px, 0px);
+    z-index: 0;
+    background-color: $dark-yellow;
+    opacity: 0.4;
+  }
+
+  .row {
+    position: relative;
+    z-index: 1;
+    padding: 25px;
+    @include flex-center(column, space-between);
+    width: 100%;
+    place-items: normal;
+    gap: 40px;
+
+    .col{
+      &:first-child{
+        display: grid;
+        grid-template-columns: 120px 1fr 120px;
+        gap: 15px;
+      }
+      .title_container{
+        @include flex-center(row, center);
+        .heading{
+          .title{
+            @include homepage-buttons("Bobby-Jones-Soft", 50px, #9B3B32, "none");
+            // @include hover-scale(1, 0s);
+            text-align: center;
+            text-shadow: -1.5px -1.5px 0 $yellow, 1.5px -1.5px 0 $yellow, -1.5px 1.5px 0px $yellow, 1.5px 1.5px 0 $yellow;
+            // -webkit-text-stroke: 1px $yellow;
+          }
+        }
+      }
+
+      &:last-child{
+        @include flex-center(row, center);
+        flex-wrap: wrap;
+        gap: 40px;
+        filter: drop-shadow(2px 4px 6px $black);
+
+        .card{
+          position: relative;
+          transition: all .2s linear;
+
+          .card_img{
+            height: 250px;
+            opacity: .7;
+          }
+          .card_heading{
+            @include full-absolute(auto, 0px, 25px, 0px);
+            @include flex-center(row, center);
+
+            .heading{
+              @include homepage-buttons("gladiola", 40px, $light-yellow, "none");
+              @include hover-scale(1, 0s);
+              text-shadow: 0px 0px 15px $black, -1.5px -1.5px 0 $brown-4, 1.5px -1.5px 0 $brown-4, -1.5px 1.5px 0px $brown-4, 1.5px 1.5px 0 $brown-4;
+              transition: all .2s linear;
+            }
+          }
+
+          &:hover{
+            .card_heading{
+              .heading{
+                transform: scale(1.1);
+              }
+            }
+          }
+        }
+
+      }
+    }
+
+    @media (max-width: 768px) {
+      .col {
+        &:first-child{
+          
+          .d-sm-none{
+            display: none;
+          }
+
+          grid-template-columns: 1fr 120px !important;
+          
+          .title_container{
+            justify-content: flex-start !important;
+          }
+        }
+      }
+    }
+
+
+    @media (max-width: 560px) {
+      .col {
+        &:first-child{
+          grid-template-columns: 1fr !important;
+          
+          .title_container{
+            justify-content: center !important;
+            order: 1;
+
+            .heading{
+              .title{
+                font-size: 45px !important;
+              }
+            }
+          }
+
+          .logoutBtn{
+            order: 0;
+            justify-self: end;
+          }
+        }
+
+        .card{
+          .card_img{
+            height: auto !important;
+            width: 100% !important;
+          }
+
+          .card_heading{
+            .heading{
+              font-size: 35px !important;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 .eshop_member_wrapper {
   @extend .emotional_wrapper;
   background-image: url("#{$serveEshopMemberBgImg}") !important;
