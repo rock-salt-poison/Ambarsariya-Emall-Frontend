@@ -5,6 +5,7 @@ import location_img from "../../Utils/images/Sell/esale/location.svg";
 import member_icon from '../../Utils/images/Sell/esale/life/member_icon.png';
 import events from '../../Utils/videos/events.mp4';
 import relations from '../../Utils/videos/relations.mp4';
+import community from '../../Utils/videos/community.mp4';
 import destinations from '../../Utils/videos/destinations.mp4';
 import fourway from '../../Utils/videos/fourway.mp4';
 import VideoPlayer from '../../Components/MerchantWrapper/VideoPlayer';
@@ -18,7 +19,7 @@ function Locations() {
 
   const data = [
     { id: 1, name: 'Events', alt: 'events', video_url: events, cName: 'card1 events' },
-    { id: 2, name: 'Relations', alt: 'relations', video_url: relations, cName: 'card2 relations' },
+    { id: 2, name: 'Community', alt: 'community', video_url: community, cName: 'card2 community' },
     { id: 3, name: 'Destinations', alt: 'destinations', video_url: destinations, cName: 'card2 destinations' },
     { id: 4, name: 'Fourway', alt: 'fourway', video_url: fourway, cName: 'card1 fourway' },
   ];

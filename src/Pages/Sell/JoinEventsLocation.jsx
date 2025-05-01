@@ -7,7 +7,8 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
-import { Pagination, Navigation } from 'swiper/modules';
+import { Navigation } from 'swiper/modules';
+import { NumbersOutlined } from '@mui/icons-material';
 
 function JoinEventsLocation() {
   const [audio] = useState(new Audio(hornSound));
@@ -59,22 +60,19 @@ function JoinEventsLocation() {
          <Box className="col">
             <Box className="container">
                   <Swiper
-                    slidesPerView={5}
-                    spaceBetween={30}
+                    slidesPerView={1}
+                    spaceBetween={10}
                     loop={true}
                     autoplay={{
                       delay: 1200,
                       disableOnInteraction: false,
                     }}
                     speed={1500}
-                    pagination={{
-                      clickable: true,
-                    }}
                     navigation={true}
-                    modules={[Pagination, Navigation]}
+                    modules={[Navigation]}
                     className="mySwiper"
                   >
-                    <SwiperSlide className="frame">
+                    {[1, 2, 3]?.map((num, index) => {return <SwiperSlide className="frame" key={index}>
                       <Box className="outer-frame">
                           <Box className="inner-frame">
                               <Box component='img' src='' alt='img' className="img"/>
@@ -82,9 +80,32 @@ function JoinEventsLocation() {
                       </Box>
         
                       <Box className="details">
-                        
+                          <Box className="group">
+                            <Typography className="heading">Time : </Typography>
+                            <Typography className="description">{(new Date()).toLocaleString()}</Typography>
+                          </Box>
+                          <Box className="group">
+                            <Typography className="heading">Location : </Typography>
+                            <Typography className="description">{(new Date()).toLocaleString()}</Typography>
+                          </Box>
+                          <Box className="group">
+                            <Typography className="heading">Engagement : </Typography>
+                            <Typography className="description">{num}</Typography>
+                          </Box>
+                          <Box className="group">
+                            <Typography className="heading">Status : </Typography>
+                            <Typography className="description">Public</Typography>
+                          </Box>
+                          <Box className="group">
+                            <Typography className="heading">Purpose : </Typography>
+                            <Typography className="description">-</Typography>
+                          </Box>
+                          <Box className="group">
+                            <Typography className="heading">Rules and Description : </Typography>
+                            <Typography className="description"> - </Typography>
+                          </Box>
                       </Box>
-                    </SwiperSlide>
+                    </SwiperSlide> })}
                   </Swiper>
                   </Box>
             </Box>

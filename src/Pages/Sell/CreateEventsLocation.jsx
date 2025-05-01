@@ -5,6 +5,7 @@ import member_icon from '../../Utils/images/Sell/esale/life/member_icon.png';
 import { Link, useNavigate } from 'react-router-dom';
 import hornSound from '../../Utils/audio/horn-sound.mp3';
 import UserBadge from '../../UserBadge';
+import CreateEventForm from '../../Components/Sell/Esale/Locations/CreateEventForm';
 
 
 
@@ -57,8 +58,16 @@ function CreateEventsLocation() {
         </Box>
 
         <Box className="col">
-          <Box className="container">
-          
+          <Box className="form_container">
+            <Box className="board_pins">
+              <Box className="circle"></Box>
+              <Box className="circle"></Box>
+            </Box>
+                <CreateEventForm />
+            <Box className="board_pins">
+              <Box className="circle"></Box>
+              <Box className="circle"></Box>
+            </Box>
           </Box>
         </Box>
       </Box>

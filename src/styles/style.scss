@@ -18208,98 +18208,100 @@ body .MuiBackdrop-root {
         }
 
         .container {
-          form {
-            .form-row {
-              @include flex-center(row, space-between);
-              gap: 15px;
+         
+        }
+      }
 
-              .label,
-              .MuiTypography-root {
+      form {
+        .form-row {
+          @include flex-center(row, space-between);
+          gap: 15px;
+
+          .label,
+          .MuiTypography-root {
+            @include homepage-buttons(
+              "Bobby-Jones-Soft",
+              20px !important,
+              $brown-4,
+              none
+            );
+            @include hover-scale(1, 0s);
+            align-self: center;
+            width: 32%;
+            line-height: 20px;
+          }
+
+          .field_container {
+            width: 65%;
+
+            .input_field,
+            .MuiTextField-root {
+              width: 100%;
+
+              .MuiInputBase-input,
+              .MuiSelect-select {
+                background-color: hsla(14, 33%, 32%, 0.6);
+                border-radius: 10px;
+                padding: 5px 10px 3px;
                 @include homepage-buttons(
                   "Bobby-Jones-Soft",
-                  20px !important,
-                  $brown-4,
+                  18px !important,
+                  $yellow,
                   none
                 );
                 @include hover-scale(1, 0s);
-                align-self: center;
-                width: 32%;
-                line-height: 20px;
-              }
 
-              .field_container {
-                width: 65%;
-
-                .input_field,
-                .MuiTextField-root {
-                  width: 100%;
-
-                  .MuiInputBase-input,
-                  .MuiSelect-select {
-                    background-color: hsla(14, 33%, 32%, 0.6);
-                    border-radius: 10px;
-                    padding: 5px 10px 3px;
-                    @include homepage-buttons(
-                      "Bobby-Jones-Soft",
-                      18px !important,
-                      $yellow,
-                      none
-                    );
-                    @include hover-scale(1, 0s);
-
-                    &::placeholder {
-                      opacity: 1;
-                    }
-                  }
-
-                  .MuiInputBase-root {
-                    padding: 0px;
-                  }
-
-                  .MuiOutlinedInput-notchedOutline {
-                    border: 0px;
-                  }
-                }
-
-                .radio_button {
-                  flex-direction: row;
-
-                  .MuiSvgIcon-root {
-                    fill: $brown-4;
-                  }
-
-                  .MuiTypography-root {
-                    width: max-content;
-                  }
-                }
-
-                .MuiTextField-root {
-                  width: 100%;
+                &::placeholder {
+                  opacity: 1;
                 }
               }
 
-            }
+              .MuiInputBase-root {
+                padding: 0px;
+              }
 
-            .error_message {
-              @include homepage-buttons("Bobby-Jones-Soft", 16px, $red2, "none");
-              @include hover-scale(1, 0s);
-            }
-
-            .submit_button_container {
-              @include flex-center(row, center);
-              margin-top: 10px;
-              flex: 1;
-        
-              .submit_button {
-                background: linear-gradient($brown-4, #714a3f);
-                @include homepage-buttons("Bobby-Jones-Soft", 18px, $yellow, "none");
-                @include hover-scale(1, 0s);
-                margin: 0 auto 5px;
-                padding: 2px 15px;
-                border-radius: 8px;
-                transition: background-color 0.3s ease;
+              .MuiOutlinedInput-notchedOutline {
+                border: 0px;
               }
             }
+
+            .radio_button {
+              flex-direction: row;
+
+              .MuiSvgIcon-root {
+                fill: $brown-4;
+              }
+
+              .MuiTypography-root {
+                width: max-content;
+              }
+            }
+
+            .MuiTextField-root {
+              width: 100%;
+            }
+          }
+
+        }
+
+        .error_message {
+          @include homepage-buttons("Bobby-Jones-Soft", 16px, $red2, "none");
+          @include hover-scale(1, 0s);
+        }
+
+        .submit_button_container {
+          @include flex-center(row, center);
+          margin-top: 10px;
+          flex: 1;
+    
+          .submit_button {
+            background: linear-gradient($brown-4, #714a3f);
+            @include homepage-buttons("Bobby-Jones-Soft", 18px, $yellow, "none");
+            @include hover-scale(1, 0s);
+            margin: 0 auto 5px;
+            padding: 2px 15px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
           }
         }
       }
@@ -18491,6 +18493,7 @@ body .MuiBackdrop-root {
 
 .member_location_create_event_wrapper{
   @extend .member_locations_wrapper;
+  @extend .member_relations_wrapper;
   background-image: url('#{$memberLocationsCreateEventsBgImg}');
 
   .row{
@@ -18515,6 +18518,58 @@ body .MuiBackdrop-root {
           }
         }
       }
+
+      &:last-child{
+        .form_container{         
+          background-color: #B78F49bf;
+          padding: 20px;
+          border-radius: 10px;
+          width: 70%;
+          @include flex-center(column, flex-start);
+          place-items: normal;
+          gap: 10px;
+
+          .container{
+            width: 100%;
+          }
+
+          .board_pins {
+            @include flex-center(row, space-between);
+            padding: 0px;
+  
+            .circle {
+              width: 14px;
+              height: 14px;
+              border-radius: 50px;
+              background-color: $light-yellow;
+              opacity: 0.7;
+            }
+  
+            &:last-child {
+              margin-top: auto;
+            }
+          }
+
+          form{
+            width: 100%;
+            
+            @include flex-center(column, flex-start);
+            gap: 10px;
+            place-items: normal;
+
+            .label{
+              color: $light-yellow;
+            }
+
+            .input_field{
+              .MuiSelect-select, .MuiInputBase-input{
+                background: #5D4321 !important;
+                color: $light-yellow !important;
+              }
+            }
+          }
+        }
+      }
     }
   }
 
@@ -18527,6 +18582,9 @@ body .MuiBackdrop-root {
   .row{
     flex: 1;
     justify-content: flex-start;
+    gap:20px;
+    width: 100%;
+    max-width: -webkit-fill-available;
     .col{
       &:first-child{
         display: grid;
@@ -18552,30 +18610,38 @@ body .MuiBackdrop-root {
         .title_container{
           .title{
             color: #653426;
+            font-size: 2.8em;
           }
         }
       }
 
       &:last-child{
+        width: 65% !important;
         flex: 1;
-        justify-content: flex-start !important;
+        overflow: hidden;
         .container{
-          width: 70%;
+          width: 100%;
+          overflow: visible; // hides other slides
+          position: relative;
 
           .swiper{
             width: 100%;
+            @include flex-center(row, center);
+            overflow: visible !important;
+            position: relative;
 
             .swiper-wrapper{
-              width: 80%;
+              width: 90%;
               margin: 0 auto;
+              padding: 15px 0;
 
               .frame{
-                flex: 1;
                 margin: auto;
-                padding: 15px;
+                padding: 0px 15px;
                 @include flex-center(column, center);
                 gap: 20px;
-                
+                width: 100% !important;
+                box-sizing: border-box;
 
                 .outer-frame{
                   align-self: stretch;
@@ -18588,21 +18654,113 @@ body .MuiBackdrop-root {
                     box-shadow:inset 0px 0px 0px 2px #FFB428;
                     flex: 1;
                     align-self: stretch;
+                    height: 280px;
 
                     .img{
                       width: 100%;
-                      height: 280px;
                     }
                   }
                 }
 
                 .details{
                   align-self: stretch;
-                  padding: 30px;
-                  background-color: #FFCE79bf;
+                  padding: 20px;
+                  background-color: #ffce79bf;
+
+                  @include flex-center(row, space-between);
+                  flex-wrap: wrap;
+                  gap: 20px;
+
+                  .group{
+                   @include flex-center(row, space-between);
+                   flex-wrap: wrap;
+                   gap: 10px;
+                   
+                   .heading{
+                      @include homepage-buttons(
+                        "Bobby-Jones-Soft",
+                        22px !important,
+                        #653426,
+                        none
+                      );
+                      line-height: 20px;
+                      @include hover-scale(1, 0s);
+                   }
+
+                   .description{
+                        @include homepage-buttons(
+                          "Bobby-Jones-Soft",
+                          22px !important,
+                          $black,
+                          none
+                        );
+                        line-height: 20px;
+                        @include hover-scale(1, 0s);
+                    }
+                  }
                 }
               }
             }
+
+            .swiper-button-prev,
+.swiper-button-next {
+  color: $black;
+  font-size: 35px;
+  font-weight: bold;
+}
+
+          }
+        }
+      }
+    }
+
+    @media (max-width: 992px){
+      .col{
+        &:last-child{
+          .container{
+            width: 80%;
+          }
+        }
+      }
+    }
+
+    @media (max-width: 768px){
+      .col{
+        &:first-child{
+            .title_container{
+              order: 0;
+            }
+        }
+
+        &:last-child{
+          .container{
+            width: 100%;
+          }
+        }
+      }
+    }
+
+    @media (max-width: 560px){
+      .col{
+        &:first-child{
+          grid-template-columns: 1fr 1fr !important;
+          grid-template-rows: auto auto;
+          grid-template-areas:
+              "logoutBtn logoutBtn"
+              "heading_container title_container" !important;
+          gap: 20px;
+          
+          .title_container{
+            order: 0;
+            grid-area: title_container;
+          }
+
+          .heading_container{
+            grid-area: heading_container;
+          }
+
+          .logoutBtn{
+            grid-area: logoutBtn;
           }
         }
       }
