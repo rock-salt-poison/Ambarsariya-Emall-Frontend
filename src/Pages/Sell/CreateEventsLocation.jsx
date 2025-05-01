@@ -40,7 +40,7 @@ function CreateEventsLocation() {
       <Box className="row">
         <Box className="col header_badge">
            <Box className="heading_container">
-            <Typography className="title">Join</Typography>
+            <Typography className="title">Create</Typography>
           </Box>
 
           <Box className="title_container">
