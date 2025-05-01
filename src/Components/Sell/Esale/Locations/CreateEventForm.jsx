@@ -64,6 +64,45 @@ function CreateEventForm() {
       }, [token])
 
       
+    const event = {
+        public: [
+            {id: 1, name :'Entertainment Events', engagement: [
+                'Concerts & Music Festivals', 'Film Screenings & Film Festivals', 'Comedy Shows', 'Cultural Performances'
+            ]},
+            {id: 2, name :'Commercial & Promotional Events', engagement: [
+                'Trade Shows and Expos', 'Product Launches', 'Pop-up Shops & Markets', 'Brand Activations'
+            ]},
+            {id: 3, name :'Cultural & Religious Events', engagement: [
+                'Cultural Festivals', 'Religious Gatherings or Processions', 'Traditional Ceremonies', 'Food or Craft Fairs'
+            ]},
+            {id: 4, name :'Educational Events', engagement: [
+                'Public Lectures & Talks', 'Workshops & Seminars', 'Science Fairs', 'Exhibitions'
+            ]},
+            {id: 5, name :'Civic & Political Events', engagement: [
+                'Political Rallies', 'Town Halls', 'Public Protests or Demonstrations', 'Awareness Campaigns'
+            ]},
+            {id: 6, name :'Sports & Recreational Events', engagement: [
+                'Marathons & Runs', 'Sports Matches & Tournaments', 'Fitness Bootcamps or Zumba in the park', 'Esports Tournaments'
+            ]},
+            {id: 7, name :'Community & Volunteer Events', engagement: [
+                'Clean-Up Drives', 'Tree Planting Events', 'Fundraisers', 'Charity Walks or Bike Rides'
+            ]},
+            {id: 8, name :'Virtual or Hybrid Events', engagement: [
+                'Webinars', 'Virtual Conferences', 'Online Live Concerts or Streams', 'Online Game Nights or Hackathons'
+            ]},
+        ],
+        private : [
+            {id: 1, name :'Social Events', engagement: [
+                'Meetups', 'Parties', 'Game nights', 'Movie watch parties'
+            ]},
+            {id: 2, name :'Professional or Work-Related Events', engagement: [
+                'Team meetings', 'Workshops or training sessions', 'Brainstorming Sessions', 'Webinars or presentations', 'Deadlines or project milestones'
+            ]},
+            {id: 3, name :'Educational Events', engagement: [
+                'Study groups', 'Tutoring sessions', 'Q&A sessions with experts', 'Book club discussions', 'Book club discussions', 'Online classes or lectures'
+            ]},
+        ]
+    }
 
     const formFields = [
         {

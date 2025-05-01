@@ -18567,6 +18567,27 @@ body .MuiBackdrop-root {
                 color: $light-yellow !important;
               }
             }
+
+            .file_label {
+              .file_button {
+                background-color: #5D4321;
+                border-radius: 10px;
+                width: 100%;
+                white-space: nowrap;
+                overflow: hidden;
+                text-align: start;
+                justify-content: flex-start;
+                @include homepage-buttons(
+                  "Bobby-Jones-Soft",
+                  17px,
+                  $light-yellow,
+                  "none"
+                );
+                @include hover-scale(1, 0s);
+                padding: 5px 15px 3px;
+                box-shadow: none;
+              }
+            }
           }
         }
       }

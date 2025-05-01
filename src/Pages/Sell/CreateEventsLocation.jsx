@@ -8,7 +8,6 @@ import UserBadge from '../../UserBadge';
 import CreateEventForm from '../../Components/Sell/Esale/Locations/CreateEventForm';
 
 
-
 function CreateEventsLocation() {
   const [audio] = useState(new Audio(hornSound));
   const navigate = useNavigate();

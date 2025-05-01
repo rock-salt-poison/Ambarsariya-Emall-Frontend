@@ -11,7 +11,7 @@ function Tab_content() {
     const themeProps = {
         popoverBackgroundColor: '#f8e3cc',
         scrollbarThumb: 'var(--brown)',
-      };
+    };
     
       const theme = createCustomTheme(themeProps);
 
