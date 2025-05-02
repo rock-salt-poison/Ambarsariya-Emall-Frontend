@@ -66,10 +66,10 @@ function CreateEventForm() {
                 if(resp.valid){
                     setEventPurpose(resp?.data);
                     console.log(resp?.data);
-                    
                 }
             }catch(e){
                 console.error(e);
+                setSnackbar({ open: true, message: e.response.data.message, severity: 'error' });                   
             }finally{
                 setLoading(false);
             }
@@ -88,6 +88,7 @@ function CreateEventForm() {
                 }
             }catch(e){
                 console.error(e);
+                setSnackbar({ open: true, message: e.response.data.message, severity: 'error' });                   
             }finally{
                 setLoading(false);
             }
@@ -252,39 +253,39 @@ function CreateEventForm() {
                 try{
                     setLoading(true);
 
-                    const selectedPeople = formData.people.map((personName) => {
-                        return contacts.find((contact) => contact.name === personName);
-                      });
+                    // const selectedPeople = formData.people.map((personName) => {
+                    //     return contacts.find((contact) => contact.name === personName);
+                    //   });
                       
-                    const data = {
-                        member_id: user.member_id,
-                        user_id: user.user_id, 
-                        relation: formData.relation,
-                        other_relation: formData.other_relation || null,
-                        place_name: formData.place_name,
-                        address: formData.address.description,
-                        latitude: formData.address.latitude,
-                        longitude: formData.address.longitude,
-                        work_yrs: formData.work_yrs,
-                        ongoing_or_left: formData.ongoing_or_left,
-                        people: JSON.stringify(selectedPeople),
-                        name_group: formData.group,
-                        mentor: formData.mentor,
-                        member_phone_no: formData.member_phone_no,
-                        people_list: formData.people_list,
-                        community: formData.community,
-                        last_topic: formData.last_topic,
-                        last_event: formData.last_event,
-                        total_score: formData.total_score,
-                        position_score: formData.position_score,
-                        arrange_event: formData.arrange_event,
-                        next_event: formData.next_event,
-                        passed_event: formData.passed_event
-                    };
+                    // const data = {
+                    //     member_id: user.member_id,
+                    //     user_id: user.user_id, 
+                    //     relation: formData.relation,
+                    //     other_relation: formData.other_relation || null,
+                    //     place_name: formData.place_name,
+                    //     address: formData.address.description,
+                    //     latitude: formData.address.latitude,
+                    //     longitude: formData.address.longitude,
+                    //     work_yrs: formData.work_yrs,
+                    //     ongoing_or_left: formData.ongoing_or_left,
+                    //     people: JSON.stringify(selectedPeople),
+                    //     name_group: formData.group,
+                    //     mentor: formData.mentor,
+                    //     member_phone_no: formData.member_phone_no,
+                    //     people_list: formData.people_list,
+                    //     community: formData.community,
+                    //     last_topic: formData.last_topic,
+                    //     last_event: formData.last_event,
+                    //     total_score: formData.total_score,
+                    //     position_score: formData.position_score,
+                    //     arrange_event: formData.arrange_event,
+                    //     next_event: formData.next_event,
+                    //     passed_event: formData.passed_event
+                    // };
 
-                    const resp = await post_memberRelations(user.member_id, user.user_id, data);
-                    console.log(resp);
-                    setSnackbar({ open: true, message: resp.message, severity: 'success' });                   
+                    // const resp = await post_memberRelations(user.member_id, user.user_id, data);
+                    // console.log(resp);
+                    // setSnackbar({ open: true, message: resp.message, severity: 'success' });                   
                 }catch(e){
                     console.error(e);
                     setSnackbar({ open: true, message: e.response.data.message, severity: 'error' });
