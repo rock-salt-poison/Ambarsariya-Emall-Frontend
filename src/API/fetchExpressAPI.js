@@ -914,6 +914,17 @@ export const get_member_event_purpose_engagement = async (event_type, event_purp
   }
 }
 
+export const get_member_events = async (member_id) => {
+  if(member_id){
+  try{
+      const resp = await axios.get(`${link}/sell/events/${member_id}`);
+      return resp.data;
+    }catch(e){
+      throw e;
+    }
+  }
+}
+
 export const post_eventsData = async (member_id, data) => {
   try {
     const response = await axios.post(
