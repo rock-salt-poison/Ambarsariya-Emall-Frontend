@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react';
 import GeneralLedgerForm from '../../../Form/GeneralLedgerForm';
 import { Box, CircularProgress, ThemeProvider } from '@mui/material';
 import createCustomTheme from '../../../../styles/CustomSelectDropdownTheme';
-import { getUser, post_memberRelations } from '../../../../API/fetchExpressAPI';
+import { get_member_event_purpose, get_member_event_purpose_engagement, getUser, post_memberRelations } from '../../../../API/fetchExpressAPI';
 import CustomSnackbar from '../../../CustomSnackbar';
 import { useSelector } from 'react-redux';
 
 function CreateEventForm() {
 
     const themeProps = {
-        popoverBackgroundColor: '#f8e3cc',
+        popoverBackgroundColor: '#fff',
         scrollbarThumb: 'var(--brown)',
       };
     
@@ -37,6 +37,8 @@ function CreateEventForm() {
     const token = useSelector((state) => state.auth.userAccessToken);
     const [user, setUser] = useState({});
     const [contacts, setContacts] = useState([]);
+    const [eventPurpose, setEventPurpose] = useState([]);
+    const [eventEngagement, setEventEngagement] = useState([]);
 
     const fetchCurrentUserData = async (token) => {
         if (token) {
@@ -56,6 +58,42 @@ function CreateEventForm() {
         }
       };      
 
+      const fetchEventPurpose = async (event_type) => {
+        if(event_type){
+            try{
+                setLoading(true);
+                const resp = await get_member_event_purpose(event_type);
+                if(resp.valid){
+                    setEventPurpose(resp?.data);
+                    console.log(resp?.data);
+                    
+                }
+            }catch(e){
+                console.error(e);
+            }finally{
+                setLoading(false);
+            }
+        }
+      }
+
+
+      const fetchEventPurposeEngagement = async (event_type, event_purpose_id) => {
+        if(event_type && event_purpose_id){
+            try{
+                setLoading(true);   
+                const resp = await get_member_event_purpose_engagement(event_type, event_purpose_id);
+                if(resp.valid){
+                    console.log(resp?.data);
+                    setEventEngagement(resp?.data);
+                }
+            }catch(e){
+                console.error(e);
+            }finally{
+                setLoading(false);
+            }
+        }
+      }
+
     
       useEffect(() => {
         if (token) {
@@ -63,46 +101,27 @@ function CreateEventForm() {
         }
       }, [token])
 
-      
-    const event = {
-        public: [
-            {id: 1, name :'Entertainment Events', engagement: [
-                'Concerts & Music Festivals', 'Film Screenings & Film Festivals', 'Comedy Shows', 'Cultural Performances'
-            ]},
-            {id: 2, name :'Commercial & Promotional Events', engagement: [
-                'Trade Shows and Expos', 'Product Launches', 'Pop-up Shops & Markets', 'Brand Activations'
-            ]},
-            {id: 3, name :'Cultural & Religious Events', engagement: [
-                'Cultural Festivals', 'Religious Gatherings or Processions', 'Traditional Ceremonies', 'Food or Craft Fairs'
-            ]},
-            {id: 4, name :'Educational Events', engagement: [
-                'Public Lectures & Talks', 'Workshops & Seminars', 'Science Fairs', 'Exhibitions'
-            ]},
-            {id: 5, name :'Civic & Political Events', engagement: [
-                'Political Rallies', 'Town Halls', 'Public Protests or Demonstrations', 'Awareness Campaigns'
-            ]},
-            {id: 6, name :'Sports & Recreational Events', engagement: [
-                'Marathons & Runs', 'Sports Matches & Tournaments', 'Fitness Bootcamps or Zumba in the park', 'Esports Tournaments'
-            ]},
-            {id: 7, name :'Community & Volunteer Events', engagement: [
-                'Clean-Up Drives', 'Tree Planting Events', 'Fundraisers', 'Charity Walks or Bike Rides'
-            ]},
-            {id: 8, name :'Virtual or Hybrid Events', engagement: [
-                'Webinars', 'Virtual Conferences', 'Online Live Concerts or Streams', 'Online Game Nights or Hackathons'
-            ]},
-        ],
-        private : [
-            {id: 1, name :'Social Events', engagement: [
-                'Meetups', 'Parties', 'Game nights', 'Movie watch parties'
-            ]},
-            {id: 2, name :'Professional or Work-Related Events', engagement: [
-                'Team meetings', 'Workshops or training sessions', 'Brainstorming Sessions', 'Webinars or presentations', 'Deadlines or project milestones'
-            ]},
-            {id: 3, name :'Educational Events', engagement: [
-                'Study groups', 'Tutoring sessions', 'Q&A sessions with experts', 'Book club discussions', 'Book club discussions', 'Online classes or lectures'
-            ]},
-        ]
-    }
+      useEffect(()=> {
+        if(formData.event_type){
+            fetchEventPurpose((formData?.event_type).toLowerCase())            
+        }
+      }, [formData.event_type]);
+
+      useEffect(()=> {
+        if(formData.event_type && formData.event_purpose){
+            console.log(formData?.event_type, formData?.event_purpose);
+
+            const selectedEvent = eventPurpose?.filter((event)=>event.purpose===formData?.event_purpose && event.event_type === (formData?.event_type)?.toLowerCase());
+            console.log(selectedEvent);
+            
+            if(selectedEvent){
+                console.log(selectedEvent?.[0]?.event_type, selectedEvent?.[0]?.id);
+                
+                fetchEventPurposeEngagement(selectedEvent?.[0]?.event_type, selectedEvent?.[0]?.id);
+            }
+        }
+      }, [formData.event_type, formData.event_purpose, eventPurpose]);
+    
 
     const formFields = [
         {
@@ -126,13 +145,14 @@ function CreateEventForm() {
             placeholder:'Select event purpose',
             name: 'event_purpose',
             type: 'select',
-            options: ['Entertainment Events', 'Commercial & Promotional Events']
+            options: eventPurpose?.map((event)=>event.purpose)
         },
         {
             id: 3,
             label: 'Event engagement',
             name: 'event_engagement',
-            type: 'text',
+            type: 'select',
+            options:eventEngagement?.map((event)=>event?.engagement),
             placeholder:'Event Engagement',
         },
         {
@@ -178,20 +198,20 @@ function CreateEventForm() {
             type: 'date',
         },
         {
-            id: 9,
+            id: 10,
             label: 'Set time',
             name: 'time',
             type: 'time',
         },
         {
-            id: 10,
+            id: 11,
             label: 'Rules or Description',
             name: 'rules_or_description',
             type: 'text',
             placeholder:'Rules or Description',
         },
         {
-            id: 11,
+            id: 12,
             label: 'Upload File',
             name: 'file',
             type: 'file',
@@ -202,7 +222,7 @@ function CreateEventForm() {
         
     const handleChange = (event) => {
         const { name, value } = event.target;
-        console.log(name, value)
+
         setFormData({ ...formData, [name]: value });
 
         // Clear any previous error for this field

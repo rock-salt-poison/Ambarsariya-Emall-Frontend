@@ -883,3 +883,26 @@ export const get_member_share_level = async (member_id) => {
     }
   }
 }
+
+export const get_member_event_purpose = async (event_type) => {
+  if(event_type){
+  try{
+      const resp = await axios.get(`${link}/event-purpose/${event_type}`);
+      return resp.data;
+    }catch(e){
+      throw e;
+    }
+  }
+}
+
+
+export const get_member_event_purpose_engagement = async (event_type, event_purpose_id) => {
+  if(event_type && event_purpose_id){
+  try{
+      const resp = await axios.get(`${link}/event-purpose-engagement/${event_type}/${event_purpose_id}`);
+      return resp.data;
+    }catch(e){
+      throw e;
+    }
+  }
+}

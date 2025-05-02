@@ -18500,6 +18500,11 @@ body .MuiBackdrop-root {
     .col{
       &:first-child{
         display: grid;
+        grid-template-columns: 180px 1fr 180px;
+
+        .logoutBtn{
+          margin-left: auto;
+        }
 
         .heading_container{
           background: #64401590;
@@ -18565,6 +18570,12 @@ body .MuiBackdrop-root {
               .MuiSelect-select, .MuiInputBase-input{
                 background: #5D4321 !important;
                 color: $light-yellow !important;
+              }
+            }
+
+            .submit_button_container{
+              .submit_button{
+                background: linear-gradient(#6B4336, #5D4321);
               }
             }
 
