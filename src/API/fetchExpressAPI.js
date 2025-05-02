@@ -851,15 +851,22 @@ export const post_memberRelations = async (member_id, user_id, data) => {
 };
 
 export const get_memberRelations = async (member_id, user_id, relation) => {
-  if(member_id, user_id, relation){
+  if (member_id && user_id) {
     try {
-      const response = await axios.get(`${link}/sell/relations/${member_id}/${user_id}/${relation}`);
+      const url = relation 
+        ? `${link}/sell/relations/${member_id}/${user_id}?relation=${relation}`
+        : `${link}/sell/relations/${member_id}/${user_id}`;
+
+      const response = await axios.get(url);
       return response.data;
     } catch (error) {
       throw error;
     }
+  } else {
+    throw new Error("member_id and user_id are required");
   }
-}
+};
+
 
 export const put_member_share_level = async (data) => {
   if(data){
@@ -906,3 +913,19 @@ export const get_member_event_purpose_engagement = async (event_type, event_purp
     }
   }
 }
+
+export const post_eventsData = async (member_id, data) => {
+  try {
+    const response = await axios.post(
+      `${link}/sell/events/${member_id}`,
+      data, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

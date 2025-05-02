@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import GeneralLedgerForm from '../../../Form/GeneralLedgerForm';
 import { Box, CircularProgress, ThemeProvider } from '@mui/material';
 import createCustomTheme from '../../../../styles/CustomSelectDropdownTheme';
-import { get_member_event_purpose, get_member_event_purpose_engagement, getUser, post_memberRelations } from '../../../../API/fetchExpressAPI';
+import { get_member_event_purpose, get_member_event_purpose_engagement, get_memberRelations, getUser, post_eventsData, post_memberRelations } from '../../../../API/fetchExpressAPI';
 import CustomSnackbar from '../../../CustomSnackbar';
 import { useSelector } from 'react-redux';
 
@@ -27,7 +27,7 @@ function CreateEventForm() {
         date:'',
         time:'',
         rules_or_description:'',
-        file:''
+        uploaded_file_link:''
     };
 
     const [formData, setFormData] = useState(initialData);
@@ -36,6 +36,7 @@ function CreateEventForm() {
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
     const token = useSelector((state) => state.auth.userAccessToken);
     const [user, setUser] = useState({});
+    const [relations, setRelations] = useState([]);
     const [contacts, setContacts] = useState([]);
     const [eventPurpose, setEventPurpose] = useState([]);
     const [eventEngagement, setEventEngagement] = useState([]);
@@ -48,6 +49,15 @@ function CreateEventForm() {
             if (resp?.[0].user_type === "member") {
               const userData = resp?.[0];
               setUser(userData);
+
+              const relationsResp = await get_memberRelations(
+                    userData?.member_id,
+                    userData?.user_id
+                );
+                if (relationsResp?.valid) {
+                    console.log(relationsResp?.data);
+                    setRelations(relationsResp?.data);
+                }
       
             }
           } catch (e) {
@@ -174,7 +184,7 @@ function CreateEventForm() {
             label: 'Add Relations',
             name: 'relations',
             type: 'select-check',
-            options: ['abc'],
+            options: relations.map((r)=>(`${r.other_relation ? r.other_relation : r.relation} from ${r.place_name}`)),
             placeholder:'Add Relations',
         },    
         {
@@ -214,7 +224,7 @@ function CreateEventForm() {
         {
             id: 12,
             label: 'Upload File',
-            name: 'file',
+            name: 'uploaded_file_link',
             type: 'file',
             placeholder:'Upload File',
         },            
@@ -222,13 +232,16 @@ function CreateEventForm() {
 
         
     const handleChange = (event) => {
-        const { name, value } = event.target;
-
-        setFormData({ ...formData, [name]: value });
-
+        const { name, value, files, type } = event.target;
+    
+        let fieldValue = type === "file" ? files[0] : value;
+    
+        setFormData({ ...formData, [name]: fieldValue });
+    
         // Clear any previous error for this field
         setErrors({ ...errors, [name]: null });
     };
+    
 
     const validateForm = () => {
         const newErrors = {};
@@ -244,48 +257,45 @@ function CreateEventForm() {
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0; // Return true if no errors
     };
-    
 
+    
     const handleSubmit = async (event) => {
         event.preventDefault(); // Prevent default form submission
         if (validateForm()) {
             console.log(formData);
                 try{
                     setLoading(true);
+                    const selectedEvent = eventEngagement?.filter((event)=>event.purpose===formData?.event_purpose && event.engagement === formData?.event_engagement && event.event_type === (formData?.event_type).toLowerCase());
 
-                    // const selectedPeople = formData.people.map((personName) => {
-                    //     return contacts.find((contact) => contact.name === personName);
-                    //   });
-                      
-                    // const data = {
-                    //     member_id: user.member_id,
-                    //     user_id: user.user_id, 
-                    //     relation: formData.relation,
-                    //     other_relation: formData.other_relation || null,
-                    //     place_name: formData.place_name,
-                    //     address: formData.address.description,
-                    //     latitude: formData.address.latitude,
-                    //     longitude: formData.address.longitude,
-                    //     work_yrs: formData.work_yrs,
-                    //     ongoing_or_left: formData.ongoing_or_left,
-                    //     people: JSON.stringify(selectedPeople),
-                    //     name_group: formData.group,
-                    //     mentor: formData.mentor,
-                    //     member_phone_no: formData.member_phone_no,
-                    //     people_list: formData.people_list,
-                    //     community: formData.community,
-                    //     last_topic: formData.last_topic,
-                    //     last_event: formData.last_event,
-                    //     total_score: formData.total_score,
-                    //     position_score: formData.position_score,
-                    //     arrange_event: formData.arrange_event,
-                    //     next_event: formData.next_event,
-                    //     passed_event: formData.passed_event
-                    // };
+                    const selectedRelationsId = relations
+                    ?.filter((r) => {
+                        const label = `${r.other_relation ? r.other_relation : r.relation} from ${r.place_name}`;
+                        return formData?.relations.includes(label);
+                    })
+                    .map((r) => r.id);
 
-                    // const resp = await post_memberRelations(user.member_id, user.user_id, data);
-                    // console.log(resp);
-                    // setSnackbar({ open: true, message: resp.message, severity: 'success' });                   
+                    // const selectedRelationsId = relations?.filter((r)=>r.)
+                    const data = {
+                        member_id: user?.member_id,
+                        event_type: (formData?.event_type)?.toLowerCase(),
+                        event_purpose_id: selectedEvent?.[0]?.event_purpose_id,
+                        event_engagement_id: selectedEvent?.[0]?.event_engagement_id,
+                        event_name: formData?.event_name,
+                        mentor_name: formData?.mentor_name,
+                        relations: JSON.stringify(selectedRelationsId),
+                        groups: JSON.stringify(formData?.groups) || null,
+                        location: formData?.location?.description,
+                        latitude: formData?.location.latitude,
+                        longitude: formData?.location.longitude,
+                        date: formData?.date,
+                        time: formData?.time,
+                        rules_or_description: formData?.rules_or_description,
+                        file: formData?.uploaded_file_link
+                    };
+
+                    const resp = await post_eventsData(user.member_id, data);
+                    console.log(resp);
+                    setSnackbar({ open: true, message: resp.message, severity: 'success' });                   
                 }catch(e){
                     console.error(e);
                     setSnackbar({ open: true, message: e.response.data.message, severity: 'error' });
