@@ -18571,6 +18571,14 @@ body .MuiBackdrop-root {
                 background: #5D4321 !important;
                 color: $light-yellow !important;
               }
+
+              .MuiInputBase-input::-webkit-calendar-picker-indicator {
+                filter: invert(100%);
+              }
+
+              svg{
+                fill: $light-yellow;
+              }
             }
 
             .submit_button_container{
