@@ -291,7 +291,8 @@ function Tab_content() {
 
                     const resp = await post_memberRelations(user.member_id, user.user_id, data);
                     console.log(resp);
-                    setSnackbar({ open: true, message: resp.message, severity: 'success' });                   
+                    setSnackbar({ open: true, message: resp.message, severity: 'success' });        
+                    setFormData(initialData);           
                 }catch(e){
                     console.error(e);
                     setSnackbar({ open: true, message: e.response.data.message, severity: 'error' });
