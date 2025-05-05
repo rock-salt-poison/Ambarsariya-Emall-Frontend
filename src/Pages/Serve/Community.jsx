@@ -3,6 +3,7 @@ import { Box, Typography } from '@mui/material';
 import Button2 from '../../Components/Home/Button2';
 import community_icon from '../../Utils/images/Serve/emotional/campaign/community/community-network.webp';
 import { Link } from 'react-router-dom';
+import UserBadge from '../../UserBadge';
 
 // Assuming these are your CSS variable names
 const iconVariables = {
@@ -38,12 +39,16 @@ function Community() {
     <Box className="community_main_wrapper">
       <Box className="row">
         <Box className="col">
-          <Button2 text="Back" redirectTo={-1} />
+          <Box></Box>
           <Link className="title_container" to="../emotional">
             <Box component="img" src={community_icon} alt="community" className="community_icon" />
             <Typography className="community_title" variant="h2">community</Typography>
           </Link>
-          <Button2 text="Next" redirectTo={'../emotional/campaign'} />
+          <UserBadge
+            handleBadgeBgClick={-1}
+            handleLogin="../login"
+            handleLogoutClick="../../AmbarsariyaMall"
+          />
         </Box>
         <Box className="col">
           <Box className="cards_container">

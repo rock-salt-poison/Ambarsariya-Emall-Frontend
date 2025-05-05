@@ -39,7 +39,9 @@ function Locations() {
           setTimeout(()=>{
               if(target.classList.contains('events')){
                   navigate('../esale/locations/events')
-              }
+              }else if(target.classList.contains('community')){
+                navigate('../esale/locations/community')
+            }
           }, 600)
       }
     }

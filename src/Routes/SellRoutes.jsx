@@ -37,6 +37,7 @@ import Locations from '../Pages/Sell/Locations';
 import EventsLocation from '../Pages/Sell/EventsLocation';
 import CreateEventsLocation from '../Pages/Sell/CreateEventsLocation';
 import JoinEventsLocation from '../Pages/Sell/JoinEventsLocation';
+import CommunityLocation from '../Pages/Sell/CommunityLocation';
 
 function SellRoutes() {
   const ConditionalRoute = () => {
@@ -92,6 +93,7 @@ function SellRoutes() {
       <Route path="esale/locations/events" element={<EventsLocation />} />
       <Route path="esale/locations/events/create" element={<CreateEventsLocation />} />
       <Route path="esale/locations/events/join" element={<JoinEventsLocation />} />
+      <Route path="esale/locations/community" element={<CommunityLocation />} />
     </Routes>
   );
 }
