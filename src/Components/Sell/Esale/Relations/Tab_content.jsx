@@ -19,14 +19,14 @@ function Tab_content() {
         relation:'',
         other_relation:'',
         place_name:'',
-        address:'',
+        address:null,
         work_yrs:'',
         ongoing_or_left:'',
-        people:'',
+        people:[],
         group:'',
         mentor:'',
         member_phone_no:'',
-        people_list:'',
+        people_list:[],
         // community:'',
         // last_topic:'',
         // last_event:'',
@@ -45,6 +45,9 @@ function Tab_content() {
     const [user, setUser] = useState({});
     const [contacts, setContacts] = useState([]);
 
+    console.log(contacts.length);
+    
+
     const fetchCurrentUserData = async (token) => {
         if (token) {
           try {
@@ -53,7 +56,6 @@ function Tab_content() {
             if (resp?.[0].user_type === "member") {
               const userData = resp?.[0];
               setUser(userData);
-      
             }
           } catch (e) {
             console.error(e);
@@ -140,8 +142,8 @@ function Tab_content() {
             id: 6,
             label: 'People',
             name: 'people',
-            type: 'select-check',
-            options: contacts ? contacts.map((contact)=>`${contact.name}`) : [],
+            type: 'search-select-check',
+            options: contacts ? contacts.map((contact)=>`${contact.name} | ${contact.phone}`) : [],
             placeholder:'Add from gmail contacts',
         },    
         {
@@ -154,7 +156,8 @@ function Tab_content() {
             id: 8,
             label: 'Mentor',
             name: 'mentor',
-            type: 'text',
+            type: 'select',
+            options: formData?.people || [],
             placeholder:'mentor name',
         },
         {
@@ -167,9 +170,9 @@ function Tab_content() {
             id: 10,
             label: 'Show people',
             name: 'people_list',
-            type: 'select-check',
+            type: 'search-select-check',
             placeholder:'List of people',
-            options:['Person 1','Person 2','Person 3','Person 4','Person 5'],
+            options:formData?.people || [],
         },
         // {
         //     id: 11,
@@ -230,11 +233,28 @@ function Tab_content() {
     const handleChange = (event) => {
         const { name, value } = event.target;
         console.log(name, value)
-        setFormData({ ...formData, [name]: value });
 
+        if (name === 'mentor' && value) {
+            // Extract the phone number from mentor field (split by "|")
+            const phoneNumber = value?.split('|')?.[1];
+            console.log(phoneNumber);
+            
+            // Update the form data with the extracted phone number for `member_phone_no`
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                mentor: value,
+                member_phone_no: phoneNumber || '', // If no phone number, set as empty string
+            }));
+        } else {
+            setFormData({ ...formData, [name]: value });
+        }
         // Clear any previous error for this field
         setErrors({ ...errors, [name]: null });
     };
+
+
+    console.log(formData?.member_phone_no);
+    
 
     const validateForm = () => {
         const newErrors = {};
@@ -250,6 +270,15 @@ function Tab_content() {
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0; // Return true if no errors
     };
+
+    const selectedPeople = formData.people.map((person) => {
+        const personName = person.split(' | ')?.[0]; 
+        const personPhone = person.split(' | ')?.[1]; 
+        return contacts.find((contact) => contact.name === personName && contact.phone === personPhone);
+      });
+      
+      console.log(selectedPeople);
+      
     
 
     const handleSubmit = async (event) => {
@@ -259,8 +288,10 @@ function Tab_content() {
                 try{
                     setLoading(true);
 
-                    const selectedPeople = formData.people.map((personName) => {
-                        return contacts.find((contact) => contact.name === personName);
+                    const selectedPeople = formData.people.map((person) => {
+                        const personName = person.split(' | ')?.[0]; 
+                        const personPhone = person.split(' | ')?.[1]; 
+                        return contacts.find((contact) => contact.name === personName && contact.phone === personPhone);
                       });
                       
                     const data = {
@@ -276,7 +307,7 @@ function Tab_content() {
                         ongoing_or_left: formData.ongoing_or_left,
                         people: JSON.stringify(selectedPeople),
                         name_group: formData.group,
-                        mentor: formData.mentor,
+                        mentor: (formData.mentor)?.split('|')?.[0],
                         member_phone_no: formData.member_phone_no,
                         people_list: formData.people_list,
                         // community: formData.community,
@@ -296,7 +327,6 @@ function Tab_content() {
                 }catch(e){
                     console.error(e);
                     setSnackbar({ open: true, message: e.response.data.message, severity: 'error' });
-
                 }finally{
                     setLoading(false);
                 }

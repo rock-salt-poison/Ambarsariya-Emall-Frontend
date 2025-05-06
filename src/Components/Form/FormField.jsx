@@ -1,8 +1,11 @@
 import React from 'react';
-import { Box, Typography, TextField, Select, MenuItem, Checkbox, FormControlLabel, Button, Slider, ListItemText, Switch, InputAdornment, RadioGroup, Radio } from '@mui/material';
+import { Box, Typography, TextField, Select, MenuItem, Checkbox, FormControlLabel, Button, Slider, ListItemText, Switch, InputAdornment, RadioGroup, Radio, OutlinedInput, Autocomplete } from '@mui/material';
 import MuiPhoneNumber from 'mui-phone-number';
 import Address_Google_Map_Field from './Address_Google_Map_Field';
 import { Link } from 'react-router-dom';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+
 
 const FormField = ({
   icon,
@@ -36,6 +39,9 @@ const FormField = ({
 }) => {
 
   const marks = getSliderMarks ? getSliderMarks(name) : [];
+  const checkedIcon = <CheckBoxIcon fontSize="small" />;
+  const icon2 = <CheckBoxOutlineBlankIcon fontSize="small" />;
+
 
   const handleSelectChange = (event) => {
     const { value } = event.target;
@@ -54,6 +60,16 @@ const FormField = ({
       target: {
         name,
         value
+      }
+    });
+  };
+
+  const handleSearchSelectChange = (event, newValue) => {
+    // Since the `Autocomplete` `onChange` gives the newValue directly
+    onChange({
+      target: {
+        name,
+        value: newValue // newValue is directly the selected value
       }
     });
   };
@@ -184,6 +200,7 @@ const FormField = ({
                   name={name}
                   value={defaultChecked ? options : Array.isArray(value) ? value : []} 
                   onChange={!readOnly ? handleSelectChange : undefined}
+                  // input={<OutlinedInput label="Name" />}
                   renderValue={(selected) => (
                     <Box>
                       {selected.length > 0 ? selected.join(', ') : placeholder}
@@ -204,6 +221,39 @@ const FormField = ({
                     </MenuItem>
                   ))}
                 </Select>
+              ) : type === 'search-select-check' ? (
+
+                <Autocomplete
+                    multiple
+                    name={name}
+                    className={`search_input_field ${className}`}
+                    value={Array.isArray(value) ? value : []}
+                    options={options || []}
+                    onChange={(event, newValue) => {
+                      handleSearchSelectChange(event, newValue);  // Pass both event and newValue
+                    }}
+                    disableCloseOnSelect
+                    getOptionLabel={(option) => option}
+                    renderOption={(props, option, { selected }) => {
+                      const { key, ...optionProps } = props;
+                      return (
+                        <li key={key} {...optionProps}>
+                          <Checkbox
+                            icon={icon2}
+                            checkedIcon={checkedIcon}
+                            style={{ marginRight: 8 }}
+                            checked={value.includes(option)}
+                          />
+                          {option}
+                        </li>
+                      );
+                    }}
+                    renderInput={(params) => (
+                      <TextField {...params} placeholder={placeholder} className={`input_field ${className}`} />
+                    )}
+                  />
+
+                
               ) : type === "textarea" ? (
                 <TextField 
                   multiline 
