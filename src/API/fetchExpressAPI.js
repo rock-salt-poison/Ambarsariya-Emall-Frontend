@@ -867,6 +867,29 @@ export const get_memberRelations = async (member_id, user_id, relation) => {
   }
 };
 
+export const get_memberRelationDetail = async (member_id, access_token) => {
+  if (member_id && access_token) {
+    try {
+      const response = await axios.get(`${link}/sell/relation/${member_id}/${access_token}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+};
+
+
+export const delete_memberRelation = async (id, access_token) => {
+  try {
+    if (id && access_token) {
+      const response = await axios.delete(`${link}/sell/member-relation/${id}/${access_token}`);
+      return response.data;
+    }
+  } catch (e) {
+    throw e;
+  }
+}
+
 
 export const put_member_share_level = async (data) => {
   if(data){

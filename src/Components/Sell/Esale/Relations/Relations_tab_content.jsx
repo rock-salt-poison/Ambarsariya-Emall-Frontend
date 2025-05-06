@@ -7,13 +7,13 @@ import {
   Typography,
 } from "@mui/material";
 import createCustomTheme from "../../../../styles/CustomSelectDropdownTheme";
-import { get_memberRelations, getUser } from "../../../../API/fetchExpressAPI";
+import { delete_memberRelation, get_memberRelations, getUser } from "../../../../API/fetchExpressAPI";
 import CustomSnackbar from "../../../CustomSnackbar";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { ClearIcon } from "@mui/x-date-pickers";
 
-function Relations_tab_content({ relation }) {
+function Relations_tab_content({ relation, onCardClick }) {
   const themeProps = {
     popoverBackgroundColor: "#f8e3cc",
     scrollbarThumb: "var(--brown)",
@@ -70,8 +70,46 @@ function Relations_tab_content({ relation }) {
     }
   }, [token]);
 
-  const handleCardClick = async (relation) => {
-    
+  const handleCardClick = async (e, relation) => {
+    e.preventDefault();
+    if (onCardClick) {
+      const selectedRelation = {
+        member_id: relation?.member_id,
+        access_token: relation?.access_token 
+      }
+      onCardClick(selectedRelation);
+    }
+  }
+
+  const handleRemove = async (e, relation) => {
+    if(relation){
+      try{
+        setLoading(true);
+        const resp =  await delete_memberRelation(relation?.id, relation?.access_token);
+        if(resp){
+          console.log(resp);
+          
+          setSnackbar({
+            open: true,
+            message: resp.message,
+            severity: "success",
+          });
+
+          setRelations((prevRelations) =>
+            prevRelations.filter((r) => r.access_token !== relation.access_token)
+          );
+        }
+      }catch(e){
+        console.error(e);
+        setSnackbar({
+          open: true,
+          message: e.response.data.error,
+          severity: "error",
+        });
+      }finally{
+        setLoading(false);
+      }
+    }
   }
 
   return (
@@ -88,9 +126,9 @@ function Relations_tab_content({ relation }) {
                 <Link
                   key={relation.id}
                   className="card"
-                  onClick={() => handleCardClick(relation)}
+                  onClick={(e) => handleCardClick(e, relation)}
                 >
-                  <Box className="col">
+                  <Box className="col avatar">
                     <Avatar alt={relation?.people.map((people)=>people.name)?.join(', ')} src="/broken-image.jpg" />
                   </Box>
                   <Box className="col">
@@ -98,7 +136,7 @@ function Relations_tab_content({ relation }) {
                       <Typography variant="h3">{relation?.people.map((people)=>people.name)?.join(', ')}</Typography>
                       {/* <Link onClick={(e) => handleRemove(e, msg.id)}> */}
                       <Link >
-                        <ClearIcon />
+                        <ClearIcon onClick={(e)=>handleRemove(e, relation)}/>
                       </Link>
                     </Box>
                       <Typography className="message">Relation: {relation.relation !== 'Others' ? relation.relation : relation.other_relation}</Typography>

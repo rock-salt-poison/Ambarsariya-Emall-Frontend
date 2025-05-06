@@ -18113,6 +18113,11 @@ body .MuiBackdrop-root {
 
   .row {
     .col {
+
+      &.avatar{
+        width: max-content !important;
+      }
+
       &:last-child {
         width: 90%;
       }
@@ -18145,6 +18150,46 @@ body .MuiBackdrop-root {
         .cards_container{
           @include flex-center(column, flex-start);
           place-items: normal;
+          gap: 15px;
+
+          .card{
+            background : transparent !important;
+            padding: 0px !important; 
+
+            &:hover{
+              &::before{
+                background: transparent !important;
+              }
+            }
+
+            @include homepage-buttons(
+              "Bobby-Jones-Soft",
+              20px !important,
+              $blue-3,
+              none
+            );
+            @include hover-scale(1, 0s);
+          }
+
+          .col-auto{
+            width: 100% !important;
+            @include flex-center(row, space-between);
+            place-items: normal;
+
+            .label{
+              @include homepage-buttons(
+                "Bobby-Jones-Soft",
+                20px !important,
+                $brown-4,
+                none
+              );
+              @include hover-scale(1, 0s);
+
+              &:nth-child(even){
+                color: $black;
+              }
+            }
+          }
 
           .card{
             align-self: stretch;
@@ -18154,11 +18199,29 @@ body .MuiBackdrop-root {
             background: #f1eee86e;
             border-radius: 8px;
             padding: 10px;
+            position: relative;
+            z-index: 1;
+            
+            &:hover{
+              &::before{
+                content: '';
+                @include full-absolute(0px,0px,0px,0px);
+                z-index: 0;
+                background: #ffffff1a;
+                border-radius: 8px;
+              }
+            }
+
+            &:nth-child(even){
+              background: #d2bf8eab;
+            }
 
             .col{
               @include flex-center(column, flex-center);
               place-items: normal;
               gap: 5px;
+              position: relative;
+              z-index: 2;
 
               .MuiAvatar-root{
                 background-color: #683248;
