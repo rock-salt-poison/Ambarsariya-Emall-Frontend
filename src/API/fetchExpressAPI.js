@@ -878,6 +878,27 @@ export const get_memberRelationDetail = async (member_id, access_token) => {
   }
 };
 
+export const get_memberRelationTypes = async (member_id) => {
+  if (member_id) {
+    try {
+      const response = await axios.get(`${link}/sell/relation-types/${member_id}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+};
+
+export const get_memberRelationSpecificGroups = async (member_id, selectedRelation) => {
+  if (member_id && selectedRelation) {
+    try {
+      const response = await axios.get(`${link}/sell/relation-specific-groups/${member_id}/${selectedRelation}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+};
 
 export const delete_memberRelation = async (id, access_token) => {
   try {
@@ -952,6 +973,22 @@ export const post_eventsData = async (member_id, data) => {
   try {
     const response = await axios.post(
       `${link}/sell/events/${member_id}`,
+      data, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const post_memberCommunity = async (data) => {
+  try {
+    const response = await axios.post(
+      `${link}/sell/community`,
       data, {
       headers: {
         'Content-Type': 'multipart/form-data',

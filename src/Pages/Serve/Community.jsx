@@ -4,6 +4,7 @@ import Button2 from '../../Components/Home/Button2';
 import community_icon from '../../Utils/images/Serve/emotional/campaign/community/community-network.webp';
 import { Link } from 'react-router-dom';
 import UserBadge from '../../UserBadge';
+import CreateCommunityForm from '../../Components/Sell/Esale/Locations/CreateCommunityForm';
 
 // Assuming these are your CSS variable names
 const iconVariables = {
@@ -27,12 +28,12 @@ const getIconSrc = (iconName) => {
 
 function Community() {
   const data = [
-    { id: 1, title: 'Start Discussion : Create a Community, Create a Topic or Choose Community And Its Forums.', imgSrc: getIconSrc(iconVariables.icon1), link_to:'discussion' },
-    { id: 2, title: 'Choose your Media For Spreading Your Community.', imgSrc: getIconSrc(iconVariables.icon2), link_to:'' },
-    { id: 3, title: 'Book the Slot And G-meet. Live Will be Available for All Members of E-mall', imgSrc: getIconSrc(iconVariables.icon3), link_to:'' },
-    { id: 4, title: 'Vote for Members, Member as a Leader, Create an Event.', imgSrc: getIconSrc(iconVariables.icon4), link_to:'votes' },
-    { id: 5, title: 'Book A Studio / Stage / Park / Restaurant / Banquet Hall.', imgSrc: getIconSrc(iconVariables.icon5), link_to:'' },
-    { id: 6, title: 'Leader board with max votes', imgSrc: getIconSrc(iconVariables.icon6), link_to:'' },
+    { id: 1, title: 'Choose your Media For Spreading Your Community', imgSrc: getIconSrc(iconVariables.icon1), link_to:'discussion' },
+    { id: 2, title: 'Choose Community and Journal.', imgSrc: getIconSrc(iconVariables.icon2), link_to:'' },
+    // { id: 3, title: 'Book the Slot And G-meet. Live Will be Available for All Members of E-mall', imgSrc: getIconSrc(iconVariables.icon3), link_to:'' },
+    { id: 4, title: 'Choose Relation and group.', imgSrc: getIconSrc(iconVariables.icon4), link_to:'votes' },
+    { id: 5, title: 'Upload your video, pic or text.', imgSrc: getIconSrc(iconVariables.icon5), link_to:'' },
+    // { id: 6, title: 'Leader board with max votes', imgSrc: getIconSrc(iconVariables.icon6), link_to:'' },
   ];
 
   return (
@@ -51,7 +52,7 @@ function Community() {
           />
         </Box>
         <Box className="col">
-          <Box className="cards_container">
+          {/* <Box className="cards_container">
             <Box className="cards_row">
               {data.map((item) => (
                 <Link className="card" key={item.id} to={item.link_to}>
@@ -67,7 +68,16 @@ function Community() {
                 </Link>
               ))}
             </Box>
+          </Box> */}
+
+        <Box className="cards_container">
+          <Box className="cards_row">
+            <Box className="card">
+              <CreateCommunityForm />
+            </Box>
           </Box>
+        </Box>
+
         </Box>
       </Box>
     </Box>
