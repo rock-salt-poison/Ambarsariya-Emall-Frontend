@@ -18451,6 +18451,24 @@ body .MuiBackdrop-root {
     @media (max-width: 768px) {
       padding: 25px 20px;
     }
+
+    @media (max-width: 560px) {
+      padding: 25px 20px;
+
+      .cards_container{
+        gap: 20px !important;
+        
+        .col-auto{
+          flex-direction: column !important;
+          gap: 0px !important;
+
+          .label{
+            text-align: left !important;
+            width: 100% !important;
+          }
+        }
+      }
+    }
   }
 }
 
