@@ -19,6 +19,7 @@ function CreateCommunityForm() {
         community:'',
         journal:'',
         relation:'',
+        relation_id:'',
         group:'',
         media:'',
         file:''
@@ -129,7 +130,7 @@ function CreateCommunityForm() {
             placeholder: 'Select Group',
             name: 'group',
             type: 'select',
-            options: groups?.map((group)=>group.name_group)
+            options: groups?.map((group)=>`${group.id} | ${group.name_group}`)
         },
         {
             id: 5,
@@ -158,7 +159,21 @@ function CreateCommunityForm() {
             // Extract the phone number from mentor field (split by "|")
             fetchMemberRelationSpecificGroups(user?.member_id, value);
         } 
-        setFormData({ ...formData, [name]: fieldValue });
+        if (name === 'group') {
+            console.log(value);
+            const [relationId, groupName] = value.split(' | ');
+            console.log(relationId);
+            console.log(groupName);
+            
+            setFormData({
+              ...formData,     // name for display
+              [name]: fieldValue,
+              relation_id: relationId      // id for backend
+            });
+          } else {
+            setFormData({ ...formData, [name]: fieldValue });
+          }         
+
         // Clear any previous error for this field
         setErrors({ ...errors, [name]: null });
     };
@@ -189,14 +204,16 @@ function CreateCommunityForm() {
             console.log(formData);
                 try{
                     setLoading(true);
-                      
+                    
+                    const groupName = formData?.group?.split(' | ')?.[1];
                     const data = {
                         member_id: user.member_id,
                         user_id: user.user_id, 
                         community : formData.community,
                         journal : formData.journal,
                         relation : formData.relation,
-                        group_name : formData.group,
+                        member_relation_id : formData.relation_id,
+                        group_name : groupName,
                         media : formData.media,
                         file: formData.file
                     };
