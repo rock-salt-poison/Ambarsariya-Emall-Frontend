@@ -18114,12 +18114,19 @@ body .MuiBackdrop-root {
   .row {
     .col {
 
+      flex-wrap: nowrap;
+
       &.avatar{
         width: max-content !important;
       }
 
       &:last-child {
         width: 90%;
+      }
+
+      .tabs_container{
+        max-width: max-content;
+        min-width: max-content;
       }
 
       .tab_panel {
@@ -18131,6 +18138,7 @@ body .MuiBackdrop-root {
         );
         border: 1px solid #f9e0b3cc;
         box-shadow: 0px 0px 10px 1px #00000033;
+        width: 60%;
 
         .no-record{
           @include flex-center(row, center);
@@ -18457,7 +18465,7 @@ body .MuiBackdrop-root {
 
       .cards_container{
         gap: 20px !important;
-        
+
         .col-auto{
           flex-direction: column !important;
           gap: 0px !important;

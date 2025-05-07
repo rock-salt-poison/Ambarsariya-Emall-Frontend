@@ -170,8 +170,9 @@ function Tab_content() {
             id: 10,
             label: 'Show people',
             name: 'people_list',
-            type: 'search-select-check',
+            type: 'select-check',
             placeholder:'List of people',
+            defaultCheckedOptions: true,
             options:formData?.people || [],
         },
         // {
@@ -236,7 +237,7 @@ function Tab_content() {
 
         if (name === 'mentor' && value) {
             // Extract the phone number from mentor field (split by "|")
-            const phoneNumber = value?.split('|')?.[1];
+            const phoneNumber = value?.split(' | ')?.[1];
             console.log(phoneNumber);
             
             // Update the form data with the extracted phone number for `member_phone_no`
