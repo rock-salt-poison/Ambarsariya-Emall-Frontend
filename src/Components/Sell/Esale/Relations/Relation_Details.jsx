@@ -11,7 +11,7 @@ import { delete_memberRelation, get_memberRelationDetail, get_memberRelations, g
 import CustomSnackbar from "../../../CustomSnackbar";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { ClearIcon } from "@mui/x-date-pickers";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 function Relation_Details({ data, goBack }) {
   const themeProps = {
@@ -70,10 +70,10 @@ console.log(data);
         <Box className="cards_container">
           <Link
             key={relation.id}
-            className="card"
+            className="back"
             onClick={goBack}
           > 
-            Go Back
+            <ArrowBackIcon/> Back
           </Link>
           <Box className="col-auto">
             <Typography className="label">Relation</Typography>

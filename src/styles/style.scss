@@ -18152,9 +18152,14 @@ body .MuiBackdrop-root {
           place-items: normal;
           gap: 15px;
 
-          .card{
+          .back{
             background : transparent !important;
             padding: 0px !important; 
+            align-self: flex-start;
+
+            svg{
+              vertical-align: middle;
+            }
 
             &:hover{
               &::before{
@@ -18175,6 +18180,7 @@ body .MuiBackdrop-root {
             width: 100% !important;
             @include flex-center(row, space-between);
             place-items: normal;
+            gap: 20px;
 
             .label{
               @include homepage-buttons(
@@ -18187,6 +18193,8 @@ body .MuiBackdrop-root {
 
               &:nth-child(even){
                 color: $black;
+                text-align: right;
+                width: 70%;
               }
             }
           }
