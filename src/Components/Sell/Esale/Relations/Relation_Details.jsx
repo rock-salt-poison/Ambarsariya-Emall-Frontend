@@ -97,7 +97,7 @@ console.log(data);
           </Box>
           <Box className="col-auto">
             <Typography className="label">People</Typography>
-            <Typography className="label">{relation.people?.map((people)=> people.name)}</Typography>
+            <Typography className="label">{relation.people?.map((people)=> people.name)?.join(', ')}</Typography>
           </Box>
           <Box className="col-auto">
             <Typography className="label">Name of group</Typography>
