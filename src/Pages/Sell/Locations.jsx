@@ -11,6 +11,7 @@ import fourway from '../../Utils/videos/fourway.mp4';
 import VideoPlayer from '../../Components/MerchantWrapper/VideoPlayer';
 import { Link, useNavigate } from 'react-router-dom';
 import hornSound from '../../Utils/audio/horn-sound.mp3';
+import UserBadge from '../../UserBadge';
 
 function Locations() {
   const [hoveredCardId, setHoveredCardId] = useState(null);
@@ -50,7 +51,7 @@ function Locations() {
   return (
     <Box className='member_locations_wrapper'>
       <Box className="row">
-        <Header
+        {/* <Header
           icon_1={location_img}
           icon_2={member_icon}
           icon_1_link='../../AmbarsariyaMall/sell/user'
@@ -58,7 +59,24 @@ function Locations() {
           title="Locations"
           title_container={true}
           redirectTo='../../AmbarsariyaMall/sell/esale'
-        />
+        /> */}
+
+        <Box className="col">
+          <Link to={'../../AmbarsariyaMall/sell/user'} className='icon_link'>
+                      <Box component="img" src={location_img} alt="suppliers_for_shop" className='icon' />
+                    </Link>
+
+                    <Box className="title_container">
+                                <Link to={'../../AmbarsariyaMall/sell/esale'}>
+                                  <Typography className="title">Locations</Typography>
+                                </Link>
+                            </Box>
+                            <UserBadge
+            handleBadgeBgClick={-1}
+            handleLogin="../login"
+            handleLogoutClick="../../AmbarsariyaMall"
+          />
+        </Box>
 
         <Box className="col">
           <Box className="container">

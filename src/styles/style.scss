@@ -16005,8 +16005,8 @@ a {
         7px 16px
       );
 
-      &.header:first-child{
-        display: grid;
+      &.header_badge:first-child{
+        display: grid !important;
         grid-template-columns: 120px 1fr 120px;
       }
 
