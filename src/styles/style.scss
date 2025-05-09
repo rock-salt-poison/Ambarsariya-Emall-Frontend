@@ -12753,6 +12753,22 @@ a {
       }
     }
 
+    @media (max-width: 992px) {
+      .col {
+        .col-5{
+          grid-template-columns: repeat(3, 1fr)  !important;
+        }
+      }
+    }
+
+    @media (max-width: 768px) {
+      .col {
+        .col-5{
+          grid-template-columns: repeat(2, 1fr)  !important;
+        }
+      }
+    }
+
     @media (max-width: 560px) {
       .col {
         .title_container {
@@ -12762,6 +12778,10 @@ a {
 
         .backButton {
           order: 0;
+        }
+
+        .col-5{
+          grid-template-columns: repeat(1, 1fr)  !important;
         }
       }
     }
