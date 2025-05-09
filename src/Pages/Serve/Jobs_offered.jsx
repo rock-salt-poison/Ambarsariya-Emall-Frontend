@@ -56,7 +56,7 @@ function Jobs_offered() {
 
         <Box className="col col-9">
           <Box className="col-5">
-            {job_types.slice(0, 5).map((job) => {
+            {job_types.map((job) => {
               return (
                 <>
                   <Link
@@ -68,34 +68,6 @@ function Jobs_offered() {
                     <Box className="top_bar">
                       <Box className="circle"></Box>
                     </Box>
-                    <Box className="content">
-                      <Typography className="job_type">{job.type}</Typography>
-                    </Box>
-                  </Link>
-                  <CardBoardPopup
-                    open={openPopupId === job.id}
-                    handleClose={handleClose}
-                    title={job.type}
-                    body_content={job.popup_body_content}
-                  />
-                </>
-              );
-            })}
-          </Box>
-          <Box className="col-5">
-            {job_types.slice(5).map((job) => {
-              return (
-                <>
-                  {" "}
-                  <Link
-                    className="container"
-                    key={job.id}
-                    onClick={(e) => handleClick(e, job.id)}
-                  >
-                    <Box className="top_bar">
-                      <Box className="circle"></Box>
-                    </Box>
-                    {/* <Box component="img" src={frame} alt="frame" className='frame'/> */}
                     <Box className="content">
                       <Typography className="job_type">{job.type}</Typography>
                     </Box>

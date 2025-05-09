@@ -12671,14 +12671,14 @@ a {
 
         .col-5 {
           // min-width: 38%;
-          @include flex-center(row, flex-start);
+          display: grid;
+          grid-template-columns: repeat(5, 1fr);
           gap: 30px;
           align-items: stretch;
 
           .container {
             position: relative;
             z-index: 1;
-            width: 20%;
             align-self: stretch;
             border-radius: 15px;
             border: 1px solid $black;
