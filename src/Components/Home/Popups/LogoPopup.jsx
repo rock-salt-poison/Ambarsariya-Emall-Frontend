@@ -86,11 +86,11 @@ function LogoPopup({ open, handleClose }) {
                     alt="rock-salt-poison"
                     className="logo"
                   />
-                  <UserBadge
+                  {/* <UserBadge
                     handleClose={handleClose}
                     handleLogin="sell/login"
                     handleLogoutClick="../../AmbarsariyaMall"
-                  />
+                  /> */}
                 </Box>
                 <Box className="col-2">
                   {obj.map((item) => (

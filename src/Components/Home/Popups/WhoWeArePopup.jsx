@@ -50,11 +50,11 @@ export default function WhoWeArePopup({ open, handleClose, handleBackClick }) {
           <Box className="content-body">
             <Box className="header">
               <Typography variant="h2">Who we are !</Typography>
-              <UserBadge
+              {/* <UserBadge
                 handleClose={handleClose}
                 handleLogin="sell/login"
                 handleLogoutClick="../../AmbarsariyaMall"
-              />
+              /> */}
             </Box>
             <Typography className="description">
               With the team of Devotees, towards Science & Environmental

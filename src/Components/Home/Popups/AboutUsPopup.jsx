@@ -28,11 +28,11 @@ export default function AboutUsPopup({ open, handleClose, handleBackClick }) {
           <Box className="content-body">
             <Box className="header">
               <Typography variant="h2">About us</Typography>
-              <UserBadge
+              {/* <UserBadge
                 handleClose={handleClose}
                 handleLogin="sell/login"
                 handleLogoutClick="../../AmbarsariyaMall"
-              />
+              /> */}
             </Box>
             <Box className="descriptionContainer">
               <Typography className="description">

@@ -38,11 +38,11 @@ export default function VisionPopup({ open, handleClose, handleBackClick }) {
           <Box className="content-body">
             <Box className="header">
               <Typography variant="h2">Vision</Typography>
-              <UserBadge
+              {/* <UserBadge
                 handleClose={handleClose}
                 handleLogin="sell/login"
                 handleLogoutClick="../../AmbarsariyaMall"
-              />
+              /> */}
             </Box>
             <ul>
               {listItems.map((item, index) => (

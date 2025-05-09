@@ -77,11 +77,11 @@ function TimeTablePopup({ open, handleClose }) {
       <DialogContent className='timeTableDialogBoxContent'>
         <Box className="content">
           <Box className="content-header">
-          <UserBadge
+          {/* <UserBadge
                     handleClose={handleClose}
                     handleLogin="sell/login"
                     handleLogoutClick="../../AmbarsariyaMall"
-                  />
+                  /> */}
             <Typography component="h1">Travel Time</Typography>
           </Box>
           <Box className="content-body">
