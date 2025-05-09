@@ -12666,19 +12666,38 @@ a {
       &.col-9 {
         width: 90% !important;
         align-self: center;
+        @include flex-center(column, center);
+        gap: 30px;
 
         .col-5 {
-          min-width: 38%;
-          @include flex-center(column, flex-start);
-          gap: 20px;
+          // min-width: 38%;
+          @include flex-center(row, flex-start);
+          gap: 30px;
           align-items: stretch;
 
           .container {
-            padding: 25px 30px;
             position: relative;
             z-index: 1;
+            width: 20%;
             align-self: stretch;
+            border-radius: 15px;
+            border: 1px solid $black;
+            @include flex-center(column, center);
+            box-shadow: 5px 5px 0px 2px $dark-yellow2, 6px 6px 0px 2px $black;
+            overflow: hidden; // Make sure the pseudo element doesn’t overflow
+            transition: all .2s linear;
 
+            // Background with opacity
+            &::before {
+              content: "";
+              position: absolute;
+              inset: 0;
+              background-color: $light-yellow;
+              opacity: 0.55;
+              z-index: 0;
+            }
+
+            // Frame stays above background
             .frame {
               @include full-absolute(0px, 0px, 0px, 0px);
               z-index: 0;
@@ -12686,21 +12705,42 @@ a {
               height: 100%;
             }
 
-            .job_type {
-              @include homepage-buttons(
-                "Bobby-Jones-Soft",
-                25px,
-                $brown-4,
-                "none"
-              );
-              // @include hover-scale(1, 0s);
-              text-align: center;
-              text-shadow: 0px 2px 4px $light-yellow;
+            .top_bar{
+              @include flex-center(row, space-between);
+              gap: 10px;
+              padding: 8px 12px;
+              align-self: stretch;
+              border-bottom: 1px solid $black;
               position: relative;
-              z-index: 1;
-              margin-right: 15px;
+              z-index: 2;
+              background-color: rgba($yellow, .70);
+
+              .circle{
+                width: 12px;
+                height: 12px;
+                background: $dark-yellow2;
+                border-radius: 20px;
+                border: 1px solid $black;
+              }
             }
+
+            .content{
+              padding: 35px 20px;
+              flex: 1;
+              @include flex-center(column, center);
+
+              .job_type {
+                @include homepage-buttons("Bobby-Jones-Soft", 23px, $brown-4, "none");
+                text-align: center;
+                text-shadow: 0px 2px 4px $light-yellow;
+                line-height: 30px;
+                position: relative;
+                z-index: 1;
+              }
+            }
+
           }
+
 
           &:last-child {
             .container {
@@ -16593,14 +16633,15 @@ body .MuiBackdrop-root {
           h2 {
             @include homepage-buttons(
               "Gladiola",
-              36px !important,
+              32px !important,
               $dark-yellow2 !important,
               "none"
             );
             @include hover-scale(1, 0s);
-            line-height: 23px;
+            line-height: 30px;
             text-shadow: 1px 3px 4px #d4983280;
             text-transform: capitalize;
+            text-align: center;
           }
         }
       }
