@@ -7,21 +7,10 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import parse from 'autosuggest-highlight/parse';
 import { debounce } from '@mui/material/utils';
+import { useLoadScript } from '@react-google-maps/api';
 
 const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_API;
-
-function loadScript(src, position, id) {
-  if (!position) return;
-
-  if (!document.querySelector(`#${id}`)) {
-    const script = document.createElement('script');
-    script.setAttribute('async', '');
-    script.setAttribute('defer', '');
-    script.setAttribute('id', id);
-    script.src = src;
-    position.appendChild(script);
-  }
-}
+const libraries = ['places'];
 
 const autocompleteService = { current: null };
 const placesService = { current: null };
@@ -30,18 +19,11 @@ export default function Address_Google_Map_Field({ value, label, onChange, place
   const [inputValue, setInputValue] = React.useState('');
   const [updatedValue, setUpdatedValue] = React.useState('');
   const [options, setOptions] = React.useState([]);
-  const loaded = React.useRef(false);
 
-  React.useEffect(() => {
-    if (typeof window !== 'undefined' && !loaded.current) {
-      loadScript(
-        `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places&loading=async`,
-        document.querySelector('head'),
-        'google-maps'
-      );
-      loaded.current = true;
-    }
-  }, []);
+  const { isLoaded, loadError } = useLoadScript({
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
+    libraries,
+  });
 
   const fetch = React.useMemo(
     () =>
@@ -54,12 +36,11 @@ export default function Address_Google_Map_Field({ value, label, onChange, place
   );
 
   React.useEffect(() => {
-    let active = true;
+    if (!isLoaded) return;
 
     if (!autocompleteService.current && window.google) {
       autocompleteService.current = new window.google.maps.places.AutocompleteService();
     }
-    if (!autocompleteService.current) return;
 
     if (inputValue === '') {
       setOptions(updatedValue ? [updatedValue] : []);
@@ -67,22 +48,13 @@ export default function Address_Google_Map_Field({ value, label, onChange, place
     }
 
     fetch({ input: inputValue }, (results) => {
-      if (active) {
-        let newOptions = updatedValue ? [updatedValue, ...(results || [])] : results || [];
-        
-        // If no results, allow user input as a selectable option
-        if (newOptions.length === 0) {
-          newOptions = [{ description: inputValue, place_id: "no_match" }];
-        }
-
-        setOptions(newOptions);
+      let newOptions = updatedValue ? [updatedValue, ...(results || [])] : results || [];
+      if (newOptions.length === 0) {
+        newOptions = [{ description: inputValue, place_id: "no_match" }];
       }
+      setOptions(newOptions);
     });
-
-    return () => {
-      active = false;
-    };
-  }, [value, inputValue, fetch]);
+  }, [isLoaded, inputValue, fetch]);
 
   React.useEffect(() => {
     if (value) {
@@ -93,12 +65,12 @@ export default function Address_Google_Map_Field({ value, label, onChange, place
 
   const handlePlaceSelect = (event, newValue) => {
     if (!newValue) {
-      // Handle clearing the value
       setUpdatedValue(null);
       onChange(null);
       return;
     }
-    if (newValue && newValue.place_id !== "no_match") {
+
+    if (newValue.place_id !== "no_match") {
       if (!placesService.current && window.google) {
         placesService.current = new window.google.maps.places.PlacesService(document.createElement('div'));
       }
@@ -110,8 +82,8 @@ export default function Address_Google_Map_Field({ value, label, onChange, place
             const placeData = {
               description: newValue.description,
               place_id: newValue.place_id,
-              latitude: placeDetails.geometry?.location?.lat() || 31.6340, // Default Amritsar
-              longitude: placeDetails.geometry?.location?.lng() || 74.8723, // Default Amritsar
+              latitude: placeDetails.geometry?.location?.lat() || 31.6340,
+              longitude: placeDetails.geometry?.location?.lng() || 74.8723,
               formatted_address: placeDetails.formatted_address || newValue.description,
             };
 
@@ -125,28 +97,27 @@ export default function Address_Google_Map_Field({ value, label, onChange, place
     }
   };
 
-  // Saves the user-typed input if no option is selected
   const saveUserTypedLocation = () => {
-    if (!inputValue.trim() || (updatedValue && updatedValue.place_id !== "manual_entry")) return;
-  
+    if (!inputValue.trim()) return;
+
     const defaultPlace = {
-      description: inputValue, 
+      description: inputValue,
       place_id: "manual_entry",
-      latitude: 31.6340, 
+      latitude: 31.6340,
       longitude: 74.8723,
-      formatted_address: inputValue, 
+      formatted_address: inputValue,
     };
-  
+
     onChange(defaultPlace);
     setUpdatedValue(defaultPlace);
   };
-  
+
+  if (loadError) return <div>Error loading Google Maps</div>;
+  if (!isLoaded) return <div>Loading Google Maps...</div>;
 
   return (
     <Autocomplete
-      getOptionLabel={(option) =>
-        typeof option === 'string' ? option : option.description
-      }
+      getOptionLabel={(option) => typeof option === 'string' ? option : option.description}
       filterOptions={(x) => x}
       options={options}
       autoComplete
@@ -155,13 +126,11 @@ export default function Address_Google_Map_Field({ value, label, onChange, place
       value={updatedValue}
       size='small'
       fullWidth
-      freeSolo={true}
+      freeSolo
       noOptionsText="No locations"
       className="input_field"
       disabled={disable}
-      isOptionEqualToValue={(option, value) => 
-        option?.description === value?.description
-      }
+      isOptionEqualToValue={(option, value) => option?.description === value?.description}
       placeholder={placeholder}
       onChange={handlePlaceSelect}
       onInputChange={(event, newInputValue) => {
@@ -171,10 +140,10 @@ export default function Address_Google_Map_Field({ value, label, onChange, place
           onChange(null);
         }
       }}
-      onBlur={saveUserTypedLocation} // Handle case when user leaves input without selection
+      onBlur={saveUserTypedLocation}
       onKeyDown={(event) => {
         if (event.key === "Enter") {
-          event.preventDefault(); // Prevent form submission
+          event.preventDefault();
           saveUserTypedLocation();
         }
       }}
@@ -183,12 +152,8 @@ export default function Address_Google_Map_Field({ value, label, onChange, place
       )}
       renderOption={(props, option) => {
         const { key, ...optionProps } = props;
-        const matches =
-          option.structured_formatting?.main_text_matched_substrings || [];
-        const parts = parse(
-          option.structured_formatting?.main_text || '',
-          matches.map((match) => [match.offset, match.offset + match.length])
-        );
+        const matches = option.structured_formatting?.main_text_matched_substrings || [];
+        const parts = parse(option.structured_formatting?.main_text || '', matches.map(match => [match.offset, match.offset + match.length]));
 
         return (
           <li key={key} {...optionProps}>
@@ -196,16 +161,9 @@ export default function Address_Google_Map_Field({ value, label, onChange, place
               <Grid item sx={{ display: 'flex', width: 44 }}>
                 <LocationOnIcon sx={{ color: 'text.secondary' }} />
               </Grid>
-              <Grid
-                item
-                sx={{ width: 'calc(100% - 44px)', wordWrap: 'break-word' }}
-              >
+              <Grid item sx={{ width: 'calc(100% - 44px)', wordWrap: 'break-word' }}>
                 {parts.map((part, index) => (
-                  <Box
-                    key={index}
-                    component="span"
-                    sx={{ fontWeight: part.highlight ? 'bold' : 'regular' }}
-                  >
+                  <Box key={index} component="span" sx={{ fontWeight: part.highlight ? 'bold' : 'regular' }}>
                     {part.text}
                   </Box>
                 ))}

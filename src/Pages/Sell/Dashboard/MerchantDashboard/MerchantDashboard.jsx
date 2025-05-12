@@ -39,7 +39,7 @@ function MerchantDashboard(props) {
             }
             fetchData();
         }
-    }, [token])
+    }, [token, edit])
 
     return (
         <ThemeProvider theme={theme}>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Box, Tooltip, Typography } from '@mui/material'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import edit_form_icon from '../../../../Utils/images/Sell/dashboard/merchant_dashboard/edit_form_icon.png';
 import shop_icon from '../../../../Utils/images/Sell/dashboard/merchant_dashboard/shop_icon.svg';
 import Calendar from '../../../../Components/Home/AQIPopupComponents/Calendar';
@@ -12,7 +12,7 @@ import EditableCalendar from '../../../../Components/Home/AQIPopupComponents/Edi
 function DashboardHeader({data, setSelectedDate}) {
     const { token, edit } = useParams();
     const [ openPopup, setOpenPopup ] = useState(false);
-    
+    const navigate = useNavigate();
 
     console.log('Header -----------------------', data);
     
@@ -24,6 +24,20 @@ function DashboardHeader({data, setSelectedDate}) {
         setOpenPopup(true);
     }
 
+    const handleRedirect = (e) => {
+        if(e.target){
+            if(edit){
+                setTimeout(()=> {
+                    navigate(-1);
+                }, 300);
+            }else{
+                setTimeout(()=> {
+                    navigate('edit');
+                }, 300);
+            }
+        }
+    }
+
   return (
     <Box className="col">
     <Box className="sub-col">
@@ -33,7 +47,7 @@ function DashboardHeader({data, setSelectedDate}) {
     </Box>
     <Box className="sub-col">
         <Box className="title">
-            <Link to={edit ? -1 :`../support/shop/${token}/dashboard/edit`}><Typography className='shop_name'>{data?.business_name}</Typography></Link>
+            <Link onClick={(e)=> handleRedirect(e)}><Typography className='shop_name'>{data?.business_name}</Typography></Link>
 
             <Box className="domain_sector">
             <Typography>
