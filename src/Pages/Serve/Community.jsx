@@ -41,7 +41,7 @@ function Community() {
       <Box className="row">
         <Box className="col">
           <Box></Box>
-          <Link className="title_container" to="../emotional">
+          <Link className="title_container" to={-1}>
             <Box component="img" src={community_icon} alt="community" className="community_icon" />
             <Typography className="community_title" variant="h2">community</Typography>
           </Link>

@@ -11709,12 +11709,16 @@ a {
     z-index: 1;
     padding: 40px 30px;
     @include flex-center(column, center);
-    gap: 25px;
+    gap: 10px;
     flex: 1;
 
     .col {
       @include flex-center(row, space-between);
       align-self: stretch;
+
+      &:first-child{
+        justify-content: flex-end;
+      }
 
       @include backButton(
         linear-gradient(to bottom, $dark-yellow2, #b46b4d),
@@ -11975,6 +11979,10 @@ a {
       @include flex-center(row, space-between);
       align-self: stretch;
       flex-wrap: wrap;
+
+      &:last-child{
+        justify-content: flex-end;
+      }
 
       h2.heading {
         @include homepage-buttons("EFCO", 40px, $yellow, "none");
@@ -12630,6 +12638,10 @@ a {
       flex-wrap: wrap;
       gap: 15px;
 
+      &.header_badge{
+        display: grid;
+      }
+
       @include backButton(
         linear-gradient(to left, #b67d1cb3, #6b4336b3),
         $yellow,
@@ -13064,7 +13076,7 @@ a {
         .cards_container {
           .cards_row {
             .card {
-              width: 38% !important;
+              width: 75% !important;
             }
           }
         }
@@ -13089,7 +13101,17 @@ a {
         .cards_container {
           .cards_row {
             .card {
-              width: 70% !important;
+              form{
+                gap: 20px;
+              }
+              .form-row{
+                flex-direction: column !important;
+                gap: 10px !important;
+
+                .label , .field_container{
+                  width: 100% !important;
+                }
+              }
             }
           }
         }
@@ -18713,6 +18735,14 @@ body .MuiBackdrop-root {
 
   .row{
     .col{
+      &:first-child{
+        display: grid;
+        grid-template-columns: 120px 1fr 120px;
+
+        .icon_link{
+          justify-self: flex-start;
+        }
+      }
       &:last-child{
         width: 100% !important;
         justify-content: center !important;
@@ -18842,6 +18872,75 @@ body .MuiBackdrop-root {
         }
       }
     }
+    
+    @media (max-width:992px){
+      .col{
+        &:last-child{
+          .container{
+            width: 100% !important;
+
+            .card{
+              .title{
+                font-size: 75px !important;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    @media (max-width:768px){
+      .col{
+
+        &:first-child{
+          grid-template-columns: 120px 1fr 120px !important;
+
+          .title_container{
+            order: 0;
+          }
+
+
+        }
+
+        &:last-child{
+          .container{
+            flex-wrap: wrap !important;
+
+            .card{
+              flex: auto !important;
+              height: 180px !important;
+            }
+          }
+        }
+      }
+    }
+
+    @media (max-width:560px){
+      .col{
+        &:first-child{
+          @include flex-center(column,  space-between);
+          gap: 0px;
+
+          .logoutBtn{
+            align-self: flex-end;
+            order: -1;
+          }
+        }
+
+        &:last-child{
+          .container{
+            flex-wrap: wrap !important;
+            gap: 20px !important;
+
+            .card{
+             .title{
+              font-size: 40px !important;
+             }
+            }
+          }
+        }
+      }
+    }
   }
 
 }
@@ -18966,8 +19065,87 @@ body .MuiBackdrop-root {
         }
       }
     }
-  }
 
+    @media (max-width: 992px){
+      .col{
+        &:last-child{
+          form{
+            gap: 20px !important;
+          }
+          .form-row{
+            flex-direction: column !important;
+            gap: 10px !important;
+
+            .label{
+              width: 100% !important;
+            }
+
+            .field_container{
+              width: 100% !important;
+            }
+          }
+        }
+      }
+    }
+
+    @media (max-width: 768px){
+      .col{
+        &:first-child{
+          .title_container{
+            order: 0 !important;
+          }
+        }
+
+        &:last-child{
+          .form_container{
+            width: 80% !important;
+          } 
+        }
+      }
+    }
+
+    @media (max-width: 560px){
+      .col{
+        &:first-child{
+          grid-template-columns: 1fr !important;
+
+          .logoutBtn{
+            order: 1;
+            grid-column-start: 1;
+            grid-column-end: 2;
+          }
+
+          .title_container{
+            order: 3 !important;
+            grid-column-start: 1;
+            grid-column-end: 2;
+
+            .title{
+              float: right;
+            }
+          }
+
+          .heading_container{
+            order: 2;
+            grid-column-start: 0;
+            grid-column-end: 1;
+            padding: 10px 15px;
+
+            .title{
+              font-size: 23px !important;
+              line-height: 20px !important;
+            }
+          }
+        }
+
+        &:last-child{
+          .form_container{
+            width: 100% !important;
+          } 
+        }
+      }
+    }
+  }
 }
 
 .member_location_join_event_wrapper{
@@ -19114,9 +19292,7 @@ body .MuiBackdrop-root {
     @media (max-width: 992px){
       .col{
         &:last-child{
-          .container{
-            width: 80%;
-          }
+          width: 80% !important;
         }
       }
     }
@@ -19130,9 +19306,7 @@ body .MuiBackdrop-root {
         }
 
         &:last-child{
-          .container{
-            width: 100%;
-          }
+          width: 100% !important;
         }
       }
     }
@@ -22853,7 +23027,7 @@ textarea[readonly]{
 }
 
 .header_badge{
-  display: grid !important;
+  display: grid;
   grid-template-columns: 120px 1fr 120px;
 
   @media (max-width:768px){

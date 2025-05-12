@@ -8,6 +8,7 @@ import ribbon from '../../Utils/images/Serve/emotional/eshop/hr_management/ribbo
 import Button2 from '../../Components/Home/Button2';
 import Header from '../../Components/Serve/SupplyChain/Header';
 import BarChartComponent from '../../Components/Serve/SupplyChain/BarChartComponent';
+import UserBadge from '../../UserBadge';
 
 function Suppliers_for_shop2(props) {
   const [barChartData, setBarChartData] = useState([]); // Manage state for date range visibility
@@ -162,8 +163,13 @@ function Suppliers_for_shop2(props) {
           </Box>
 
           <Box className="col">
-            <Button2 text="Back" redirectTo={-1} />
-            <Button2 text="Next" redirectTo={-1} />
+            {/* <Button2 text="Back" redirectTo={-1} />
+            <Button2 text="Next" redirectTo={-1} /> */}
+            <UserBadge
+                            handleBadgeBgClick={-1}
+                            handleLogin="../login"
+                            handleLogoutClick="../../AmbarsariyaMall"
+                        />
           </Box>
         </Box>
       </Box>

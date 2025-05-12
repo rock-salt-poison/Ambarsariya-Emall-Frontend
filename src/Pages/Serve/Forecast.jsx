@@ -8,6 +8,7 @@ import Button2 from '../../Components/Home/Button2';
 import BarChartComponent from '../../Components/Serve/SupplyChain/BarChartComponent';
 import Header from '../../Components/Serve/SupplyChain/Header';
 import DateRangePicker from 'rsuite/esm/DateRangePicker';
+import UserBadge from '../../UserBadge';
 
 function Forecast(props) {
   const [barChartData, setBarChartData] = useState([]); 
@@ -126,8 +127,13 @@ function Forecast(props) {
           </Box>
 
           <Box className="col">
-            <Button2 text="Back" redirectTo={-1} />
-            <Button2 text="Next" redirectTo={-1} />
+            {/* <Button2 text="Back" redirectTo={-1} />
+            <Button2 text="Next" redirectTo={-1} /> */}
+            <UserBadge
+              handleBadgeBgClick={-1}
+              handleLogin="../login"
+              handleLogoutClick="../../AmbarsariyaMall"
+            />
           </Box>
         </Box>
       </Box>

@@ -11,6 +11,7 @@ import BarChartComponent from '../../Components/Serve/SupplyChain/BarChartCompon
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
 import Header from '../../Components/Serve/SupplyChain/Header';
+import UserBadge from '../../UserBadge';
 
 function Supply_chain_management(props) {
   const [stock_count, set_stock_count] = useState(99); // Manage state for date range visibility
@@ -187,8 +188,13 @@ function Supply_chain_management(props) {
           </Box>
 
           <Box className="col">
-            <Button2 text="Back" redirectTo={-1} />
-            <Button2 text="Next" redirectTo={-1} />
+            {/* <Button2 text="Back" redirectTo={-1} />
+            <Button2 text="Next" redirectTo={-1} /> */}
+            <UserBadge
+              handleBadgeBgClick={-1}
+              handleLogin="../login"
+              handleLogoutClick="../../AmbarsariyaMall"
+            />
           </Box>
         </Box>
       </Box>

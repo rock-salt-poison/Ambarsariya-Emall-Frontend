@@ -11,6 +11,7 @@ import BarChartComponent from '../../Components/Serve/SupplyChain/BarChartCompon
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
 import DateRangePicker from 'rsuite/esm/DateRangePicker';
+import UserBadge from '../../UserBadge';
 
 function Suppliers_for_shop3(props) {
   const [barChartData, setBarChartData] = useState([]); // Manage state for date range visibility
@@ -219,8 +220,13 @@ function Suppliers_for_shop3(props) {
           </Box>
 
           <Box className="col">
-            <Button2 text="Back" redirectTo={-1} />
-            <Button2 text="Next" redirectTo="/emotional/eshop/suppliers-for-shop3" />
+            {/* <Button2 text="Back" redirectTo={-1} />
+            <Button2 text="Next" redirectTo="/emotional/eshop/suppliers-for-shop3" /> */}
+          <UserBadge
+            handleBadgeBgClick={-1}
+            handleLogin="../login"
+            handleLogoutClick="../../AmbarsariyaMall"
+          />
           </Box>
         </Box>
       </Box>

@@ -10,6 +10,7 @@ import PieChartComponent from "../../Components/Serve/SupplyChain/PieChartCompon
 import BarChartComponent from "../../Components/Serve/SupplyChain/BarChartComponent";
 import Header from "../../Components/Serve/SupplyChain/Header";
 import DateRangePicker from "rsuite/esm/DateRangePicker";
+import UserBadge from "../../UserBadge";
 
 function Supply_chain_sale_order(props) {
   const [showDateRange, setShowDateRange] = useState(false); // Manage state for date range visibility
@@ -304,13 +305,18 @@ function Supply_chain_sale_order(props) {
           </Box>
 
           <Box className="col">
-            <Button2
+            {/* <Button2
               text="Back"
               redirectTo="../emotional/eshop/suppliers-for-shop"
             />
             <Button2
               text="Next"
               redirectTo="../emotional/eshop/stock-management"
+          /> */}
+            <UserBadge
+              handleBadgeBgClick={-1}
+              handleLogin="../login"
+              handleLogoutClick="../../AmbarsariyaMall"
             />
           </Box>
         </Box>

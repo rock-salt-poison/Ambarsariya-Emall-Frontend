@@ -24,7 +24,7 @@ function CommunityLocation() {
         }, 300)
 
         setTimeout(() => {
-            navigate('../../AmbarsariyaMall/serve/emotional/eshop/soul');
+            navigate('../../AmbarsariyaMall/serve/emotional/community');
         }, 600)
       }
     }

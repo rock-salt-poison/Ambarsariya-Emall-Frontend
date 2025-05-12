@@ -10,6 +10,7 @@ import Header from '../../Components/Serve/SupplyChain/Header';
 import BarChartComponent from '../../Components/Serve/SupplyChain/BarChartComponent';
 import DateRangePicker from 'rsuite/DateRangePicker';
 import 'rsuite/DateRangePicker/styles/index.css';
+import UserBadge from '../../UserBadge';
 
 function Stock_reports(props) {
   const [barChartData, setBarChartData] = useState([]); 
@@ -150,8 +151,13 @@ function Stock_reports(props) {
             </Box>
 
             <Box className="col">
-              <Button2 text="Back" redirectTo={-1} />
-              <Button2 text="Next" redirectTo={-1} />
+              {/* <Button2 text="Back" redirectTo={-1} />
+              <Button2 text="Next" redirectTo={-1} /> */}
+              <UserBadge
+                handleBadgeBgClick={-1}
+                handleLogin="../login"
+                handleLogoutClick="../../AmbarsariyaMall"
+              />
             </Box>
           </Box>
         </Box>

@@ -162,7 +162,7 @@ function Budget() {
         <Box className="col">
           {/* <Button2 text="Back" redirectTo={`../${owner}/subscribe`} /> */}
           <UserBadge
-                handleBadgeBgClick={`../${owner}/subscribe`}
+                handleBadgeBgClick={-1}
                 handleLogin="../login"
                 handleLogoutClick="../../AmbarsariyaMall"
             />

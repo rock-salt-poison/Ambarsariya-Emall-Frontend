@@ -42,6 +42,7 @@ function EventsLocation() {
                 <Typography className="title">events</Typography>
               </Link>
           </Box>
+          <Box></Box>
 
           <UserBadge
               handleBadgeBgClick="../esale/locations"

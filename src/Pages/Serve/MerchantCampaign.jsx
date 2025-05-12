@@ -17,6 +17,7 @@ import CampaignCTA_PopupContent from '../../Components/Serve/MerchantCampaign/Ca
 import dummy_img from '../../Utils/images/aqi-bg2.webp';
 import CampaignResult_PopupContent from '../../Components/Serve/MerchantCampaign/CampaignResult_PopupContent';
 import CampaignPreview_PopupContent from '../../Components/Serve/MerchantCampaign/CampaignPreview_PopupContent';
+import UserBadge from '../../UserBadge';
 
 function MerchantCampaign() {
     const [formData, setFormData] = useState({
@@ -311,6 +312,13 @@ function MerchantCampaign() {
                             <Box className="circle"></Box>
                         </Box>
                     </Box>
+                </Box>
+                <Box className="col">
+                    <UserBadge
+                        handleBadgeBgClick={-1}
+                        handleLogin="../login"
+                        handleLogoutClick="../../AmbarsariyaMall"
+                    />
                 </Box>
             </Box>
             <CardBoardPopup

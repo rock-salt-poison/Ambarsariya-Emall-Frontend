@@ -13,7 +13,7 @@ function EmotionalMember() {
     const [ audio ] = useState(new Audio(hornSound));
     const data = [
         { id: 1, imgSrc: personality, alt: 'personality', linkTo: '', heading:'Personality' },
-        { id: 2, imgSrc: community, alt: 'community', linkTo: '', heading:'Community' },
+        { id: 2, imgSrc: community, alt: 'community', linkTo: 'community', heading:'Community' },
         { id: 2, imgSrc: ranking, alt: 'ranking', linkTo: '', heading:'Ranking' },
         
     ];

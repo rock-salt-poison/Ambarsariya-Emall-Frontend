@@ -7,6 +7,7 @@ import HR_management_icon2 from '../../Utils/images/Serve/emotional/eshop/HR_man
 import ribbon from '../../Utils/images/Serve/emotional/eshop/hr_management/ribbon.svg';
 import Button2 from '../../Components/Home/Button2';
 import Header from '../../Components/Serve/SupplyChain/Header';
+import UserBadge from '../../UserBadge';
 
 function HR_management(props) {
   const themeProps = {
@@ -265,9 +266,14 @@ function HR_management(props) {
         </Box>
 
         <Box className="col">
-            <Button2 text="Back" redirectTo='../emotional/eshop/financial-management' />
-            <Button2 text="Next" redirectTo='../emotional/eshop/suppliers-for-shop' />
-          </Box>
+            {/* <Button2 text="Back" redirectTo='../emotional/eshop/financial-management' />
+            <Button2 text="Next" redirectTo='../emotional/eshop/suppliers-for-shop' /> */}
+          <UserBadge
+              handleBadgeBgClick={-1}
+              handleLogin="../login"
+              handleLogoutClick="../../AmbarsariyaMall"
+          />
+        </Box>
 
         </Box>
       </Box>

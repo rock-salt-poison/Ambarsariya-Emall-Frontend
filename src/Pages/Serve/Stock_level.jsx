@@ -10,6 +10,7 @@ import Header from '../../Components/Serve/SupplyChain/Header';
 import BarChartComponent from '../../Components/Serve/SupplyChain/BarChartComponent';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
+import UserBadge from '../../UserBadge';
 
 function Stock_level(props) {
   const [showDateRange, setShowDateRange] = useState(false); // Manage state for date range visibility
@@ -202,8 +203,13 @@ function Stock_level(props) {
           </Box>
 
           <Box className="col">
-            <Button2 text="Back" redirectTo={-1} />
-            <Button2 text="Next" redirectTo={-1} />
+            {/* <Button2 text="Back" redirectTo={-1} />
+            <Button2 text="Next" redirectTo={-1} /> */}
+            <UserBadge
+              handleBadgeBgClick={-1}
+              handleLogin="../login"
+              handleLogoutClick="../../AmbarsariyaMall"
+            />
           </Box>
         </Box>
       </Box>

@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import FormField from '../../Components/Form/FormField'; 
 import icon_1 from '../../Utils/images/Serve/emotional/campaign/icon_1.svg';
 import icon_2 from '../../Utils/images/Serve/emotional/campaign/icon_2.svg';
+import UserBadge from '../../UserBadge';
 
 const more_options_data = [
     { id: 1, iconSrc: job_icon, redirect_to: '../emotional/campaign/job', alt: 'Job' },
@@ -61,8 +62,13 @@ function Campaign() {
     <Box className="campaign_wrapper">
       <Box className="row">
         <Box className="col">
-          <Button2 text="Back" redirectTo='../emotional/crm' />
-          <Button2 text="Next" redirectTo={`../emotional/eshop`} />
+          {/* <Button2 text="Back" redirectTo='../emotional/crm' />
+          <Button2 text="Next" redirectTo={`../emotional/eshop`} /> */}
+          <UserBadge
+              handleBadgeBgClick={-1}
+              handleLogin="../login"
+              handleLogoutClick="../../AmbarsariyaMall"
+          />
         </Box>
 
         <Box className="col">

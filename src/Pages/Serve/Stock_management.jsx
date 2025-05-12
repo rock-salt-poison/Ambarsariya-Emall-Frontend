@@ -10,6 +10,7 @@ import Header from '../../Components/Serve/SupplyChain/Header';
 import BarChartComponent from '../../Components/Serve/SupplyChain/BarChartComponent';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
+import UserBadge from '../../UserBadge';
 
 function Stock_management(props) {
   const [barChartData, setBarChartData] = useState([]); // Manage state for date range visibility
@@ -220,8 +221,13 @@ function Stock_management(props) {
           </Box>
 
           <Box className="col">
-            <Button2 text="Back" redirectTo='../emotional/eshop/supply-chain-sale-order' />
-            <Button2 text="Next" redirectTo='../emotional/eshop/financial-management' />
+            {/* <Button2 text="Back" redirectTo='../emotional/eshop/supply-chain-sale-order' />
+            <Button2 text="Next" redirectTo='../emotional/eshop/financial-management' /> */}
+            <UserBadge
+              handleBadgeBgClick={-1}
+              handleLogin="../login"
+              handleLogoutClick="../../AmbarsariyaMall"
+            />
           </Box>
         </Box>
       </Box>

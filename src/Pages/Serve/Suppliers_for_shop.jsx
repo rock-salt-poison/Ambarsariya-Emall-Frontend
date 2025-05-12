@@ -7,6 +7,7 @@ import financial_management_icon2 from '../../Utils/images/Serve/emotional/eshop
 import ribbon from '../../Utils/images/Serve/emotional/eshop/hr_management/ribbon.svg';
 import Button2 from '../../Components/Home/Button2';
 import Header from '../../Components/Serve/SupplyChain/Header';
+import UserBadge from '../../UserBadge';
 
 function Suppliers_for_shop(props) {
   const themeProps = {
@@ -219,8 +220,13 @@ function Suppliers_for_shop(props) {
           </Box>
 
           <Box className="col">
-            <Button2 text="Back" redirectTo='../emotional/eshop/hr-management/' />
-            <Button2 text="Next" redirectTo='../emotional/eshop/supply-chain-sale-order' />
+            {/* <Button2 text="Back" redirectTo='../emotional/eshop/hr-management/' />
+            <Button2 text="Next" redirectTo='../emotional/eshop/supply-chain-sale-order' /> */}
+            <UserBadge
+                handleBadgeBgClick={-1}
+                handleLogin="../login"
+                handleLogoutClick="../../AmbarsariyaMall"
+            />
           </Box>
 
         </Box>

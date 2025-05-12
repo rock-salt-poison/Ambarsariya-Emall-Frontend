@@ -21,6 +21,7 @@ import Revenue_PopupContent from '../../Components/Serve/FinancialManagement/Gen
 import Expenses_PopupContent from '../../Components/Serve/FinancialManagement/GeneralLedger/Expenses/Expenses_PopupContent'
 import GainsAndLosses_PopupContent from '../../Components/Serve/FinancialManagement/GeneralLedger/GainsAnd_losses/GainsAndLosses_PopupContent'
 import DrawingsOrDividends_PopupContent from '../../Components/Serve/FinancialManagement/GeneralLedger/DrawingsOrDividends/DrawingsOrDividends_PopupContent'
+import UserBadge from '../../UserBadge'
 
 function General_ledger() {
 
@@ -52,9 +53,14 @@ function General_ledger() {
         </Box>  
 
         <Box className="col">
-                <Button2 text="Back" redirectTo='../emotional/eshop/financial-management'/>
-                <Button2 text="Next" redirectTo='../emotional/eshop/financial-management/accounts-payable'/>
-            </Box>
+          {/* <Button2 text="Back" redirectTo='../emotional/eshop/financial-management'/>
+          <Button2 text="Next" redirectTo='../emotional/eshop/financial-management/accounts-payable'/> */}
+          <UserBadge
+                  handleBadgeBgClick={-1}
+                  handleLogin="../login"
+                  handleLogoutClick="../../AmbarsariyaMall"
+              />
+        </Box>
       </Box>  
 
       

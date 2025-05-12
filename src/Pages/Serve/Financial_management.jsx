@@ -10,6 +10,7 @@ import CardsGrid from '../../Components/Serve/Unexpected/CardsGrid'
 import { Box, Typography } from '@mui/material'
 import Header from '../../Components/Serve/SupplyChain/Header'
 import Button2 from '../../Components/Home/Button2'
+import UserBadge from '../../UserBadge'
 
 function Financial_management() {
 
@@ -38,9 +39,14 @@ function Financial_management() {
         </Box>  
 
         <Box className="col">
-                <Button2 text="Back" redirectTo='../emotional/eshop/'/>
-                <Button2 text="Next" redirectTo='../emotional/eshop/hr-management/'/>
-            </Box>
+          {/* <Button2 text="Back" redirectTo='../emotional' />
+          <Button2 text="Next" redirectTo='../emotional/analytics' /> */}
+          <UserBadge
+                  handleBadgeBgClick={-1}
+                  handleLogin="../login"
+                  handleLogoutClick="../../AmbarsariyaMall"
+              />
+      </Box>
       </Box>  
     </Box>
   )

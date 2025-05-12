@@ -62,7 +62,7 @@ function Locations() {
         /> */}
 
         <Box className="col header_badge">
-          <Link to={'../../AmbarsariyaMall/sell/user'} className='icon_link'>
+          <Link to={'../../AmbarsariyaMall/sell/esale'} className='icon_link'>
                       <Box component="img" src={location_img} alt="suppliers_for_shop" className='icon' />
                     </Link>
 
