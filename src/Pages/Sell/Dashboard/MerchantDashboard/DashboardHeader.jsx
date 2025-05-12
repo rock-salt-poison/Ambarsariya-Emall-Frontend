@@ -33,7 +33,7 @@ function DashboardHeader({data, setSelectedDate}) {
     </Box>
     <Box className="sub-col">
         <Box className="title">
-            <Link to={edit ? -1 :'edit'}><Typography className='shop_name'>{data?.business_name}</Typography></Link>
+            <Link to={edit ? -1 :`../support/shop/${token}/dashboard/edit`}><Typography className='shop_name'>{data?.business_name}</Typography></Link>
 
             <Box className="domain_sector">
             <Typography>
