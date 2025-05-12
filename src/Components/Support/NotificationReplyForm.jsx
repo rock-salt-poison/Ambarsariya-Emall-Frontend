@@ -59,10 +59,15 @@ const NotificationReplyForm = ({ visitorData, selectedNotification, currentUser 
   // WebSocket for real-time updates
   useEffect(() => {
     const socket = initializeWebSocket();
+    
+    if (selectedNotification?.support_id) {
+      socket.emit("join_room", selectedNotification.support_id);
+    }
 
-    socket.on("message", (msg) => {
-      setMessages((prev) => [...prev, msg]);
+    socket.on("chat_message", (message) => {
+      setMessages((prev) => [...prev, message]);
     });
+
 
     return () => {
       socket.disconnect();
@@ -87,7 +92,6 @@ const NotificationReplyForm = ({ visitorData, selectedNotification, currentUser 
       
       const resp = await post_supportChatMessage(data);
       if(resp.message==='Chat created successfully'){
-        setMessages((prev) => [...prev, { ...data, sent_at: new Date() }]);
       setNewMessage("");
       }      
     }catch(e){
