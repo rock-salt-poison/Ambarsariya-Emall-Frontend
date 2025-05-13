@@ -18,6 +18,7 @@ import CardsGrid from '../../Components/Serve/Unexpected/CardsGrid'
 import { Box, Typography } from '@mui/material'
 import Header from '../../Components/Serve/SupplyChain/Header'
 import Button2 from '../../Components/Home/Button2'
+import UserBadge from '../../UserBadge'
 
 function Budgeting_and_forecasting() {
 
@@ -54,9 +55,14 @@ function Budgeting_and_forecasting() {
         </Box>  
 
         <Box className="col">
-                <Button2 text="Back" redirectTo='../emotional/eshop/financial-management/accounts-receivable'/>
-                <Button2 text="Next" redirectTo='../emotional/eshop/financial-management/asset-management'/>
-            </Box>
+                {/* <Button2 text="Back" redirectTo='../emotional/eshop/financial-management/accounts-receivable'/>
+                <Button2 text="Next" redirectTo='../emotional/eshop/financial-management/asset-management'/> */}
+          <UserBadge
+              handleBadgeBgClick={-1}
+              handleLogin="../login"
+              handleLogoutClick="../../AmbarsariyaMall"
+          />
+        </Box>
       </Box>  
     </Box>
   )

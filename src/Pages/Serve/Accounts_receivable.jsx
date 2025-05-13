@@ -20,6 +20,7 @@ import Invoices_Popup from "../../Components/Serve/FinancialManagement/AccountsR
 import Sales_Popup from "../../Components/Serve/FinancialManagement/AccountsReceivable/SalesOrderPayment/Sales_Popup";
 import AgingOfReceivableLedger_Popup from "../../Components/Serve/FinancialManagement/AccountsReceivable/AgingOfReceivableLedger/AgingOfReceivableLedger_Popup";
 import AccountsReceivableLedger_PopupContent from "../../Components/Serve/FinancialManagement/AccountsReceivable/AccountsReceivableLedger/AccountsReceivableLedger_PopupContent";
+import UserBadge from "../../UserBadge";
 
 function Accounts_receivable() {
   const cards_data = [
@@ -99,13 +100,19 @@ function Accounts_receivable() {
         </Box>
 
         <Box className="col">
-          <Button2
+          {/* <Button2
             text="Back"
             redirectTo="../emotional/eshop/financial-management/accounts-payable"
           />
           <Button2
             text="Next"
             redirectTo="../emotional/eshop/financial-management/budgeting-and-forecasting"
+          /> */}
+
+          <UserBadge
+              handleBadgeBgClick={-1}
+              handleLogin="../login"
+              handleLogoutClick="../../AmbarsariyaMall"
           />
         </Box>
       </Box>

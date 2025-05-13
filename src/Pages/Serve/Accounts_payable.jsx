@@ -23,6 +23,7 @@ import PaymentProcessing_PopupContent from "../../Components/Serve/FinancialMana
 import CreditsAndAdjustments_PopupContent from "../../Components/Serve/FinancialManagement/AccountsPayable/CreditsAndAdjustments/CreditsAndAdjustments_PopupContent";
 import AgingOfPayable_PopupContent from "../../Components/Serve/FinancialManagement/AccountsPayable/AgingOfPayable/AgingOfPayable_PopupContent";
 import ApprovalWorkflow_PopupContent from "../../Components/Serve/FinancialManagement/AccountsPayable/ApprovalWorkflow/ApprovalWorkflow_PopupContent";
+import UserBadge from "../../UserBadge";
 
 function Accounts_payable() {
   const cards_data = [
@@ -120,13 +121,18 @@ function Accounts_payable() {
         </Box>
 
         <Box className="col">
-          <Button2
+          {/* <Button2
             text="Back"
             redirectTo="../emotional/eshop/financial-management/general-ledger"
           />
           <Button2
             text="Next"
             redirectTo="../emotional/eshop/financial-management/accounts-receivable"
+          /> */}
+          <UserBadge
+              handleBadgeBgClick={-1}
+              handleLogin="../login"
+              handleLogoutClick="../../AmbarsariyaMall"
           />
         </Box>
       </Box>
