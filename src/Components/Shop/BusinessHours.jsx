@@ -53,12 +53,15 @@ function BusinessHours({ data }) {
         <CircularText text="Business Hours" />
         <Box className="h_line"></Box>
 
-        <Typography className="status">{isOpen ? 'Open' : 'Closed'}</Typography>
 
-        <Switch_On_Off2
-          checked={isOpen}
-          onChange={(e) => setOverrideOpen(e.target.checked)}
-        />
+        <Box className="open_close">
+          <Typography className="status">{isOpen ? 'Open' : 'Closed'}</Typography>
+
+          <Switch_On_Off2
+            checked={isOpen}
+            onChange={(e) => setOverrideOpen(e.target.checked)}
+          />
+        </Box>
 
         <Typography className="time">
           {data?.ontime && data?.offtime

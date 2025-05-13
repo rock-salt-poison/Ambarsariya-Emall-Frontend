@@ -7951,6 +7951,18 @@ a {
             }
           }
 
+          .MuiFormGroup-root{
+            label{
+              margin: 0px;
+            }
+          }
+
+          .open_close{
+            @include flex-center(row, center);
+            gap:10px;
+            flex-wrap: wrap;
+          }
+
           .h_line {
             border: 1px solid $yellow;
             margin-top: 10px;
