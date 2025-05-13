@@ -3,6 +3,7 @@ import { Box, Typography } from '@mui/material';
 import CircularText from '../Home/CircularText';
 import Button2 from '../Home/Button2';
 import UserBadge from '../../UserBadge';
+import Switch_On_Off2 from '../Form/Switch_On_Off2';
 
 function BusinessHours({ data }) {
 
@@ -55,7 +56,7 @@ function BusinessHours({ data }) {
         <CircularText text="Business Hours" />
         <Box className="h_line"></Box>
         <Typography className="status">{isOpen() ? 'Open' : 'Closed'}</Typography>
-
+        <Switch_On_Off2/>
         {/* Render business hours or fallback time */}
         <Typography className="time">
           {data?.ontime && data?.offtime

@@ -30,7 +30,7 @@ const PinDropPopup = ({
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [loading, setLoading] = useState(false);
-  const [radius, setRadius] = useState((distance_from_pin ).toString() || "1"); // in km
+  const [radius, setRadius] = useState((distance_from_pin )?.toString() || "1"); // in km
   const circleRef = useRef(null);
   const mapRef = useRef(null);
 
