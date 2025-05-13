@@ -83,6 +83,11 @@ const VisitorFormBox = ({ visitorData, shopNo, currentUser }) => {
     setSelectedNotification(msg);
   }
 
+  console.log(currentUser);
+  console.log(visitorData);
+  console.log(shopNo);
+  
+
   useEffect(() => {
     if (shopNo) {
       handleNotificationClick(shopNo);
