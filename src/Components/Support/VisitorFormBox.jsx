@@ -11,7 +11,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import NotificationReplyForm from "./NotificationReplyForm";
 dayjs.extend(relativeTime);
 
-const VisitorFormBox = ({ visitorData, shopNo, currentUser }) => {
+const VisitorFormBox = ({ visitorData, shopData, currentUser }) => {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [value, setValue] = useState({ domain: "domain", sector: "sector" });
   const [notifications, setNotifications] = useState([]);
@@ -85,14 +85,13 @@ const VisitorFormBox = ({ visitorData, shopNo, currentUser }) => {
 
   console.log(currentUser);
   console.log(visitorData);
-  console.log(shopNo);
   
 
   useEffect(() => {
-    if (shopNo) {
-      handleNotificationClick(shopNo);
+    if (shopData) {
+      handleNotificationClick(shopData?.shop_no);
     }
-  }, [shopNo]);
+  }, [shopData]);
   
   
 
@@ -116,7 +115,7 @@ const VisitorFormBox = ({ visitorData, shopNo, currentUser }) => {
               </Link>
             )
           ) : (
-            <Link onClick={() => { handleNotificationClick(shopNo);  setNotificationOpen(true);setSelectedNotification(null) }}>
+            <Link onClick={() => { handleNotificationClick(shopData?.shop_no);  setNotificationOpen(true);setSelectedNotification(null) }}>
               <Badge className="badge_bg" badgeContent={notifications?.length}>
                 <NotificationsIcon className="notification_icon" />
               </Badge>
@@ -170,7 +169,7 @@ const VisitorFormBox = ({ visitorData, shopNo, currentUser }) => {
       E-Ambarsariya:
       <Link onClick={handleHeadingClick}>
         <Typography variant="span">
-          {formSubmitted && visitorData?.domain_name && visitorData?.sector_name
+          {shopData ? `${shopData.domain_name} - ${shopData.sector_name}` : formSubmitted && visitorData?.domain_name && visitorData?.sector_name
             ? `${visitorData.domain_name} - ${visitorData.sector_name}`
             : `${value.domain} - ${value.sector}`}
         </Typography>

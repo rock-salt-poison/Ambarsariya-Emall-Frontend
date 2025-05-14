@@ -209,7 +209,7 @@ function Support(props) {
                 <Box className="col-3">
                   <VisitorFormBox 
                     visitorData={visitorData ? visitorData : shopData ? shopData : memberData ? memberData : null} 
-                    shopNo ={shopData?.shop_no}
+                    shopData ={shopData}
                     currentUser={currentUser} />
                 </Box>
               </>
