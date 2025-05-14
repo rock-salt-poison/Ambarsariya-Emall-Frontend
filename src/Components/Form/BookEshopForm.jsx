@@ -345,6 +345,9 @@ const BookEshopForm = () => {
     return valid;
   };
 
+  console.log(formData?.address);
+  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const loggedIn = !!localStorage.getItem('access_token');

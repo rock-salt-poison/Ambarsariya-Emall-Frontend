@@ -56,14 +56,18 @@ export default function Cards() {
       {loading && <Box className="loading"><CircularProgress/></Box> }
       <Box className="cards_container">
         <Swiper
-          slidesPerView={5}
-          spaceBetween={30}
+          slidesPerView={3}
+          spaceBetween={10}
           loop={true}
           autoplay={{
-            delay: 1200,
+            delay: 0,
             disableOnInteraction: false,
           }}
-          speed={1500}
+          speed={2350}
+           freeMode= {{
+              enabled: true,
+              sticky: true,
+            }}
           pagination={{
             clickable: true,
           }}

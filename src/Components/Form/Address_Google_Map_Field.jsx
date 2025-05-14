@@ -98,7 +98,7 @@ export default function Address_Google_Map_Field({ value, label, onChange, place
   };
 
   const saveUserTypedLocation = () => {
-    if (!inputValue.trim()) return;
+    if (!inputValue.trim() || (updatedValue && updatedValue.place_id !== "manual_entry")) return;
 
     const defaultPlace = {
       description: inputValue,
