@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
-import { Box, Typography } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Box, CircularProgress, Slider, Typography } from '@mui/material';
 import CircularText from '../Home/CircularText';
-import Button2 from '../Home/Button2';
 import UserBadge from '../../UserBadge';
-import Switch_On_Off2 from '../Form/Switch_On_Off2';
+import { updateEshopStatus } from '../../API/fetchExpressAPI';
+import CustomSnackbar from '../CustomSnackbar';
 
 function BusinessHours({ data }) {
-  const [overrideOpen, setOverrideOpen] = useState(null); // null = auto, true/false = manual override
+  const [sliderValue, setSliderValue] = useState(typeof data?.is_open === 'boolean' ? Number(data.is_open) : 0); // 0 = Closed, 1 = Open
+  const [loading, setLoading] =  useState(false);
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
   // Convert time to 12-hour format
   const convertTo12HourFormat = (time24) => {
@@ -18,49 +20,94 @@ function BusinessHours({ data }) {
     return `${hours}:${minutes} ${period}`;
   };
 
-  // Calculate auto open/closed based on current time
-  const isCurrentlyOpen = () => {
-    if (!data?.ontime || !data?.offtime) return false;
+  // Calculate initial value based on time
+  useEffect(() => {
+  const now = new Date();
+  const [onHour, onMinute] = data.ontime?.split(':').map(Number) || [0, 0];
+  const [offHour, offMinute] = data.offtime?.split(':').map(Number) || [0, 0];
 
-    const now = new Date();
-    const [onHour, onMinute] = data.ontime.split(':').map(Number);
-    const [offHour, offMinute] = data.offtime.split(':').map(Number);
+  const onTime = new Date();
+  const offTime = new Date();
+  onTime.setHours(onHour, onMinute, 0);
+  offTime.setHours(offHour, offMinute, 0);
 
-    const onTime = new Date();
-    const offTime = new Date();
+  // If offTime is earlier than onTime, assume it's next day
+  if (offTime < onTime) {
+    offTime.setDate(offTime.getDate() + 1);
+  }
 
-    onTime.setHours(onHour, onMinute, 0, 0);
-    offTime.setHours(offHour, offMinute, 0, 0);
+  // If is_open is explicitly 0 or 1 (boolean-like), use it
+  if (typeof data.is_open === 'boolean' || data.is_open === 0 || data.is_open === 1) {
+    setSliderValue(Number(data.is_open));
+  } else {
+    // Otherwise, compute based on current time
+    const isOpen = now >= onTime && now <= offTime;
+    setSliderValue(isOpen ? 1 : 0);
+  }
+}, [data]);
 
-    if (offTime < onTime) {
-      offTime.setDate(offTime.getDate() + 1);
+  
+
+  // Handle slider toggle
+  const handleSliderChange = async (event, newValue) => {
+    try{
+      setLoading(true);
+      const obj = {
+        isOpen: Boolean(newValue),
+        shop_access_token : data?.shop_access_token,
+      }
+
+      const resp = await updateEshopStatus(obj);
+       setSnackbar({
+          open: true,
+          message: resp.message,
+          severity: 'success',
+        });
+      setSliderValue(newValue);
+    }catch(e){
+       setSnackbar({
+          open: true,
+          message: e.response.data.message,
+          severity: 'error',
+        });
+    }finally{
+      setLoading(false);
     }
-
-    return now >= onTime && now <= offTime;
   };
 
-  // Final open status with override logic
-  const isOpen = overrideOpen !== null ? overrideOpen : isCurrentlyOpen();
-
+  console.log(data);
+  
   return (
     <Box className="business_hours_container">
+      {loading && <Box className="loading"><CircularProgress/></Box>}
+
       <UserBadge
         handleBadgeBgClick={`../support/shop?token=${data.shop_access_token}`}
         handleLogin="../login"
         handleLogoutClick="../../AmbarsariyaMall"
       />
+
       <Box className="business_hours_wrapper">
         <CircularText text="Business Hours" />
-        <Box className="h_line"></Box>
 
+        <Slider
+          value={sliderValue}
+          onChange={handleSliderChange}
+          min={0}
+          max={1}
+          step={1}
+          marks={[
+            { value: 0, },
+            { value: 1,  },
+          ]}
+          size="large"
+          className="input_field open_close_slider"
+        />
 
         <Box className="open_close">
-          <Typography className="status">{isOpen ? 'Open' : 'Closed'}</Typography>
-
-          <Switch_On_Off2
-            checked={isOpen}
-            onChange={(e) => setOverrideOpen(e.target.checked)}
-          />
+          <Typography className="status">
+            {sliderValue === 1 ? 'Open' : 'Closed'}
+          </Typography>
         </Box>
 
         <Typography className="time">
@@ -69,6 +116,12 @@ function BusinessHours({ data }) {
             : '00:00 - 00:00'}
         </Typography>
       </Box>
+      <CustomSnackbar
+        open={snackbar.open}
+        handleClose={() => setSnackbar({ ...snackbar, open: false })}
+        message={snackbar.message}
+        severity={snackbar.severity}
+      />
     </Box>
   );
 }

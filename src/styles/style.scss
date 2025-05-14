@@ -7956,6 +7956,11 @@ a {
               margin: 0px;
             }
           }
+          
+          .open_close_slider{
+            width: 80px;
+            color: $yellow;
+          }
 
           .open_close{
             @include flex-center(row, center);
