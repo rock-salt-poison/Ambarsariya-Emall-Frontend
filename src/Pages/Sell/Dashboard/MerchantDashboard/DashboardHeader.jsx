@@ -28,7 +28,7 @@ function DashboardHeader({data, setSelectedDate}) {
         if(e.target){
             if(edit){
                 setTimeout(()=> {
-                    navigate(-1);
+                    navigate(`../support/shop/${token}/dashboard`);
                 }, 300);
             }else{
                 setTimeout(()=> {

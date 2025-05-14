@@ -8,10 +8,12 @@ import {
   Box,
   IconButton,
   ThemeProvider,
+  CircularProgress,
 } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import GeneralLedgerForm from "../Form/GeneralLedgerForm";
 import createCustomTheme from '../../styles/CustomSelectDropdownTheme';
+import { get_support_page_famous_areas } from "../../API/fetchExpressAPI";
 
 
 function StreetViewPopup({ open, onClose, message, optionalCname, lat = 31.6356659, lng = 74.8787496 }) {
@@ -22,12 +24,16 @@ function StreetViewPopup({ open, onClose, message, optionalCname, lat = 31.63566
   };
   const theme = createCustomTheme(themeProps);
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
-
+  const [loading, setLoading] = useState(false);
   
   const [streetViewImg, setStreetViewImg] = useState("");
+  const [nearByAreas, setNearByAreas] = useState([]);
 
   useEffect(() => {
-    if (open) fetchStreetView();
+    if (open){
+      fetchStreetView();
+      fetchFamousAreas();
+    }
   }, [open]); // Fetch data when dialog opens
 
   const fetchStreetView = async () => {
@@ -38,6 +44,20 @@ function StreetViewPopup({ open, onClose, message, optionalCname, lat = 31.63566
       console.error("Error fetching street view:", error);
     }
   };
+
+  const fetchFamousAreas = async () => {
+    try{
+      setLoading(true);
+      const resp = await get_support_page_famous_areas();
+      if(resp){
+        setNearByAreas(resp);
+      }
+    }catch(e){
+
+    }finally{
+      setLoading(false);
+    }
+  }
 
   const initialData = {
       availability:'',
@@ -58,7 +78,7 @@ function StreetViewPopup({ open, onClose, message, optionalCname, lat = 31.63566
           label: 'Near-by areas',
           name: 'nearByAreas',
           type: 'select',
-          options:[]
+          options:nearByAreas?.map((area)=>`${area.area_title}`)
       },
       
   ];
@@ -81,6 +101,7 @@ function StreetViewPopup({ open, onClose, message, optionalCname, lat = 31.63566
 
   return (
     <ThemeProvider theme={theme}>
+      {loading && <Box className="loading"><CircularProgress/></Box>}
     <Dialog
       open={open}
       onClose={onClose}
