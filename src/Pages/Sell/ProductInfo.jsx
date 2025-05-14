@@ -162,7 +162,7 @@ function ProductInfo() {
           </Box>
         </Box>
 
-        <Box className="col">
+        <Box className="col plane_col">
           <Box className="image_container_2">
             <Box component="img" src={plane_img} className="plane" />
           </Box>

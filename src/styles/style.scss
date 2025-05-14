@@ -9034,10 +9034,14 @@ a {
           left: -55px;
         }
       }
+
+      &.plane_col{
+        z-index: -1;
+      }
       
       &.ticket_container{
         @include full-absolute(auto, 0px, 0px, auto);
-        z-index: -1;
+        z-index: 1;
 
         .image_container_3{
           box-shadow: -2px -2px 5px 0px #0000004d;
