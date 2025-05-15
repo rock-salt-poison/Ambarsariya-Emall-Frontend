@@ -83,7 +83,7 @@ function RetailerPopupContent({ onClose }) {
         <DiscountField
           name1="percentage"
           name2="minimum_order"
-          value={retailerCoupon?.discounts?.retailer_upto || discounts.retailer_upto}
+          value={discounts.retailer_upto}
           label="Percentage"
           checked={discounts.retailer_upto.checked}
           handleOnChange={(e) => handleOnChange(e, 'retailer_upto')}
@@ -95,7 +95,7 @@ function RetailerPopupContent({ onClose }) {
         <DiscountField
           name1="flat"
           name2="minimum_order"
-          value={retailerCoupon?.discounts?.retailer_flat || discounts.retailer_flat}
+          value={discounts.retailer_flat}
           label="Flat"
           checked={discounts.retailer_flat.checked}
           handleOnChange={(e) => handleOnChange(e, 'retailer_flat')}
@@ -107,7 +107,7 @@ function RetailerPopupContent({ onClose }) {
         <DiscountField
           name1="buy"
           name2="get"
-          value={retailerCoupon?.discounts?.retailer_freebies || discounts.retailer_freebies}
+          value={discounts.retailer_freebies}
           label="Buy"
           checked={discounts.retailer_freebies.checked}
           handleOnChange={(e) => handleOnChange(e, 'retailer_freebies')}
