@@ -5,9 +5,15 @@ import DiscountField from '../Form/DiscountField';
 import PercentIcon from '@mui/icons-material/Percent';
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import { addCoupon } from '../../store/couponsSlice';
+import CustomSnackbar from '../CustomSnackbar';
 
-function RetailerPopupContent() {
+function RetailerPopupContent({ onClose }) {
   const dispatch = useDispatch();
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
 
   // Get retailer coupon data from Redux store
   const retailerCoupon = useSelector((state) => state.coupon.retailer);
@@ -58,6 +64,17 @@ function RetailerPopupContent() {
 
     // Dispatch the coupon details to Redux store
     dispatch(addCoupon({ type: 'retailer', coupon: { id: Date.now(), discounts } }));
+
+    setSnackbar({
+        open: true,
+        message: "Form Submitted successfully.",
+        severity: "success",
+    });
+    setTimeout(()=>{
+      if(onClose){
+        onClose();
+      }
+    }, 1500)
   };
 
   return (
@@ -112,6 +129,13 @@ function RetailerPopupContent() {
           Submit
         </Button>
       </Box>
+
+      <CustomSnackbar
+        open={snackbar.open}
+        handleClose={() => setSnackbar({ ...snackbar, open: false })}
+        message={snackbar.message}
+        severity={snackbar.severity}
+      />
     </Box>
   );
 }

@@ -13,10 +13,11 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import GeneralLedgerForm from "../Form/GeneralLedgerForm";
 import createCustomTheme from '../../styles/CustomSelectDropdownTheme';
-import { get_support_page_famous_areas } from "../../API/fetchExpressAPI";
+import { get_nearby_areas_for_shop, get_support_page_famous_areas, put_near_by_shops } from "../../API/fetchExpressAPI";
+import CustomSnackbar from "../CustomSnackbar";
 
 
-function StreetViewPopup({ open, onClose, message, optionalCname, lat = 31.6356659, lng = 74.8787496 }) {
+function StreetViewPopup({ open, onClose, message, optionalCname, lat = 31.6356659, lng = 74.8787496, shop_no, shop_access_token }) {
   const API_KEY = process.env.REACT_APP_GOOGLE_API;
   const themeProps = {
     popoverBackgroundColor: '#f8e3cc',
@@ -28,13 +29,17 @@ function StreetViewPopup({ open, onClose, message, optionalCname, lat = 31.63566
   
   const [streetViewImg, setStreetViewImg] = useState("");
   const [nearByAreas, setNearByAreas] = useState([]);
+  const [nearByArea, setNearByArea] = useState(null);
 
+  console.log(nearByArea);
+  
   useEffect(() => {
-    if (open){
+    if (open && shop_no && shop_access_token){
       fetchStreetView();
       fetchFamousAreas();
+      fetch_near_by_area(shop_no, shop_access_token);
     }
-  }, [open]); // Fetch data when dialog opens
+  }, [open, shop_no, shop_access_token]); // Fetch data when dialog opens
 
   const fetchStreetView = async () => {
     try {
@@ -59,26 +64,43 @@ function StreetViewPopup({ open, onClose, message, optionalCname, lat = 31.63566
     }
   }
 
+  const fetch_near_by_area = async (shop_no, shop_access_token) => {
+    try{
+      setLoading(true);
+      const resp = await get_nearby_areas_for_shop(shop_access_token, shop_no);
+      if(resp){
+         const selectedArea = resp[0];
+        setNearByArea(selectedArea);
+        // Set the default selected option
+        setFormData(prev => ({
+          ...prev,
+          nearByArea: selectedArea?.area_title
+        }));
+      }  
+    }catch(e){
+      console.error(e);
+    }finally{
+      setLoading(false);
+    }
+  }
+
   const initialData = {
-      availability:'',
-      location:'',
-      hours:'',
-      instructions:'',
-      estimated_pickup_time:'',
-      confirmation:'',
+      nearByArea:'',
   };
 
   const [formData, setFormData] = useState(initialData);
   const [errors, setErrors] = useState({});
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
 
   const formFields = [
       {
           id: 1,
-          label: 'Near-by areas',
-          name: 'nearByAreas',
+          label: 'Near-by area',
+          name: 'nearByArea',
           type: 'select',
-          options:nearByAreas?.map((area)=>`${area.area_title}`)
+          options:nearByAreas?.map((area)=>`${area.area_title}`),
+          readOnly: nearByArea ? true : false
       },
       
   ];
@@ -93,10 +115,33 @@ function StreetViewPopup({ open, onClose, message, optionalCname, lat = 31.63566
       setErrors({ ...errors, [name]: null });
   };
 
-  const handleSubmit = (event) => {
-        event.preventDefault(); // Prevent default form submission
-            console.log(formData);
-            // Proceed with further submission logic, e.g., API call
+  const handleSubmit = async (event) => {
+      event.preventDefault(); // Prevent default form submission
+      try{
+        setLoading(true);
+        const data = {
+          shop_no,
+          famous_area:formData?.nearByArea
+        }
+        const resp = await put_near_by_shops(data);
+        if(resp?.success){
+          setSnackbar({
+            open: true,
+            message: resp?.message,
+            severity: 'success',
+          });
+        }
+        
+      }catch(e){
+        console.error(e);
+        setSnackbar({
+          open: true,
+          message: e.response.data.message,
+          severity: 'error',
+        });
+      }finally{
+        setLoading(false);
+      }
     };
 
   return (
@@ -137,9 +182,16 @@ function StreetViewPopup({ open, onClose, message, optionalCname, lat = 31.63566
           formData={formData}
           onChange={handleChange}
           errors={errors}
+          submitBtnVisibility={nearByArea ? false : true}
         />
       </DialogContent>
     </Dialog>
+    <CustomSnackbar
+            open={snackbar.open}
+            handleClose={() => setSnackbar({ ...snackbar, open: false })}
+            message={snackbar.message}
+            severity={snackbar.severity}
+          />
     </ThemeProvider>
   );
 }

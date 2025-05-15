@@ -5,10 +5,16 @@ import PercentIcon from '@mui/icons-material/Percent';
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import { useDispatch, useSelector } from 'react-redux';
 import { addCoupon } from '../../store/couponsSlice';
+import CustomSnackbar from '../CustomSnackbar';
 
-function LoyaltyPopupContent() {
+function LoyaltyPopupContent({onClose}) {
 
     const dispatch = useDispatch();
+    const [snackbar, setSnackbar] = useState({
+      open: false,
+      message: "",
+      severity: "success",
+    });
 
     // Get retailer coupon data from Redux store
     const loyaltyCoupon = useSelector((state) => state.coupon.loyalty); 
@@ -60,6 +66,16 @@ function LoyaltyPopupContent() {
   
       // Dispatch the coupon details to Redux store
       dispatch(addCoupon({ type: 'loyalty', coupon: { id: Date.now(), discounts } }));
+      setSnackbar({
+          open: true,
+          message: "Form Submitted successfully.",
+          severity: "success",
+      });
+      setTimeout(()=>{
+        if(onClose){
+          onClose();
+        }
+      }, 1500)
     };
     return (
         <Box component="form" noValidate autoComplete="off" className="offerings_popup_form" onSubmit={handleSubmit}>
@@ -133,6 +149,13 @@ function LoyaltyPopupContent() {
                     Submit
                 </Button>
             </Box>
+
+            <CustomSnackbar
+              open={snackbar.open}
+              handleClose={() => setSnackbar({ ...snackbar, open: false })}
+              message={snackbar.message}
+              severity={snackbar.severity}
+            />
         </Box>
     );
 }

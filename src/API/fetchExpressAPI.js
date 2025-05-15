@@ -455,6 +455,14 @@ export const get_support_page_famous_areas = async () => {
   }
 }
 
+export const get_nearby_areas_for_shop = async (shop_access_token, shop_no) => {
+  try {
+    const response = await axios.get(`${link}/sell/near-by-area/${shop_access_token}/${shop_no}`);
+    return response.data;
+  } catch (e) {
+    throw e;
+  }
+}
 
 export const get_nearby_shops = async (token) => {
   try {
@@ -1012,3 +1020,14 @@ export const post_memberCommunity = async (data) => {
     throw error;
   }
 };
+
+export const put_near_by_shops= async (data) => {
+  if(data){
+  try{
+      const resp = await axios.put(`${link}/sell/near-by-shop`, data);
+      return resp.data;
+    }catch(e){
+      throw e;
+    }
+  }
+}

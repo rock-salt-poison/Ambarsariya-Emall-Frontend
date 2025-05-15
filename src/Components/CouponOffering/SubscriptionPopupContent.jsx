@@ -5,9 +5,15 @@ import PercentIcon from '@mui/icons-material/Percent';
 import DateRangePicker from 'rsuite/esm/DateRangePicker';
 import { useDispatch, useSelector } from 'react-redux';
 import { addCoupon } from '../../store/couponsSlice';
+import CustomSnackbar from '../CustomSnackbar';
 
-function SubscriptionPopupContent() {
+function SubscriptionPopupContent({ onClose }) {
   const dispatch = useDispatch();
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
 
   const subscriptionCoupon = useSelector((state) => state.coupon.subscription);
 
@@ -62,6 +68,16 @@ function SubscriptionPopupContent() {
     event.preventDefault();
     console.log(discounts);
     dispatch(addCoupon({ type: 'subscription', coupon: { id: Date.now(), discounts } }));
+    setSnackbar({
+        open: true,
+        message: "Form Submitted successfully.",
+        severity: "success",
+    });
+    setTimeout(()=>{
+      if(onClose){
+        onClose();
+      }
+    }, 1500)
   };
 
 
@@ -138,6 +154,13 @@ function SubscriptionPopupContent() {
           Submit
         </Button>
       </Box>
+
+      <CustomSnackbar
+          open={snackbar.open}
+          handleClose={() => setSnackbar({ ...snackbar, open: false })}
+          message={snackbar.message}
+          severity={snackbar.severity}
+        />
     </Box>
   );
 }

@@ -16,6 +16,7 @@ import { DateRangePicker } from 'rsuite';
 import { useDispatch, useSelector } from 'react-redux';
 import { addCoupon } from '../../store/couponsSlice';
 import createCustomTheme from '../../styles/CustomSelectDropdownTheme';
+import CustomSnackbar from '../CustomSnackbar';
 
 function CheckboxGroup({ label, name, fields, values = {}, onChange, errors }) {
     console.log('CheckboxGroup values:', values); // Debug values
@@ -114,7 +115,7 @@ function CheckboxGroup({ label, name, fields, values = {}, onChange, errors }) {
 }
 
 
-function CustomizablePopupContent() {
+function CustomizablePopupContent({onClose}) {
     const [formData, setFormData] = useState({
         sale_for_stock_clearance: { checked: false, sku_no: '', price: '', sale_for_stock_clearance_date_range: [] },
         festivals_sale: { checked: false, festival_name: '', offer: '', festivals_sale_date_range: [] },
@@ -132,7 +133,11 @@ function CustomizablePopupContent() {
     const [errors, setErrors] = useState({});
     const dispatch = useDispatch();
     const customizableCoupon = useSelector((state) => state.coupon.customizable); 
-
+    const [snackbar, setSnackbar] = useState({
+      open: false,
+      message: "",
+      severity: "success",
+    });
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -193,6 +198,17 @@ function CustomizablePopupContent() {
                     coupon: { id: Date.now(), discounts: formattedDiscounts },
                 })
             );
+
+            setSnackbar({
+                open: true,
+                message: "Form Submitted successfully.",
+                severity: "success",
+            });
+            setTimeout(()=>{
+            if(onClose){
+                onClose();
+            }
+            }, 1500)
     };
     
 
@@ -281,6 +297,12 @@ function CustomizablePopupContent() {
                     </Button>
                 </Box>
             </Box>
+            <CustomSnackbar
+                open={snackbar.open}
+                handleClose={() => setSnackbar({ ...snackbar, open: false })}
+                message={snackbar.message}
+                severity={snackbar.severity}
+            />
         </ThemeProvider>
     );
 }

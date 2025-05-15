@@ -64,10 +64,6 @@ export default function Cards() {
             disableOnInteraction: false,
           }}
           speed={2350}
-           freeMode= {{
-              enabled: true,
-              sticky: true,
-            }}
           pagination={{
             clickable: true,
           }}

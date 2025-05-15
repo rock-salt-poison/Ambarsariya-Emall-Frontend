@@ -36,7 +36,7 @@ function Offers({ text, onClick, optionalCname, popup, popup_body_content }) {
 
       {/* Use the separate Popover component */}
 
-      <CardBoardPopup open={open} handleClose={handlePopoverClose} title={text} body_content={popup_body_content} />
+      <CardBoardPopup open={open} handleClose={handlePopoverClose} title={text} body_content={popup_body_content ? popup_body_content(handlePopoverClose) : null} />
     </Box>
   );
 }

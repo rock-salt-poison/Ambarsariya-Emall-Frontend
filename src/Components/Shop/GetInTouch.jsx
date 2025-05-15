@@ -106,6 +106,8 @@ function GetInTouch({ data }) {
         optionalCname="map-popup-dialog"
         lat={data.latitude}
         lng={data.longitude}
+        shop_no={data.shop_no}
+        shop_access_token={data.shop_access_token}
       />
 
       <PinDropPopup
