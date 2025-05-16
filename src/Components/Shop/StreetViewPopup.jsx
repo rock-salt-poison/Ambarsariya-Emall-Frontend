@@ -17,7 +17,7 @@ import { get_nearby_areas_for_shop, get_support_page_famous_areas, put_near_by_s
 import CustomSnackbar from "../CustomSnackbar";
 
 
-function StreetViewPopup({ open, onClose, message, optionalCname, lat = 31.6356659, lng = 74.8787496, shop_no, shop_access_token }) {
+function StreetViewPopup({ open, onClose, message, optionalCname, lat = 31.6356659, lng = 74.8787496, shop_no, shop_access_token, openDashboard }) {
   const API_KEY = process.env.REACT_APP_GOOGLE_API;
   const themeProps = {
     popoverBackgroundColor: '#f8e3cc',
@@ -98,9 +98,9 @@ function StreetViewPopup({ open, onClose, message, optionalCname, lat = 31.63566
           id: 1,
           label: 'Near-by area',
           name: 'nearByArea',
-          type: 'select',
+          type: openDashboard ? 'select':'text',
           options:nearByAreas?.map((area)=>`${area.area_title}`),
-          readOnly: nearByArea ? true : false
+          readOnly: openDashboard ? nearByArea ? true : false : false
       },
       
   ];
@@ -130,7 +130,11 @@ function StreetViewPopup({ open, onClose, message, optionalCname, lat = 31.63566
             message: resp?.message,
             severity: 'success',
           });
+          setTimeout(()=>{
+            onClose();
+          },800);
         }
+
         
       }catch(e){
         console.error(e);
@@ -146,7 +150,6 @@ function StreetViewPopup({ open, onClose, message, optionalCname, lat = 31.63566
 
   return (
     <ThemeProvider theme={theme}>
-      {loading && <Box className="loading"><CircularProgress/></Box>}
     <Dialog
       open={open}
       onClose={onClose}
@@ -155,7 +158,8 @@ function StreetViewPopup({ open, onClose, message, optionalCname, lat = 31.63566
       fullWidth
       maxWidth="sm"
       className={optionalCname}
-    >
+      >
+      {loading && <Box className="loading"><CircularProgress/></Box>}
       <DialogContent className="content">
         <Box id="confirm-message">
         
@@ -176,22 +180,29 @@ function StreetViewPopup({ open, onClose, message, optionalCname, lat = 31.63566
             sx={{ width: "100%", borderRadius: "8px", marginTop: 2 }}
           />
         )}
-        <GeneralLedgerForm
+        {openDashboard ? <GeneralLedgerForm
           formfields={formFields}
           handleSubmit={handleSubmit}
           formData={formData}
           onChange={handleChange}
           errors={errors}
-          submitBtnVisibility={nearByArea ? false : true}
-        />
+          submitBtnVisibility={openDashboard ? nearByArea ? false : true : false}
+        /> : formData?.nearByArea && <GeneralLedgerForm
+          formfields={formFields}
+          handleSubmit={handleSubmit}
+          formData={formData}
+          onChange={handleChange}
+          errors={errors}
+          submitBtnVisibility={openDashboard ? nearByArea ? false : true : false}
+        />}
       </DialogContent>
-    </Dialog>
     <CustomSnackbar
             open={snackbar.open}
             handleClose={() => setSnackbar({ ...snackbar, open: false })}
             message={snackbar.message}
             severity={snackbar.severity}
           />
+    </Dialog>
     </ThemeProvider>
   );
 }

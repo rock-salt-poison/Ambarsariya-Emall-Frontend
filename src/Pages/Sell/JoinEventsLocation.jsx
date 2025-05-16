@@ -143,7 +143,7 @@ const fetchCurrentUserData = async (token) => {
                           </Box>
                           <Box className="group">
                             <Typography className="heading">Date : </Typography>
-                            <Typography className="description">{r.date}</Typography>
+                            <Typography className="description">{(r.date)?.split('T')?.[0]}</Typography>
                           </Box>
                           <Box className="group">
                             <Typography className="heading">Location : </Typography>

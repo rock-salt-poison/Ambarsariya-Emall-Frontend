@@ -60,7 +60,7 @@ export default function ScrollableTabsButton(props) {
         {tabsData.map((tab) => (
           tab.content && ( // Only render TabPanel if content is available
             <TabPanel key={tab.id} value={`${tab.id}`} className="tab_panel">
-              {tab.content} {/* Display the content of the tab */}
+              {typeof tab.content === 'function' ? tab.content(): tab.content} {/* Display the content of the tab */}
             </TabPanel>
           )
         ))}

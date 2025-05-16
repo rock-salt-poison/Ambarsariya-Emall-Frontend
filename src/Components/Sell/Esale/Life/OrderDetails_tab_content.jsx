@@ -67,6 +67,7 @@ function OrderDetails_tab_content({ title }) {
     }, [selectedOrder])
 
     console.log(selectedOrder);
+    console.log(purchasedOrders);
     
     return (
         <Box className="tab_content">

@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { TextField, Button, Box, IconButton } from '@mui/material';
+import { TextField, Button, Box, IconButton, InputAdornment } from '@mui/material';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+// import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
+import ArrowBackIcon from '@mui/icons-material/ArrowBackIos';
 import lock_icon from '../../Utils/images/Sell/login/lock_icon.svg';
 import tag_chain_icon from '../../Utils/images/Sell/login/tag_chain_icon.svg';
 import input_img from '../../Utils/images/Sell/login/input_bg.svg';
@@ -9,11 +11,25 @@ import { authenticateUser, getUser } from '../../API/fetchExpressAPI';
 import { setShopToken, setUserToken, setShopTokenValid, setUserTokenValid, setMemberTokenValid, setMemberToken } from '../../store/authSlice'; 
 import { useDispatch, useSelector } from 'react-redux';
 import CustomSnackbar from '../CustomSnackbar';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const LoginForm = ({ redirectTo, title, forgotPassword }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+
+  const [showPassword, setShowPassword] = React.useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
+  const handleMouseUpPassword = (event) => {
+    event.preventDefault();
+  };
 
   const [formData, setFormData] = useState({
     username: '',
@@ -86,6 +102,14 @@ const LoginForm = ({ redirectTo, title, forgotPassword }) => {
     }
   };
 
+  const handleBackStep = (e) => {
+    if (e) e.preventDefault();
+    
+      if (step === 1) {
+        setStep(0);
+      } 
+  };
+
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
       if (e) e.preventDefault();
@@ -149,7 +173,8 @@ const LoginForm = ({ redirectTo, title, forgotPassword }) => {
   }, [isLoginSuccessful, token, redirectTo, navigate]);
 
   return (
-    <Box component="form" noValidate autoComplete="off">
+    
+    <Box component="form" >
       {step === 0 && (
         <Box className="form-control">
           <Box className="form-row">
@@ -168,6 +193,9 @@ const LoginForm = ({ redirectTo, title, forgotPassword }) => {
                 className="input_field"
                 placeholder="Enter Username"
               />
+              <IconButton onClick={handleBackStep} className="arrow_icon back">
+                <ArrowBackIcon />
+              </IconButton>
               <IconButton onClick={handleNextStep} className="arrow_icon">
                 <ArrowForwardIcon />
               </IconButton>
@@ -184,16 +212,33 @@ const LoginForm = ({ redirectTo, title, forgotPassword }) => {
               <TextField
                 hiddenLabel
                 variant="outlined"
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
                 onKeyPress={handleKeyPress}
                 required
+                autoComplete="current-password"
                 error={errors.password}
                 className="input_field"
                 placeholder="Enter Password"
+                InputProps={{ endAdornment: <InputAdornment position="end">
+                <IconButton
+                  aria-label={
+                    showPassword ? 'hide the password' : 'display the password'
+                  }
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  onMouseUp={handleMouseUpPassword}
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment> }}
               />
+              <IconButton onClick={handleBackStep} className="arrow_icon back">
+                <ArrowBackIcon />
+              </IconButton>
               <IconButton onClick={handleNextStep} className="arrow_icon">
                 <ArrowForwardIcon />
               </IconButton>

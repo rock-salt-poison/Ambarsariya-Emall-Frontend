@@ -6309,6 +6309,15 @@ a {
                   @include full-absolute(0px, 36px, auto, 45px);
                   @include flex-center(row, center);
 
+                  .arrow_icon{
+                    @include full-absolute(20px, -28px, auto, auto);
+
+                    &.back{
+                      left: -26px;
+                      right: auto;
+                    }
+                  }
+
                   .MuiFormControl-root {
                     margin: 0 auto;
 
@@ -6330,7 +6339,7 @@ a {
                       @include homepage-buttons(
                         "Bobby-Jones-Soft",
                         20px,
-                        $black "none"
+                        $black, "none"
                       );
                       @include hover-scale(1, 0s);
 
@@ -6344,6 +6353,12 @@ a {
                         // );
                         @include hover-scale(1, 0s);
                       }
+
+                      &:-internal-autofill-selected{
+                        background-color: transparent !important;
+                      }
+
+                      
                     }
                   }
                 }

@@ -48,7 +48,7 @@ function CardsGrid({cards_data, title, component_className, backLink, nextLink, 
                     <Box component="img" src={card.imgSrc} className='card_icon' alt={card.title}/>
                     <Typography className='card_title'>{card.title}</Typography>
                   </Link>
-                  <CardBoardPopup open={openPopupId===card.id} handleClose={handleClose} title={card.title} body_content={card.popupcontent} optionalCName="financial" iconSrc={card.iconSrc} texturedSheet={card.texturedSheet}/>
+                  <CardBoardPopup open={openPopupId===card.id} handleClose={handleClose} title={card.title} body_content={card.popupcontent(handleClose)} optionalCName="financial" iconSrc={card.iconSrc} texturedSheet={card.texturedSheet}/>
                   </React.Fragment>
                   })}
                 </Box>

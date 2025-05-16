@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import GeneralLedgerForm from "../../../../Form/GeneralLedgerForm";
 
-function Cash_PopupContent() {
+function Cash_PopupContent({onClose}) {
     const initialData = {
         name: "",
         bank_name: "",
@@ -113,12 +113,17 @@ function Cash_PopupContent() {
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0; // Return true if no errors
     };
+console.log(onClose);
 
     const handleSubmit = (event) => {
         event.preventDefault(); // Prevent default form submission
         if (validateForm()) {
             console.log(formData);
             // Proceed with further submission logic, e.g., API call
+
+            if(onClose){
+                onClose();
+            }
         }
     };
 

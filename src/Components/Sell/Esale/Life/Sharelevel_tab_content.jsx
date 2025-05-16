@@ -3,12 +3,19 @@ import { Box, CircularProgress, Typography } from '@mui/material';
 import Switch_On_Off2 from '../../../Form/Switch_On_Off2';
 import { useSelector } from 'react-redux';
 import { get_member_share_level, getUser, put_member_share_level } from '../../../../API/fetchExpressAPI';
+import CustomSnackbar from '../../../CustomSnackbar';
 
 function Sharelevel_tab_content({ title, communityData }) {
   const [loading, setLoading] = useState(false);
   const [member, setMember] = useState(null);
   const [checkedStates, setCheckedStates] = useState({});
   const token = useSelector((state) => state.auth.userAccessToken);
+
+  const [snackbar, setSnackbar] = useState({
+      open: false,
+      message: "",
+      severity: "success",
+    });
 
   const data = [
     { id: 1, title: 'Emotional' },
@@ -64,10 +71,7 @@ function Sharelevel_tab_content({ title, communityData }) {
   const handleOnChange = async (id, title) => {
     const newIsPublic = !checkedStates[title];
 
-    setCheckedStates((prevStates) => ({
-      ...prevStates,
-      [title]: newIsPublic,
-    }));
+    
 
     if (title !== 'Community' && title !== 'Locations') {
       try {
@@ -79,8 +83,24 @@ function Sharelevel_tab_content({ title, communityData }) {
         };
         const resp = await put_member_share_level(data);
         console.log('Updated:', resp);
+        if(resp.success){
+          setSnackbar({
+            open: true,
+            message: resp.message,
+            severity: "success",
+          });
+          setCheckedStates((prevStates) => ({
+            ...prevStates,
+            [title]: newIsPublic,
+          }));
+        }
       } catch (e) {
         console.error(e);
+         setSnackbar({
+            open: true,
+            message: e.response.data.message,
+            severity: "error",
+          });
       } finally {
         setLoading(false);
       }
@@ -108,6 +128,12 @@ function Sharelevel_tab_content({ title, communityData }) {
           </Box>
         ))}
       </Box>
+      <CustomSnackbar
+        open={snackbar.open}
+        handleClose={() => setSnackbar({ ...snackbar, open: false })}
+        message={snackbar.message}
+        severity={snackbar.severity}
+      />
     </Box>
   );
 }

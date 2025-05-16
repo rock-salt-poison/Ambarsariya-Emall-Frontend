@@ -107,6 +107,7 @@ function GetInTouch({ data }) {
         lat={data.latitude}
         lng={data.longitude}
         shop_no={data.shop_no}
+        openDashboard={openDashboard}
         shop_access_token={data.shop_access_token}
       />
 

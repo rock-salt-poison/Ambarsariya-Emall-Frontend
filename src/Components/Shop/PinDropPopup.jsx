@@ -33,6 +33,8 @@ const PinDropPopup = ({
   const [radius, setRadius] = useState((distance_from_pin )?.toString() || "1"); // in km
   const circleRef = useRef(null);
   const mapRef = useRef(null);
+  console.log(lat, lng);
+  
 
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: API_KEY,

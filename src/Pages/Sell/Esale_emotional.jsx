@@ -103,14 +103,14 @@ function Esale_emotional() {
 
   useEffect(() => {
     if (data) {
-      setJoyBarCount(data.emotional_range_joy_to_excitement || 1);
-      setSadnessBarCount(data.emotional_range_sadness_to_anger || 1);
+      setJoyBarCount(data?.emotional_range_joy_to_excitement || 1);
+      setSadnessBarCount(data?.emotional_range_sadness_to_anger || 1);
       setSelectedIcons({
-        advice: data.emotional_reactivity_like_advice || false,
-        share: data.emotional_reactivity_share_experiences || false,
+        advice: data?.emotional_reactivity_like_advice || false,
+        share: data?.emotional_reactivity_share_experiences || false,
       });
-      setStressSwitch(data.emotional_regulations_recall_adverse_emotions || false);
-      setAngerSwitch(data.emotional_regulations_control_anger_and_crying || false);
+      setStressSwitch(data?.emotional_regulations_recall_adverse_emotions || false);
+      setAngerSwitch(data?.emotional_regulations_control_anger_and_crying || false);
     }
   }, [data]);
   
