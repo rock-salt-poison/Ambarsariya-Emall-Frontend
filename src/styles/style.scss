@@ -7976,6 +7976,15 @@ a {
           .open_close_slider{
             width: 80px;
             color: $yellow;
+
+            .MuiSlider-track{
+              height: 2px;
+            }
+
+            .MuiSlider-thumb{
+              width: 15px;
+              height: 15px;
+            }
           }
 
           .open_close{
@@ -18127,6 +18136,18 @@ body .MuiBackdrop-root {
                 @include flex-center(column, flex-start);
                 gap: 10px;
                 align-self: stretch;
+
+                hr{
+                  align-self: stretch;
+                  background: $yellow;
+                  margin: 10px 0;
+                }
+
+                &:last-child{
+                  hr{
+                    display: none;
+                  }
+                }
               }
 
               .col{

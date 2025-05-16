@@ -87,9 +87,42 @@ function OrderDetails_tab_content({ title }) {
                             <Typography className="text">{order.product_name ? order.product_name : '-'}</Typography>
                         </Box>
                         <Box className="col">
+                            <Typography className="heading">Shipping Method</Typography>
+                            <Typography className="text">{order.service || '-'}</Typography>
+                        </Box>
+                        <Box className="col">
+                            <Typography className="heading">No. of units</Typography>
+                            <Typography className="text">{order.quantity_ordered}</Typography>
+                        </Box>
+                        <Box className="col">
+                            <Typography className="heading">Units price</Typography>
+                            <Typography className="text">{order.unit_price}</Typography>
+                        </Box>
+                        <Box className="col">
                             <Typography className="heading">Total Amount</Typography>
                             <Typography className="text">{order.total_amount}</Typography>
                         </Box>
+                        <Box className="col">
+                            <Typography className="heading">GST</Typography>
+                            <Typography className="text">{order.buyer_gst_number || '-'}</Typography>
+                        </Box>
+                        <Box className="col">
+                            <Typography className="heading">Discount</Typography>
+                            <Typography className="text">{order.discount_amount}</Typography>
+                        </Box>
+                        <Box className="col">
+                            <Typography className="heading">Grand Total</Typography>
+                            <Typography className="text">{order.subtotal}</Typography>
+                        </Box>
+                        <Box className="col">
+                            <Typography className="heading">Services</Typography>
+                            <Typography className="text">COD</Typography>
+                        </Box>
+                        <Box className="col">
+                            <Typography className="heading">Status</Typography>
+                            <Typography className="text">{order.status}</Typography>
+                        </Box>
+                        <Divider/>
                         
                     </Box>))}
                     </Box>

@@ -14,6 +14,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { GoogleMap, MarkerF, useLoadScript } from "@react-google-maps/api";
 import FormField from "../Form/FormField";
 import { updateEshopLocation } from "../../API/fetchExpressAPI";
+import CustomSnackbar from "../CustomSnackbar";
 
 const API_KEY = process.env.REACT_APP_GOOGLE_API;
 const mapContainerStyle = { width: "100%", height: "350px" };
@@ -32,15 +33,16 @@ const PinDropPopup = ({
   const [loading, setLoading] = useState(false);
   const [radius, setRadius] = useState((distance_from_pin )?.toString() || "1"); // in km
   const circleRef = useRef(null);
+  const [markerPosition, setMarkerPosition] = useState({ lat, lng });
   const mapRef = useRef(null);
-  console.log(lat, lng);
+
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
   
 
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: API_KEY,
   });
 
-  const markerPosition = { lat, lng };
   const validLength = parseFloat(radius) || 0;
 
   useEffect(() => {
@@ -58,7 +60,7 @@ const PinDropPopup = ({
         map: mapRef.current,
       });
     }
-  }, [validLength, lat, lng]);
+  }, [validLength, markerPosition]);
 
   const handleOnChange = (e) => {
     let value = parseFloat(e.target.value);
@@ -71,12 +73,20 @@ const PinDropPopup = ({
     if (validLength && shop_access_token) {
       try {
         setLoading(true);
-        await updateEshopLocation({
+        const resp = await updateEshopLocation({
           distance_from_pin: validLength,
-          location_pin_drop: [{ lat, lng }],
+          location_pin_drop: [markerPosition],
           shop_access_token,
         });
-        onClose();
+        setSnackbar({
+          open: true,
+          message: resp?.message,
+          severity: 'success',
+        });
+        setTimeout(()=>{
+          onClose();
+        },800);
+        
       } finally {
         setLoading(false);
       }
@@ -113,11 +123,13 @@ const PinDropPopup = ({
 
         <GoogleMap
           mapContainerStyle={mapContainerStyle}
-          zoom={15}
+          zoom={20}
           center={markerPosition}
           onLoad={(map) => (mapRef.current = map)}
         >
-          <MarkerF position={markerPosition} />
+          <MarkerF position={markerPosition} draggable onDragEnd={(e) =>
+    setMarkerPosition({ lat: e.latLng.lat(), lng: e.latLng.lng() })
+  }/>
         </GoogleMap>
 
         <Box component="form" onSubmit={handleSubmit} mt={2}>
@@ -139,6 +151,12 @@ const PinDropPopup = ({
           </Button>
         </Box>
       </DialogContent>
+      <CustomSnackbar
+        open={snackbar.open}
+        handleClose={() => setSnackbar({ ...snackbar, open: false })}
+        message={snackbar.message}
+        severity={snackbar.severity}
+      />
     </Dialog>
   );
 };

@@ -2,13 +2,33 @@ import React, { useState, useEffect } from 'react';
 import { Box, CircularProgress, Slider, Typography } from '@mui/material';
 import CircularText from '../Home/CircularText';
 import UserBadge from '../../UserBadge';
-import { updateEshopStatus } from '../../API/fetchExpressAPI';
+import { getUser, updateEshopStatus } from '../../API/fetchExpressAPI';
 import CustomSnackbar from '../CustomSnackbar';
+import { useSelector } from 'react-redux';
 
 function BusinessHours({ data }) {
   const [sliderValue, setSliderValue] = useState(typeof data?.is_open === 'boolean' ? Number(data.is_open) : 0); // 0 = Closed, 1 = Open
   const [loading, setLoading] =  useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+
+
+  const token = useSelector((state) => state.auth.userAccessToken);
+    const [openDashboard, setOpenDashboard] = useState(false);
+  
+    useEffect(()=> {
+      if(token){
+        fetch_user(token);
+      }
+    },[token]);
+  
+    const fetch_user = async (token) => {
+      const res = await getUser(token);
+      if(data.shop_access_token === res[0].shop_access_token){
+        setOpenDashboard(true);
+      }else {
+        setOpenDashboard(false);
+      }
+    }
 
   // Convert time to 12-hour format
   const convertTo12HourFormat = (time24) => {
@@ -89,8 +109,7 @@ function BusinessHours({ data }) {
 
       <Box className="business_hours_wrapper">
         <CircularText text="Business Hours" />
-
-        <Slider
+        {!openDashboard ? <Box className="h_line"></Box> : <Slider
           value={sliderValue}
           onChange={handleSliderChange}
           min={0}
@@ -102,7 +121,9 @@ function BusinessHours({ data }) {
           ]}
           size="large"
           className="input_field open_close_slider"
-        />
+        />}
+
+        
 
         <Box className="open_close">
           <Typography className="status">

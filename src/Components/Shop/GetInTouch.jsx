@@ -114,8 +114,8 @@ function GetInTouch({ data }) {
       <PinDropPopup
         open={openPinDrop}
         onClose={() => setOpenPinDrop(false)}
-        lat={parseFloat(data.latitude)}
-        lng={parseFloat(data.longitude)}
+        lat={parseFloat(data?.location_pin_drop?.[0]?.lat ? data?.location_pin_drop?.[0]?.lat : data.latitude)}
+        lng={parseFloat(data?.location_pin_drop?.[0]?.lng ? data?.location_pin_drop?.[0]?.lng : data.longitude)}
         optionalCname="map-popup-dialog"
         shop_access_token={data.shop_access_token}
         distance_from_pin={data.distance_from_pin}

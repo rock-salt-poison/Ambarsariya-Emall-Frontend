@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
-import { TextField, Button, Box, IconButton, CircularProgress } from '@mui/material';
+import { TextField, Button, Box, IconButton, CircularProgress, InputAdornment } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
+import ArrowBackIcon from '@mui/icons-material/ArrowBackIos';
 import input_img from '../../Utils/images/Sell/login/input_bg.svg';
 import { put_otp, post_verify_otp, put_forgetPassword } from '../../API/fetchExpressAPI';
 import CustomSnackbar from '../CustomSnackbar';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const ForgotPasswordForm = ({ redirectTo, title }) => {
   const navigate = useNavigate();
@@ -14,7 +17,17 @@ const ForgotPasswordForm = ({ redirectTo, title }) => {
   const [errorMessages, setErrorMessages] = useState({ username: '', otp: '', password: '' });
   const [step, setStep] = useState(0); // Step 0: username, Step 1: OTP, Step 2: password
   const [loading, setLoading ] = useState(false);
+  const [showPassword, setShowPassword] = React.useState(false);
 
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
+  const handleMouseUpPassword = (event) => {
+    event.preventDefault();
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -140,6 +153,20 @@ const ForgotPasswordForm = ({ redirectTo, title }) => {
     }
   };
 
+  const handleBackStep = (e) => {
+    if (e) e.preventDefault();
+    
+      if (step === 1) {
+        setStep(0);
+      } else if (step === 2) {
+        setStep(1);
+      } else if (step === 3) {
+        setStep(2);
+      } else if (step === 4) {
+        setStep(3);
+      } 
+  };
+
   const handleSubmit = async (e) => {
     if (e) e.preventDefault();
     if (validate()) {
@@ -169,6 +196,9 @@ const ForgotPasswordForm = ({ redirectTo, title }) => {
           <Box className="form-row">
             <Box component="img" src={input_img} className="input_bg" alt="background" />
             <Box className="field_container">
+              <IconButton onClick={handleBackStep} className="arrow_icon back">
+                <ArrowBackIcon />
+              </IconButton>
               <TextField
                 hiddenLabel
                 variant="outlined"
@@ -196,6 +226,9 @@ const ForgotPasswordForm = ({ redirectTo, title }) => {
           <Box className="form-row">
             <Box component="img" src={input_img} className="input_bg" alt="background" />
             <Box className="field_container">
+              <IconButton onClick={handleBackStep} className="arrow_icon back">
+                <ArrowBackIcon />
+              </IconButton>
               <TextField
                 hiddenLabel
                 variant="outlined"
@@ -223,18 +256,35 @@ const ForgotPasswordForm = ({ redirectTo, title }) => {
           <Box className="form-row">
             <Box component="img" src={input_img} className="input_bg" alt="background" />
             <Box className="field_container">
+              <IconButton onClick={handleBackStep} className="arrow_icon back">
+                <ArrowBackIcon />
+              </IconButton>
               <TextField
                 hiddenLabel
                 variant="outlined"
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
                 onKeyPress={handleKeyPress}
                 required
+                autoComplete="current-password"
                 error={errors.password}
                 className="input_field"
                 placeholder="Enter Password"
+                InputProps={{ endAdornment: <InputAdornment position="end">
+                <IconButton
+                  aria-label={
+                    showPassword ? 'hide the password' : 'display the password'
+                  }
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  onMouseUp={handleMouseUpPassword}
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment> }}
               />
               <IconButton onClick={handleNextStep} className="arrow_icon">
                 <ArrowForwardIcon />
@@ -249,18 +299,35 @@ const ForgotPasswordForm = ({ redirectTo, title }) => {
           <Box className="form-row">
             <Box component="img" src={input_img} className="input_bg" alt="background" />
             <Box className="field_container">
+              <IconButton onClick={handleBackStep} className="arrow_icon back">
+                <ArrowBackIcon />
+              </IconButton>
               <TextField
                 hiddenLabel
                 variant="outlined"
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 name="confirm_password"
                 value={formData.confirm_password}
                 onChange={handleChange}
                 onKeyPress={handleKeyPress}
                 required
+                autoComplete="current-password"
                 error={errors.confirm_password}
                 className="input_field"
                 placeholder="Confirm Password"
+                InputProps={{ endAdornment: <InputAdornment position="end">
+                <IconButton
+                  aria-label={
+                    showPassword ? 'hide the password' : 'display the password'
+                  }
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  onMouseUp={handleMouseUpPassword}
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment> }}
               />
               <IconButton onClick={handleNextStep} className="arrow_icon">
                 <ArrowForwardIcon />

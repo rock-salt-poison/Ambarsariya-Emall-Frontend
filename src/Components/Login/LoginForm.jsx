@@ -180,6 +180,9 @@ const LoginForm = ({ redirectTo, title, forgotPassword }) => {
           <Box className="form-row">
             <Box component="img" src={input_img} className="input_bg" alt="background" />
             <Box className="field_container">
+              <IconButton onClick={handleBackStep} className="arrow_icon back">
+                <ArrowBackIcon />
+              </IconButton>
               <TextField
                 hiddenLabel
                 variant="outlined"
@@ -193,9 +196,7 @@ const LoginForm = ({ redirectTo, title, forgotPassword }) => {
                 className="input_field"
                 placeholder="Enter Username"
               />
-              <IconButton onClick={handleBackStep} className="arrow_icon back">
-                <ArrowBackIcon />
-              </IconButton>
+              
               <IconButton onClick={handleNextStep} className="arrow_icon">
                 <ArrowForwardIcon />
               </IconButton>
@@ -209,6 +210,9 @@ const LoginForm = ({ redirectTo, title, forgotPassword }) => {
           <Box className="form-row">
             <Box component="img" src={input_img} className="input_bg" alt="background" />
             <Box className="field_container">
+              <IconButton onClick={handleBackStep} className="arrow_icon back">
+                <ArrowBackIcon />
+              </IconButton>
               <TextField
                 hiddenLabel
                 variant="outlined"
@@ -236,9 +240,7 @@ const LoginForm = ({ redirectTo, title, forgotPassword }) => {
                 </IconButton>
               </InputAdornment> }}
               />
-              <IconButton onClick={handleBackStep} className="arrow_icon back">
-                <ArrowBackIcon />
-              </IconButton>
+              
               <IconButton onClick={handleNextStep} className="arrow_icon">
                 <ArrowForwardIcon />
               </IconButton>
