@@ -72,7 +72,7 @@ function Locations() {
                                 </Link>
                             </Box>
                             <UserBadge
-            handleBadgeBgClick={-1}
+            handleBadgeBgClick={'../esale'}
             handleLogin="../login"
             handleLogoutClick="../../AmbarsariyaMall"
           />
