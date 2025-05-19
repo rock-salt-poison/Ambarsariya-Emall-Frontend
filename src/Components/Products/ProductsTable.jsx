@@ -241,7 +241,11 @@ export default function CustomPaginationTable({rows}) {
         
     const secondaryText =
       column.id === "variations"
-        ? row.variation_1
+        ? (() => {
+      const selectedProduct = selectedProducts.find(p => p.product_no === row.product_no);
+      const variationToShow = selectedProduct?.selectedVariant ? (selectedProduct.selectedVariant)?.split('_')?.at(-2) : row.variation_1;
+      return variationToShow;
+    })()
         : column.id === "product"
         ? row.brand
         : "";

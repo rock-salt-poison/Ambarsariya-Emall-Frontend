@@ -8,7 +8,7 @@ import {
   RadioGroup,
   Typography,
 } from "@mui/material";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { convertDriveLink, get_product, get_product_variants, get_products, getShopUserData } from "../../API/fetchExpressAPI";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Zoom } from "swiper/modules";
@@ -18,6 +18,7 @@ import UserBadge from "../../UserBadge";
 import Button2 from "../../Components/Home/Button2";
 import { useDispatch } from "react-redux";
 import { addProduct } from "../../store/cartSlice";
+import CustomSnackbar from "../../Components/CustomSnackbar";
 
 function ProductInfo() {
   const { product_id, token } = useParams();
@@ -27,6 +28,12 @@ function ProductInfo() {
   const [variants, setVariants] = useState(0);
   const [selectedVariant, setSelectedVariant] = useState(null);
   const dispatch = useDispatch();
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
+  const navigate = useNavigate();
   
 
   useEffect(() => {
@@ -85,6 +92,15 @@ function ProductInfo() {
   const handleCartClick = () => {
     console.log(product);
     dispatch(addProduct(product));
+    setSnackbar({
+      open: true,
+      message: `Product Added to cart successfully!`,
+      severity: "success",
+    });
+
+    setTimeout(()=>{
+      navigate(`../shop/${token}/products`);
+    }, 600);
   }
 
   
@@ -211,6 +227,12 @@ function ProductInfo() {
           </Link>
         </Box>
       </Box>
+      <CustomSnackbar
+        open={snackbar.open}
+        handleClose={() => setSnackbar({ ...snackbar, open: false })}
+        message={snackbar.message}
+        severity={snackbar.severity}
+      />
     </Box>
   );
 }
