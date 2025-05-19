@@ -183,7 +183,7 @@ function CartTable({ rows,setCartData, setSelectedCoupon }) {
 };
 
 const calculateTotal = () =>
-  data.reduce((acc, item) => acc + Number(item.price * item.quantity), 0);
+  data.reduce((acc, item) => acc + Number(item.selling_price * item.quantity), 0);
 
 const calculateDiscount = () => {
     if (!selectedCoupon) return 0;
@@ -337,10 +337,10 @@ const calculateDiscount = () => {
                       </Box>
                     </TableCell>
                     <TableCell className="text_3" align="right">
-                      &#8377;{Number(row.price).toFixed(2)}
+                      &#8377;{Number(row.selling_price).toFixed(2)}
                     </TableCell>
                     <TableCell className="text_3 product_price" align="right">
-                      &#8377;{(row.price * row.quantity).toFixed(2)}
+                      &#8377;{(row.selling_price * row.quantity).toFixed(2)}
                     </TableCell>
                   </TableRow>
                 ))

@@ -12,7 +12,7 @@ import Login from "../Pages/Serve/Login";
 function SocializeRoutes() {
     const token = useSelector((state) => state.auth.userAccessToken);
     const [checkUser, setCheckUser] = useState();
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
   
     useEffect(() => {
       const fetchUserType = async () => {
@@ -54,9 +54,9 @@ function SocializeRoutes() {
 
   return (
     <Routes>
-      <Route path="/" element={token ? <Socialize /> : <Navigate to="login" />
+      <Route path="/" element={token ? <Socialize /> : <Navigate to="login" /> 
       } />
-      <Route path="login" element={<Login />} />
+      <Route path="/login" element={<Login />} />
       <Route path="/city-feeds" element={
         <ProtectedRoute
             shopElement={<CityFeeds />}

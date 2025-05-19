@@ -54,7 +54,7 @@ import { Box, CircularProgress } from "@mui/material";
 export default function ServeRoutes() {
   const token = useSelector((state) => state.auth.userAccessToken);
   const [checkUser, setCheckUser] = useState();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchUserType = async () => {
@@ -93,6 +93,7 @@ export default function ServeRoutes() {
         <CircularProgress />
       </Box>
     );
+
   return (
     <Routes>
       <Route path="/" element={token ? <Serve /> : <Navigate to="login" />} />

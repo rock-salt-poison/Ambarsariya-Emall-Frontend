@@ -44,7 +44,7 @@ export default function CustomPaginationTable({rows}) {
   const [canBuy, setCanBuy] = useState(true);
 
 
-  console.log(loggedInUserToken);
+  console.log(selectedProducts);
   
   useEffect(() => {
     const fetchShopUserData = async () => {
@@ -164,6 +164,7 @@ export default function CustomPaginationTable({rows}) {
   const handleCheckboxClick = (event, row) => {
     if (event.target.checked) {
       dispatch(addProduct(row));
+      console.log(row);
     } else {
       dispatch(removeProduct(row.product_no));
     }
@@ -232,8 +233,12 @@ export default function CustomPaginationTable({rows}) {
         : column.id === "product"
         ? row.product_name
         : column.id === "price"
-        ? `₹ ${row.price} ${row.unit !== null ? row.unit : ''}`
-        : "";
+  ? (() => {
+      const selectedProduct = selectedProducts.find(p => p.product_no === row.product_no);
+      const priceToShow = selectedProduct ? selectedProduct.selling_price : row.selling_price;
+      return `₹ ${priceToShow} ${row.unit !== null ? row.unit : ''}`;
+    })():"";
+        
     const secondaryText =
       column.id === "variations"
         ? row.variation_1
@@ -366,17 +371,17 @@ export default function CustomPaginationTable({rows}) {
         </Box>
       </Paper>
       <Box className="pagination">
-        <Button2
+        {page !== 0 && <Button2
           text="Prev"
           optionalcName={page === 0 ? "disabled_button" : ""}
           onClick={handlePrevPage}
-        />
-        <Button2
+        />}
+        {!(page >= totalPages - 1) && <Button2
           text="Next"
           optionalcName={page >= totalPages - 1 ? "disabled_button" : ""}
           onClick={handleNextPage}
           disabled={page >= totalPages - 1}
-        />
+        />}
         {canBuy && <Button2
           text="Buy"
           optionalcName={selectedProducts.length <= 0 ? "disabled_button" : ""}

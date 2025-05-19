@@ -9063,6 +9063,26 @@ a {
       &.plane_col{
         z-index: -1;
       }
+
+      &.cart_button{
+        position: relative;
+
+        .backButton{
+          @include full-absolute(auto, auto, 40px, 0px);
+          z-index: 2;
+        }
+
+        @include backButton(
+          $light-yellow,
+          $dark-yellow2,
+          6px,
+          "yellow-shadow-2",
+          0px,
+          flex-start,
+          18px,
+          8px 20px
+        );
+      }
       
       &.ticket_container{
         @include full-absolute(auto, 0px, 0px, auto);

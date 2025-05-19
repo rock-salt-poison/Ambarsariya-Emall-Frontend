@@ -9,19 +9,25 @@ import {
   Typography,
 } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
-import { convertDriveLink, get_product, get_product_variants, getShopUserData } from "../../API/fetchExpressAPI";
+import { convertDriveLink, get_product, get_product_variants, get_products, getShopUserData } from "../../API/fetchExpressAPI";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Zoom } from "swiper/modules";
 import plane_img from '../../Utils/images/Sell/products/plane.webp';
 import ticket from '../../Utils/images/Sell/products/ticket_design.webp';
 import UserBadge from "../../UserBadge";
+import Button2 from "../../Components/Home/Button2";
+import { useDispatch } from "react-redux";
+import { addProduct } from "../../store/cartSlice";
 
 function ProductInfo() {
   const { product_id, token } = useParams();
   const [data, setData] = useState(null);
+  const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(false);
   const [variants, setVariants] = useState(0);
   const [selectedVariant, setSelectedVariant] = useState(null);
+  const dispatch = useDispatch();
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,6 +39,13 @@ function ProductInfo() {
         // Fetch product variants
         const resp = await get_product_variants(product_id);
         console.log(resp.data);
+
+
+        const productResp = await get_product(resp.data?.[0]?.shop_no, resp.data?.[0]?.product_id);
+        if(productResp?.valid){
+          setProduct(productResp.data?.[0])
+          console.log(productResp.data?.[0])
+        }
         
         
         if (resp?.valid && Array.isArray(resp.data)) {
@@ -58,6 +71,22 @@ function ProductInfo() {
     }
   };
  
+  useEffect(() => {
+  if (data?.[selectedVariant]) {
+    setProduct(prev => ({
+      ...prev,
+      selling_price: data[selectedVariant].selling_price,
+      selectedVariant: data[selectedVariant].item_id
+    }));
+  }
+}, [selectedVariant, data]);
+
+
+  const handleCartClick = () => {
+    console.log(product);
+    dispatch(addProduct(product));
+  }
+
   
 
   return (
@@ -100,7 +129,7 @@ function ProductInfo() {
             </Typography>
             <Typography className="text">
               <Typography variant="span" className="light">Style : </Typography>
-              {data?.[0].product_style}
+              {data?.[selectedVariant]?.item_id?.split('_')?.at(-2)}
             </Typography>
           </Box>
         </Box>
@@ -166,6 +195,14 @@ function ProductInfo() {
           <Box className="image_container_2">
             <Box component="img" src={plane_img} className="plane" />
           </Box>
+        </Box>
+
+        <Box className="col cart_button">
+          <Button2
+            text="Add to cart"
+            // redirectTo={`../shop/${token}/cart`}
+            onClick={()=>handleCartClick()}
+          />
         </Box>
 
         <Box className="col ticket_container">

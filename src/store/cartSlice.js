@@ -10,15 +10,28 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     addProduct: (state, action) => {
-      const newShopNo = action.payload.shop_no;
+      const newProduct = action.payload;
+      const newShopNo = newProduct.shop_no;
 
       if (state.currentShopNo !== newShopNo) {
-        // Overwrite products if shop_no is different
-        state.selectedProducts = [action.payload];
+        // New shop: overwrite cart
+        state.selectedProducts = [newProduct];
         state.currentShopNo = newShopNo;
       } else {
-        // Add product if same shop
-        state.selectedProducts.push(action.payload);
+        // Same shop: check for existing product
+        const index = state.selectedProducts.findIndex(
+          (product) =>
+            product.product_id === newProduct.product_id &&
+            product.product_no === newProduct.product_no
+        );
+
+        if (index !== -1) {
+          // Replace existing product
+          state.selectedProducts[index] = newProduct;
+        } else {
+          // Add new product
+          state.selectedProducts.push(newProduct);
+        }
       }
     },
     removeProduct: (state, action) => {
