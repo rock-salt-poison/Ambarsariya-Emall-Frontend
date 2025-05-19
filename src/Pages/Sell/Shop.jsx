@@ -76,10 +76,10 @@ function Shop() {
         }
       };
       fetchData();
-    }, [token]);
+    }, [token]);    
   
     return (
-      <Box className="shop_wrapper">
+      <Box className={`${data?.is_open ? 'shop_wrapper' : 'shop_wrapper close'}`}>
         {loading && (
           <Box className="loading">
             <CircularProgress />

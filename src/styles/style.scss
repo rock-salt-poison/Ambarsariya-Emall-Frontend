@@ -7687,6 +7687,13 @@ a {
   @include flex-center(row, flex-start);
   place-items: normal;
 
+  &.close{
+    opacity: .85;
+    a{
+      pointer-events: none;
+    }
+  }
+
   &::before {
     content: "";
     @include full-absolute(0px, 0px, 0px, 0px);
