@@ -65,12 +65,9 @@ function Products() {
         setFilteredRows(rows); // Initialize filteredRows with all rows
     }, [rows]);
 
+    
 
-    const suggestions = [
-        'Round Neck',
-        'Self Printed',
-        'Dress',
-    ];
+    const suggestions = filteredRows.map((product)=>product.product_name)?.slice(0,4);
 
     return (
         <Box className='products_wrapper'>
