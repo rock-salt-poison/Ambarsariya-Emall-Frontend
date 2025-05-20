@@ -26,7 +26,7 @@ function ProductInfo() {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(false);
   const [variants, setVariants] = useState(0);
-  const [selectedVariant, setSelectedVariant] = useState(null);
+  const [selectedVariant, setSelectedVariant] = useState(0);
   const dispatch = useDispatch();
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -46,7 +46,6 @@ function ProductInfo() {
         // Fetch product variants
         const resp = await get_product_variants(product_id);
         console.log(resp.data);
-
 
         const productResp = await get_product(resp.data?.[0]?.shop_no, resp.data?.[0]?.product_id);
         if(productResp?.valid){
@@ -145,7 +144,7 @@ function ProductInfo() {
             </Typography>
             <Typography className="text">
               <Typography variant="span" className="light">Style : </Typography>
-              {data?.[selectedVariant]?.item_id?.split('_')?.at(-2)}
+              {data?.[selectedVariant]?.item_id ? data?.[selectedVariant]?.item_id?.split('_')?.at(-2) : data?.[0]?.product_style ? data?.[0]?.product_style : '-'}
             </Typography>
           </Box>
         </Box>
@@ -202,7 +201,7 @@ function ProductInfo() {
             </Swiper>
             <Typography className="text">
               <Typography variant="span" className="light">Price : </Typography>
-              {data?.[selectedVariant]?.selling_price} {data?.[selectedVariant]?.unit}
+              {data?.[selectedVariant]?.selling_price ? data?.[selectedVariant]?.selling_price : data?.[selectedVariant]?.product_selling_price} {data?.[selectedVariant]?.unit}
               </Typography>
           </Box>
         </Box>
@@ -215,7 +214,7 @@ function ProductInfo() {
 
         <Box className="col cart_button">
           <Button2
-            text="Add to cart"
+            text="Proceed"
             // redirectTo={`../shop/${token}/cart`}
             onClick={()=>handleCartClick()}
           />

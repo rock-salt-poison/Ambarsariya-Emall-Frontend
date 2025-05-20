@@ -162,13 +162,21 @@ export default function CustomPaginationTable({rows}) {
 
   // Handle individual row checkbox click
   const handleCheckboxClick = (event, row) => {
-    if (event.target.checked) {
-      dispatch(addProduct(row));
-      console.log(row);
-    } else {
-      dispatch(removeProduct(row.product_no));
-    }
-  };
+  if (event.target.checked) {
+    // Check if the product is already in selectedProducts
+    const existingProduct = selectedProducts.find(p => p.product_no === row.product_no);
+
+    const selectedRow = existingProduct?.selectedVariant
+      ? row // already has selectedVariant, use as-is
+      : { ...row, selectedVariant: row.item_ids ? (row?.item_ids)?.find((ids)=>ids?.match(row.iku_id?.[0])?.input) : null}; // add selectedVariant if missing
+
+    dispatch(addProduct(selectedRow));
+    console.log(selectedRow);
+  } else {
+    dispatch(removeProduct(row.product_no));
+  }
+};
+
 
   const isSelected = (id) =>
     selectedProducts.some((product) => product.product_no === id);
@@ -235,7 +243,7 @@ export default function CustomPaginationTable({rows}) {
         : column.id === "price"
   ? (() => {
       const selectedProduct = selectedProducts.find(p => p.product_no === row.product_no);
-      const priceToShow = selectedProduct ? selectedProduct.selling_price : row.selling_price;
+      const priceToShow = selectedProduct ? selectedProduct.selling_price : row?.first_iku_price ? row?.first_iku_price : row.selling_price;
       return `₹ ${priceToShow} ${row.unit !== null ? row.unit : ''}`;
     })():"";
         

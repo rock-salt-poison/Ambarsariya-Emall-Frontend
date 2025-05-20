@@ -199,12 +199,13 @@ function Cart() {
       }
   
       const products = cartData.cart.map((cart) => ({
-        no: cart.product_id,
+        id: cart.product_id,
         name: cart.product_name,
         description: cart.product_description,
         quantity: cart.quantity,
-        unit_price: cart.price,
-        total_price: parseInt(cart.price) * cart.quantity
+        unit_price: cart.selling_price,
+        selectedVariant : cart.selectedVariant,
+        total_price: parseInt(cart.selling_price) * cart.quantity,
       }));
   
       const data = {
@@ -230,6 +231,10 @@ function Cart() {
         delivery_terms: null,
         additional_instructions: null,
       };
+
+      console.log(data);
+      console.log(cartData.cart);
+      
   
       try {
         if (data) {

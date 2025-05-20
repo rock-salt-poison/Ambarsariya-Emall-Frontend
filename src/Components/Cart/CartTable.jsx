@@ -48,6 +48,7 @@ function CartTable({ rows,setCartData, setSelectedCoupon }) {
   const [categoryNames, setCategoryNames] = useState({}); // Map of category IDs to names
   const { selectedCoupon } = useSelector((state) => state.discounts);
 
+  console.log(rows);
   
   // Fetch category names for all products
   useEffect(() => {
@@ -393,11 +394,11 @@ const calculateDiscount = () => {
         </Box>
       </Paper>
       <CustomSnackbar
-              open={snackbar.open}
-              handleClose={() => setSnackbar({ ...snackbar, open: false })}
-              message={snackbar.message}
-              severity={snackbar.severity}
-            />
+          open={snackbar.open}
+          handleClose={() => setSnackbar({ ...snackbar, open: false })}
+          message={snackbar.message}
+          severity={snackbar.severity}
+        />
     </Box>
   );
 }

@@ -21964,10 +21964,13 @@ textarea[readonly]{
                 );
                 @include hover-scale(1, 0s);
               }
-              
+              .input_field.select{
+                width: 240px;
+              }
               .MuiSelect-select{
                 text-align: left;
-                width: 75%;
+                width: 85%;
+                text-overflow: ellipsis;
               }
 
               svg{
