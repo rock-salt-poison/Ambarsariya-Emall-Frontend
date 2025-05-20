@@ -9,7 +9,7 @@ import ShopDetails2 from "../../Components/Shop/ShopDetails2";
 import Button2 from "../../Components/Home/Button2";
 import { useSelector } from "react-redux";
 import { useParams, useSearchParams } from "react-router-dom";
-import { allShops, getShopUserData } from "../../API/fetchExpressAPI";
+import { allShops, getShopUserData, getUser } from "../../API/fetchExpressAPI";
 import CustomSnackbar from "../../Components/CustomSnackbar";
 import UserBadge from "../../UserBadge";
 
@@ -20,9 +20,12 @@ function Shop() {
     // const shopId = searchParams.get("token");
 
     const { token } = useParams();
+    const loggedInUserToken = useSelector((state) => state.auth.userAccessToken);
   
     const [loading, setLoading] = useState(true);
+    const [openDashboard, setOpenDashboard] = useState(false);
     const [data, setData] = useState(null);
+    const [disableShop, setDisableShop] = useState(false);
   
     const [snackbar, setSnackbar] = useState({
       open: false,
@@ -76,10 +79,35 @@ function Shop() {
         }
       };
       fetchData();
-    }, [token]);    
-  
+    }, [token, disableShop]);    
+
+    useEffect(()=> {
+        if(loggedInUserToken){
+          fetch_user(loggedInUserToken);
+        }
+      },[loggedInUserToken, data?.is_open]);
+    
+      const fetch_user = async (token) => {
+        const res = await getUser(token);
+        if(data?.shop_access_token === res[0].shop_access_token){
+          setOpenDashboard(true);
+        }else {
+          setOpenDashboard(false);
+        }
+      }
+
+      useEffect(()=> {
+        if(!data?.is_open){
+          if(!openDashboard){
+            setDisableShop(true);
+          }else{setDisableShop(false);}
+        }else{
+          setDisableShop(false);
+        }
+      }, [data?.is_open, openDashboard])
+
     return (
-      <Box className={`${data?.is_open ? 'shop_wrapper' : 'shop_wrapper close'}`}>
+      <Box className={`shop_wrapper ${disableShop ? 'close' : '' }`}>
         {loading && (
           <Box className="loading">
             <CircularProgress />
