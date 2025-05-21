@@ -23,15 +23,18 @@ import {
   post_saleOrder,
 } from "../../../../API/fetchExpressAPI";
 import CustomSnackbar from "../../../../Components/CustomSnackbar";
+import ConfirmationDialog from "../../../../Components/ConfirmationDialog";
 
 function PurchasedOrderTable({ purchasedOrders, selectedPO }) {
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState([]);
-  const [productVariants, setProductVariants] = useState([]);
+  const [updatedProducts, setUpdatedProducts] = useState([]);
   const { token } = useParams();
   const [toggleStates, setToggleStates] = useState({});
   const [headerToggleState, setHeaderToggleState] = useState("Hold");
   const [editedValues, setEditedValues] = useState({});
+    const [openDialog, setOpenDialog] = useState(false); // State for dialog
+  const [saleOrder, setSaleOrder] = useState(null);
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -39,7 +42,8 @@ function PurchasedOrderTable({ purchasedOrders, selectedPO }) {
   });
 
   const [soExists, setSoExists] = useState(false);
-  console.log(products);
+  console.log("products : ", products );
+  console.log("updated products : ", updatedProducts );
 
   const fetch_products = async (po_no) => {
     try {
@@ -47,58 +51,54 @@ function PurchasedOrderTable({ purchasedOrders, selectedPO }) {
       if (po_no) {
         const resp = await get_purchaseOrders(po_no);
         if (resp.valid) {
+
+          const updatedData = resp.data?.map((product)=> {
+            const selected_variant = product?.selected_variant?.split('_');
+            return {...product, product_name: `${selected_variant?.at(8)} - ${selected_variant?.at(10)}`,status: product.status || "Hold" }
+          })
+
           setProducts(resp.data);
-          console.log(resp.data);
+          setUpdatedProducts(updatedData);
+          console.log(updatedData);
         }
       }
     } catch (e) {
       console.log(e);
       setProducts([]);
+      setUpdatedProducts([]);
     } finally {
       setLoading(false);
     }
   };
 
-  const fetch_product_variants = async (product_id) => {
-    if (product_id) {
-      try {
-        const resp = await get_product_variants(product_id);
-        if (resp.valid) {
-          setProductVariants(resp.data);
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  };
 
   useEffect(() => {
     if (purchasedOrders.length > 0 && selectedPO) {
       fetch_products(selectedPO);
     } else {
-      setProducts([]); // Ensure no products are displayed if no POs are available
+      setProducts([]); 
+      setUpdatedProducts([]); 
     }
   }, [purchasedOrders, selectedPO]);
 
   useEffect(() => {
-    if (products.length > 0) {
-      setSoExists(products.some((product) => product.so_no));
+    if (updatedProducts.length > 0) {
+      setSoExists(updatedProducts.some((product) => product.so_no));
 
       const initialStates = {};
-      products.forEach((product, index) => {
+      updatedProducts.forEach((product, index) => {
         initialStates[index] = product.status || "Hold"; // Default selection as "hold"
       });
       setToggleStates(initialStates);
     }
-  }, [products]);
+  }, [updatedProducts]);
 
-  console.log(products);
 
   const handleToggleChange = async (index, newValue) => {
     if (newValue !== null) {
       setToggleStates((prevState) => ({ ...prevState, [index]: newValue }));
 
-      setProducts((prevProducts) => {
+      setUpdatedProducts((prevProducts) => {
         const updatedProducts = [...prevProducts];
         updatedProducts[index] = {
           ...updatedProducts[index],
@@ -121,106 +121,202 @@ function PurchasedOrderTable({ purchasedOrders, selectedPO }) {
         return updatedStates;
       });
 
-      setProducts((prevProducts) =>
+      setUpdatedProducts((prevProducts) =>
         prevProducts.map((product) => ({
           ...product,
-          status: newValue,
+          status: newValue || product.status,
         }))
       );
     }
   };
 
+  const calculateUpdatedStock = (originalProducts, modifiedProducts) => {
+  const stockUpdates = [];
+
+  modifiedProducts.forEach((updated) => {
+    const original = originalProducts.find(
+      (orig) => orig.product_id === updated.product_id
+    );
+
+    const originalQty = parseFloat(original?.quantity_ordered || 0);
+    const updatedQty = parseFloat(updated?.quantity_ordered || 0);
+    const originalVariant = original?.selected_variant;
+    const updatedVariant = updated?.selected_variant;
+
+    if (updated.status === "Accept") {
+      if (!isNaN(originalQty) && !isNaN(updatedQty)) {
+        if (originalVariant !== updatedVariant) {
+          // Variant changed: reverse original, apply updated
+          if (originalVariant) {
+            stockUpdates.push({
+              item_id: originalVariant,
+              quantity_change: -originalQty,
+              product_id: original.product_id
+            });
+          }
+          if (updatedVariant) {
+            stockUpdates.push({
+              item_id: updatedVariant,
+              quantity_change: updatedQty,
+              product_id: updated.product_id
+            });
+          }
+        } else {
+          // Same variant: adjust by quantity diff
+          const quantityChange = updatedQty - originalQty;
+          if (quantityChange !== 0) {
+            stockUpdates.push({
+              item_id: updatedVariant,
+              quantity_change: quantityChange,
+              product_id: updated.product_id
+            });
+          }
+        }
+      }
+    }
+
+    if (updated.status === "Deny") {
+      if (!isNaN(originalQty) && originalVariant) {
+        stockUpdates.push({
+          item_id: originalVariant,
+          quantity_change: -originalQty,
+          product_id: original.product_id
+        });
+      }
+    }
+  });
+
+  return stockUpdates;
+};
+
+
+
+const handleConfirm = async (saleOrder) => {
+  try {
+      setLoading(true);
+      const resp = await post_saleOrder(saleOrder);
+      console.log(resp);
+      setSnackbar({
+        open: true,
+        message: resp.message,
+        severity: "success",
+      });
+      setSoExists(true);
+    } catch (error) {
+      console.error("API error:", error);
+      setSnackbar({
+        open: true,
+        message: error.response?.data?.error || "Error processing order",
+        severity: "error",
+      });
+      setSoExists(false);
+    } finally {
+      setLoading(false);
+      setOpenDialog(false);
+    }
+}
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+   
+    const acceptedProducts = updatedProducts.filter(p => p.status === "Accept");
 
-    const product_data = products[0];
-    console.log(product_data);
+  if (acceptedProducts.length === 0) {
+    setSnackbar({
+      open: true,
+      message: "No products accepted to generate sale order.",
+      severity: "warning",
+    });
+    return;
+  }
 
-    const soProducts = products.map((p) => ({
-      product_id: p.product_id,
-      product_name: p.product_name,
-      quantity: p.quantity_ordered,
-      unit_price: p.unit_price,
-      line_total_no_of_items: p.quantity_ordered,
-      accept_or_deny: p.status,
-    }));
-    // Prepare sale order data
-    const saleOrderData = {
-      po_no: product_data.po_no,
-      buyer_id: product_data.buyer_id,
-      seller_id: product_data.seller_id,
-      buyer_type: product_data.buyer_type,
-      order_date: new Date(),
-      products: soProducts,
-      quantity: product_data.quantity_ordered,
-      unit_price: product_data.unit_price,
-      line_total_no_of_items: product_data.quantity_ordered,
-      subtotal: product_data.total_price,
-      taxes: product_data.taxes || null, // Update if applicable
-      discounts:
-        product_data.discount_amount === "0.00"
-          ? null
-          : product_data.discount_amount,
-      shipping_method: product_data.shipping_method, // Adjust as needed
-      shipping_charges: null, // Adjust if applicable
-      expected_delivery_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
-      co_helper: null,
-      subscription_type: product_data.special_offers,
-      payment_terms: null,
-      total_payment_with_all_services: null,
-      payment_method: product_data.payment_method,
-      payment_due_date: new Date(Date.now() + 24 * 60 * 60 * 1000),
-      prepaid: product_data.pre_post_paid,
-      postpaid: product_data.pre_post_paid,
-      balance_credit: null,
-      balance_credit_due_date: null,
-      after_due_date_surcharges_per_day: null,
-      status: headerToggleState,
-      send_qr_upi_bank_details: true,
-    };
+  const product_data = updatedProducts[0]; // assuming all share same PO meta
+  const stockUpdates = calculateUpdatedStock(products, updatedProducts); 
 
-    console.log(saleOrderData);
 
-    // try {
-    //   setLoading(true);
-    //   const resp = await post_saleOrder(saleOrderData);
-    //   console.log(resp);
-    //   setSnackbar({
-    //     open: true,
-    //     message: resp.message,
-    //     severity: "success",
-    //   });
-    //   setSoExists(true);
-    // } catch (error) {
-    //   console.error("API error:", error);
-    //   setSnackbar({
-    //     open: true,
-    //     message: error.response?.data?.error || "Error processing order",
-    //     severity: "error",
-    //   });
-    //   setSoExists(false);
-    // } finally {
-    //   setLoading(false);
-    // }
+  const soProducts = updatedProducts.map((p) => ({
+    product_id: p.product_id,
+    product_name: p.product_name,
+    quantity: p.quantity_ordered,
+    unit_price: p.unit_price,
+    line_total_no_of_items: p.quantity_ordered,
+    accept_or_deny: p.status,
+    selected_variant: p.selected_variant
+  }));
+
+  // 🔹 Only calculate subtotal from accepted products
+  const acceptedSubtotal = acceptedProducts.reduce((acc, curr) => {
+    const quantity = parseFloat(curr.quantity_ordered) || 0;
+    const price = parseFloat(curr.unit_price) || 0;
+    const discount_amount = parseFloat(curr.discount_amount) || 0;
+    return (acc + quantity * price) - discount_amount;
+  }, 0);
+
+
+  const saleOrderData = {
+    po_no: product_data.po_no,
+    buyer_id: product_data.buyer_id,
+    seller_id: product_data.seller_id,
+    buyer_type: product_data.buyer_type,
+    order_date: new Date(),
+    products: soProducts,
+    quantity: product_data.quantity_ordered,
+    unit_price: product_data.unit_price,
+    line_total_no_of_items: product_data.quantity_ordered,
+    subtotal: acceptedSubtotal, // 🔸 Only total of accepted products
+    taxes: product_data.taxes || null,
+    stockUpdates,
+    discounts:
+      product_data.discount_amount === "0.00"
+        ? null
+        : product_data.discount_amount,
+    shipping_method: product_data.shipping_method,
+    shipping_charges: null,
+    expected_delivery_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    co_helper: null,
+    subscription_type: product_data.special_offers,
+    payment_terms: null,
+    total_payment_with_all_services: null,
+    payment_method: product_data.payment_method,
+    payment_due_date: new Date(Date.now() + 24 * 60 * 60 * 1000),
+    prepaid: product_data.pre_post_paid,
+    postpaid: product_data.pre_post_paid,
+    balance_credit: null,
+    balance_credit_due_date: null,
+    after_due_date_surcharges_per_day: null,
+    status: headerToggleState,
+    send_qr_upi_bank_details: true,
+  };
+
+  console.log("Submitted Sale Order:", saleOrderData);
+  setSaleOrder(saleOrderData);
+  setOpenDialog(true);
+
+    
   };
 
   const handleInputChange = (index, field, value) => {
     setEditedValues((prevState) => {
-      const updatedValues = {
+      const updated = {
         ...prevState,
         [index]: { ...prevState[index], [field]: value },
       };
 
-      // Update product in state
-      setProducts((prevProducts) => {
+      setUpdatedProducts((prevProducts) => {
         const updatedProducts = [...prevProducts];
-        updatedProducts[index] = { ...updatedProducts[index], [field]: value };
+        const updatedProduct = {
+          ...updatedProducts[index],
+          [field]: value,
+        };
+        updatedProduct.total_price = updatedProduct.unit_price * updatedProduct.quantity;
+        updatedProducts[index] = updatedProduct;
         return updatedProducts;
       });
 
-      return updatedValues;
+      return updated;
     });
   };
+
 
   const handleItemChange = (index, selectedItemId, row) => {
     const selectedItem = row.items?.find(
@@ -242,7 +338,7 @@ function PurchasedOrderTable({ purchasedOrders, selectedPO }) {
       },
     }));
 
-    setProducts((prevProducts) => {
+    setUpdatedProducts((prevProducts) => {
       const updated = [...prevProducts];
       updated[index] = {
         ...updated[index],
@@ -255,6 +351,8 @@ function PurchasedOrderTable({ purchasedOrders, selectedPO }) {
     });
   };
 
+  console.log(products);
+  
   return (
     <Box className="col">
       {loading && (
@@ -307,7 +405,9 @@ function PurchasedOrderTable({ purchasedOrders, selectedPO }) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {products.map((row, index) => {
+          {updatedProducts.map((row, index) => {
+            console.log(row);
+            
             const isHold = toggleStates[index] === "Hold";
             const purchasedVariant = row.items
               ?.find((i) => i?.item_id?.match(row.selected_variant))
@@ -369,7 +469,7 @@ function PurchasedOrderTable({ purchasedOrders, selectedPO }) {
                   )}
                 </TableCell>
 
-                <TableCell>{row.quantity_in_stock}</TableCell>
+                <TableCell>{row.items?.find((i)=>i.item_id===row.selected_variant)?.item_quantity}</TableCell>
                 <TableCell width="100px">
                   {isHold ? (
                     <TextField
@@ -396,7 +496,7 @@ function PurchasedOrderTable({ purchasedOrders, selectedPO }) {
                   )}{" "}
                 </TableCell>
                 <TableCell>₹ {row.unit_price * row.quantity_ordered}</TableCell>
-                <TableCell>₹ {row.total_price - row.discount_amount}</TableCell>
+                <TableCell>₹ {(row.unit_price * row.quantity_ordered) - row.discount_amount}</TableCell>
 
                 {/* Toggle Button Group */}
                 <TableCell>
@@ -427,7 +527,7 @@ function PurchasedOrderTable({ purchasedOrders, selectedPO }) {
             );
           })}
 
-          {products.length > 0 && !soExists && (
+          {updatedProducts.length > 0 && !soExists && (
             <TableRow hover>
               <TableCell colSpan="7">Final Status</TableCell>
               <TableCell>
@@ -438,7 +538,7 @@ function PurchasedOrderTable({ purchasedOrders, selectedPO }) {
             </TableRow>
           )}
 
-          {products.length <= 0 && (
+          {updatedProducts.length <= 0 && (
             <TableRow hover>
               <TableCell colSpan="8">No purchase order exist</TableCell>
             </TableRow>
@@ -450,6 +550,14 @@ function PurchasedOrderTable({ purchasedOrders, selectedPO }) {
         handleClose={() => setSnackbar({ ...snackbar, open: false })}
         message={snackbar.message}
         severity={snackbar.severity}
+      />
+      <ConfirmationDialog
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+        onConfirm={(e)=>handleConfirm(saleOrder)}
+        title="Confirm Sale Order"
+        message={`Are you sure you want to ${headerToggleState} this order?`}
+        optionalCname="logoutDialog"
       />
     </Box>
   );

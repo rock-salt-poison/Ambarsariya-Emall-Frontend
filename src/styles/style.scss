@@ -18032,6 +18032,7 @@ body .MuiBackdrop-root {
     padding: 30px;
     @include flex-center(column, center);
     gap: 30px;
+    height: 90.5vh;
 
     .col {
       align-self: stretch;
@@ -18042,6 +18043,7 @@ body .MuiBackdrop-root {
         gap: 30px;
         width: 85%;
         align-self: center;
+        overflow-y: hidden;
       }
 
       .icon_link {
@@ -18132,14 +18134,18 @@ body .MuiBackdrop-root {
           rgba(191, 207, 169, 0.7490196078) 43%,
           rgba(104, 50, 72, 0.7490196078) 67%
         );
-        padding: 20px 30px !important;
+        padding: 20px 15px 20px 30px !important;
         border-radius: 20px;
+        height: 90%;
 
         .tab_content {
           @include flex-center(column, flex-start);
           gap: 20px;
           align-self: stretch;
           place-items: normal;
+          padding-right: 15px;
+          overflow-y: scroll;
+          height: 100%;
 
           .title {
             @include homepage-buttons("Gladiola", 32px, $light-yellow, none);

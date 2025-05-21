@@ -110,10 +110,7 @@ function OrderDetails_tab_content({ title }) {
                             <Typography className="heading">Discount</Typography>
                             <Typography className="text">{order.discount_amount}</Typography>
                         </Box>
-                        <Box className="col">
-                            <Typography className="heading">Grand Total</Typography>
-                            <Typography className="text">{order.subtotal}</Typography>
-                        </Box>
+                        
                         <Box className="col">
                             <Typography className="heading">Services</Typography>
                             <Typography className="text">COD</Typography>
@@ -125,6 +122,11 @@ function OrderDetails_tab_content({ title }) {
                         <Divider/>
                         
                     </Box>))}
+
+                    <Box className="col">
+                            <Typography className="heading">Grand Total</Typography>
+                            <Typography className="text">{selectedOrder?.[0].subtotal}</Typography>
+                        </Box>
                     </Box>
                 
                 </>) : (
@@ -141,7 +143,7 @@ function OrderDetails_tab_content({ title }) {
                                 <Typography className="text">{order.shipping_method}</Typography>
                             </Box>
                             <Box className="col status">
-                                <Typography className="text">Pending</Typography>
+                                <Typography className="text">{order.status === "Accept" ? 'Accepted' : order.status === "Deny" ? 'Denied' : order.status || "Hold"}</Typography>
                             </Box>
                         </Box>
                     ))
