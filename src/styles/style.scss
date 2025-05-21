@@ -18193,6 +18193,19 @@ body .MuiBackdrop-root {
                   font-size: 18px;
                   color: $yellow;
                 }
+
+                .MuiInputBase-root.input_field{
+                  .MuiSelect-select{
+                    padding: 0px 32px 0px 0px; 
+                    @include homepage-buttons("Bobby-Jones-Soft", 20px, $black, none);
+                    @include hover-scale(1, 0s);
+                    min-height: max-content;
+                  }
+
+                  .MuiOutlinedInput-notchedOutline{
+                    border: 0px;
+                  }
+                }
               }
             }
 

@@ -132,7 +132,7 @@ function OrderDetails_tab_content({ title }) {
                                         setSelectedOrder(updatedOrders);
                                     }}
                                     displayEmpty
-                                    sx={{ minWidth: 120 }}
+                                    className="input_field"
                                 >
                                     <MenuItem value="">Select</MenuItem>
                                     <MenuItem value="Accept">Accept</MenuItem>
