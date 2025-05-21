@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography, Button, CircularProgress, Divider } from "@mui/material";
+import { Box, Typography, Button, CircularProgress, Divider, MenuItem, Select } from "@mui/material";
 import { get_allPurchaseOrderDetails, get_purchaseOrderDetails, get_purchaseOrders, getUser } from "../../../../API/fetchExpressAPI";
 import { useSelector } from "react-redux";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
@@ -87,6 +87,10 @@ function OrderDetails_tab_content({ title }) {
                             <Typography className="text">{order.product_name ? order.product_name : '-'}</Typography>
                         </Box>
                         <Box className="col">
+                            <Typography className="heading">Product Variant</Typography>
+                            <Typography className="text">{order.selected_variant ? (order.selected_variant)?.split('_')?.at(10) : '-'}</Typography>
+                        </Box>
+                        <Box className="col">
                             <Typography className="heading">Shipping Method</Typography>
                             <Typography className="text">{order.service || '-'}</Typography>
                         </Box>
@@ -100,7 +104,7 @@ function OrderDetails_tab_content({ title }) {
                         </Box>
                         <Box className="col">
                             <Typography className="heading">Total Amount</Typography>
-                            <Typography className="text">{order.total_amount}</Typography>
+                            <Typography className="text">{order.unit_price * order.quantity_ordered}</Typography>
                         </Box>
                         <Box className="col">
                             <Typography className="heading">GST</Typography>
@@ -117,15 +121,36 @@ function OrderDetails_tab_content({ title }) {
                         </Box>
                         <Box className="col">
                             <Typography className="heading">Status</Typography>
-                            <Typography className="text">{order.status}</Typography>
+                            {order.so_subtotal ? (
+                                <Select
+                                    size="small"
+                                    value={order.status || ""}
+                                    onChange={(e) => {
+                                        const updatedOrders = selectedOrder.map(o => 
+                                            o.product_id === order.product_id ? { ...o, status: e.target.value } : o
+                                        );
+                                        setSelectedOrder(updatedOrders);
+                                    }}
+                                    displayEmpty
+                                    sx={{ minWidth: 120 }}
+                                >
+                                    <MenuItem value="">Select</MenuItem>
+                                    <MenuItem value="Accept">Accept</MenuItem>
+                                    <MenuItem value="Deny">Deny</MenuItem>
+                                    <MenuItem value="Hold">Hold</MenuItem>
+                                </Select>
+                            ) : (
+                                <Typography className="text">{order.status || "Pending"}</Typography>
+                            )}
                         </Box>
+
                         <Divider/>
                         
                     </Box>))}
 
                     <Box className="col">
                             <Typography className="heading">Grand Total</Typography>
-                            <Typography className="text">{selectedOrder?.[0].subtotal}</Typography>
+                            <Typography className="text">{selectedOrder?.[0].so_subtotal || selectedOrder?.[0].po_subtotal}</Typography>
                         </Box>
                     </Box>
                 
