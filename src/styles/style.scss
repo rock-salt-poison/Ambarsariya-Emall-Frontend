@@ -9202,6 +9202,28 @@ a {
     z-index: 0;
   }
 
+  &.purchase_order{
+    .row{
+      .col{
+        &:first-child{
+          display: grid;
+          grid-template-columns: 120px 1fr 120px;
+          gap: 10px;
+          
+          .badge{
+            display: flex;
+          }
+        }
+
+        &:last-child{
+          justify-content: center;
+          flex: 1;
+          place-items: normal;
+        }
+      }
+    }
+  }
+
   .row {
     padding: 30px;
     @include flex-center(column, space-between);
@@ -18185,6 +18207,7 @@ body .MuiBackdrop-root {
 
               .col{
                 width: 100%;
+                overflow: visible;
                 .text{
                   font-size: 20px;
                   color: $black;
@@ -18194,6 +18217,14 @@ body .MuiBackdrop-root {
                     color: $red;
                     background: $light-yellow;
                   }
+
+                  &.shadow{
+                    text-shadow: 3px 3px 5px $yellow;
+                  }
+
+                  &.total{
+                    font-size: 28px;
+                  }
                 }
                 .heading{
                   font-size: 18px;
@@ -18202,10 +18233,11 @@ body .MuiBackdrop-root {
 
                 .MuiInputBase-root.input_field{
                   .MuiSelect-select{
-                    padding: 0px 32px 0px 0px; 
+                    padding: 4px 25px 4px 10px; 
                     @include homepage-buttons("Bobby-Jones-Soft", 20px, $black, none);
                     @include hover-scale(1, 0s);
                     min-height: max-content;
+                    background: $light-yellow;
                   }
 
                   .MuiOutlinedInput-notchedOutline{
@@ -21685,6 +21717,21 @@ textarea[readonly]{
       gap: 10px;
       flex: 1;
       flex-wrap: wrap;
+
+      &.buyer_details{
+        justify-content: center;
+        background-color: rgba($yellow, 0.55);
+        padding: 10px 15px ;
+        border-radius: 10px;
+        .heading, .text{
+            @include homepage-buttons("Bobby-Jones-Soft", 20px, $black, none);
+            @include hover-scale(1, 0s);
+        }
+
+        .text{
+          color: $brown-4;
+        }
+      }
 
       &:last-child{
         justify-content: flex-end;

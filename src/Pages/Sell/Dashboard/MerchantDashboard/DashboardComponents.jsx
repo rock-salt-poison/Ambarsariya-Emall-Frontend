@@ -22,7 +22,7 @@ function DashboardComponents({ data, date }) {
 
   const card_data = [
     { id: 1, heading: "Today's Sale Orders", value: "-" },
-    { id: 2, heading: "Today's Subscriptions Orders", value: "-" },
+    { id: 2, heading: "Today's Subscription Orders", value: "-" },
     { id: 3, heading: "Today's Counter Orders", value: "-" },
     { id: 4, heading: "Today's Completed Orders", value: "-" },
     { id: 5, heading: "Today's Pending Orders", value: "-" },

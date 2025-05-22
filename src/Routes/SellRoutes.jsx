@@ -38,6 +38,7 @@ import EventsLocation from '../Pages/Sell/EventsLocation';
 import CreateEventsLocation from '../Pages/Sell/CreateEventsLocation';
 import JoinEventsLocation from '../Pages/Sell/JoinEventsLocation';
 import CommunityLocation from '../Pages/Sell/CommunityLocation';
+import PurchasedCart from '../Pages/Sell/PurchasedCart';
 
 function SellRoutes() {
   const ConditionalRoute = () => {
@@ -88,6 +89,7 @@ function SellRoutes() {
       {/* <Route path=":owner/:action/budget" element={<Budget />} /> */}
       <Route path=":owner/budget" element={<Budget />} />
       <Route path="esale/life" element={<Life />} />
+      <Route path="esale/life/:owner/purchased-cart/:po_no" element={<PurchasedCart />} />
       <Route path="esale/relations" element={<MemberRelations />} />
       <Route path="esale/locations" element={<Locations />} />
       <Route path="esale/locations/events" element={<EventsLocation />} />

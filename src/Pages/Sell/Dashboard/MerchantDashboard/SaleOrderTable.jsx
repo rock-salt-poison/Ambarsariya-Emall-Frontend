@@ -7,14 +7,16 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  Typography,
 } from "@mui/material";
 import { get_saleOrders } from "../../../../API/fetchExpressAPI";
 import CustomSnackbar from "../../../../Components/CustomSnackbar";
+import { Link } from "react-router-dom";
 
 function SaleOrderTable({ seller_id }) {
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState([]);
-  
+
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -22,8 +24,8 @@ function SaleOrderTable({ seller_id }) {
   });
 
   console.log('------------sale ', products);
-  
- 
+
+
   const fetch_products = async (seller_id) => {
     try {
       setLoading(true);
@@ -41,11 +43,11 @@ function SaleOrderTable({ seller_id }) {
     }
   };
 
-  
 
 
 
-  
+
+
   useEffect(() => {
     if (seller_id) {
       fetch_products(seller_id);
@@ -53,11 +55,17 @@ function SaleOrderTable({ seller_id }) {
       setProducts([]); // Ensure no products are displayed if no POs are available
     }
   }, [seller_id]);
-  
 
-  
+
+
 
   return (
+    <>
+
+      <Box className="col buyer_details">
+        <Typography className="heading">Buyer Id : </Typography>
+        <Link><Typography className="text">{products?.[0]?.buyer_id}</Typography></Link>
+      </Box>
       <Box className="col">
         {loading && (
           <Box className="loading">
@@ -80,7 +88,7 @@ function SaleOrderTable({ seller_id }) {
               <TableCell>
                 Return / Refund Status
               </TableCell>
-              
+
               {/* <TableCell>Total Price</TableCell>
                                 <TableCell>List of services applied</TableCell>
                                 <TableCell>Final S.O.</TableCell>
@@ -97,13 +105,13 @@ function SaleOrderTable({ seller_id }) {
 
                   {/* Product Name Column - Dropdown if on Hold */}
                   <TableCell>
-                   
-                      {row.payment_method}
+
+                    {row.payment_method}
                   </TableCell>
 
                   {/* Quantity Column - Input if on Hold */}
                   <TableCell>
-                      Pending
+                    Pending
                   </TableCell>
 
                   <TableCell>
@@ -136,6 +144,7 @@ function SaleOrderTable({ seller_id }) {
           severity={snackbar.severity}
         />
       </Box>
+    </>
   );
 }
 

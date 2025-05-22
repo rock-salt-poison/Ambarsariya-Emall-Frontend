@@ -16,7 +16,7 @@ import {
   ToggleButtonGroup,
   Typography,
 } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import {
   get_product_variants,
   get_purchaseOrders,
@@ -354,6 +354,13 @@ const handleConfirm = async (saleOrder) => {
   console.log(products);
   
   return (
+    <>
+    
+    <Box className="col buyer_details">
+        <Typography className="heading">Buyer Id : </Typography>
+        <Link><Typography className="text">{products?.[0]?.buyer_id}</Typography></Link>
+    </Box>
+   
     <Box className="col">
       {loading && (
         <Box className="loading">
@@ -560,6 +567,7 @@ const handleConfirm = async (saleOrder) => {
         optionalCname="logoutDialog"
       />
     </Box>
+     </>
   );
 }
 

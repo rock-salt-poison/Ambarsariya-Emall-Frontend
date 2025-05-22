@@ -26,7 +26,6 @@ const columns = [
 
 export default function CustomPaginationTable({rows}) {
 
-  console.log('rows : ', rows);
   
   const [page, setPage] = useState(0);
   const [selectAll, setSelectAll] = useState(false);
@@ -44,7 +43,6 @@ export default function CustomPaginationTable({rows}) {
   const [canBuy, setCanBuy] = useState(true);
 
 
-  console.log(selectedProducts);
   
   useEffect(() => {
     const fetchShopUserData = async () => {

@@ -679,6 +679,17 @@ export const get_allPurchaseOrderDetails = async (buyer_id) => {
   }
 }
 
+export const get_purchasedOrder = async (po_no) => {
+  try {
+    if (po_no) {
+      const resp = await axios.get(`${link}/purchased-order/${po_no}`);
+      return resp.data;
+    }
+  } catch (e) {
+    throw e;
+  }
+}
+
 export const get_purchaseOrders = async (po_no) => {
   try {
     if (po_no) {

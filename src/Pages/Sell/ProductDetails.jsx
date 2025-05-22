@@ -36,7 +36,6 @@ function ProductDetails() {
     fetchData();
   }, [token, product_id]);
 
-  console.log(data);
   
 
   const RenderComponent = ({ title, bgColor, linkTo, target }) => {

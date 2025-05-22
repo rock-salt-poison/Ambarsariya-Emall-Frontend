@@ -150,6 +150,9 @@ function Cart() {
   
     setOpenServicePopup(item.id);
   };
+
+  console.log(cartData);
+  
   
 
   const handle_QR_Code_Click = async (e) => {

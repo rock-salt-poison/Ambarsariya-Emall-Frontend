@@ -48,7 +48,6 @@ function CartTable({ rows,setCartData, setSelectedCoupon }) {
   const [categoryNames, setCategoryNames] = useState({}); // Map of category IDs to names
   const { selectedCoupon } = useSelector((state) => state.discounts);
 
-  console.log(rows);
   
   // Fetch category names for all products
   useEffect(() => {
@@ -146,13 +145,23 @@ function CartTable({ rows,setCartData, setSelectedCoupon }) {
   
 
   useEffect(()=>{
+    const subtotal = calculateTotal();
+    const discount = calculateDiscount();
+    const deliveryCharge = 30;
+
+    const total = selectedCoupon
+      ? (subtotal - discount + deliveryCharge)
+      : (subtotal - discount);
+
     setCartData({
-      subtotal: calculateTotal().toFixed(2),
-      total: (calculateTotal() - calculateDiscount()).toFixed(2),
-      discount: calculateDiscount().toFixed(2),
-      cart : data
+      subtotal: subtotal.toFixed(2),
+      discount: discount.toFixed(2),
+      total: total.toFixed(2),
+      cart: data,
     });
-  },[data])
+
+  },[data, selectedCoupon])
+  
 
   useEffect(()=>{
     setSelectedCoupon(selectedCoupon);
@@ -367,6 +376,14 @@ const calculateDiscount = () => {
                   &#8377;{calculateTotal().toFixed(2)}
                 </TableCell>
               </TableRow>
+              {selectedCoupon && <TableRow>
+                <TableCell colSpan={5} align="right">
+                  <Typography className="text_1">Coupon Cost :</Typography>
+                </TableCell>
+                <TableCell className="text_2">
+                  &#8377; 30
+                </TableCell>
+              </TableRow>}
               <TableRow>
                 <TableCell colSpan={5} align="right">
                   <Typography className="text_1">Discount {selectedCoupon && `(${(selectedCoupon.coupon_type)?.replace(/_/g,' ')})`} :</Typography>
@@ -375,13 +392,16 @@ const calculateDiscount = () => {
                   -&#8377;{calculateDiscount().toFixed(2)}
                 </TableCell>
               </TableRow>
+              
               <TableRow>
                 <TableCell colSpan={5} align="right">
                   <Typography className="text_1">Total :</Typography>
                 </TableCell>
-                <TableCell className="text_2">
+                {selectedCoupon ? <TableCell className="text_2">
+                  &#8377;{((calculateTotal() - calculateDiscount()) + 30).toFixed(2)}
+                </TableCell> : <TableCell className="text_2">
                   &#8377;{(calculateTotal() - calculateDiscount()).toFixed(2)}
-                </TableCell>
+                </TableCell>}
               </TableRow>
             </TableFooter>
             

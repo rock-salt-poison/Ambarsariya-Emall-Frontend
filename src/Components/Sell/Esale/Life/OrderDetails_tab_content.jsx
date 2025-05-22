@@ -96,10 +96,10 @@ function OrderDetails_tab_content({ title }) {
           return {
             productId: order.product_id,
             variantDiff: poProduct?.selectedVariant !== order.selected_variant,
-            quantityDiff: poProduct?.quantity !== order.quantity_ordered,
-            unitPriceDiff: poProduct?.unit_price !== order.unit_price,
+            quantityDiff: poProduct?.quantity != order.quantity_ordered,
+            unitPriceDiff: poProduct?.unit_price != order.unit_price,
             totalAmountDiff:
-              poProduct?.total_price !== order.unit_price * order.quantity_ordered,
+              poProduct?.total_price != order.unit_price * order.quantity_ordered,
           };
         });
       
@@ -136,16 +136,22 @@ console.log(differences)
               <Box className="col_group">
                 <Box className="col">
                   <Typography className="heading">Order Details</Typography>
-                  <Typography className="text">
-                    {selectedOrder?.[0]?.po_no}
-                  </Typography>
+                  <Link to={`../esale/life/${selectedOrder?.[0]?.shop_access_token}/purchased-cart/${selectedOrder?.[0]?.po_no}`}>
+                    <i>
+                        <Typography className="text shadow">
+                            {selectedOrder?.[0]?.po_no}
+                        </Typography>
+                    </i>
+                  </Link>
                 </Box>
                 <Box className="col">
                   <Typography className="heading">Seller Id</Typography>
                   <Link to={`../support/shop/shop-detail/${selectedOrder?.[0]?.shop_access_token}`}>
-                    <Typography className="text">
-                        {selectedOrder?.[0]?.seller_id}
-                    </Typography>
+                    <i>
+                        <Typography className="text shadow">
+                            {selectedOrder?.[0]?.seller_id}
+                        </Typography>
+                    </i>
                   </Link>
                 </Box>
               </Box>
@@ -156,9 +162,9 @@ console.log(differences)
                 return <Box className="col_group">
                   <Box className="col">
                     <Typography className="heading">Product Name</Typography>
-                    <Link to={`../shop/${order.shop_access_token}/products/detail/${order.product_id}`}><Typography className="text">
+                    <Link to={`../shop/${order.shop_access_token}/products/detail/${order.product_id}`}><i><Typography className="text shadow">
                       {order.product_name ? order.product_name : "-"}
-                    </Typography></Link>
+                    </Typography></i></Link>
                   </Box>
                   <Box className="col">
                     <Typography className="heading">Product Variant</Typography>
@@ -242,7 +248,7 @@ console.log(differences)
 
               <Box className="col">
                 <Typography className="heading">Grand Total</Typography>
-                <Typography className="text">
+                <Typography className="text total shadow">
                   {selectedOrder?.[0].so_subtotal ||
                     selectedOrder?.[0].po_subtotal}
                 </Typography>
