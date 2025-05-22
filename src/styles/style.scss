@@ -18188,6 +18188,12 @@ body .MuiBackdrop-root {
                 .text{
                   font-size: 20px;
                   color: $black;
+
+                  &.highlight{
+                    padding: 4px 10px;
+                    color: $red;
+                    background: $light-yellow;
+                  }
                 }
                 .heading{
                   font-size: 18px;
