@@ -152,11 +152,14 @@ function CartTable({ rows,setCartData, setSelectedCoupon }) {
     const total = selectedCoupon
       ? (subtotal - discount + deliveryCharge)
       : (subtotal - discount);
+    
+    const couponCost = selectedCoupon ? 30 : null;
 
     setCartData({
       subtotal: subtotal.toFixed(2),
       discount: discount.toFixed(2),
       total: total.toFixed(2),
+      couponCost,
       cart: data,
     });
 

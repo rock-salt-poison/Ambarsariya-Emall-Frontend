@@ -17,6 +17,7 @@ import {
 import { useSelector } from "react-redux";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import { Link } from "react-router-dom";
+import ConfirmationDialog from "../../../ConfirmationDialog";
 
 function OrderDetails_tab_content({ title }) {
   const [purchasedOrders, setPurchasedOrders] = useState([]);
@@ -24,6 +25,8 @@ function OrderDetails_tab_content({ title }) {
   const token = useSelector((state) => state.auth.userAccessToken);
   const [loading, setLoading] = useState(false);
   const [differences, setDifferences] = useState([]);
+  const [saleOrderStatus, setSaleOrderStatus] = useState('');
+  const [openDialog, setOpenDialog] = useState({open : false, status : ''}); // State for dialog
 
 
   const fetchPurchasedOrder = async (buyer_id) => {
@@ -66,7 +69,11 @@ function OrderDetails_tab_content({ title }) {
         setLoading(true);
         const resp = await get_purchaseOrders(po_no);
         if (resp.valid) {
-          setSelectedOrder(resp.data);
+          const ordersWithOriginalStatus = resp.data.map(order => ({
+            ...order,
+            originalStatus: order.status
+          }));
+          setSelectedOrder(ordersWithOriginalStatus);
         }
       } catch (e) {
         console.log(e);
@@ -108,8 +115,14 @@ function OrderDetails_tab_content({ title }) {
 }, [selectedOrder]);
 
 
-console.log(differences)
+console.log(differences);
 
+const handleConfirm = async () => { 
+  setSaleOrderStatus(openDialog.status);
+  setOpenDialog(false);
+}
+
+console.log(saleOrderStatus);
   return (
     <Box className="tab_content">
       {loading && (
@@ -154,6 +167,7 @@ console.log(differences)
                     </i>
                   </Link>
                 </Box>
+                <Divider />
               </Box>
               {selectedOrder?.map((order) => {
                 const difference = differences?.find((diff)=>diff.productId === order.product_id);
@@ -174,12 +188,12 @@ console.log(differences)
                         : "-"}
                     </Typography>
                   </Box>
-                  <Box className="col">
+                  {/* <Box className="col">
                     <Typography className="heading">Shipping Method</Typography>
                     <Typography className="text">
                       {order.service || "-"}
                     </Typography>
-                  </Box>
+                  </Box> */}
                   <Box className="col">
                     <Typography className="heading">No. of units</Typography>
                     <Typography className={difference?.quantityDiff ? "text highlight" : "text"}>
@@ -188,34 +202,18 @@ console.log(differences)
                   </Box>
                   <Box className="col">
                     <Typography className="heading">Units price</Typography>
-                    <Typography className={difference?.unitPriceDiff ? "text highlight" : "text"}>{order.unit_price}</Typography>
+                    <Typography className={difference?.unitPriceDiff ? "text highlight" : "text"}>&#8377; {order.unit_price}</Typography>
                   </Box>
                   <Box className="col">
                     <Typography className="heading">Total Amount</Typography>
                     <Typography className={difference?.totalAmountDiff ? "text highlight" : "text"}>
-                      {order.unit_price * order.quantity_ordered}
+                      &#8377; {(order.total_price)}
                     </Typography>
                   </Box>
-                  <Box className="col">
-                    <Typography className="heading">GST</Typography>
-                    <Typography className="text">
-                      {order.buyer_gst_number || "-"}
-                    </Typography>
-                  </Box>
-                  <Box className="col">
-                    <Typography className="heading">Discount</Typography>
-                    <Typography className="text">
-                      {order.discount_amount}
-                    </Typography>
-                  </Box>
-
-                  <Box className="col">
-                    <Typography className="heading">Services</Typography>
-                    <Typography className="text">COD</Typography>
-                  </Box>
+                  
                   <Box className="col">
                     <Typography className="heading">Status</Typography>
-                    {order.so_subtotal && order.status !== 'Deny' ? (
+                    {order.so_subtotal && (saleOrderStatus == '' ) && (order.originalStatus !== 'Deny' || order.status !== 'Deny') ? (
                       <Select
                         size="small"
                         value={order.status || ""}
@@ -246,13 +244,65 @@ console.log(differences)
                 </Box>
             })}
 
+            <Box className="col">
+              <Typography className="heading">Services</Typography>
+              <Typography className="text">COD</Typography>
+            </Box>
+
+            <Box className="col">
+              <Typography className="heading">subtotal</Typography>
+              <Typography className="text">
+                &#8377; {selectedOrder?.[0].so_subtotal || selectedOrder?.[0].po_subtotal}
+              </Typography>
+            </Box>
+
+            <Box className="col">
+              <Typography className="heading">GST</Typography>
+              <Typography className="text">
+                {selectedOrder?.[0].buyer_gst_number || "-"}
+              </Typography>
+            </Box>
+
+           {selectedOrder?.[0].discount_amount && selectedOrder?.[0].discount_amount !== 0.00 && selectedOrder?.[0].discount_amount !== "" && <Box className="col">
+              <Typography className="heading">Discount</Typography>
+              <Typography className="text">
+                - &#8377; {selectedOrder?.[0].total_discount_amount}
+              </Typography>
+            </Box>}
+
+            {selectedOrder?.[0].coupon_cost && <Box className="col">
+              <Typography className="heading">Coupon Cost</Typography>
+              <Typography className="text">
+                 &#8377; {selectedOrder?.[0].coupon_cost}
+              </Typography>
+            </Box>}
+
               <Box className="col">
                 <Typography className="heading">Grand Total</Typography>
                 <Typography className="text total shadow">
-                  {selectedOrder?.[0].so_subtotal ||
-                    selectedOrder?.[0].po_subtotal}
+                  &#8377; {selectedOrder?.[0].total_amount ||
+                    selectedOrder?.[0].total_amount}
                 </Typography>
               </Box>
+                    {selectedOrder?.[0].so_subtotal && (
+            <Box className="col">
+                    <Typography className="heading">Sale Order Status</Typography>
+                      <Select
+                        size="small"
+                        value={saleOrderStatus }
+                        onChange={(e) => {
+                          setOpenDialog({open: true, status:e.target.value})
+                          }}
+                        displayEmpty
+                        className="input_field"
+                      >
+                        <MenuItem value="">Select Status</MenuItem>
+                        <MenuItem value="Accept">Accept</MenuItem>
+                        <MenuItem value="Deny">Deny</MenuItem>
+                        <MenuItem value="Hold">Hold</MenuItem>
+                      </Select>
+                  </Box>
+                    ) }
             </Box>
           </>
         ) : (
@@ -287,6 +337,14 @@ console.log(differences)
           ))
         )}
       </Box>
+      <ConfirmationDialog
+              open={openDialog.open}
+              onClose={() => setOpenDialog(false)}
+              onConfirm={(e)=>handleConfirm()}
+              title="Confirm Sale Order"
+              message={`Are you sure you want to ${openDialog.status} this order?`}
+              optionalCname="logoutDialog"
+            />
     </Box>
   );
 }

@@ -205,10 +205,10 @@ function Cart() {
         id: cart.product_id,
         name: cart.product_name,
         description: cart.product_description,
-        quantity: cart.quantity,
-        unit_price: cart.selling_price,
+        quantity: Number(cart.quantity),
+        unit_price: Number(cart.selling_price),
         selectedVariant : cart.selectedVariant,
-        total_price: parseInt(cart.selling_price) * cart.quantity,
+        total_price: Number(parseInt(cart.selling_price) * cart.quantity),
       }));
   
       const data = {
@@ -233,6 +233,7 @@ function Cart() {
         date_of_issue: new Date(),
         delivery_terms: null,
         additional_instructions: null,
+        coupon_cost : cartData.couponCost
       };
 
       console.log(data);

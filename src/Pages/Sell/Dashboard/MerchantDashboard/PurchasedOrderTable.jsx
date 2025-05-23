@@ -42,6 +42,7 @@ function PurchasedOrderTable({ purchasedOrders, selectedPO }) {
   });
 
   const [soExists, setSoExists] = useState(false);
+  const [total, setTotal] = useState(0.00);
   console.log("products : ", products );
   console.log("updated products : ", updatedProducts );
 
@@ -216,6 +217,23 @@ const handleConfirm = async (saleOrder) => {
     }
 }
 
+const calculate_total = () => {
+  const total = updatedProducts?.reduce((acc, curr) => {
+    const quantity = parseFloat(curr.quantity_ordered) || 0;
+    const price = parseFloat(curr.unit_price) || 0;
+    const discount_amount = parseFloat(curr.discount_amount) || 0;
+    return acc + (quantity * price - discount_amount);
+  }, 0);
+
+  const couponCost = parseFloat(updatedProducts?.[0]?.coupon_cost) || 0;
+  setTotal((total + couponCost).toFixed(2));
+}
+
+
+useEffect(()=>{
+  calculate_total();
+}, [updatedProducts, selectedPO])
+
   const handleSubmit = async (e) => {
     e.preventDefault();
    
@@ -237,9 +255,10 @@ const handleConfirm = async (saleOrder) => {
   const soProducts = updatedProducts.map((p) => ({
     product_id: p.product_id,
     product_name: p.product_name,
-    quantity: p.quantity_ordered,
-    unit_price: p.unit_price,
-    line_total_no_of_items: p.quantity_ordered,
+    quantity: Number(p.quantity_ordered),
+    unit_price: Number(p.unit_price),
+    total_price: Number(parseInt(p.unit_price) * p.quantity_ordered),
+    line_total_no_of_items: Number(p.quantity_ordered),
     accept_or_deny: p.status,
     selected_variant: p.selected_variant
   }));
@@ -249,9 +268,11 @@ const handleConfirm = async (saleOrder) => {
     const quantity = parseFloat(curr.quantity_ordered) || 0;
     const price = parseFloat(curr.unit_price) || 0;
     const discount_amount = parseFloat(curr.discount_amount) || 0;
-    return (acc + quantity * price) - discount_amount;
+    return (acc + quantity * price);
   }, 0);
 
+  const couponCost = parseFloat(product_data.coupon_cost) || 0;
+  const subtotal = (acceptedSubtotal + couponCost).toFixed(2);
 
   const saleOrderData = {
     po_no: product_data.po_no,
@@ -263,13 +284,13 @@ const handleConfirm = async (saleOrder) => {
     quantity: product_data.quantity_ordered,
     unit_price: product_data.unit_price,
     line_total_no_of_items: product_data.quantity_ordered,
-    subtotal: acceptedSubtotal, // 🔸 Only total of accepted products
+    subtotal: acceptedSubtotal, 
     taxes: product_data.taxes || null,
     stockUpdates,
     discounts:
-      product_data.discount_amount === "0.00"
+      product_data.total_discount_amount === "0.00"
         ? null
-        : product_data.discount_amount,
+        : product_data.total_discount_amount,
     shipping_method: product_data.shipping_method,
     shipping_charges: null,
     expected_delivery_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
@@ -286,6 +307,7 @@ const handleConfirm = async (saleOrder) => {
     after_due_date_surcharges_per_day: null,
     status: headerToggleState,
     send_qr_upi_bank_details: true,
+    coupon_cost : couponCost
   };
 
   console.log("Submitted Sale Order:", saleOrderData);
@@ -356,10 +378,10 @@ const handleConfirm = async (saleOrder) => {
   return (
     <>
     
-    <Box className="col buyer_details">
+    {updatedProducts?.length > 0 && <Box className="col buyer_details">
         <Typography className="heading">Buyer Id : </Typography>
         <Link><Typography className="text">{products?.[0]?.buyer_id}</Typography></Link>
-    </Box>
+    </Box>}
    
     <Box className="col">
       {loading && (
@@ -503,7 +525,7 @@ const handleConfirm = async (saleOrder) => {
                   )}{" "}
                 </TableCell>
                 <TableCell>₹ {row.unit_price * row.quantity_ordered}</TableCell>
-                <TableCell>₹ {(row.unit_price * row.quantity_ordered) - row.discount_amount}</TableCell>
+                <TableCell>₹ {((row.unit_price * row.quantity_ordered) - row.discount_amount)?.toFixed(2)}</TableCell>
 
                 {/* Toggle Button Group */}
                 <TableCell>
@@ -533,10 +555,14 @@ const handleConfirm = async (saleOrder) => {
               </TableRow>
             );
           })}
+          
 
           {updatedProducts.length > 0 && !soExists && (
             <TableRow hover>
-              <TableCell colSpan="7">Final Status</TableCell>
+              <TableCell colSpan="6">
+                Total (Coupon Cost Included)
+              </TableCell>
+              <TableCell>₹ {total}</TableCell>
               <TableCell>
                 <Button className="btn-submit" onClick={(e) => handleSubmit(e)}>
                   Submit

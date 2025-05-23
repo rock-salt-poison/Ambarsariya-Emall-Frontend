@@ -62,10 +62,10 @@ function SaleOrderTable({ seller_id }) {
   return (
     <>
 
-      <Box className="col buyer_details">
+     {products?.length>0 && <Box className="col buyer_details">
         <Typography className="heading">Buyer Id : </Typography>
         <Link><Typography className="text">{products?.[0]?.buyer_id}</Typography></Link>
-      </Box>
+      </Box>}
       <Box className="col">
         {loading && (
           <Box className="loading">
