@@ -280,8 +280,8 @@ console.log(saleOrderStatus);
               <Box className="col">
                 <Typography className="heading">Grand Total</Typography>
                 <Typography className="text total shadow">
-                  &#8377; {(selectedOrder?.[0].so_subtotal)-(selectedOrder?.[0].total_discount_amount)+ selectedOrder?.[0].coupon_cost ||
-                    (selectedOrder?.[0].po_subtotal)-(selectedOrder?.[0].total_discount_amount)+ selectedOrder?.[0].coupon_cost}
+                  &#8377; {selectedOrder?.[0].so_subtotal ? ((selectedOrder?.[0].so_subtotal)-(selectedOrder?.[0].total_discount_amount)+ selectedOrder?.[0].coupon_cost) :
+                    (Number(selectedOrder?.[0]?.po_subtotal)-(selectedOrder?.[0].total_discount_amount)+ selectedOrder?.[0].coupon_cost)}
                 </Typography>
               </Box>
                     {selectedOrder?.[0].so_subtotal && (
