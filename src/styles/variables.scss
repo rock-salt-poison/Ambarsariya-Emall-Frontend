@@ -156,6 +156,8 @@ $brown-6 : #B26D3E;
 $orange : #ff6822;
 $error : #FB5D33;
 $brown-5: #543c1fb3;
+$invoice_bg : #F8F4EC;
+$invoice_border: #706556;
 
 // fonts
 
@@ -166,6 +168,7 @@ $font-LedNotice : '../Utils/fonts/LcdPhone.ttf';
 $font-Bobby-Jones-Soft : '../Utils/fonts/Bobby-Jones-Soft.otf';
 $font-digital : '../Utils/fonts/digital-7.ttf';
 $fontProxima : '../Utils/fonts/ProximaNovaFont.otf';
+$font-PTSerif-Regular : '../Utils/fonts/PTSerif-Regular.ttf';
 
 @font-face {
     font-family: 'EFCO';
@@ -211,6 +214,13 @@ $fontProxima : '../Utils/fonts/ProximaNovaFont.otf';
 @font-face {
     font-family: 'Proxima';
     src: url(#{$fontProxima}) format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'PTSerifRegular';
+    src: url(#{$font-PTSerif-Regular}) format('truetype');
     font-weight: normal;
     font-style: normal;
 }

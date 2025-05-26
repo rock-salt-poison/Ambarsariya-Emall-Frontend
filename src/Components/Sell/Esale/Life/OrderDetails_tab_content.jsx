@@ -18,6 +18,7 @@ import { useSelector } from "react-redux";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import { Link } from "react-router-dom";
 import ConfirmationDialog from "../../../ConfirmationDialog";
+import InvoicePopup from "../../../Invoice/InvoicePopup";
 
 function OrderDetails_tab_content({ title }) {
   const [purchasedOrders, setPurchasedOrders] = useState([]);
@@ -27,7 +28,7 @@ function OrderDetails_tab_content({ title }) {
   const [differences, setDifferences] = useState([]);
   const [saleOrderStatus, setSaleOrderStatus] = useState('');
   const [openDialog, setOpenDialog] = useState({open : false, status : ''}); // State for dialog
-
+  const [openInvoice, setOpenInvoice] = useState(false);
 
   const fetchPurchasedOrder = async (buyer_id) => {
     try {
@@ -120,9 +121,12 @@ console.log(differences);
 const handleConfirm = async () => { 
   setSaleOrderStatus(openDialog.status);
   setOpenDialog(false);
+  if(openDialog.status === 'Accept' || openDialog.status === 'Hold'){
+    setOpenInvoice(true);
+  }
 }
 
-console.log(saleOrderStatus);
+console.log(openDialog.status);
   return (
     <Box className="tab_content">
       {loading && (
@@ -148,7 +152,7 @@ console.log(saleOrderStatus);
             <Box className="order_details_info">
               <Box className="col_group">
                 <Box className="col">
-                  <Typography className="heading">Order Details</Typography>
+                  <Typography className="heading">Order Id</Typography>
                   <Link to={`../esale/life/${selectedOrder?.[0]?.shop_access_token}/purchased-cart/${selectedOrder?.[0]?.po_no}`}>
                     <i>
                         <Typography className="text shadow">
@@ -345,6 +349,7 @@ console.log(saleOrderStatus);
               message={`Are you sure you want to ${openDialog.status} this order?`}
               optionalCname="logoutDialog"
             />
+      <InvoicePopup open={openInvoice} onClose={()=>setOpenInvoice(false)}/>
     </Box>
   );
 }

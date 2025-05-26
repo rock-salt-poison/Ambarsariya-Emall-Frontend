@@ -18054,7 +18054,6 @@ body .MuiBackdrop-root {
     padding: 30px;
     @include flex-center(column, center);
     gap: 30px;
-    height: 90.5vh;
 
     .col {
       align-self: stretch;
@@ -23633,6 +23632,130 @@ textarea[readonly]{
           text-shadow: #3e3132 -2px 2px 9px, #3e3132 0px 0px 10px, -2px -2px 0 #3e3132, 2px -2px 0 #3e3132, -2px 2px 7px #3e3132, 2px 2px 0 #3e3132;  
         }
       }
+    }
+  }
+}
+
+
+.invoice-popup-dialog-paper{
+  .MuiPaper-root{
+    border-radius: 0px;
+    width: 55%;
+    min-height: 90vh;
+    max-width: 100%;
+    .invoiceDialogContent {
+      @include flex-center(row, space-between);
+      place-items: normal;
+        .content{
+          @include flex-center(row, space-between);
+          place-items: normal;
+          width: 100%;
+          padding: 30px 20px 30px 30px;
+          .content-body{
+            flex: 1;
+            overflow-y: scroll;
+            // padding-right: 7px;
+
+            @include flex-center(column, flex-start);
+            gap: 20px;
+            place-items: normal;
+
+            .text{
+                @include homepage-buttons(
+                "PTSerifRegular", 
+                16px, 
+                $black, 
+                'none'
+              );
+              @include hover-scale(1, 0s);
+              text-align: center;
+              line-height: 16px;
+            }
+          
+            .header{
+              background-color: $invoice_bg;
+              padding-bottom: 30px;
+              height: max-content;
+
+              .row{
+                @include flex-center(row, space-between);
+                border-bottom: 1px solid $invoice_border;
+
+                .col-3{
+                  width: 30%;
+                  padding: 20px;
+                  border-right: 1px solid $invoice_border;
+                  @include flex-center(column, center);
+                  gap: 5px;
+
+                  .logo{
+                    width: 60px !important;
+                    height: auto !important;
+                    fill: $invoice_border;
+                  }
+
+                  .shop_name{
+                    @include homepage-buttons(
+                      "PTSerifRegular", 
+                      26px, 
+                      $black, 
+                      'none'
+                    );
+                    @include hover-scale(1, 0s);
+                    text-align: center;
+                    font-weight: 500;
+                  }
+
+                }
+                .col-7{
+                  flex: 1;
+                  @include flex-center(row, center);
+                  padding-top: 30px;
+                  align-self: stretch;
+
+                  .title_container{
+                    align-self: stretch;
+                    border-top: 1px solid $invoice_border;
+                    flex: 1;
+                    @include flex-center(column, center); 
+                    
+                    .title{
+                      @include homepage-buttons(
+                        "PTSerifRegular", 
+                        50px, 
+                        $black, 
+                        'none'
+                      );
+                      @include hover-scale(1, 0s);
+                      text-align: center;
+                    }
+                  }
+                }
+              }
+            }
+
+            .shop_info{
+              @include flex-center(row, center);
+              border: 1px solid $invoice_border;
+
+              .col{
+                padding: 15px;
+                border-right: 1px solid $invoice_border;
+                flex: 1;
+
+                .text{
+                  white-space: nowrap;
+                }
+
+                &:last-child{
+                  border: 0px;
+                }
+              }
+              
+            }
+
+          }
+        }
     }
   }
 }
