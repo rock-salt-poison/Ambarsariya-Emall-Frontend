@@ -23312,6 +23312,10 @@ textarea[readonly] {
             background: $invoice_border;
           }
 
+          .page-break{
+            display: none;
+          }
+
           @include flex-center(column, flex-start);
           gap: 20px;
           place-items: normal;
@@ -23560,6 +23564,9 @@ textarea[readonly] {
 
         }
       }
+
+
+      
     }
   }
 }

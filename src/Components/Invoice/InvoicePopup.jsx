@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Box,
+  Button,
   Dialog,
   DialogContent,
   Table,
@@ -18,6 +19,8 @@ import hornSound from "../../Utils/audio/horn-sound.mp3";
 import createCustomTheme from "../../styles/CustomSelectDropdownTheme";
 import FitbitIcon from "@mui/icons-material/Fitbit";
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
+import html2pdf from "html2pdf.js";
+
 
 function InvoicePopup({ open, onClose, serviceType }) {
   const [audio] = useState(new Audio(hornSound));
@@ -29,7 +32,289 @@ function InvoicePopup({ open, onClose, serviceType }) {
   const theme = createCustomTheme(themeProps);
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm")); // Fullscreen on small screens
 
-  console.log('--------------------------------',serviceType);
+  const invoiceRef = useRef();
+
+const handleDownloadPDF = () => {
+  const invoiceContent = invoiceRef.current;
+  if (!invoiceContent) return;
+
+  const opt = {
+    margin: [0, 0, 0, 0],
+    filename: 'invoice.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
+    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] } 
+  };
+
+  // Clone the invoice node and inline the CSS
+  const clone = invoiceContent.cloneNode(true);
+  const styleTag = document.createElement('style');
+  styleTag.innerHTML = `
+    @import url('https://fonts.googleapis.com/css2?family=PT+Serif&display=swap');
+
+    * {
+      font-family: 'PT Serif', serif !important;
+    }
+
+    body {
+      font-family: "PT Serif", serif;
+    }
+
+
+    .page-break {
+  page-break-after: always;
+}
+
+    /* Paste your CSS styles here */
+    
+
+    .content {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      width: 100%;
+      padding: 30px;
+      box-sizing: border-box;
+    }
+
+    .content-body {
+      flex: 1;
+      overflow-y: visible;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 20px;
+    }
+
+    .text {
+      font-size: 15px;
+      color: #000;
+      text-align: center;
+      line-height: 17px;
+    }
+
+    .header {
+      background-color: #F8F4EC;
+      padding-bottom: 20px;
+    }
+
+    .row {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      border-bottom: 1px solid #706556;
+    }
+
+    .heading {
+      padding: 15px;
+      background: #F8F4EC;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+    }
+
+    .header .col-3 {
+      width: 30%;
+      padding: 20px;
+      border-right: 1px solid #706556;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      place-items: center;
+      gap: 5px;
+    }
+
+    .logo {
+      width: 60px !important;
+      height: auto !important;
+      fill: #706556;
+    }
+
+    .shop_name {
+      font-size: 22px;
+      font-weight: 500;
+      text-align: center;
+    }
+
+    .header .col-7 {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-top: 20px;
+    }
+
+
+    .title_container {
+      border-top: 1px solid #706556;
+      display: flex;
+      flex-direction: column;
+      flex:1;
+      align-self:stretch;
+      justify-content: center;
+    }
+
+    .title {
+      font-size: 70px;
+      text-align: center;
+    }
+
+    .shop_info {
+      display: flex;
+      justify-content: center;
+      border: 1px solid #706556;
+    }
+
+    .shop_info .col {
+      padding: 10px 15px;
+      border-right: 1px solid #706556;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .shop_info .col:last-child {
+      border-right: none;
+    }
+
+    .details{
+      display: flex;
+      flex-direction : column;
+      justify-content : flex-start;
+    }
+
+    .details .row {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      border: 1px solid #706556;
+    }
+
+    .details .row:not(:first-child) {
+      border-top: none;
+    }
+
+    .bgColor {
+      background: #F8F4EC;
+    }
+
+    .right {
+      text-align: right;
+    }
+
+    table{
+      margin-top: 30px;
+    }
+
+    table svg{
+                  width: 16px;
+                  height: auto;
+                  vertical-align: top;
+                }
+
+    .details table tr td,
+    .details table tr th {
+      border-right: 1px solid #706556;
+      border-bottom: 1px solid #706556;
+    }
+
+    .details table tr td:last-child,
+    .details table tr th:last-child {
+      border-right: none;
+    }
+
+    .details table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .border-bottom {
+      border-bottom: 1px solid #706556;
+    }
+
+    .border-right {
+      border-right: 1px solid #706556;
+    }
+
+    .border-top {
+      border-top: 1px solid #706556;
+    }
+
+    .border-top-none {
+      border-top: 0px;
+    }
+
+    .bold {
+      font-weight: 600;
+    }
+
+    .body{
+      padding: 15px;
+      display: flex;
+      flex-direction : column;
+      justify-content : flex-start;
+      gap: 15px;
+    }
+
+    .body .col-group {
+      display: flex;
+      flex-direction : row;
+      justify-content : flex-start;
+      gap: 10px;
+    }
+
+    .col-7{
+      width: 70%;
+      flex: 1;
+    }
+
+    .col-7 .text{
+      text-align: right;
+    }
+
+
+    .col-2 {
+      width: 20%;
+    }
+
+    .col-2 .col-group {
+      align-self: flex-start;
+    }
+
+    .col-2 .text {
+      text-align: left;
+      font-size: 16px;
+      line-height: 18px;
+    }
+
+    .col-3 {
+      width: 30%;
+    }
+
+    .col-3  .col-group {
+        align-self: flex-start;
+    }  
+    .col-3 .col-group .text {
+      text-align: left;
+    }
+
+    .col-3 .col-group .vertical {
+      flex-direction: column;
+    }
+
+    button{
+      display: none;
+    }
+                
+
+    /* Add more styling as needed */
+  `;
+  clone.prepend(styleTag);
+
+  html2pdf().set(opt).from(clone).save();
+};
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -41,8 +326,8 @@ function InvoicePopup({ open, onClose, serviceType }) {
         fullScreen={fullScreen}
         fullWidth
       >
-        <DialogContent className="invoiceDialogContent">
-          <Box className="content">
+        <DialogContent className="invoiceDialogContent" >
+          <Box className="content" ref={invoiceRef}>
             <Box className="content-body">
               <Box className="header">
                 <Box className="row">
@@ -284,6 +569,7 @@ function InvoicePopup({ open, onClose, serviceType }) {
                 </Box>
               </Box>
 
+
               <Box className="details">
                 <Box className="row">
                   <Table>
@@ -375,12 +661,12 @@ function InvoicePopup({ open, onClose, serviceType }) {
                         </TableCell>
                         {/* <TableCell>
                           <Box className="col-group vertical">
-                            <Typography className="text">
-                              Home Delivery Charges
-                            </Typography>
-                            <Typography className="text">N.A</Typography>
+                          <Typography className="text">
+                          Home Delivery Charges
+                          </Typography>
+                          <Typography className="text">N.A</Typography>
                           </Box>
-                        </TableCell> */}
+                          </TableCell> */}
                         <TableCell>
                           <Box className="col-group vertical">
                             <Typography className="text">
@@ -412,6 +698,7 @@ function InvoicePopup({ open, onClose, serviceType }) {
                   </Table>
                 </Box>
               </Box>
+                          <Box className="page-break"></Box>
 
               <Box className="details">
                 <Box className="row">
@@ -488,6 +775,8 @@ function InvoicePopup({ open, onClose, serviceType }) {
                 </Box>
               </Box>
 
+
+
               <Box className="details">
                 <Box className="row">
                   <Box className="col-2 heading border-right">
@@ -562,6 +851,12 @@ function InvoicePopup({ open, onClose, serviceType }) {
                   </Box>
                 </Box>
               </Box>
+
+              
+
+              <Button variant="contained" color="primary" onClick={handleDownloadPDF}>
+                Download Invoice as PDF
+              </Button>
             </Box>
           </Box>
         </DialogContent>
