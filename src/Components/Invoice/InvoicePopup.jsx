@@ -19,7 +19,7 @@ import createCustomTheme from "../../styles/CustomSelectDropdownTheme";
 import FitbitIcon from "@mui/icons-material/Fitbit";
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 
-function InvoicePopup({ open, onClose }) {
+function InvoicePopup({ open, onClose, serviceType }) {
   const [audio] = useState(new Audio(hornSound));
   const themeProps = {
     popoverBackgroundColor: "#f8e3cc",
@@ -29,7 +29,7 @@ function InvoicePopup({ open, onClose }) {
   const theme = createCustomTheme(themeProps);
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm")); // Fullscreen on small screens
 
-  console.log(open);
+  console.log('--------------------------------',serviceType);
 
   return (
     <ThemeProvider theme={theme}>
@@ -342,6 +342,20 @@ function InvoicePopup({ open, onClose }) {
                           <Typography className="text"><CurrencyRupeeIcon/> 5036.5</Typography>
                           </TableCell>
                       </TableRow>
+
+                      {serviceType === 'Hold' && <TableRow className="bgColor">
+                        <TableCell colSpan={3} className="text right">
+                          Paid Amount 
+                        </TableCell>
+                        <TableCell className="text"><CurrencyRupeeIcon/> 1000</TableCell>
+                      </TableRow>}
+
+                      {serviceType === 'Hold' && <TableRow className="bgColor">
+                        <TableCell colSpan={3} className="text right">
+                          Balance Amount 
+                        </TableCell>
+                        <TableCell className="text"><CurrencyRupeeIcon/> 4036.5</TableCell>
+                      </TableRow> }
 
                       <TableRow className="bgColor">
                         

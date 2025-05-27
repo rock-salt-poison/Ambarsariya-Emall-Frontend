@@ -119,8 +119,9 @@ function OrderDetails_tab_content({ title }) {
 console.log(differences);
 
 const handleConfirm = async () => { 
+  const status = openDialog.status;
   setSaleOrderStatus(openDialog.status);
-  setOpenDialog(false);
+  setOpenDialog({open: false, status });
   if(openDialog.status === 'Accept' || openDialog.status === 'Hold'){
     setOpenInvoice(true);
   }
@@ -349,7 +350,7 @@ console.log(openDialog.status);
               message={`Are you sure you want to ${openDialog.status} this order?`}
               optionalCname="logoutDialog"
             />
-      <InvoicePopup open={openInvoice} onClose={()=>setOpenInvoice(false)}/>
+      <InvoicePopup open={openInvoice} onClose={()=>setOpenInvoice(false)} serviceType={openDialog.status}/>
     </Box>
   );
 }
