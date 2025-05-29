@@ -380,7 +380,7 @@ useEffect(()=>{
     
     {updatedProducts?.length > 0 && <Box className="col buyer_details">
         <Typography className="heading">Buyer Id : </Typography>
-        <Link><Typography className="text">{products?.[0]?.buyer_id}</Typography></Link>
+        <Link to={`../support/shop/${token}/purchased-order/${encodeURIComponent(products?.[0]?.po_no)}`}><Typography className="text">{(products?.[0]?.po_no)?.split('&')?.[0]}</Typography></Link>
     </Box>}
    
     <Box className="col">
@@ -409,7 +409,7 @@ useEffect(()=>{
               P.O Sale
               <Typography component="span">
                 <ToggleButtonGroup
-                  value={headerToggleState}
+                  value={headerToggleState || products?.[0]?.sale_order_status}
                   exclusive
                   onChange={handleHeaderToggleChange}
                   disabled={soExists}
@@ -530,24 +530,20 @@ useEffect(()=>{
                 {/* Toggle Button Group */}
                 <TableCell>
                   <ToggleButtonGroup
-                    value={toggleStates[index] || row.status || "Hold"}
+                    value={toggleStates[index] ?? row.status ?? "Hold"}
                     exclusive
                     onChange={(event, newValue) =>
                       handleToggleChange(index, newValue)
                     }
                     disabled={soExists}
                   >
-                    <ToggleButton value="Deny" className="toggle">
+                    <ToggleButton value="Deny" className="toggle" selected={(toggleStates[index] ?? row.status) === "Deny"}>
                       Deny
                     </ToggleButton>
-                    <ToggleButton
-                      value="Hold"
-                      className="toggle"
-                      disabled={soExists}
-                    >
+                    <ToggleButton value="Hold" className="toggle" selected={(toggleStates[index] ?? row.status) === "Hold"}>
                       Hold
                     </ToggleButton>
-                    <ToggleButton value="Accept" className="toggle">
+                    <ToggleButton value="Accept" className="toggle" selected={(toggleStates[index] ?? row.status) === "Accept"}>
                       Accept
                     </ToggleButton>
                   </ToggleButtonGroup>

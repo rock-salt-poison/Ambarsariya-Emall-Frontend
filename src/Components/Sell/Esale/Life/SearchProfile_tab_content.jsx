@@ -14,7 +14,7 @@ function SearchProfile_tab_content({ title, communityData }) {
         <Box className="tab_content">
             <Typography className="title">{title}</Typography>
             <Box className="content">
-                <AutoCompleteSearchField data={data} onFilter={handleFilter} suggestions placeholder="Search profile by phone no."/>
+                <AutoCompleteSearchField data={data} onFilter={handleFilter} suggestions={[]} placeholder="Search profile by phone no."/>
             </Box>
         </Box>
     )

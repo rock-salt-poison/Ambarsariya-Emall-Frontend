@@ -12,10 +12,12 @@ import { Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import PurchasedOrderTable from "./PurchasedOrderTable";
 import SaleOrderTable from "./SaleOrderTable";
+import { Link, useParams } from "react-router-dom";
 
 function DashboardComponents({ data, date }) {
   const [loading, setLoading] = useState(false);
   const [purchasedOrders, setPurchasedOrders] = useState([]);
+  const { token } = useParams();
   const [saleOrders, setSaleOrders] = useState(0);
   const [selectedPO, setSelectedPO] = useState([]);
   const [activeTable, setActiveTable] = useState("purchase"); // Default to Purchase Order Table
@@ -106,7 +108,9 @@ function DashboardComponents({ data, date }) {
                     {purchasedOrders.map((order, index) => (
                       <SwiperSlide key={index}>
                         <Typography className="number" sx={{cursor:'pointer'}}>
-                          {order.po_no.split("_")[2]}
+                          <Link className="number" to={`../support/shop/${token}/purchased-order/${encodeURIComponent(order?.po_no)}`}>
+                            {order.po_no.split("&")[2]}
+                          </Link>
                         </Typography>
                       </SwiperSlide>
                     ))}

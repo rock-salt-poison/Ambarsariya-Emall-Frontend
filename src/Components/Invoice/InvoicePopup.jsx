@@ -1,7 +1,8 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Box,
   Button,
+  CircularProgress,
   Dialog,
   DialogContent,
   Table,
@@ -18,11 +19,11 @@ import { Link } from "react-router-dom";
 import hornSound from "../../Utils/audio/horn-sound.mp3";
 import createCustomTheme from "../../styles/CustomSelectDropdownTheme";
 import FitbitIcon from "@mui/icons-material/Fitbit";
-import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
+import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import html2pdf from "html2pdf.js";
+import { get_invoiceOrder } from "../../API/fetchExpressAPI";
 
-
-function InvoicePopup({ open, onClose, serviceType }) {
+function InvoicePopup({ open, onClose, serviceType, invoiceNo }) {
   const [audio] = useState(new Audio(hornSound));
   const themeProps = {
     popoverBackgroundColor: "#f8e3cc",
@@ -31,26 +32,28 @@ function InvoicePopup({ open, onClose, serviceType }) {
   };
   const theme = createCustomTheme(themeProps);
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm")); // Fullscreen on small screens
-
+  const [loading, setLoading] = useState(false);
+  const [invoice, setInvoice] = useState({});
   const invoiceRef = useRef();
+  console.log(invoiceNo);
 
-const handleDownloadPDF = () => {
-  const invoiceContent = invoiceRef.current;
-  if (!invoiceContent) return;
+  const handleDownloadPDF = () => {
+    const invoiceContent = invoiceRef.current;
+    if (!invoiceContent) return;
 
-  const opt = {
-    margin: [0, 0, 0, 0],
-    filename: 'invoice.pdf',
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2, useCORS: true },
-    jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
-    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] } 
-  };
+    const opt = {
+      margin: [0, 0, 0, 0],
+      filename: "invoice.pdf",
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true },
+      jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
+      pagebreak: { mode: ["avoid-all", "css", "legacy"] },
+    };
 
-  // Clone the invoice node and inline the CSS
-  const clone = invoiceContent.cloneNode(true);
-  const styleTag = document.createElement('style');
-  styleTag.innerHTML = `
+    // Clone the invoice node and inline the CSS
+    const clone = invoiceContent.cloneNode(true);
+    const styleTag = document.createElement("style");
+    styleTag.innerHTML = `
     @import url('https://fonts.googleapis.com/css2?family=PT+Serif&display=swap');
 
     * {
@@ -135,6 +138,7 @@ const handleDownloadPDF = () => {
       font-size: 22px;
       font-weight: 500;
       text-align: center;
+      text-transform: capitalize;
     }
 
     .header .col-7 {
@@ -247,6 +251,7 @@ const handleDownloadPDF = () => {
 
     .bold {
       font-weight: 600;
+      white-space:nowrap;
     }
 
     .body{
@@ -310,10 +315,33 @@ const handleDownloadPDF = () => {
 
     /* Add more styling as needed */
   `;
-  clone.prepend(styleTag);
+    clone.prepend(styleTag);
 
-  html2pdf().set(opt).from(clone).save();
-};
+    html2pdf().set(opt).from(clone).save();
+  };
+
+  const fetchInvoiceDetails = async (invoice_no) => {
+    if (invoice_no) {
+      try {
+        setLoading(true);
+        const resp = await get_invoiceOrder(invoice_no);
+        if (resp?.valid) {
+          console.log(resp?.data?.[0]);
+          setInvoice(resp?.data?.[0]);
+        }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (invoiceNo) {
+      fetchInvoiceDetails(invoiceNo);
+    }
+  }, [invoiceNo]);
 
 
   return (
@@ -326,7 +354,12 @@ const handleDownloadPDF = () => {
         fullScreen={fullScreen}
         fullWidth
       >
-        <DialogContent className="invoiceDialogContent" >
+        {loading && (
+          <Box className="loading">
+            <CircularProgress />
+          </Box>
+        )}
+        <DialogContent className="invoiceDialogContent">
           <Box className="content" ref={invoiceRef}>
             <Box className="content-body">
               <Box className="header">
@@ -334,13 +367,13 @@ const handleDownloadPDF = () => {
                   <Box className="col-3">
                     <FitbitIcon className="logo" />
                     <Typography variant="h3" className="shop_name">
-                      Finance Mart
+                      {invoice?.shop_name}
                     </Typography>
                     <Typography className="text small">
-                      Domain : Daily Needs
+                      Domain : {invoice?.domain_name}
                     </Typography>
                     <Typography className="text small">
-                      Sector : Financial Services
+                      Sector : {invoice?.sector_name}
                     </Typography>
                   </Box>
                   <Box className="col-7">
@@ -356,18 +389,20 @@ const handleDownloadPDF = () => {
               <Box className="shop_info">
                 <Box className="col">
                   <Typography className="text">
-                    123 Anywhere St., Any City, ST 12345
+                    {invoice?.shop_address}
                   </Typography>
                 </Box>
 
                 <Box className="col">
                   <Typography className="text">
-                    hello@reallygreatsite.com
+                    {invoice?.shop_email}
                   </Typography>
                 </Box>
 
                 <Box className="col">
-                  <Typography className="text">123-456-9870</Typography>
+                  <Typography className="text">
+                    {invoice?.shop_contact?.[0]}
+                  </Typography>
                 </Box>
               </Box>
 
@@ -382,20 +417,25 @@ const handleDownloadPDF = () => {
                         <Typography className="text bold">
                           Seller's Name:
                         </Typography>
-                        <Typography className="text">Muskan singh</Typography>
+                        <Typography
+                          className="text"
+                          sx={{ textTransform: "capitalize" }}
+                        >
+                          {invoice?.seller_name}
+                        </Typography>
                       </Box>
 
                       <Box className="col-group">
                         <Typography className="text bold">Email ID:</Typography>
                         <Typography className="text">
-                          ms312093@gmail.com
+                          {invoice?.shop_email}
                         </Typography>
                       </Box>
 
                       <Box className="col-group">
                         <Typography className="text bold">Address:</Typography>
                         <Typography className="text">
-                          123 Anywhere city, 123467
+                          {invoice?.shop_address}
                         </Typography>
                       </Box>
 
@@ -404,29 +444,53 @@ const handleDownloadPDF = () => {
                           Phone No.:
                         </Typography>
                         <Typography className="text">
-                          7888610079, 9876543210
+                          {invoice?.shop_contact
+                            ?.filter((contact) => contact != null)
+                            ?.join(", ")}
                         </Typography>
                       </Box>
 
-                      <Box className="col-group">
-                        <Typography className="text bold">PAN ID:</Typography>
-                        <Typography className="text">-</Typography>
-                      </Box>
+                      {invoice?.seller_pan && (
+                        <Box className="col-group">
+                          <Typography className="text bold">PAN ID:</Typography>
+                          <Typography className="text">
+                            {invoice?.seller_pan || "-"}
+                          </Typography>
+                        </Box>
+                      )}
 
-                      <Box className="col-group">
-                        <Typography className="text bold">GST No.:</Typography>
-                        <Typography className="text">-</Typography>
-                      </Box>
+                      {invoice?.seller_gst && (
+                        <Box className="col-group">
+                          <Typography className="text bold">
+                            GST No.:
+                          </Typography>
+                          <Typography className="text">
+                            {invoice?.seller_gst || "-"}
+                          </Typography>
+                        </Box>
+                      )}
 
-                      <Box className="col-group">
-                        <Typography className="text bold">MSME No.:</Typography>
-                        <Typography className="text">-</Typography>
-                      </Box>
+                      {invoice?.seller_msme && (
+                        <Box className="col-group">
+                          <Typography className="text bold">
+                            MSME No.:
+                          </Typography>
+                          <Typography className="text">
+                            {invoice?.seller_msme || "-"}
+                          </Typography>
+                        </Box>
+                      )}
 
-                      <Box className="col-group">
-                        <Typography className="text bold">CIN No.:</Typography>
-                        <Typography className="text">-</Typography>
-                      </Box>
+                      {invoice?.seller_cin && (
+                        <Box className="col-group">
+                          <Typography className="text bold">
+                            CIN No.:
+                          </Typography>
+                          <Typography className="text">
+                            {invoice?.seller_cin || "-"}
+                          </Typography>
+                        </Box>
+                      )}
                     </Box>
                   </Box>
                   <Box className="col-3">
@@ -436,7 +500,9 @@ const handleDownloadPDF = () => {
 
                     <Box className="body border-bottom">
                       <Box className="col-group">
-                        <Typography className="text">9876543210</Typography>
+                        <Typography className="text">
+                          {invoice?.invoice_no}
+                        </Typography>
                       </Box>
                     </Box>
 
@@ -446,7 +512,9 @@ const handleDownloadPDF = () => {
 
                     <Box className="body">
                       <Box className="col-group">
-                        <Typography className="text">May 27, 2025</Typography>
+                        <Typography className="text">
+                          {invoice?.created_at?.split("T")?.[0]}
+                        </Typography>
                       </Box>
                     </Box>
                   </Box>
@@ -462,22 +530,29 @@ const handleDownloadPDF = () => {
                     <Box className="body">
                       <Box className="col-group">
                         <Typography className="text bold">
-                          Buyer's Name
+                          Buyer's Name:
                         </Typography>
-                        <Typography className="text">Muskan singh</Typography>
-                      </Box>
-
-                      <Box className="col-group">
-                        <Typography className="text bold">Email ID</Typography>
-                        <Typography className="text">
-                          ms312093@gmail.com
+                        <Typography
+                          className="text"
+                          sx={{ textTransform: "capitalize" }}
+                        >
+                          {invoice?.buyer_name}
                         </Typography>
                       </Box>
 
                       <Box className="col-group">
-                        <Typography className="text bold">Address</Typography>
+                        <Typography className="text bold">
+                          Email ID:{" "}
+                        </Typography>
                         <Typography className="text">
-                          123 Anywhere city, 123467
+                          {invoice?.buyer_name}
+                        </Typography>
+                      </Box>
+
+                      <Box className="col-group">
+                        <Typography className="text bold">Address: </Typography>
+                        <Typography className="text">
+                          {invoice?.buyer_address}
                         </Typography>
                       </Box>
 
@@ -485,28 +560,52 @@ const handleDownloadPDF = () => {
                         <Typography className="text bold">
                           Phone No.:
                         </Typography>
-                        <Typography className="text">7888610078</Typography>
+                        <Typography className="text">
+                          {invoice?.buyer_contact_no}
+                        </Typography>
                       </Box>
 
-                      <Box className="col-group">
-                        <Typography className="text bold">PAN ID:</Typography>
-                        <Typography className="text">-</Typography>
-                      </Box>
+                      {invoice?.buyer_pan && (
+                        <Box className="col-group">
+                          <Typography className="text bold">PAN ID:</Typography>
+                          <Typography className="text">
+                            {invoice?.buyer_pan || "-"}
+                          </Typography>
+                        </Box>
+                      )}
 
-                      <Box className="col-group">
-                        <Typography className="text bold">GST No.:</Typography>
-                        <Typography className="text">-</Typography>
-                      </Box>
+                      {invoice?.buyer_gst && (
+                        <Box className="col-group">
+                          <Typography className="text bold">
+                            GST No.:
+                          </Typography>
+                          <Typography className="text">
+                            {invoice?.buyer_gst || "-"}
+                          </Typography>
+                        </Box>
+                      )}
 
-                      <Box className="col-group">
-                        <Typography className="text bold">MSME No.:</Typography>
-                        <Typography className="text">-</Typography>
-                      </Box>
+                      {invoice?.buyer_msme && (
+                        <Box className="col-group">
+                          <Typography className="text bold">
+                            MSME No.:
+                          </Typography>
+                          <Typography className="text">
+                            {invoice?.buyer_msme || "-"}
+                          </Typography>
+                        </Box>
+                      )}
 
-                      <Box className="col-group">
-                        <Typography className="text bold">CIN No.:</Typography>
-                        <Typography className="text">-</Typography>
-                      </Box>
+                      {invoice?.buyer_cin && (
+                        <Box className="col-group">
+                          <Typography className="text bold">
+                            CIN No.:
+                          </Typography>
+                          <Typography className="text">
+                            {invoice?.buyer_cin || "-"}
+                          </Typography>
+                        </Box>
+                      )}
                     </Box>
                   </Box>
                   <Box className="col-3">
@@ -516,7 +615,9 @@ const handleDownloadPDF = () => {
 
                     <Box className="body">
                       <Box className="col-group">
-                        <Typography className="text">9876543210</Typography>
+                        <Typography className="text">
+                          {invoice?.invoice_no}
+                        </Typography>
                       </Box>
                     </Box>
                   </Box>
@@ -529,7 +630,9 @@ const handleDownloadPDF = () => {
                         <Typography className="text bold">
                           Purchase Order No.:
                         </Typography>
-                        <Typography className="text">PO_1234567</Typography>
+                        <Typography className="text">
+                          {invoice?.po_no}
+                        </Typography>
                       </Box>
                     </Box>
                   </Box>
@@ -538,7 +641,7 @@ const handleDownloadPDF = () => {
                       <Box className="col-group vertical">
                         <Typography className="text">Date/Time :</Typography>
                         <Typography className="text">
-                          26 May 2025, 7:14 PM
+                          {invoice?.po_created_at?.split("T")?.[0]}
                         </Typography>
                       </Box>
                     </Box>
@@ -552,7 +655,9 @@ const handleDownloadPDF = () => {
                         <Typography className="text bold">
                           Sale Order No.:
                         </Typography>
-                        <Typography className="text">SO_1234567</Typography>
+                        <Typography className="text">
+                          {invoice?.so_no}
+                        </Typography>
                       </Box>
                     </Box>
                   </Box>
@@ -561,14 +666,13 @@ const handleDownloadPDF = () => {
                       <Box className="col-group vertical">
                         <Typography className="text">Date/Time :</Typography>
                         <Typography className="text">
-                          26 May 2025, 7:14 PM
+                          {invoice?.so_created_at?.split("T")?.[0]}
                         </Typography>
                       </Box>
                     </Box>
                   </Box>
                 </Box>
               </Box>
-
 
               <Box className="details">
                 <Box className="row">
@@ -584,67 +688,101 @@ const handleDownloadPDF = () => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      <TableRow>
-                        <TableCell className="text">
-                          Vehicle service plan
-                        </TableCell>
-                        <TableCell className="text">7084/-</TableCell>
-                        <TableCell className="text">2</TableCell>
-                        <TableCell className="text"><CurrencyRupeeIcon/> 14168/-</TableCell>
-                      </TableRow>
+                      {invoice?.products?.map((product, index) => {
+                        return (
+                          <TableRow key={index}>
+                            <TableCell className="text">
+                              {product?.product_name
+                                ?.split(" - ")?.[0]
+                                ?.replace(/-/g, " ")}
+                              /{product?.category_name}/{product?.brand}/
+                              {product?.variation}
+                            </TableCell>
+                            <TableCell className="text">
+                              {product?.unit_price}/-
+                            </TableCell>
+                            <TableCell className="text">
+                              {product?.quantity}
+                            </TableCell>
+                            <TableCell className="text">
+                              <CurrencyRupeeIcon />{" "}
+                              {product?.unit_price * product?.quantity}/-
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
                       <TableRow className="bgColor">
                         <TableCell colSpan={3} className="text right">
                           Subtotal
                         </TableCell>
-                        <TableCell className="text"><CurrencyRupeeIcon/> 14168/-</TableCell>
-                      </TableRow>
-
-                      <TableRow className="bgColor">
-                        <TableCell colSpan={3} className="text right">
-                          Tax Rate (%)
+                        <TableCell className="text">
+                          <CurrencyRupeeIcon /> {invoice?.subtotal}
                         </TableCell>
-                        <TableCell className="text">18% = <CurrencyRupeeIcon/> 5925</TableCell>
                       </TableRow>
 
-                      <TableRow className="bgColor">
+                      {invoice.tax_applied &&
+                        <TableRow className="bgColor">
+                          <TableCell colSpan={3} className="text right">
+                            Tax Rate (%)
+                          </TableCell>
+                          <TableCell className="text">
+                            18% = <CurrencyRupeeIcon /> {invoice.tax_applied || '-'}
+                          </TableCell>
+                        </TableRow>
+                      }
+
+                      {invoice.discount_applied && <TableRow className="bgColor">
                         <TableCell colSpan={3} className="text right">
                           Discount Coupon Applied
                         </TableCell>
-                        <TableCell className="text">15% = <CurrencyRupeeIcon/> 888.75</TableCell>
-                      </TableRow>
+                        <TableCell className="text">
+                          {invoice.discount_applied?.coupon}% = <CurrencyRupeeIcon /> {invoice?.discount_amount}
+                        </TableCell>
+                      </TableRow>}
 
-                      <TableRow className="bgColor">
+                      {invoice.discount_amount && <TableRow className="bgColor">
                         <TableCell colSpan={3} className="text right">
-                          Coupon Charges 
+                          Coupon Charges
                         </TableCell>
                         <TableCell className="text">30</TableCell>
-                      </TableRow>
+                      </TableRow>}
 
                       <TableRow className="bgColor">
                         <TableCell colSpan={3} className="text right">
                           Total
                         </TableCell>
                         <TableCell className="text">
-                          <Typography className="text"><CurrencyRupeeIcon/> 5036.5</Typography>
-                          </TableCell>
+                          <Typography className="text">
+                            <CurrencyRupeeIcon /> {
+                              invoice.discount_amount ? ((invoice?.subtotal) - (invoice?.discount_amount) + invoice?.coupon_cost): invoice?.subtotal
+                            }
+                          </Typography>
+                        </TableCell>
                       </TableRow>
 
-                      {serviceType === 'Hold' && <TableRow className="bgColor">
-                        <TableCell colSpan={3} className="text right">
-                          Paid Amount 
-                        </TableCell>
-                        <TableCell className="text"><CurrencyRupeeIcon/> 1000</TableCell>
-                      </TableRow>}
+                      {serviceType === "Hold" && (
+                        <TableRow className="bgColor">
+                          <TableCell colSpan={3} className="text right">
+                            Paid Amount
+                          </TableCell>
+                          <TableCell className="text">
+                            <CurrencyRupeeIcon /> 1000
+                          </TableCell>
+                        </TableRow>
+                      )}
 
-                      {serviceType === 'Hold' && <TableRow className="bgColor">
-                        <TableCell colSpan={3} className="text right">
-                          Balance Amount 
-                        </TableCell>
-                        <TableCell className="text"><CurrencyRupeeIcon/> 4036.5</TableCell>
-                      </TableRow> }
+                      {serviceType === "Hold" && (
+                        <TableRow className="bgColor">
+                          <TableCell colSpan={3} className="text right">
+                            Balance Amount
+                          </TableCell>
+                          <TableCell className="text">
+                            <CurrencyRupeeIcon /> 4036.5
+                          </TableCell>
+                        </TableRow>
+                      )}
 
                       <TableRow className="bgColor">
-                        
                         <TableCell colSpan={2}>
                           <Box className="col-group vertical">
                             <Typography className="text">Co-Helper</Typography>
@@ -678,27 +816,19 @@ const handleDownloadPDF = () => {
                       </TableRow>
 
                       <TableRow className="bgColor">
-                        <TableCell className="text">
-                            CGST : 9%
-                        </TableCell>
+                        <TableCell className="text">CGST : 0%</TableCell>
 
-                        <TableCell className="text">
-                            Cost : 450
-                        </TableCell>
+                        <TableCell className="text">Cost : -</TableCell>
 
-                        <TableCell className="text">
-                            SGST : 9%
-                        </TableCell>
+                        <TableCell className="text">SGST : 0%</TableCell>
 
-                        <TableCell className="text">
-                            Cost : 450
-                        </TableCell>
+                        <TableCell className="text">Cost : -</TableCell>
                       </TableRow>
                     </TableBody>
                   </Table>
                 </Box>
               </Box>
-                          <Box className="page-break"></Box>
+              <Box className="page-break"></Box>
 
               <Box className="details">
                 <Box className="row">
@@ -775,8 +905,6 @@ const handleDownloadPDF = () => {
                 </Box>
               </Box>
 
-
-
               <Box className="details">
                 <Box className="row">
                   <Box className="col-2 heading border-right">
@@ -852,9 +980,11 @@ const handleDownloadPDF = () => {
                 </Box>
               </Box>
 
-              
-
-              <Button variant="contained" color="primary" onClick={handleDownloadPDF}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleDownloadPDF}
+              >
                 Download Invoice as PDF
               </Button>
             </Box>

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getMemberData, getShopUserData, getUser, post_purchaseOrder } from "../../API/fetchExpressAPI";
+import { get_member_buyer_data, getMemberData, getShopUserData, getUser, post_purchaseOrder } from "../../API/fetchExpressAPI";
 import UserBadge from "../../UserBadge";
 import CustomSnackbar from "../../Components/CustomSnackbar";
 import { clearCart } from "../../store/cartSlice";
@@ -15,13 +15,13 @@ function PurchasedCart() {
   
   const token = useSelector((state) => state.auth.userAccessToken);
   const [buyerData, setBuyerData] = useState(null);
-  const [sellerData, setSellerData] = useState(null);
+  const [memberData, setMemberData] = useState(null);
   const [loading, setLoading] = useState(false);
-   const [snackbar, setSnackbar] = useState({
-      open: false,
-      message: "",
-      severity: "success",
-    });
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
 
 
   useEffect(() => {
@@ -38,8 +38,37 @@ function PurchasedCart() {
     fetchData();
   }, [owner]);
 
-  
+  useEffect(() => {
+      if(token && po_no){
+        const verifyUser = async () => {
+          const user = (await getUser(token))[0];
+          
+            if(user.user_access_token && user.user_type === 'shop'){
+              fetchMemberData(po_no)
+            }
+        }
+        verifyUser();
+      }
+    }, [token, po_no]);
 
+    const fetchMemberData = async (po_no) => {
+        try{
+          setLoading(true);
+          const resp = await get_member_buyer_data(po_no);
+          if(resp?.valid){
+            setMemberData(()=>({
+              ...resp?.data?.[0],
+              user_type: "member"
+            }))
+          }
+        }catch(e){
+          console.log(e);
+          setSnackbar({ open: true, message: e.response.data.message, severity: 'error' });
+        }finally{
+          setLoading(false);
+        }
+      }
+      
   return (
     <Box className="cart_wrapper purchase_order">
       {loading && <Box className="loading"><CircularProgress/></Box> }
@@ -50,12 +79,12 @@ function PurchasedCart() {
       
           <Typography variant="h2" className="heading">
             <Typography variant="span" className="span_1">
-              {shopData?.business_name}
+              {memberData?.full_name  || shopData?.business_name}
             </Typography>
             <Typography variant="span" className="span_1">
-              Shop No:
+              {memberData ? 'Member No:' : 'Shop No:'}
               <Typography variant="span" className="span_2">
-                {(shopData?.shop_no)?.split('_')[1]}
+                {(memberData?.member_id)?.split('_')[1] || (shopData?.shop_no)?.split('_')[1]}
               </Typography>
             </Typography>
           </Typography>

@@ -21362,10 +21362,11 @@ textarea[readonly] {
       flex-wrap: wrap;
 
       &.buyer_details {
-        justify-content: center;
+        justify-content: flex-start;
         background-color: rgba($yellow, 0.55);
         padding: 10px 15px;
         border-radius: 10px;
+        width: max-content;
 
         .heading,
         .text {
@@ -21593,8 +21594,8 @@ textarea[readonly] {
                 }
 
                 &.Mui-disabled {
-                  background: #6d44377a;
-                  color: #FFFBF4d6 !important;
+                  // background: #6d44377a;
+                  // color: #FFFBF4d6 !important;
                   cursor: not-allowed;
                   pointer-events: visible;
                 }
@@ -21650,7 +21651,7 @@ textarea[readonly] {
                 }
 
                 &.Mui-disabled {
-                  background: #6d44377a;
+                  // background: #6d44377a;
                   color: #FFFBF4d6 !important;
                   cursor: not-allowed;
                   pointer-events: visible;
@@ -23328,7 +23329,8 @@ textarea[readonly] {
             );
             @include hover-scale(1, 0s);
             text-align: center;
-            line-height: 17px;
+            line-height: 20px;
+            word-break: break-all;
           }
 
           .header {
@@ -23362,6 +23364,7 @@ textarea[readonly] {
                   @include hover-scale(1, 0s);
                   text-align: center;
                   font-weight: 500;
+                  text-transform: capitalize;
                 }
 
                 .text {
@@ -23504,6 +23507,7 @@ textarea[readonly] {
 
               .bold {
                 font-weight: 600;
+                white-space: nowrap;
               }
 
               .body {

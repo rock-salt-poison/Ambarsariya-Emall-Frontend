@@ -45,7 +45,7 @@ function PurchasedCartTable({ rows }) {
   const [data, setData] = useState([]);
   const { selectedCoupon } = useSelector((state) => state.discounts);
 
-  
+
   // Fetch category names for all products
   useEffect(() => {
     if(po_no){
@@ -85,8 +85,8 @@ function PurchasedCartTable({ rows }) {
           <Table>
             <TableHead>
               <TableRow>
-                {columns.map((column) => (
-                  <TableCell key={column.id}>
+                {columns.map((column, index) => (
+                  <TableCell key={index}>
                     <Typography className="text_1">{column.label_1}</Typography>
                   </TableCell>
                 ))}
@@ -95,7 +95,7 @@ function PurchasedCartTable({ rows }) {
             <TableBody>
               {data.length > 0 && (
                 data.map((row, index) => (
-                  <TableRow key={row.product_no}>
+                  <TableRow key={index}>
                     <TableCell className="text_3" align="center">
                       {index + 1}
                     </TableCell>
@@ -178,7 +178,7 @@ function PurchasedCartTable({ rows }) {
                   <Typography className="text_1">Discount {data?.[0]?.discount_applied && `(${(data?.[0]?.discount_applied?.coupon_type)?.replace(/_/g,' ')})`} :</Typography>
                 </TableCell>
                 <TableCell className="text_2">
-                  -&#8377;{data?.[0]?.discount_amount}
+                  -&#8377;{data?.[0]?.total_discount_amount}
                 </TableCell>
               </TableRow>
               

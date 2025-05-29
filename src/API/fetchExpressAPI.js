@@ -682,7 +682,8 @@ export const get_allPurchaseOrderDetails = async (buyer_id) => {
 export const get_purchasedOrder = async (po_no) => {
   try {
     if (po_no) {
-      const resp = await axios.get(`${link}/purchased-order/${po_no}`);
+      const encodedPoNo = encodeURIComponent(po_no);
+      const resp = await axios.get(`${link}/purchased-order/${encodedPoNo}`);
       return resp.data;
     }
   } catch (e) {
@@ -693,9 +694,8 @@ export const get_purchasedOrder = async (po_no) => {
 export const get_purchaseOrders = async (po_no) => {
   try {
     if (po_no) {
-      console.log(po_no);
-
-      const resp = await axios.get(`${link}/purchase_orders/${po_no}`);
+      const encodedPoNo = encodeURIComponent(po_no);
+      const resp = await axios.get(`${link}/purchase_orders/${encodedPoNo}`);
       return resp.data;
     }
   } catch (e) {
@@ -703,10 +703,23 @@ export const get_purchaseOrders = async (po_no) => {
   }
 }
 
+
 export const get_purchaseOrderNo = async (shop_no, date) => {
   try {
     if (shop_no && date) {
       const resp = await axios.get(`${link}/purchase_order_no/${shop_no}/${date}`);
+      return resp.data;
+    }
+  } catch (e) {
+    throw e;
+  }
+}
+
+export const get_member_buyer_data = async (po_no) => {
+  try {
+    if (po_no) {
+      const encodedPoNo = encodeURIComponent(po_no);
+      const resp = await axios.get(`${link}/buyer-details/${encodedPoNo}`);
       return resp.data;
     }
   } catch (e) {
@@ -1040,5 +1053,61 @@ export const put_near_by_shops= async (data) => {
     }catch(e){
       throw e;
     }
+  }
+}
+
+export const post_invoiceOrder = async (data) => {
+  try {
+    if (data) {
+      const response = await axios.post(`${link}/create-invoice`, { data });
+      return response.data;
+    }
+  } catch (e) {
+    throw e;
+  }
+}
+
+export const get_invoiceOrder = async (invoice_no) => {
+  try {
+    if (invoice_no) {
+      const encodedInvoiceNo =  encodeURIComponent(invoice_no)
+      const response = await axios.get(`${link}/invoice/${encodedInvoiceNo}`);
+      return response.data;
+    }
+  } catch (e) {
+    throw e;
+  }
+}
+
+export const get_buyer_data = async (user_id) => {
+  try {
+    if (user_id) {
+      const response = await axios.get(`${link}/buyer-data/${user_id}`);
+      return response.data;
+    }
+  } catch (e) {
+    throw e;
+  }
+}
+
+export const get_seller_data = async (shop_no) => {
+  try {
+    if (shop_no) {
+      const response = await axios.get(`${link}/seller-data/${shop_no}`);
+      return response.data;
+    }
+  } catch (e) {
+    throw e;
+  }
+}
+
+export const get_purchased_products_details = async (product_id, item_id) => {
+  try {
+    if (product_id && item_id) {
+      const response = await axios.get(`${link}/purchased-products-data/${product_id}/${item_id}`);
+      return response.data;
+    }
+  } catch (e) {
+    throw e;
   }
 }
