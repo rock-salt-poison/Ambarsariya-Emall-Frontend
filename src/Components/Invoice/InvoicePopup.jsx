@@ -736,7 +736,7 @@ function InvoicePopup({ open, onClose, serviceType, invoiceNo }) {
                           Discount Coupon Applied
                         </TableCell>
                         <TableCell className="text">
-                          {invoice.discount_applied?.coupon}% = <CurrencyRupeeIcon /> {invoice?.discount_amount}
+                          {invoice.discount_applied?.conditions?.[1]?.value}% = -<CurrencyRupeeIcon /> {invoice?.discount_amount}
                         </TableCell>
                       </TableRow>}
 
@@ -754,8 +754,11 @@ function InvoicePopup({ open, onClose, serviceType, invoiceNo }) {
                         <TableCell className="text">
                           <Typography className="text">
                             <CurrencyRupeeIcon /> {
-                              invoice.discount_amount ? ((invoice?.subtotal) - (invoice?.discount_amount) + invoice?.coupon_cost): invoice?.subtotal
-                            }
+  invoice?.discount_amount
+    ? (parseFloat(invoice?.subtotal || 0) - parseFloat(invoice?.discount_amount || 0) + 30).toFixed(2)
+    : parseFloat(invoice?.subtotal || 0).toFixed(2)
+}
+
                           </Typography>
                         </TableCell>
                       </TableRow>
