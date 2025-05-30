@@ -23574,3 +23574,129 @@ textarea[readonly] {
     }
   }
 }
+
+.product_search_wrapper{
+  position: relative;
+  min-height: 100vh;
+  @include background-center-no-repeat($productSearchBgImg);
+  background-size: cover;
+  background-position: top center;
+
+  &::after {
+    content: '';
+    @include full-absolute(0px, 0px, 0px, 0px);
+    z-index: 0;
+    background: rgba($dark-yellow, .5);
+  }
+
+  .row{
+    padding: 30px;
+    @include flex-center(column, center);
+    gap: 30px;
+    position: relative;
+    z-index: 1;
+
+    .col{
+      @include flex-center(row, space-between);
+      gap: 10px;
+      flex: 1;
+      align-self: stretch;
+
+      .icon_container{
+        position: relative;
+        filter: drop-shadow(2px 4px 6px $black);
+
+        .icon{
+          height: 80px;
+        }
+  
+        .indicator{
+          height: 50px;
+          @include full-absolute(-10px, -25px, auto, auto);
+        }
+
+         &:last-child{
+          margin-right: 30px;
+
+          .indicator{
+            right: -15px;
+          }
+        }
+      }
+
+      .container{
+        position: relative;
+        @include flex-center(row, center);
+        max-width: 240px;
+        
+        .title_container{
+          padding: 21px 20px 9px 17px;
+          position: relative;
+
+          .paper_bg{
+            @include full-absolute(0px, 0px, 0px, 0px);
+            z-index: 0;
+            @include flex-center(row, center);  
+            width: 100%;
+            height: 100%;
+          }
+  
+          .title{
+            position: relative;
+            z-index: 1;
+            @include homepage-buttons("Bobby-Jones-Soft",
+              24px,
+              $black,
+              'none'
+            );
+            @include hover-scale(1, 0s);
+          }
+
+
+          .input_field{
+            .MuiSelect-select{
+              padding-top: 0px;
+              padding-bottom: 0px;
+              padding-left: 0px;
+            }
+
+            .MuiOutlinedInput-notchedOutline{
+              border: 0px;
+            }
+          }
+        }
+        
+
+        .side_border{
+          @include full-absolute(-2px, auto, -6px, -27px);
+          z-index: 0;
+          align-self: stretch;
+          // height: 100%;
+        }
+
+        
+      }
+
+      .search_main_container{
+        background: $dark-yellow;
+        width: 40%;
+        .search_bar_container{
+            background : repeating-linear-gradient(-45deg,$black,$black 3px,#0000 0,#0000 10px);
+            padding: 0px 6px 6px 0px;
+            border-radius: 10px;
+            border: 2px solid $black;
+          
+            .MuiAutocomplete-root{
+              background-color: $white;
+              border-radius: 10px;
+              border: 2px solid $black;
+
+              .MuiOutlinedInput-notchedOutline{
+                border: 0px;
+              }
+            }
+        }
+      }
+    }
+  }
+}

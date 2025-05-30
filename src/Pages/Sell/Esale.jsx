@@ -147,7 +147,7 @@ function Esale() {
                 </Box>
               </Box>
               <Box className="sub_col">
-                <Link to={`../${owner}/budget`}>
+                <Link to={`../esale/products`}>
                   <Box
                     component="img"
                     src={gif_1}

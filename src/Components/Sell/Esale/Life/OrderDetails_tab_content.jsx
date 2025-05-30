@@ -513,18 +513,18 @@ const buyerResponse = await get_buyer_data(selectedOrder?.[0]?.buyer_id);
                       const filteredProducts = selectedOrder?.filter(
                         product => product.status === "Accept" || product.status === "Hold"
                       ) || [];
+                      console.log(filteredProducts);
+                      
 
                       const productTotal = filteredProducts
                         .map(product =>
-                          (Number(product.unit_price || 0) * Number(product.quantity_ordered || 0)) -
-                          Number(product.discount_amount || 0)
-                        )
+                          (Number(product.unit_price || 0) * Number(product.quantity_ordered || 0)))
                         .reduce((acc, curr) => acc + curr, 0);
 
                       const couponCost = Number(selectedOrder?.[0]?.coupon_cost || 0);
 
                       const grandTotal = productTotal > 0
-                        ? productTotal + (couponCost > 0 ? couponCost : 0)
+                        ? productTotal - parseFloat(selectedOrder?.[0]?.total_discount_amount) + (couponCost > 0 ? couponCost : 0)
                         : 0;
 
                       return grandTotal.toFixed(2);
