@@ -47,9 +47,7 @@ function ProductSearch() {
 const fetchMemberData = async (memberToken) => {
         setLoading(true);
           const user = await getMemberData(memberToken);
-          if(user){
-            console.log(user?.[0]);
-            
+          if(user){          
             setUserData(user?.[0])
             setLoading(false);
           }
@@ -114,7 +112,6 @@ const fetchMemberData = async (memberToken) => {
 
     const resp = await get_searched_products(selected_domain_id, selected_sector_id, product);
     if (resp?.valid) {
-      console.log(resp?.data);
       setProducts(resp?.data);
     }
   } catch (e) {
@@ -222,8 +219,8 @@ const fetchMemberData = async (memberToken) => {
             <Box className="col">
                 <Box className="cards_container">
                     {
-                        products?.map((product)=>{
-                            return <Box className="card">
+                        products?.map((product, index)=>{
+                            return <Box className="card" key={index}>
                         <Box className="card_header">
                             <Typography className="heading">
                                 {product?.category_name}
