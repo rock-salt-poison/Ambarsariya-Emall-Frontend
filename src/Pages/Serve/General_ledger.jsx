@@ -29,47 +29,47 @@ function General_ledger() {
       id: 1,
       imgSrc: assets,
       title: "Assets",
-      popupcontent: (onClose) => <Assets_PopupContent onClose={onClose} />,
+      popupcontent: <Assets_PopupContent />,
     },
     {
       id: 2,
       imgSrc: liabilities,
       title: "Liabilities",
-      popupcontent: (onClose) => <Liability_PopupContent onClose={onClose} />,
+      popupcontent: <Liability_PopupContent/>,
     },
     {
       id: 3,
       imgSrc: equity,
       title: "Equity",
-      popupcontent: (onClose) => <Equity_PopupContent onClose={onClose} />,
+      popupcontent: <Equity_PopupContent />,
     },
     {
       id: 4,
       imgSrc: revenue,
       title: "Revenue",
-      popupcontent: (onClose) => <Revenue_PopupContent onClose={onClose} />,
+      popupcontent: <Revenue_PopupContent />,
     },
     {
       id: 5,
       imgSrc: expenses,
       title: "Expenses",
-      popupcontent: (onClose) => <Expenses_PopupContent onClose={onClose} />,
+      popupcontent: <Expenses_PopupContent />,
     },
     {
       id: 6,
       imgSrc: gains_and_losses,
       title: "Gains and Losses",
-      popupcontent: (onClose) => (
-        <GainsAndLosses_PopupContent onClose={onClose} />
-      ),
+      popupcontent: 
+        <GainsAndLosses_PopupContent />
+      ,
     },
     {
       id: 7,
       imgSrc: drawings_or_dividends,
       title: "Drawings or Dividends",
-      popupcontent: (onClose) => (
-        <DrawingsOrDividends_PopupContent onClose={onClose} />
-      ),
+      popupcontent: 
+        <DrawingsOrDividends_PopupContent />
+      ,
     },
   ];
 

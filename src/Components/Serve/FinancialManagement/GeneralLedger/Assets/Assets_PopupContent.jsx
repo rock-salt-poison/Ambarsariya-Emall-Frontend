@@ -11,7 +11,7 @@ import createCustomTheme from '../../../../../styles/CustomSelectDropdownTheme'
 function Assets_PopupContent(props) {
 
     const tabsData=[
-        {id:1, name:'Cash', content:onClose => <Cash_PopupContent onClose={onClose}/>},
+        {id:1, name:'Cash', content:<Cash_PopupContent />},
         {id:2, name:'Accounts Receivable', content:<AccountsReceivable_PopupContent/>},
         {id:3, name:'Inventory', content:<Inventory_PopupContent/>},
         {id:4, name:'Fixed Assets', content:<FixedAssets_PopupContent/>},

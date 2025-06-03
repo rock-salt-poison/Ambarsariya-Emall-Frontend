@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { Box } from "@mui/material";
 import Button2 from "../../Components/Home/Button2";
 import LoginPageCard from "../../Components/Login/LoginPageCard";
@@ -12,12 +12,13 @@ import { useLocation } from "react-router-dom";
 function Login() {
   const token = useSelector((state) => state.auth.userAccessToken);
   const location = useLocation();
-
+  
   const isServeRoute = location.pathname.includes("serve");
   const isSocializeRoute = location.pathname.includes("socialize");
   const [accessToken, setAccessToken] = useState("");
   const [isValidShop, setIsValidShop] = useState(false);
 
+  
   // Fetch shop token and details
   const fetchShopToken = useCallback(async () => {
     try {
@@ -48,7 +49,14 @@ function Login() {
     }
   }, [token, fetchShopToken]);
 
-  const redirect_to = isSocializeRoute ? "../../AmbarsariyaMall/socialize" : isServeRoute && "../../AmbarsariyaMall/serve";
+
+  const redirect_to = useMemo(() => {
+    if (isSocializeRoute) return "../../AmbarsariyaMall/socialize";
+    if (isServeRoute) return "../../AmbarsariyaMall/serve";
+    return "../../AmbarsariyaMall";
+  }, [isSocializeRoute, isServeRoute]);
+
+
 
   return (
     <Box className="login_wrapper">
