@@ -23627,11 +23627,12 @@ textarea[readonly] {
       .container{
         position: relative;
         @include flex-center(row, center);
-        max-width: 240px;
+        width: 240px;
         
         .title_container{
           padding: 21px 20px 9px 17px;
           position: relative;
+          width: 100%;
 
           .paper_bg{
             @include full-absolute(0px, 0px, 0px, 0px);
@@ -23650,10 +23651,14 @@ textarea[readonly] {
               'none'
             );
             @include hover-scale(1, 0s);
+            text-align: center;
           }
 
 
           .input_field{
+            text-align: start;
+            width: 100%;
+
             .MuiSelect-select{
               padding-top: 0px;
               padding-bottom: 0px;
@@ -23678,21 +23683,165 @@ textarea[readonly] {
       }
 
       .search_main_container{
-        background: $dark-yellow;
+        background: #F1863D;
         width: 40%;
+        border-radius: 10px;
+
         .search_bar_container{
             background : repeating-linear-gradient(-45deg,$black,$black 3px,#0000 0,#0000 10px);
             padding: 0px 6px 6px 0px;
             border-radius: 10px;
             border: 2px solid $black;
+
+            .input_field{
+              width: 100%;
+            }
           
-            .MuiAutocomplete-root{
+            .MuiInputBase-root{
               background-color: $white;
               border-radius: 10px;
               border: 2px solid $black;
+              border-top: 0px;
+              border-left: 0px;
+              
+              .MuiInputBase-input{
+                padding: 6px 10px;
+                @include homepage-buttons("Bobby-Jones-Soft",
+                  18px,
+                  $black,
+                  'none'
+                );
+                @include hover-scale(1, 0s);
+
+                &::placeholder{
+                  opacity: .8;
+                }
+              }
+              .MuiInputBase-root{
+                flex-direction: row-reverse;
+                padding: 0px;
+
+
+                .MuiInputAdornment-root{
+                  padding: 7px 5px;
+                  background-color: #F1863D;
+                  align-self: stretch;
+                  border-bottom-right-radius: 8px;
+                  border-top-right-radius: 8px;
+                  height: 100%;
+                  margin: 0px;
+
+                  svg{
+                    fill: $black;
+                    opacity: 1;
+                  }
+                 
+                }
+
+                .MuiAutocomplete-endAdornment{
+                  position: relative;
+                  left: 0px;
+                  align-self: stretch;
+                  transform: none;
+
+                  button{
+                    height: 100%;
+                  }
+                }
+              }
 
               .MuiOutlinedInput-notchedOutline{
                 border: 0px;
+              }
+            }
+        }
+      }
+
+      .cards_container{
+        max-width: 70%;
+        align-self: center;
+        margin: 0 auto;
+        border: 2px solid $yellow;
+        border-bottom: 0px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        
+        .card{
+            border-right: 2px solid $yellow;
+            border-bottom: 2px solid $yellow;
+            @include flex-center(column, flex-start);
+
+            &:nth-child(3n){
+              border-right: none;
+            }
+
+            .card_header{
+              background: #BA6B1A;
+              padding: 10px;
+              border-bottom: 2px solid $yellow;
+              align-self: stretch;
+
+              .heading{
+                @include homepage-buttons("Bobby-Jones-Soft",
+                  18px,
+                  $light-yellow,
+                  'none'
+                );
+                @include hover-scale(1, 0s);
+                text-align: center;
+              }
+            }
+
+            .card_body{
+              @include flex-center(row, flex-start);
+              align-self: stretch;
+              place-items: normal;
+              padding: 20px;
+              height: 100%;
+
+              .details{
+                align-self: stretch;
+                flex: 1;
+                padding: 15px;
+                background: rgba($yellow, .2);
+                border-radius: 40px;
+                border-bottom-left-radius: 0px;
+                @include flex-center(column, flex-start);
+                gap: 5px;
+
+                .product_image{
+                  height: 120px;
+                  width: 100%;
+                  object-fit: center;
+                  border: 3px solid #AE1616;
+                  border-radius: 30px;
+                  margin-bottom: 10px;
+                }
+
+                .text{
+                  @include homepage-buttons("Bobby-Jones-Soft",
+                    20px,
+                    $black,
+                    'none'
+                  );
+                  @include hover-scale(1, 0s);
+
+                  text-align: center;
+
+                  &.shop_name{
+                    color: #AE1616;
+                  }
+
+                  &.cost{
+                    color: #0E5C04;
+                  }
+
+                  &.class_type{
+                    color: #EDE748;
+                    font-size: 26px;
+                    line-height: 26px;
+                  }
+                }
               }
             }
         }

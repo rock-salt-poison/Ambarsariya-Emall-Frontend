@@ -87,6 +87,9 @@ export default function ServeRoutes() {
     }
   };
 
+  console.log(checkUser);
+  
+
   if (loading)
     return (
       <Box className="loading">
@@ -96,7 +99,7 @@ export default function ServeRoutes() {
 
   return (
     <Routes>
-      <Route path="/" element={token ? <Serve /> : <Navigate to="login" />} />
+      <Route path="/" element={checkUser !== undefined ? <Serve /> : <Navigate to='/login' replace/>} />
       <Route path="login" element={<Login />} />
       <Route
         path="/emotional"

@@ -1111,3 +1111,41 @@ export const get_purchased_products_details = async (product_id, item_id) => {
     throw e;
   }
 }
+
+export const get_existing_domains = async () => {
+  try {
+      const response = await axios.get(`${link}/sell/product-search/domains`);
+      return response.data;
+  } catch (e) {
+    throw e;
+  }
+}
+
+export const get_existing_sectors = async (domain_id) => {
+  try {
+    if (domain_id) {
+      const response = await axios.get(`${link}/sell/product-search/sectors?domain_id=${domain_id}`);
+      return response.data;
+    }
+  } catch (e) {
+    throw e;
+  }
+}
+
+export const get_searched_products = async (domain_id, sector_id, product) => {
+  try {
+    let query = `${link}/sell/product-search/product?`;
+    const params = [];
+
+    if (domain_id) params.push(`domain_id=${domain_id}`);
+    if (sector_id) params.push(`sector_id=${sector_id}`);
+    if (product) params.push(`product=${product}`);
+
+    query += params.join('&');
+
+    const response = await axios.get(query);
+    return response.data;
+  } catch (e) {
+    throw e;
+  }
+};
