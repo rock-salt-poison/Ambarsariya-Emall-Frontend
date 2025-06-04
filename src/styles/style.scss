@@ -23761,19 +23761,21 @@ textarea[readonly] {
         max-width: 70%;
         align-self: center;
         margin: 0 auto;
-        border: 2px solid $yellow;
-        border-bottom: 0px;
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 10px;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         
         .card{
-            border-right: 2px solid $yellow;
-            border-bottom: 2px solid $yellow;
+            // border-right: 2px solid $yellow;
+            // border-bottom: 2px solid $yellow;
+
+            border: 2px solid $yellow;
+
             @include flex-center(column, flex-start);
 
-            &:nth-child(3n){
-              border-right: none;
-            }
+            // &:nth-child(3n){
+            //   border-right: none;
+            // }
 
             .card_header{
               background: #BA6B1A;
