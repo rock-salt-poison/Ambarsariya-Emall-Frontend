@@ -52,7 +52,8 @@ import Simple from "../Pages/Serve/Simple";
 import { Box, CircularProgress } from "@mui/material";
 
 export default function ServeRoutes() {
-  const token = useSelector((state) => state.auth.userAccessToken);
+const reduxToken = useSelector((state) => state.auth.userAccessToken);
+const token = reduxToken ? reduxToken : localStorage.getItem("accessToken");
   const [checkUser, setCheckUser] = useState();
   const [loading, setLoading] = useState(false);
 
@@ -83,7 +84,7 @@ export default function ServeRoutes() {
     } else if (checkUser === "member") {
       return memberElement;
     } else {
-      return <Navigate to="../login" />;
+      return <Navigate to="../../AmbarsariyaMall" />;
     }
   };
 
@@ -99,8 +100,8 @@ export default function ServeRoutes() {
 
   return (
     <Routes>
-      <Route path="/" element={checkUser !== undefined ? <Serve /> : <Navigate to='/login' replace/>} />
-      <Route path="login" element={<Login />} />
+      <Route path="/" element={<Serve /> } />
+      <Route path="/login" element={<Login />} />
       <Route
         path="/emotional"
         element={

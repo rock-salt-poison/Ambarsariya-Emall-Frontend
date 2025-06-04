@@ -86,9 +86,8 @@ export default function Home() {
                     navigate('/AmbarsariyaMall/sell');
                 }
                 else if (btnsParentElement.classList.contains('serve')) {
-                    navigate('/AmbarsariyaMall/serve');
+                    navigate(token ? '/AmbarsariyaMall/serve' : '/AmbarsariyaMall/serve/login');
                 }
-
                 else if (btnsParentElement.classList.contains('socialize')) {
                     navigate(token ? '/AmbarsariyaMall/socialize':'/AmbarsariyaMall/socialize/login');
                 }

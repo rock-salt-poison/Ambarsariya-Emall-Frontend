@@ -50,7 +50,7 @@ function Login() {
   }, [token, fetchShopToken]);
 
 
-
+  const serveRedirectTo = accessToken && "../../AmbarsariyaMall/serve";
 
 
   return (
@@ -70,7 +70,7 @@ function Login() {
           <LoginPageCard
             title="Sell"
             imgSrc={peacock_img}
-            redirectTo={'../../AmbarsariyaMall/serve'}
+            redirectTo={serveRedirectTo}
           />
         </Box>
 
@@ -78,7 +78,7 @@ function Login() {
           <LoginPageCard
             title="Buy"
             imgSrc={lion_img}
-            redirectTo={'../../AmbarsariyaMall/serve'}
+            redirectTo={serveRedirectTo}
           />
         </Box>
       </Box>

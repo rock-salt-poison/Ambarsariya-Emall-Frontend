@@ -49,13 +49,13 @@ function SocializeRoutes() {
   };
 
   // Optional: Block all route rendering until user check is done
-  if (token && (loading || !checkUser)) {
-    return (
-      <Box className="loading">
-        <CircularProgress />
-      </Box>
-    );
-  }
+  // if (token && (loading || !checkUser)) {
+  //   return (
+  //     <Box className="loading">
+  //       <CircularProgress />
+  //     </Box>
+  //   );
+  // }
 
   return (
     <Routes>
