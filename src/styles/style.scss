@@ -23630,7 +23630,7 @@ textarea[readonly] {
         width: 240px;
         
         .title_container{
-          padding: 21px 20px 9px 17px;
+          padding: 21px 20px 9px 10px;
           position: relative;
           width: 100%;
           box-sizing: border-box;
@@ -23653,6 +23653,9 @@ textarea[readonly] {
             );
             @include hover-scale(1, 0s);
             text-align: center;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
           }
 
 
