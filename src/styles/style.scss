@@ -23581,6 +23581,8 @@ textarea[readonly] {
   @include background-center-no-repeat($productSearchBgImg);
   background-size: cover;
   background-position: top center;
+  @include flex-center(column, flex-start);
+  place-items: normal;
 
   &::after {
     content: '';
@@ -23591,7 +23593,8 @@ textarea[readonly] {
 
   .row{
     padding: 30px;
-    @include flex-center(column, center);
+    @include flex-center(column, flex-start);
+    flex: 1;
     gap: 30px;
     position: relative;
     z-index: 1;
@@ -23599,8 +23602,22 @@ textarea[readonly] {
     .col{
       @include flex-center(row, space-between);
       gap: 10px;
-      flex: 1;
       align-self: stretch;
+
+      &:last-child{
+        flex: 1;
+        justify-content: center;
+      }
+
+      .text{
+        @include homepage-buttons("Bobby-Jones-Soft",
+          20px,
+          $black,
+          'none'
+        );
+        @include hover-scale(1, 0s);
+        text-align: center;
+      }
 
       .icon_container{
         position: relative;
@@ -23825,15 +23842,6 @@ textarea[readonly] {
                 }
 
                 .text{
-                  @include homepage-buttons("Bobby-Jones-Soft",
-                    20px,
-                    $black,
-                    'none'
-                  );
-                  @include hover-scale(1, 0s);
-
-                  text-align: center;
-
                   &.shop_name{
                     color: #AE1616;
                   }

@@ -91,10 +91,10 @@ const fetchMemberData = async (memberToken) => {
                 const resp = await get_existing_sectors(selected_domain_id);
                 if(resp?.valid){
                     setSectors(resp?.data);
-                     setFormData((prev) => ({
-                    ...prev,
-                    sector: resp?.data?.[0].sector_name
-                    }));
+                    //  setFormData((prev) => ({
+                    // ...prev,
+                    // sector: resp?.data?.[0].sector_name
+                    // }));
                 }
             }
         }catch(e){
@@ -217,7 +217,7 @@ const fetchMemberData = async (memberToken) => {
 
             </Box>
             <Box className="col">
-                <Box className="cards_container">
+                {products?.length>0 ? (<Box className="cards_container">
                     {
                         products?.map((product, index)=>{
                             return <Box className="card" key={index}>
@@ -247,7 +247,9 @@ const fetchMemberData = async (memberToken) => {
                         })
                     }
                     
-                </Box>
+                </Box>): 
+                <Typography className="text">No Products Available</Typography> }
+                
 
             </Box>
         </Box>
