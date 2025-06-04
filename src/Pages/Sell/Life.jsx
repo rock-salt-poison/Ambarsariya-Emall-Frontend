@@ -9,8 +9,16 @@ import Sharelevel_tab_content from "../../Components/Sell/Esale/Life/Sharelevel_
 import Authenticationlevel_tab_content from "../../Components/Sell/Esale/Life/Authenticationlevel_tab_content";
 import SearchProfile_tab_content from "../../Components/Sell/Esale/Life/SearchProfile_tab_content";
 import OrderDetails_tab_content from "../../Components/Sell/Esale/Life/OrderDetails_tab_content";
+import { useSearchParams } from "react-router-dom";
 
 function Life() {
+
+  const [searchParams] = useSearchParams();
+  const selectedTabId = searchParams.get("q");
+
+  console.log(selectedTabId);
+  
+
   const communityData = [
     {
       id: 1,
@@ -90,9 +98,23 @@ function Life() {
     },
     {
       id: 6,
-      name: "Order History/Status/complaints",
+      name: "Order History",
       content: (
         <OrderDetails_tab_content title="Order Information" />
+      ),
+    },
+    {
+      id: 7,
+      name: "Order Status",
+      content: (
+        <OrderDetails_tab_content title="Order Status" />
+      ),
+    },
+    {
+      id: 8,
+      name: "Order complaints",
+      content: (
+        <OrderDetails_tab_content title="Order Complaints" />
       ),
     },
   ];
@@ -113,6 +135,7 @@ function Life() {
           <ScrollableTabsButton
             data={tabsData}
             scrollbarThumb2="var(--brown)"
+            selectedTabValue={selectedTabId}
             verticalTabs={true}
             hideScrollBtn={true}
           />

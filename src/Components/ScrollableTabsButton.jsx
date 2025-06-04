@@ -8,62 +8,63 @@ import { useNavigate } from 'react-router-dom';
 import createCustomTheme from '../styles/CustomSelectDropdownTheme';
 
 export default function ScrollableTabsButton(props) {
-  const [value, setValue] = React.useState('1'); // Initialize with the first tab's value
-  const navigate = useNavigate(); // For redirection
-
-  // Get tabs data from props
+  const navigate = useNavigate();
   const tabsData = props.data || [];
 
+  const [value, setValue] = React.useState(props.selectedTabValue || '1');
+
+  // Sync with prop changes
+  React.useEffect(() => {
+    if (props.selectedTabValue) {
+      setValue(`${props.selectedTabValue}`);
+    }
+  }, [props.selectedTabValue]);
+
   const handleChange = (event, newValue) => {
-    const selectedTab = tabsData.find((tab) => tab.id === Number(newValue)); // Convert newValue to a number
-  
+    const selectedTab = tabsData.find((tab) => tab.id === Number(newValue));
+
     if (selectedTab) {
       if (selectedTab.redirectTo) {
-        // If the tab has a `redirectTo` property, navigate to the target URL
         navigate(selectedTab.redirectTo);
       } else {
-        // Otherwise, update the active tab and show the content
         setValue(newValue);
       }
     }
   };
-  
 
-  const themeProps = {
+  const theme = createCustomTheme({
     scrollbarThumbTabs: `${props.scrollbarThumb2}`,
-  };
-
-  const theme = createCustomTheme(themeProps);
+  });
 
   return (
     <ThemeProvider theme={theme}>
       <TabContext value={value}>
         <Box className="tabs_container">
-          <Tabs 
-            value={value} 
-            onChange={handleChange} 
-            orientation={props.verticalTabs?'vertical':'horizontal'}
-            variant="scrollable" 
-            className="tabs" 
-            scrollButtons={props.hideScrollBtn ? false:true} 
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            orientation={props.verticalTabs ? 'vertical' : 'horizontal'}
+            variant="scrollable"
+            className="tabs"
+            scrollButtons={props.hideScrollBtn ? false : true}
             sx={{
               [`& .${tabsClasses.scrollButtons}`]: {
                 '&.Mui-disabled': { opacity: 0.3 },
               },
             }}
           >
-            {tabsData.map((tab) => {
-              return <Tab label={tab.name} value={`${tab.id}`} key={tab.id} ></Tab>
-            })}
+            {tabsData.map((tab) => (
+              <Tab label={tab.name} value={`${tab.id}`} key={tab.id} />
+            ))}
           </Tabs>
         </Box>
-        {tabsData.map((tab) => (
-          tab.content && ( // Only render TabPanel if content is available
+        {tabsData.map((tab) =>
+          tab.content ? (
             <TabPanel key={tab.id} value={`${tab.id}`} className="tab_panel">
-              {typeof tab.content === 'function' ? tab.content(): tab.content} {/* Display the content of the tab */}
+              {typeof tab.content === 'function' ? tab.content() : tab.content}
             </TabPanel>
-          )
-        ))}
+          ) : null
+        )}
       </TabContext>
     </ThemeProvider>
   );

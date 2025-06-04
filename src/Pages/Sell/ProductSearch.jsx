@@ -145,7 +145,7 @@ const fetchMemberData = async (memberToken) => {
     <Box className="product_search_wrapper">
         <Box className="row">
             <Box className="col">
-                <Link to='../esale/life' className="icon_container">
+                <Link to='../esale/life?q=6' className="icon_container">
                     <Box className="icon" component="img" src={cartIcon} alt="cart"/>
                     <Box className="indicator" component="img" src={starIcon} alt="cart"/>
                 </Link>
@@ -158,7 +158,7 @@ const fetchMemberData = async (memberToken) => {
                     </Box>
                 </Link>
 
-                <Link to='../esale/life' className="icon_container">
+                <Link to='../esale/life?q=7' className="icon_container">
                     <Box className="icon" component="img" src={notificationIcon} alt="notifications"/>
                     <Box className="indicator" component="img" src={starIcon} alt="cart"/>
                 </Link>

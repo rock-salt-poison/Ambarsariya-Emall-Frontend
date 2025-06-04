@@ -23633,6 +23633,7 @@ textarea[readonly] {
           padding: 21px 20px 9px 17px;
           position: relative;
           width: 100%;
+          box-sizing: border-box;
 
           .paper_bg{
             @include full-absolute(0px, 0px, 0px, 0px);
