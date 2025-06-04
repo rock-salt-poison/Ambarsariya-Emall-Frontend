@@ -17863,9 +17863,13 @@ body .MuiBackdrop-root {
       .tab_panel {
         flex: 1;
         align-self: stretch;
+        // background: radial-gradient(circle at 111% -12%,
+        //     rgba(191, 207, 169, 0.7490196078) 43%,
+        //     rgba(104, 50, 72, 0.7490196078) 67%);
+
         background: radial-gradient(circle at 111% -12%,
-            rgba(191, 207, 169, 0.7490196078) 43%,
-            rgba(104, 50, 72, 0.7490196078) 67%);
+            rgba(191, 207, 169, 0.7490196078) 63%,
+            rgba(104, 50, 72, 0.7490196078) 92%);
         padding: 20px 15px 20px 30px !important;
         border-radius: 20px;
         // height: 90%;
