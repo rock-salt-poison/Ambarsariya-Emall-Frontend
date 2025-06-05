@@ -23317,7 +23317,7 @@ textarea[readonly] {
             background: $invoice_border;
           }
 
-          .page-break{
+          .page-break {
             display: none;
           }
 
@@ -23444,14 +23444,14 @@ textarea[readonly] {
                 background: $invoice_bg;
               }
 
-              .right{
+              .right {
                 text-align: right;
               }
 
               table {
                 border: none;
-                
-                svg{
+
+                svg {
                   width: 16px;
                   height: auto;
                   vertical-align: top;
@@ -23477,8 +23477,8 @@ textarea[readonly] {
 
                   }
 
-                  td{
-                    .col-group{
+                  td {
+                    .col-group {
                       @include flex-center(column, center);
                       gap: 6px;
                     }
@@ -23532,7 +23532,7 @@ textarea[readonly] {
                 flex: 1;
                 //  border-right: 1px solid $invoice_border;
 
-                .text{
+                .text {
                   text-align: left;
                 }
               }
@@ -23556,7 +23556,7 @@ textarea[readonly] {
 
                 .col-group {
                   align-self: flex-start;
-                  
+
                   .text {
                     text-align: left;
                   }
@@ -23574,12 +23574,12 @@ textarea[readonly] {
       }
 
 
-      
+
     }
   }
 }
 
-.product_search_wrapper{
+.product_search_wrapper {
   position: relative;
   min-height: 100vh;
   @include background-center-no-repeat($productSearchBgImg);
@@ -23595,7 +23595,7 @@ textarea[readonly] {
     background: rgba($dark-yellow, .5);
   }
 
-  .row{
+  .row {
     padding: 30px;
     @include flex-center(column, flex-start);
     flex: 1;
@@ -23603,17 +23603,17 @@ textarea[readonly] {
     position: relative;
     z-index: 1;
 
-    .col{
+    .col {
       @include flex-center(row, space-between);
       gap: 10px;
       align-self: stretch;
 
-      &:last-child{
+      &:last-child {
         flex: 1;
         justify-content: center;
       }
 
-      .text{
+      .text {
         @include homepage-buttons("Bobby-Jones-Soft",
           20px,
           $black,
@@ -23623,48 +23623,48 @@ textarea[readonly] {
         text-align: center;
       }
 
-      .icon_container{
+      .icon_container {
         position: relative;
         filter: drop-shadow(2px 4px 6px $black);
 
-        .icon{
+        .icon {
           height: 80px;
         }
-  
-        .indicator{
+
+        .indicator {
           height: 50px;
           @include full-absolute(-10px, -25px, auto, auto);
         }
 
-         &:last-child{
+        &:last-child {
           margin-right: 30px;
 
-          .indicator{
+          .indicator {
             right: -15px;
           }
         }
       }
 
-      .container{
+      .container {
         position: relative;
         @include flex-center(row, center);
         width: 240px;
-        
-        .title_container{
+
+        .title_container {
           padding: 21px 20px 9px 10px;
           position: relative;
           width: 100%;
           box-sizing: border-box;
 
-          .paper_bg{
+          .paper_bg {
             @include full-absolute(0px, 0px, 0px, 0px);
             z-index: 0;
-            @include flex-center(row, center);  
+            @include flex-center(row, center);
             width: 100%;
             height: 100%;
           }
-  
-          .title{
+
+          .title {
             position: relative;
             z-index: 1;
             @include homepage-buttons("Bobby-Jones-Soft",
@@ -23680,195 +23680,196 @@ textarea[readonly] {
           }
 
 
-          .input_field{
+          .input_field {
             text-align: start;
             width: 100%;
 
-            .MuiSelect-select{
+            .MuiSelect-select {
               padding-top: 0px;
               padding-bottom: 0px;
               padding-left: 0px;
             }
 
-            .MuiOutlinedInput-notchedOutline{
+            .MuiOutlinedInput-notchedOutline {
               border: 0px;
             }
           }
         }
-        
 
-        .side_border{
+
+        .side_border {
           @include full-absolute(-2px, auto, -6px, -27px);
           z-index: 0;
           align-self: stretch;
           // height: 100%;
         }
 
-        
+
       }
 
-      .search_main_container{
+      .search_main_container {
         background: #F1863D;
         width: 40%;
         border-radius: 10px;
 
-        .search_bar_container{
-            background : repeating-linear-gradient(-45deg,$black,$black 3px,#0000 0,#0000 10px);
-            padding: 0px 6px 6px 0px;
+        .search_bar_container {
+          background: repeating-linear-gradient(-45deg, $black, $black 3px, #0000 0, #0000 10px);
+          padding: 0px 6px 6px 0px;
+          border-radius: 10px;
+          border: 2px solid $black;
+
+          .input_field {
+            width: 100%;
+          }
+
+          .MuiInputBase-root {
+            background-color: $white;
             border-radius: 10px;
             border: 2px solid $black;
+            border-top: 0px;
+            border-left: 0px;
 
-            .input_field{
-              width: 100%;
-            }
-          
-            .MuiInputBase-root{
-              background-color: $white;
-              border-radius: 10px;
-              border: 2px solid $black;
-              border-top: 0px;
-              border-left: 0px;
-              
-              .MuiInputBase-input{
-                padding: 6px 10px;
-                @include homepage-buttons("Bobby-Jones-Soft",
-                  18px,
-                  $black,
-                  'none'
-                );
-                @include hover-scale(1, 0s);
+            .MuiInputBase-input {
+              padding: 6px 10px;
+              @include homepage-buttons("Bobby-Jones-Soft",
+                18px,
+                $black,
+                'none'
+              );
+              @include hover-scale(1, 0s);
 
-                &::placeholder{
-                  opacity: .8;
-                }
+              &::placeholder {
+                opacity: .8;
               }
-              .MuiInputBase-root{
-                flex-direction: row-reverse;
-                padding: 0px;
+            }
+
+            .MuiInputBase-root {
+              flex-direction: row-reverse;
+              padding: 0px;
 
 
-                .MuiInputAdornment-root{
-                  padding: 7px 5px;
-                  background-color: #F1863D;
-                  align-self: stretch;
-                  border-bottom-right-radius: 8px;
-                  border-top-right-radius: 8px;
+              .MuiInputAdornment-root {
+                padding: 7px 5px;
+                background-color: #F1863D;
+                align-self: stretch;
+                border-bottom-right-radius: 8px;
+                border-top-right-radius: 8px;
+                height: 100%;
+                margin: 0px;
+
+                svg {
+                  fill: $black;
+                  opacity: 1;
+                }
+
+              }
+
+              .MuiAutocomplete-endAdornment {
+                position: relative;
+                left: 0px;
+                align-self: stretch;
+                transform: none;
+
+                button {
                   height: 100%;
-                  margin: 0px;
-
-                  svg{
-                    fill: $black;
-                    opacity: 1;
-                  }
-                 
                 }
-
-                .MuiAutocomplete-endAdornment{
-                  position: relative;
-                  left: 0px;
-                  align-self: stretch;
-                  transform: none;
-
-                  button{
-                    height: 100%;
-                  }
-                }
-              }
-
-              .MuiOutlinedInput-notchedOutline{
-                border: 0px;
               }
             }
+
+            .MuiOutlinedInput-notchedOutline {
+              border: 0px;
+            }
+          }
         }
       }
 
-      .cards_container{
+      .cards_container {
         max-width: 70%;
         align-self: center;
         margin: 0 auto;
         display: grid;
         gap: 10px;
         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        
-        .card{
-            // border-right: 2px solid $yellow;
-            // border-bottom: 2px solid $yellow;
 
-            border: 2px solid $yellow;
+        .card {
+          // border-right: 2px solid $yellow;
+          // border-bottom: 2px solid $yellow;
 
-            @include flex-center(column, flex-start);
+          border: 2px solid $yellow;
 
-            // &:nth-child(3n){
-            //   border-right: none;
-            // }
+          @include flex-center(column, flex-start);
 
-            .card_header{
-              background: #BA6B1A;
-              padding: 10px;
-              border-bottom: 2px solid $yellow;
-              align-self: stretch;
+          // &:nth-child(3n){
+          //   border-right: none;
+          // }
 
-              .heading{
-                @include homepage-buttons("Bobby-Jones-Soft",
-                  18px,
-                  $light-yellow,
-                  'none'
-                );
-                @include hover-scale(1, 0s);
-                text-align: center;
-              }
+          .card_header {
+            background: #BA6B1A;
+            padding: 10px;
+            border-bottom: 2px solid $yellow;
+            align-self: stretch;
+
+            .heading {
+              @include homepage-buttons("Bobby-Jones-Soft",
+                18px,
+                $light-yellow,
+                'none'
+              );
+              @include hover-scale(1, 0s);
+              text-align: center;
             }
+          }
 
-            .card_body{
-              @include flex-center(row, flex-start);
+          .card_body {
+            @include flex-center(row, flex-start);
+            align-self: stretch;
+            place-items: normal;
+            padding: 20px;
+            height: 100%;
+
+            .details {
               align-self: stretch;
-              place-items: normal;
-              padding: 20px;
-              height: 100%;
+              flex: 1;
+              padding: 15px;
+              background: rgba($yellow, .2);
+              border-radius: 40px;
+              border-bottom-left-radius: 0px;
+              @include flex-center(column, flex-start);
+              gap: 5px;
 
-              .details{
-                align-self: stretch;
-                flex: 1;
-                padding: 15px;
-                background: rgba($yellow, .2);
-                border-radius: 40px;
-                border-bottom-left-radius: 0px;
-                @include flex-center(column, flex-start);
-                gap: 5px;
+              .product_image {
+                height: 120px;
+                width: 100%;
+                object-fit: center;
+                border: 3px solid #AE1616;
+                border-radius: 30px;
+                margin-bottom: 10px;
+              }
 
-                .product_image{
-                  height: 120px;
-                  width: 100%;
-                  object-fit: center;
-                  border: 3px solid #AE1616;
-                  border-radius: 30px;
-                  margin-bottom: 10px;
+              .text {
+                &.shop_name {
+                  color: #AE1616;
                 }
 
-                .text{
-                  &.shop_name{
-                    color: #AE1616;
-                  }
+                &.cost {
+                  color: #0E5C04;
+                }
 
-                  &.cost{
-                    color: #0E5C04;
-                  }
-
-                  &.class_type{
-                    color: #EDE748;
-                    font-size: 26px;
-                    line-height: 26px;
-                  }
+                &.class_type {
+                  color: #EDE748;
+                  font-size: 26px;
+                  line-height: 26px;
                 }
               }
             }
+          }
         }
       }
     }
   }
 }
 
-.city_junctions_wrapper{
+.city_junctions_wrapper {
   position: relative;
   min-height: 100vh;
   @include background-center-no-repeat($cityJunctionsBgImg);
@@ -23884,7 +23885,7 @@ textarea[readonly] {
     background: rgba($brown-4, .2);
   }
 
-  .row{
+  .row {
     position: relative;
     z-index: 1;
     @include flex-center(column, flex-start);
@@ -23892,16 +23893,16 @@ textarea[readonly] {
     padding: 40px;
     place-items: normal;
 
-    .col{
-      &:first-child{
+    .col {
+      &:first-child {
         display: grid;
         grid-template-columns: 120px 1fr 120px;
         gap: 15px;
 
-        .title_container{
+        .title_container {
           @include flex-center(row, center);
 
-          .title{
+          .title {
             @include homepage-buttons("Bobby-Jones-Soft", 40px, #9B3B32, "none");
             // @include hover-scale(1, 0s);
             text-align: center;
@@ -23910,8 +23911,8 @@ textarea[readonly] {
             line-height: 38px;
           }
         }
-        
-        .icon{
+
+        .icon {
           width: 80px;
           margin-left: auto;
           filter: drop-shadow(2px 4px 6px $black);
@@ -23919,7 +23920,7 @@ textarea[readonly] {
         }
       }
 
-      &:last-child{
+      &:last-child {
         width: 70%;
         display: grid;
         grid-template-columns: repeat(2, minmax(280px, 1fr));
@@ -23928,7 +23929,7 @@ textarea[readonly] {
         align-self: center;
         filter: drop-shadow(2px 4px 6px rgba($black, .4));
 
-        .card{
+        .card {
           @include flex-center(row, flex-start);
           position: relative;
           width: max-content;
@@ -23939,10 +23940,10 @@ textarea[readonly] {
           z-index: 1;
           border: 5px solid #809AC5;
 
-          &:nth-child(even){
+          &:nth-child(even) {
             justify-self: self-end;
           }
-  
+
           // .image{
           //   width: 150px;
           //   height: 120px;
@@ -23952,50 +23953,52 @@ textarea[readonly] {
           //   border: 5px solid;
           //   border-image: linear-gradient(344deg, #ffa9f9 58px, #fff7ad 105px ) 25;
           // }
-  
-          .image_main_container{
+
+          .image_main_container {
             overflow: hidden;
             border-radius: 10px;
             width: 150px;
             height: 120px;
             @include flex-center(row, flex-start);
+            
+            .image_wrapper {
+              width: 100%;
+              height: 93%;
+              overflow: hidden;
+              transition: all .4s linear;
+              border-radius: 10px;
+              border: 5px solid;
+              border-image: linear-gradient(344deg, #ffa9f9 58px, #fff7ad 105px) 25;
+              
+              .image {
+                width: 100%;
+                height: 100%;
+                margin-right: 5px;
+                object-fit: cover;
+                opacity: 0.85;
+                border-radius: 3px;
+                @include hover-scale(1.1, 0.4s);
+    
+                &:hover {
+                  opacity: 1;
+                }
+    
+              }
+            }
           }
-          .image_wrapper {
-            width: 100%;
-            height: 93%;
-            overflow: hidden; 
-            transition: all .4s linear;
-            border-radius: 10px;
-            border: 5px solid;
-            border-image: linear-gradient(344deg, #ffa9f9 58px, #fff7ad 105px) 25;
-          }
 
-.image {
-  width: 100%;
-  height: 100%;
-  margin-right: 5px;
-  object-fit: cover;
-  opacity: 0.85;
-  border-radius: 3px;
-  @include hover-scale(1.1, 0.4s);
-
-  &:hover{
-    opacity: 1;
-  }
-
-}
-          .container{
+          .container {
             // @include full-absolute(0px, 0px, 0px, 0px);
             position: relative;
             margin-left: 0%;
             z-index: -1;
-  
-            .road{
+
+            .road {
               width: 200px;
               height: 120px;
             }
-            
-            .heading{
+
+            .heading {
               @include full-absolute(0px, 0px, 0px, auto);
               @include flex-center(row, flex-end);
               margin-left: 35%;
@@ -24005,7 +24008,7 @@ textarea[readonly] {
               height: max-content;
               align-self: center;
 
-              .text{
+              .text {
                 @include homepage-buttons("Bobby-Jones-Soft",
                   22px,
                   #809AC5,
@@ -24022,75 +24025,78 @@ textarea[readonly] {
       }
     }
 
-    @media (max-width: 992px){
-      .col{
-        &:last-child{
+    @media (max-width: 992px) {
+      .col {
+        &:last-child {
           grid-template-columns: repeat(1, 1fr);
 
-          .card{
+          .card {
             justify-self: center !important;
           }
         }
       }
     }
-    @media (max-width: 768px){
-      .col{
-       
-        &:last-child{
+
+    @media (max-width: 768px) {
+      .col {
+
+        &:last-child {
           width: 100% !important;
         }
       }
     }
 
-    @media (max-width: 560px){
+    @media (max-width: 560px) {
       padding: 20px;
-      .col{
-        &:first-child{
+
+      .col {
+        &:first-child {
           display: flex !important;
           flex-wrap: wrap;
           justify-content: space-between;
 
-          .badge{
+          .badge {
             order: 0;
           }
 
-          .title_container{
+          .title_container {
             order: 2;
             margin: 0 auto;
 
-            .title{
+            .title {
               font-size: 28px;
               line-height: 28px;
             }
           }
 
-          a{
+          a {
             order: 1;
           }
 
         }
 
-        &:last-child{
+        &:last-child {
           width: 100% !important;
-          .card{
+
+          .card {
             justify-self: center !important;
             flex-direction: column;
             height: max-content;
 
-            .image_main_container{
+            .image_main_container {
               width: 100%;
             }
 
-            .container{
+            .container {
               transform: rotate(90deg);
 
-              .road{
+              .road {
                 width: 200px;
                 height: auto;
               }
 
-              .heading{
-                transform:  rotate(270deg);
+              .heading {
+                transform: rotate(270deg);
                 border-radius: 45px;
               }
             }
