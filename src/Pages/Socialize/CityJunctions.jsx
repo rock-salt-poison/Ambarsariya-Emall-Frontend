@@ -23,6 +23,7 @@ function CityJunctions() {
     const [audio] = useState(new Audio(hornSound));
 
     const handleClick = (e, item) =>{
+        const title = e.target.closest(".title");
         const target = e.target.closest(".image");
         if(target){
             target.classList.toggle('reduceSize3');
@@ -37,6 +38,19 @@ function CityJunctions() {
                     navigate('../../AmbarsariyaMall/serve/emotional/eshop/jobs-offered')
                 }
             }, 600)
+        }else if(title){
+            title.classList.toggle('reduceSize3');
+            audio.play();
+            
+            setTimeout(()=>{
+                title.classList.toggle('reduceSize3');
+            },300)
+    
+            setTimeout(()=>{
+                // if(target.classList.contains('work_from_home')){
+                    navigate('../../AmbarsariyaMall/socialize')
+                // }
+            }, 1000)
         }
     }
 
@@ -50,7 +64,7 @@ function CityJunctions() {
                         handleLogin="login"
                     />
                     <Box className="title_container">
-                        <Link>
+                        <Link onClick={(e)=>handleClick(e)} className='title_link'>
                             <Typography className="title">
                                 City Junction
                             </Typography>
