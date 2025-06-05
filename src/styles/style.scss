@@ -23922,7 +23922,7 @@ textarea[readonly] {
       &:last-child{
         width: 70%;
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        grid-template-columns: repeat(2, minmax(280px, 1fr));
         gap: 80px;
         justify-content: space-between;
         align-self: center;
@@ -24079,7 +24079,6 @@ textarea[readonly] {
 
             .image_main_container{
               width: 100%;
-              height: 190px;
             }
 
             .container{
@@ -24088,6 +24087,11 @@ textarea[readonly] {
               .road{
                 width: 200px;
                 height: auto;
+              }
+
+              .heading{
+                transform:  rotate(270deg);
+                border-radius: 45px;
               }
             }
           }
