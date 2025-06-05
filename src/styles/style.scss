@@ -23907,6 +23907,7 @@ textarea[readonly] {
             text-align: center;
             text-shadow: -1.5px -1.5px 0 $yellow, 1.5px -1.5px 0 $yellow, -1.5px 1.5px 0px $yellow, 1.5px 1.5px 0 $yellow;
             transition: all .4s linear;
+            line-height: 38px;
           }
         }
         
@@ -24028,6 +24029,67 @@ textarea[readonly] {
 
           .card{
             justify-self: center !important;
+          }
+        }
+      }
+    }
+    @media (max-width: 768px){
+      .col{
+       
+        &:last-child{
+          width: 100% !important;
+        }
+      }
+    }
+
+    @media (max-width: 560px){
+      padding: 20px;
+      .col{
+        &:first-child{
+          display: flex !important;
+          flex-wrap: wrap;
+          justify-content: space-between;
+
+          .badge{
+            order: 0;
+          }
+
+          .title_container{
+            order: 2;
+            margin: 0 auto;
+
+            .title{
+              font-size: 28px;
+              line-height: 28px;
+            }
+          }
+
+          a{
+            order: 1;
+          }
+
+        }
+
+        &:last-child{
+          width: 100% !important;
+          .card{
+            justify-self: center !important;
+            flex-direction: column;
+            height: max-content;
+
+            .image_main_container{
+              width: 100%;
+              height: 190px;
+            }
+
+            .container{
+              transform: rotate(90deg);
+
+              .road{
+                width: 200px;
+                height: auto;
+              }
+            }
           }
         }
       }
