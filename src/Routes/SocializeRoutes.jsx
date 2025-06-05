@@ -9,6 +9,7 @@ import { getUser } from '../API/fetchExpressAPI';
 import { Box, CircularProgress } from '@mui/material';
 import Login from "../Pages/Socialize/Login";
 import CityJunctions from '../Pages/Socialize/CityJunctions';
+import TermsAndConditions from '../Pages/Socialize/TermsAndConditions';
 
 function SocializeRoutes() {
   const token = useSelector((state) => state.auth.userAccessToken);
@@ -73,6 +74,9 @@ function SocializeRoutes() {
       } />
       <Route path="/city-junctions" element={
         <ProtectedRoute shopElement={<CityJunctions />} memberElement={<CityJunctions />} />
+      } />
+      <Route path="/city-junctions/terms-and-conditions" element={
+        <TermsAndConditions />
       } />
     </Routes>
   );

@@ -24110,3 +24110,47 @@ textarea[readonly] {
     }
   }
 }
+
+
+.terms_and_conditions_wrapper{
+  position: relative;
+  min-height: 100vh;
+  background-color: $white;
+
+  .row{
+    padding: 100px;
+    @include flex-center(column, flex-start);
+    place-items: normal;
+    gap: 30px;
+
+    .col{
+      &.quote_1{
+        display: grid;
+        grid-template-columns: 80px 1fr 80px;
+        gap: 20px;
+
+        .quote_start, .quote_end{
+          width: 100%;
+          height: auto;
+          fill: #1855d8;
+        }
+
+        .quote_start{
+          transform:rotate(180deg); 
+        }
+
+        .quote{
+          @include homepage-buttons("Arial",
+            26px,
+            #1855d8,
+            'none'
+          );
+          @include hover-scale(1, 0s);
+          font-weight: bold;
+          line-height: 26px;
+        }
+      }
+    }
+  }
+
+}

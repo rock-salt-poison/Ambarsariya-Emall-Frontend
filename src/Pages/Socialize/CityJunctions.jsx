@@ -25,6 +25,7 @@ function CityJunctions() {
     const handleClick = (e, item) =>{
         const title = e.target.closest(".title");
         const target = e.target.closest(".image");
+        const icon = e.target.closest(".icon");
         if(target){
             target.classList.toggle('reduceSize3');
             audio.play();
@@ -51,6 +52,19 @@ function CityJunctions() {
                     navigate('../../AmbarsariyaMall/socialize')
                 // }
             }, 1000)
+        }else if(icon){
+            icon.classList.toggle('reduceSize3');
+            audio.play();
+            
+            setTimeout(()=>{
+                icon.classList.toggle('reduceSize3');
+            },300)
+    
+            setTimeout(()=>{
+                // if(target.classList.contains('work_from_home')){
+                    navigate('../city-junctions/terms-and-conditions')
+                // }
+            }, 1000)
         }
     }
 
@@ -71,7 +85,7 @@ function CityJunctions() {
                         </Link>
                     </Box>
 
-                    <Link className='icon_container'>
+                    <Link className='icon_container' onClick={(e)=>handleClick(e)}>
                         <Box component="img" src={info} alt="icon" className='icon'/>
                     </Link>
                 </Box>
