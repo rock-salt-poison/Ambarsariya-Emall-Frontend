@@ -23867,3 +23867,170 @@ textarea[readonly] {
     }
   }
 }
+
+.city_junctions_wrapper{
+  position: relative;
+  min-height: 100vh;
+  @include background-center-no-repeat($cityJunctionsBgImg);
+  background-size: cover;
+  background-position: center;
+  @include flex-center(column, flex-start);
+  place-items: normal;
+
+  &::after {
+    content: '';
+    @include full-absolute(0px, 0px, 0px, 0px);
+    z-index: 0;
+    background: rgba($brown-4, .2);
+  }
+
+  .row{
+    position: relative;
+    z-index: 1;
+    @include flex-center(column, flex-start);
+    gap: 30px;
+    padding: 40px;
+    place-items: normal;
+
+    .col{
+      &:first-child{
+        display: grid;
+        grid-template-columns: 120px 1fr 120px;
+        gap: 15px;
+
+        .title_container{
+          @include flex-center(row, center);
+
+          .title{
+            @include homepage-buttons("Bobby-Jones-Soft", 40px, #9B3B32, "none");
+            // @include hover-scale(1, 0s);
+            text-align: center;
+            text-shadow: -1.5px -1.5px 0 $yellow, 1.5px -1.5px 0 $yellow, -1.5px 1.5px 0px $yellow, 1.5px 1.5px 0 $yellow;
+            transition: all .4s linear;
+          }
+        }
+        
+        .icon{
+          width: 70%;
+          margin-left: auto;
+          filter: drop-shadow(2px 4px 6px $black);
+          @include hover-scale(1.1, 0.4s);
+        }
+      }
+
+      &:last-child{
+        width: 70%;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 80px;
+        justify-content: space-between;
+        align-self: center;
+        filter: drop-shadow(2px 4px 6px rgba($black, .4));
+
+        .card{
+          @include flex-center(row, flex-start);
+          position: relative;
+          width: max-content;
+          max-width: 100%;
+          background-image: radial-gradient(rgba(#F1EBFF, 0.75), rgba(#938898, 0.75));
+          border-radius: 10px;
+          // padding-right: 100px;
+          z-index: 1;
+          border: 5px solid #809AC5;
+
+          &:nth-child(even){
+            justify-self: self-end;
+          }
+  
+          // .image{
+          //   width: 150px;
+          //   height: 120px;
+          //   object-fit: cover;
+          //   border-radius: 10px;
+          //   opacity: .85;
+          //   border: 5px solid;
+          //   border-image: linear-gradient(344deg, #ffa9f9 58px, #fff7ad 105px ) 25;
+          // }
+  
+          .image_main_container{
+            overflow: hidden;
+            border-radius: 10px;
+            width: 150px;
+            height: 120px;
+            @include flex-center(row, flex-start);
+          }
+          .image_wrapper {
+            width: 100%;
+            height: 93%;
+            overflow: hidden; 
+            transition: all .4s linear;
+            border-radius: 10px;
+            border: 5px solid;
+            border-image: linear-gradient(344deg, #ffa9f9 58px, #fff7ad 105px) 25;
+          }
+
+.image {
+  width: 100%;
+  height: 100%;
+  margin-right: 5px;
+  object-fit: cover;
+  opacity: 0.85;
+  border-radius: 3px;
+  @include hover-scale(1.1, 0.4s);
+
+  &:hover{
+    opacity: 1;
+  }
+
+}
+          .container{
+            // @include full-absolute(0px, 0px, 0px, 0px);
+            position: relative;
+            margin-left: 0%;
+            z-index: -1;
+  
+            .road{
+              width: 200px;
+              height: 120px;
+            }
+            
+            .heading{
+              @include full-absolute(0px, 0px, 0px, auto);
+              @include flex-center(row, flex-end);
+              margin-left: 35%;
+              margin-right: 10px;
+              z-index: 2;
+              background-color: $black;
+              height: max-content;
+              align-self: center;
+
+              .text{
+                @include homepage-buttons("Bobby-Jones-Soft",
+                  22px,
+                  #809AC5,
+                  'none'
+                );
+                @include hover-scale(1, 0s);
+                text-align: center;
+                line-height: 20px;
+              }
+
+            }
+          }
+        }
+      }
+    }
+
+    @media (max-width: 992px){
+      .col{
+        &:last-child{
+          grid-template-columns: repeat(1, 1fr);
+
+          .card{
+            justify-self: center !important;
+          }
+        }
+      }
+    }
+  }
+}

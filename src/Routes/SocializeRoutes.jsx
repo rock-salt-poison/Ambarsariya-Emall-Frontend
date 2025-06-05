@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import { getUser } from '../API/fetchExpressAPI';
 import { Box, CircularProgress } from '@mui/material';
 import Login from "../Pages/Socialize/Login";
+import CityJunctions from '../Pages/Socialize/CityJunctions';
 
 function SocializeRoutes() {
   const token = useSelector((state) => state.auth.userAccessToken);
@@ -69,6 +70,9 @@ function SocializeRoutes() {
       } />
       <Route path="/city-lights" element={
         <ProtectedRoute shopElement={<CityLights />} memberElement={<CityLights />} />
+      } />
+      <Route path="/city-junctions" element={
+        <ProtectedRoute shopElement={<CityJunctions />} memberElement={<CityJunctions />} />
       } />
     </Routes>
   );

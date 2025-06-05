@@ -37,7 +37,8 @@ function Socialize() {
             }else if(target.classList.contains('updates')){
               navigate('../updates')
           }else if(target.classList.contains('junction')){
-              navigate('../../AmbarsariyaMall/serve/emotional/eshop/jobs-offered')
+              // navigate('../../AmbarsariyaMall/serve/emotional/eshop/jobs-offered')
+              navigate('../city-junctions')
           }
         }, 600)
     }
