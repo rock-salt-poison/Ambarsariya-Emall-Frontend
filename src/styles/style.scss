@@ -23912,11 +23912,15 @@ textarea[readonly] {
           }
         }
 
-        .icon {
-          width: 80px;
+        .icon_container{
+          width: max-content;
           margin-left: auto;
-          filter: drop-shadow(2px 4px 6px $black);
-          @include hover-scale(1.1, 0.4s);
+          
+          .icon {
+            width: 80px;
+            filter: drop-shadow(2px 4px 6px $black);
+            @include hover-scale(1.1, 0.4s);
+          }
         }
       }
 

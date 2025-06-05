@@ -71,7 +71,7 @@ function CityJunctions() {
                         </Link>
                     </Box>
 
-                    <Link>
+                    <Link className='icon_container'>
                         <Box component="img" src={info} alt="icon" className='icon'/>
                     </Link>
                 </Box>
