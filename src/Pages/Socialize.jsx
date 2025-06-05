@@ -16,7 +16,7 @@ function Socialize() {
   const items = [
     {id:1, title:'Updates', linkTo:'', cName:'updates'},
     {id:2, title:'Feeds', linkTo:'', cName:'feeds'},
-    {id:3, title:'Junction', linkTo:'../../AmbarsariyaMall/serve/emotional/eshop/jobs-offered', cName:'junction'},
+    {id:3, title:'Junction', linkTo:'', cName:'junction'},
     {id:4, title:'Banners', linkTo:'', cName:'banners'},
   ]
 
@@ -36,6 +36,8 @@ function Socialize() {
                 navigate('../city-feeds')
             }else if(target.classList.contains('updates')){
               navigate('../updates')
+          }else if(target.classList.contains('junction')){
+              navigate('../../AmbarsariyaMall/serve/emotional/eshop/jobs-offered')
           }
         }, 600)
     }

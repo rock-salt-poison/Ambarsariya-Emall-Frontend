@@ -52,8 +52,7 @@ import Simple from "../Pages/Serve/Simple";
 import { Box, CircularProgress } from "@mui/material";
 
 export default function ServeRoutes() {
-const reduxToken = useSelector((state) => state.auth.userAccessToken);
-const token = reduxToken ? reduxToken : localStorage.getItem("accessToken");
+  const token = useSelector((state) => state.auth.userAccessToken);
   const [checkUser, setCheckUser] = useState();
   const [loading, setLoading] = useState(false);
 
@@ -79,24 +78,21 @@ const token = reduxToken ? reduxToken : localStorage.getItem("accessToken");
   }, [token]);
 
   const ProtectedRoute = ({ shopElement, memberElement }) => {
-    if (checkUser === "shop") {
-      return shopElement;
-    } else if (checkUser === "member") {
-      return memberElement;
-    } else {
-      return <Navigate to="../../AmbarsariyaMall" />;
-    }
-  };
-
-  console.log(checkUser);
+      if (loading) {
+        return (
+          <Box className="loading">
+            <CircularProgress />
+          </Box>
+        );
+      }
   
-
-  if (loading)
-    return (
-      <Box className="loading">
-        <CircularProgress />
-      </Box>
-    );
+      if (checkUser === "shop") {
+        return shopElement;
+      } else if (checkUser === "member") {
+        return memberElement;
+      } 
+    };
+  
 
   return (
     <Routes>

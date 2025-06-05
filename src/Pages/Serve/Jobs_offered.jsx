@@ -58,10 +58,9 @@ function Jobs_offered() {
           <Box className="col-5">
             {job_types.map((job) => {
               return (
-                <>
+                <React.Fragment key={job.id}>
                   <Link
                     className="container"
-                    key={job.id}
                     onClick={(e) => handleClick(e, job.id)}
                   >
                     {/* <Box component="img" src={frame} alt="frame" className='frame'/> */}
@@ -78,7 +77,7 @@ function Jobs_offered() {
                     title={job.type}
                     body_content={job.popup_body_content}
                   />
-                </>
+                </React.Fragment>
               );
             })}
           </Box>
