@@ -24118,30 +24118,36 @@ textarea[readonly] {
   background-color: $white;
 
   .row{
-    padding: 100px;
+    padding: 60px;
     @include flex-center(column, flex-start);
     place-items: normal;
     gap: 30px;
 
     .col{
-      &.quote_1{
+      &.quote_container{
         display: grid;
-        grid-template-columns: 80px 1fr 80px;
-        gap: 20px;
+        grid-template-columns: 50px 1fr 50px;
+        gap: 30px;
+        background-color: #E0EFFF;
+        padding: 15px 20px;
 
-        .quote_start, .quote_end{
-          width: 100%;
-          height: auto;
-          fill: #1855d8;
+        .quotes{
+          width: 50px;
+
+          &.end{
+            align-self: end;
+          }
         }
 
-        .quote_start{
-          transform:rotate(180deg); 
-        }
+
+        .blockquote{
+          @include flex-center(column, flex-start);
+          gap: 20px;
+          place-items: normal;
 
         .quote{
           @include homepage-buttons("Arial",
-            26px,
+            24px,
             #1855d8,
             'none'
           );
@@ -24149,6 +24155,80 @@ textarea[readonly] {
           font-weight: bold;
           line-height: 26px;
         }
+
+        .author{
+          @include homepage-buttons("Arial",
+            18px,
+            $black,
+            'none'
+          );
+          @include hover-scale(1, 0s);
+          
+          span{
+            font-style: italic;
+          }
+        }
+      }
+      }
+
+      &.quote_2{
+        background-color: #F1EBFF;
+
+        .quote_start, .quote_end{
+          fill: #7731d8;
+        }
+
+        .blockquote{
+          .quote{
+            color: #7731d8;
+          }
+        }
+      }
+
+      @include flex-center(column, flex-start);
+      gap: 10px;
+      place-items: normal;
+
+      .title{
+        @include homepage-buttons("Arial",
+          28px,
+          $black,
+          'none'
+        );
+        @include hover-scale(1, 0s);
+        font-weight: bold;
+        margin-bottom: 15px;
+      }
+
+      .text, .MuiFormControlLabel-label{
+        @include homepage-buttons("Arial",
+          18px,
+          $black,
+          'none'
+        );
+        @include hover-scale(1, 0s);
+        line-height: 22px;
+
+        &.bold{
+          font-weight: bold;
+        }
+      }
+
+      form{
+        @include flex-center(column, flex-start);
+        gap: 15px;
+      }
+
+      ol{
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .emall_img{
+        height: 350px;
+        object-fit: cover;
       }
     }
   }

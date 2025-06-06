@@ -88,6 +88,8 @@ const FormField = ({
               />
             }
             label={label}
+            className={className}
+            required={required}
           />
         ) : type === 'switch' ? (
           <>
