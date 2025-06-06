@@ -1,9 +1,10 @@
-import { Box, Typography } from '@mui/material'
+import { Box, CircularProgress, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Button2 from '../../Home/Button2'
 import UserBadge from '../../../UserBadge';
 import { useSelector } from 'react-redux';
+import { getUser } from '../../../API/fetchExpressAPI';
 
 function Header({ icon_1, icon_2, title, span_value, icon_1_link, icon_2_link, back_btn_link, next_btn_link, title_container, heading_with_bg, redirectTo, iconWithHeading, nextBtn=true }) {
 
@@ -15,6 +16,10 @@ function Header({ icon_1, icon_2, title, span_value, icon_1_link, icon_2_link, b
   const fetchUserDetails = async (token) => {
     try{
       setLoading(true);
+      const resp = await getUser(token);
+      if(resp?.[0]?.user_type === 'shop'){
+        setUser(resp?.[0]);
+      } 
 
     }catch(e){
       console.error(e);
@@ -35,6 +40,7 @@ function Header({ icon_1, icon_2, title, span_value, icon_1_link, icon_2_link, b
 
   return (
     <Box className="col header_badge">
+      {loading && <Box className="loading"><CircularProgress/></Box> }
       {
         icon_1 ?
           <Link to={icon_1_link} className='icon_link'>
@@ -66,9 +72,9 @@ function Header({ icon_1, icon_2, title, span_value, icon_1_link, icon_2_link, b
             </Link>
             {span_value ? <Typography variant='span' className="span">
               {span_value}
-            </Typography> : <Typography variant='span' className="span">
-              Shop No: <Typography className="value" variant='span'>0001</Typography>
-            </Typography>}
+            </Typography> : <Link to={`../../AmbarsariyaMall/sell/support/shop/shop-detail/${user?.shop_access_token}`}><Typography variant='span' className="span">
+              Shop No: <Typography className="value" variant='span'>{(user?.shop_no)?.split('_')?.[1]}</Typography>
+            </Typography></Link>}
           </Box>
       }
 

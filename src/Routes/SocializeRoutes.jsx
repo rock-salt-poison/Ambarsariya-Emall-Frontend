@@ -13,24 +13,24 @@ import TermsAndConditions from '../Pages/Socialize/TermsAndConditions';
 
 function SocializeRoutes() {
   const token = useSelector((state) => state.auth.userAccessToken);
-  const [checkUser, setCheckUser] = useState();
-  const [loading, setLoading] = useState(false);
+  const [checkUser, setCheckUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUserType = async () => {
       if (token) {
         try {
-          setLoading(true);
-          const user_type = (await getUser(token))[0].user_type;
-          setCheckUser(user_type);
-          console.log(user_type);
-        } catch (e) {
-          console.log(e);
-        } finally {
-          setLoading(false);
+          const response = await getUser(token);
+          const user_type = response[0]?.user_type;
+          setCheckUser(user_type || null);
+        } catch (error) {
+          console.error(error);
+          setCheckUser(null); // fallback
         }
       }
+      setLoading(false);
     };
+
     fetchUserType();
   }, [token]);
 

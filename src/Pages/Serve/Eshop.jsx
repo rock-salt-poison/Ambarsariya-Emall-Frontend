@@ -1,5 +1,5 @@
-import React from 'react'
-import { Box, Typography } from '@mui/material'
+import React, { useEffect, useState } from 'react'
+import { Box, CircularProgress, Typography } from '@mui/material'
 import Button2 from '../../Components/Home/Button2'
 import hanging_board from '../../Utils/images/Serve/emotional/eshop/hanging_board.webp'
 import hanging_board2 from '../../Utils/images/Serve/emotional/eshop/hanging_board2.webp'
@@ -14,13 +14,43 @@ import suppliers_for_shop_icon from '../../Utils/images/Serve/emotional/eshop/su
 import supply_chain_management_icon from '../../Utils/images/Serve/emotional/eshop/supply_chain_management_icon.webp'
 import supply_chain_management_icon2 from '../../Utils/images/Serve/emotional/campaign/community/icon_1.webp'
 import UserBadge from '../../UserBadge'
+import { useSelector } from 'react-redux'
+import { getShopUserData, getUser } from '../../API/fetchExpressAPI'
 
 function Eshop() {
+    const token = useSelector((state) => state.auth.userAccessToken);
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(false);
+    
+    const fetchUserDetails = async (token) => {
+        try{
+            setLoading(true);
+            const resp = await getUser(token);
+            if(resp?.[0]?.user_type === 'shop'){
+                const data = await getShopUserData(resp?.[0]?.shop_access_token);
+                if(data){
+                    setUser(data?.[0]);
+                }
+            } 
+
+        }catch(e){
+            console.error(e);
+        }finally{
+            setLoading(false);
+        }
+    }
+
+    useEffect(()=>{
+        if(token){
+            fetchUserDetails(token);
+        }
+    }, [token]);
+
 
     const header = [
-        { id: 1, title: 'Shop No: 001' },
-        { id: 2, title: 'Wholesale' },
-        { id: 3, title: 'Industrial and Manufacturing Supplies' },
+        { id: 1, title: `Shop No: ${(user?.shop_no)?.split('_')?.[1]}` },
+        { id: 2, title: user?.domain_name },
+        { id: 3, title: user?.sector_name },
     ];
 
     const data = [
@@ -33,6 +63,7 @@ function Eshop() {
 
     return (
         <Box className="serve_eshop_wrapper">
+            {loading &&  <Box className="loading"><CircularProgress/></Box>}
             <Box className="row">
                 <Box className="col d_md_none">
                     {
@@ -50,13 +81,13 @@ function Eshop() {
                                 <Box component="img" src={hanging_board2} alt="board" className='hanging_board2' />
                                 <Typography className='title' variant='h2'>
                                     <Typography className="heading" variant='span'>
-                                        Shop No: <Typography variant='span' className='values'>001</Typography>
+                                        Shop No: <Typography variant='span' className='values'>{(user?.shop_no)?.split('_')?.[1]}</Typography>
                                     </Typography>
                                     <Typography className="heading" variant='span'>
-                                        Domain: <Typography variant='span' className='values'>Wholesale</Typography>
+                                        Domain: <Typography variant='span' className='values'>{user?.domain_name}</Typography>
                                     </Typography>
                                     <Typography className="heading" variant='span'>
-                                        Sector: <Typography variant='span' className='values'>Industrial and Manufacturing Supplies</Typography>
+                                        Sector: <Typography variant='span' className='values'>{user?.sector_name}</Typography>
                                     </Typography>
                                     
                                 </Typography>
