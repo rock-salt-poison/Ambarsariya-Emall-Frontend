@@ -1,12 +1,33 @@
 import { Box, Typography } from '@mui/material'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Button2 from '../../Home/Button2'
 import UserBadge from '../../../UserBadge';
+import { useSelector } from 'react-redux';
 
 function Header({ icon_1, icon_2, title, span_value, icon_1_link, icon_2_link, back_btn_link, next_btn_link, title_container, heading_with_bg, redirectTo, iconWithHeading, nextBtn=true }) {
 
   const navigate = useNavigate();
+  const token = useSelector((state) => state.auth.userAccessToken);
+  const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState(null);
+
+  const fetchUserDetails = async (token) => {
+    try{
+      setLoading(true);
+
+    }catch(e){
+      console.error(e);
+    }finally{
+      setLoading(false);
+    }
+  }
+
+  useEffect(()=>{
+    if(token){
+      fetchUserDetails(token);
+    }
+  }, [token]);
   
   const handleRedirect = () => {
     setTimeout(()=>{navigate(redirectTo)},200)

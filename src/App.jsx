@@ -12,8 +12,16 @@ import 'swiper/css/autoplay';
 import 'swiper/css/pagination';
 import Notice from './Pages/Notice';
 import SocializeRoutes from './Routes/SocializeRoutes';
+import { restoreTokens } from './store/restoreToken';
+import { useDispatch } from 'react-redux';
 
 function App() {
+
+   const dispatch = useDispatch();
+
+  useEffect(() => {
+    restoreTokens(dispatch);
+  }, [dispatch]);
   
   return (
     <>

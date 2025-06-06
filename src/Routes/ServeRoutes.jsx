@@ -53,51 +53,48 @@ import { Box, CircularProgress } from "@mui/material";
 
 export default function ServeRoutes() {
   const token = useSelector((state) => state.auth.userAccessToken);
-  const [checkUser, setCheckUser] = useState();
-  const [loading, setLoading] = useState(false);
+  const [checkUser, setCheckUser] = useState(null);
+  const [loading, setLoading] = useState(true); // <- start as true
 
   useEffect(() => {
     const fetchUserType = async () => {
       if (token) {
         try {
-          setLoading(true);
-          const user_type = (await getUser(token))[0].user_type;
-
-          if (user_type) {
-            setCheckUser(user_type);
-            console.log(user_type);
-          }
-        } catch (e) {
-          console.log(e);
-        } finally {
-          setLoading(false);
+          const response = await getUser(token);
+          const user_type = response[0]?.user_type;
+          setCheckUser(user_type || null);
+        } catch (error) {
+          console.error(error);
+          setCheckUser(null); // fallback
         }
       }
+      setLoading(false);
     };
+
     fetchUserType();
   }, [token]);
 
   const ProtectedRoute = ({ shopElement, memberElement }) => {
-      if (loading) {
-        return (
-          <Box className="loading">
-            <CircularProgress />
-          </Box>
-        );
-      }
-  
-      if (checkUser === "shop") {
-        return shopElement;
-      } else if (checkUser === "member") {
-        return memberElement;
-      } 
-    };
+    if (loading) {
+      return (
+        <Box className="loading">
+          <CircularProgress />
+        </Box>
+      );
+    }
+
+    if (checkUser === "shop") return shopElement;
+    if (checkUser === "member") return memberElement;
+
+    return <Navigate to="../login" />;
+  };
+
   
 
   return (
     <Routes>
-      <Route path="/" element={<Serve /> } />
       <Route path="/login" element={<Login />} />
+      <Route path="/" element={<Serve /> } />
       <Route
         path="/emotional"
         element={

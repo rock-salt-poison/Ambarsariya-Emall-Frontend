@@ -43,12 +43,12 @@ function SocializeRoutes() {
       );
     }
 
-    if (checkUser === "shop") {
-      return shopElement;
-    } else if (checkUser === "member") {
-      return memberElement;
-    } 
+    if (checkUser === "shop") return shopElement;
+    if (checkUser === "member") return memberElement;
+
+    return <Navigate to="../login" />;
   };
+
 
   // Optional: Block all route rendering until user check is done
   // if (token && (loading || !checkUser)) {
@@ -61,8 +61,8 @@ function SocializeRoutes() {
 
   return (
     <Routes>
-      <Route path="/" element={token && <Socialize />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/" element={<Socialize />} />
       <Route path="/city-feeds" element={
         <ProtectedRoute shopElement={<CityFeeds />} memberElement={<CityFeeds />} />
       } />
