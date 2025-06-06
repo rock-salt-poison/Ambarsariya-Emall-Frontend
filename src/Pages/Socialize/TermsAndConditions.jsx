@@ -30,6 +30,13 @@ function TermsAndConditions() {
   return (
     <Box className="terms_and_conditions_wrapper">
       <Box className="row">
+        <Box className="col">
+          <UserBadge
+              handleBadgeBgClick={-1}
+              handleLogin="../login"
+              handleLogoutClick="../../AmbarsariyaMall"
+          />
+        </Box>
         <Box className="col quote_container">
           <Box
             component="img"

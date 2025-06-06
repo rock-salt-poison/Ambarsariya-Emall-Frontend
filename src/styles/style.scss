@@ -24124,6 +24124,11 @@ textarea[readonly] {
     gap: 30px;
 
     .col{
+
+      .badge{
+        align-self: flex-end;
+      }
+
       &.quote_container{
         display: grid;
         grid-template-columns: 50px 1fr 50px;
