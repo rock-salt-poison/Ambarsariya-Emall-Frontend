@@ -24230,6 +24230,7 @@ textarea[readonly] {
     }
     form{
         @include flex-center(column, flex-start);
+        place-items: normal;
         gap: 15px;
       }
   }
