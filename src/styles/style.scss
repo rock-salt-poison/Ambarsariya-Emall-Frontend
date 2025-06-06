@@ -24136,6 +24136,7 @@ textarea[readonly] {
 
           &.end{
             align-self: end;
+            justify-self: end;
           }
         }
 
@@ -24214,8 +24215,6 @@ textarea[readonly] {
         }
       }
 
-      
-
       ol{
         margin: 0;
         display: flex;
@@ -24229,10 +24228,35 @@ textarea[readonly] {
       }
     }
     form{
-        @include flex-center(column, flex-start);
-        place-items: normal;
-        gap: 15px;
+      @include flex-center(column, flex-start);
+      place-items: normal;
+      gap: 15px;
+
+      label{
+        @include flex-center(row, flex-start);
+        place-items:normal;
+        gap:10px;
+        
+        .MuiCheckbox-root{
+          padding: 0px;
+          align-self: start;
+        }
       }
+    }
+
+
+    @media (max-width: 768px){
+      padding:30px;
+    }
+
+    @media (max-width: 560px){
+      .col{
+        &.quote_container{
+          grid-template-columns: 1fr;
+          gap:30px;
+        }
+      }
+    }
   }
 
 }
