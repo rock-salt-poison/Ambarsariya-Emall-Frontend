@@ -24214,10 +24214,7 @@ textarea[readonly] {
         }
       }
 
-      form{
-        @include flex-center(column, flex-start);
-        gap: 15px;
-      }
+      
 
       ol{
         margin: 0;
@@ -24231,6 +24228,10 @@ textarea[readonly] {
         object-fit: cover;
       }
     }
+    form{
+        @include flex-center(column, flex-start);
+        gap: 15px;
+      }
   }
 
 }
