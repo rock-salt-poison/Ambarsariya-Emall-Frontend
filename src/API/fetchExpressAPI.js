@@ -1149,3 +1149,38 @@ export const get_searched_products = async (domain_id, sector_id, product) => {
     throw e;
   }
 };
+
+export const get_shop_categories = async (shop_no) => {
+  try {
+    if (shop_no) {
+      const response = await axios.get(`${link}/shop/categories?shop_no=${shop_no}`);
+      return response.data;
+    }
+  } catch (e) {
+    throw e;
+  }
+}
+
+
+export const get_shop_products = async (shop_no, category) => {
+  try {
+    if (shop_no && category) {
+      const response = await axios.get(`${link}/shop/products?shop_no=${shop_no}&category=${category}`);
+      return response.data;
+    }
+  } catch (e) {
+    throw e;
+  }
+}
+
+export const get_shop_product_items = async (product_id) => {
+  try {
+    if (product_id) {
+      const response = await axios.get(`${link}/shop/product-items?product_id=${product_id}`);
+      return response.data;
+    }
+  } catch (e) {
+    throw e;
+  }
+}
+

@@ -178,24 +178,31 @@ const FormField = ({
             <Box className="field_container">
               {type === 'select' ? (
                 <Select
-                  name={name}
-                  value={value || ''}
-                  onChange={!readOnly ? handleSelectChange2 : undefined}
-                  displayEmpty
-                  className={`input_field ${className}`}
-                  {...(error && { error: true })}
-                  required={required}
-                  disabled={disable}
-                >
-                  <MenuItem value="" disabled key={0}>
-                    {placeholder}
-                  </MenuItem>
-                  {options.map((option, index) => (
-                    <MenuItem key={index+1} value={option}>
-                      {option}
-                    </MenuItem>
-                  ))}
-                </Select>
+    name={name}
+    value={value || ''}
+    onChange={!readOnly ? handleSelectChange2 : undefined}
+    displayEmpty
+    className={`input_field ${className}`}
+    {...(error && { error: true })}
+    required={required}
+    disabled={disable}
+  >
+    <MenuItem value="" disabled key={0}>
+      {placeholder}
+    </MenuItem>
+
+    {options.map((option, index) => {
+      const isObject = typeof option === 'object' && option !== null;
+      const optionValue = isObject ? option.value : option;
+      const optionLabel = isObject ? option.label : option;
+
+      return (
+        <MenuItem key={index + 1} value={optionValue}>
+          {optionLabel}
+        </MenuItem>
+      );
+    })}
+  </Select>
               ) : type === 'select-check' ? (
                 <Select
                   multiple

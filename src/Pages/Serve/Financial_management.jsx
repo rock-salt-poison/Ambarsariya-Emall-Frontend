@@ -23,7 +23,6 @@ function Financial_management() {
   ]
 
   return (
-    
     <Box className="financial_management_wrapper">
       <Box className="row">
       <Header 
@@ -42,10 +41,10 @@ function Financial_management() {
           {/* <Button2 text="Back" redirectTo='../emotional' />
           <Button2 text="Next" redirectTo='../emotional/analytics' /> */}
           <UserBadge
-                  handleBadgeBgClick={-1}
-                  handleLogin="../login"
-                  handleLogoutClick="../../AmbarsariyaMall"
-              />
+              handleBadgeBgClick={-1}
+              handleLogin="../login"
+              handleLogoutClick="../../AmbarsariyaMall"
+          />
       </Box>
       </Box>  
     </Box>
