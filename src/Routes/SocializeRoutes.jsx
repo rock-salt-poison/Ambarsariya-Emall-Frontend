@@ -10,6 +10,7 @@ import { Box, CircularProgress } from '@mui/material';
 import Login from "../Pages/Socialize/Login";
 import CityJunctions from '../Pages/Socialize/CityJunctions';
 import TermsAndConditions from '../Pages/Socialize/TermsAndConditions';
+import CoHelpers from '../Pages/Socialize/CoHelpers';
 
 function SocializeRoutes() {
   const token = useSelector((state) => state.auth.userAccessToken);
@@ -77,6 +78,9 @@ function SocializeRoutes() {
       } />
       <Route path="/city-junctions/terms-and-conditions" element={
         <TermsAndConditions />
+      } />
+      <Route path="/city-junctions/co-helpers" element={
+        <CoHelpers />
       } />
     </Routes>
   );

@@ -35,7 +35,9 @@ function CityJunctions() {
             },300)
     
             setTimeout(()=>{
-                if(target.classList.contains('work_from_home')){
+                if(target.classList.contains('co_helpers')){
+                    navigate('../city-junctions/co-helpers')
+                }else if(target.classList.contains('work_from_home')){
                     navigate('../../AmbarsariyaMall/serve/emotional/eshop/jobs-offered')
                 }
             }, 600)

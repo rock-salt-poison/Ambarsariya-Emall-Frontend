@@ -24263,5 +24263,201 @@ textarea[readonly] {
       }
     }
   }
+}
 
+.co_helpers_wrapper{
+  position: relative;
+  min-height: 100vh;
+  background-image: linear-gradient(67deg, #8CBAD1 18%, #F4F4F4 84%);
+  overflow-x: hidden;
+
+  .big_cloud{
+    @include full-absolute(100px, auto, auto, -50px);
+    width: 210px;
+    filter: drop-shadow(0px 0px 32px rgba(#99C8D3, .7));
+
+    &.cloud_2{
+      @include full-absolute(300px, -50px, auto, auto);
+    }
+  }
+
+  .row{
+    padding:  30px;
+    position: relative;
+
+    .col{
+      @include flex-center(column, center);
+      gap: 10px;
+
+      &.back-button-wrapper{
+        justify-content: flex-end;
+        place-items: end;
+        // @include full-absolute(30px, 30px, auto, auto);
+      }
+
+      .container{
+        @include flex-center(column, center);
+        gap: 40px;
+        position: relative;
+        padding: 50px 0;
+
+        &::before{
+          content: '';
+          @include full-absolute(0px, 0px, 0px, 0px);
+          width: 70%;
+          background-color: rgba($white, .7);
+          border: 10px solid $white;
+          box-shadow: inset 0px 0px 8px 3px rgba($black, .17), 0px 0px 26px 8px rgba(#8FADBD, .5);
+          border-radius: 30px;
+          margin: 0 auto;
+        }
+
+        .heading_container{
+          @include flex-center(row, center);
+          position: absolute;
+          top: 50px;
+          z-index: 1;
+          transition: all .4s linear;
+          
+          .heading{
+            @include homepage-buttons("Gladiola",
+              40px,
+              #87C4E3,
+              'none'
+            );
+            // @include hover-scale(1, 0s);
+            line-height: 40px;
+            text-shadow: 5px 4px 13px rgba(#A6CFE4, 0.5);
+          }
+        }
+
+        
+
+        .sub_container{
+          display: grid;
+          grid-template-columns: 220px 650px 220px;
+          gap: 20px;
+          position: relative;
+          // left: -100px;
+          // right: -100px;
+          // width: 90%;
+          
+          .card{
+            @include flex-center(column, center);
+            background-color: $white;
+            border-radius: 30px;
+            gap: 15px;
+            padding-top: 15px;
+            box-shadow: inset 0px -5px 11px 1px rgb(0 0 0 / 24%);
+            transition: all .3s linear;
+
+            .card_img{
+              height: 70px;
+            }
+
+            &:hover{
+              .card_img{
+                transform: scale(1.1);
+                transition: all .4s linear;
+              }
+            }
+
+            .title_container{
+              padding: 10px;
+              align-self: stretch;
+              border-bottom-left-radius: 30px;
+              border-bottom-right-radius: 30px;
+              flex: 1;
+              @include flex-center(column, center);
+              box-shadow: inset 0px -2px 5px 0px rgb(0 0 0 / 24%);  
+
+              .title{
+                @include homepage-buttons("Bobby-Jones-Soft",
+                  17px,
+                  $light-yellow,
+                  'none'
+                );
+                @include hover-scale(1, 0s);
+                line-height: 17px;
+                text-align: center;
+              }
+            }
+          }
+
+          .col-group{
+            @include flex-center(column, center);
+            gap: 20px;
+            position: relative;
+            z-index: 0;
+            width: 220px;
+
+
+            .small_cloud{
+              @include full-absolute(60%, auto, auto, -80px);
+              width: 120px;
+              z-index: -1;
+              filter: drop-shadow(0px 0px 32px rgba(#99C8D3, .7));
+
+              &.cloud_2{
+                @include full-absolute(auto, -80px, 10%, auto);
+              }
+            }
+
+            .card{
+              .title_container{
+                background-color: #09244D;
+              }
+            }
+            
+          }
+
+          .col-group-2{
+            @include flex-center(row, center);
+            // max-width: 90%; 
+            gap: 20px;
+            flex-wrap: wrap;
+            background-color: #87C4E3;
+            padding: 20px;
+            border-radius: 30px;
+            align-self: center;
+            // width: 50%;
+            box-shadow: inset 0px 0px 4px 6px rgba(#7ABDDF,100), -2px 2px 10px 5px rgba(#CFDCE3,100);
+
+            .card{
+              width: 190px;
+              align-self: stretch;
+              // box-shadow: inset 0px -1px 4px 0px rgba($black,.25);
+              .title_container{
+                background-color: #EB9E30;
+                padding: 10px 20px;
+              }
+            }
+          }
+        }
+      }
+
+      .button_container{
+          margin-top: -80px;
+          filter: drop-shadow(0px 0px 8px 2px rgba($black, .17));
+          border-radius: 30px;
+          position: relative;
+          
+          .btn{
+            padding: 30px;
+            background-color: #EB9E30;
+            border: 5px solid #87C4E3;
+            border-radius: 30px;
+            box-shadow: inset 0px 0px 8px 2px rgba($black, .17);
+            @include homepage-buttons("Bobby-Jones-Soft",
+              60px,
+              $light-yellow,
+              'none'
+            );
+            transition: all .4s linear;
+            // @include hover-scale(1, 0s);
+            line-height: 60px;
+          }
+        }
+    }
+  }
 }
