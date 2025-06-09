@@ -24461,3 +24461,59 @@ textarea[readonly] {
     }
   }
 }
+
+.cohelper_popup{
+
+  .MuiPaper-root{
+    overflow: visible;
+    max-width: 50%;
+    background: $yellow;
+    border: 2px solid $light-yellow;
+    box-shadow: 8px 8px 0px $light-yellow;
+  }
+  .cohelper_popup_content{
+    padding: 40px 25px;
+
+    .star_img{
+      width: 80px;
+      @include full-absolute(-40px, auto, auto, 20px);
+      
+      &.bottom{
+        @include full-absolute(auto, 20px, -40px, auto);
+      }
+    }
+
+    .content{
+      .content-body{
+        @include flex-center(column, center);
+        gap: 20px;
+
+        .header{
+          h2{
+            @include homepage-buttons("Bobby-Jones-Soft",
+              24px,
+              $brown-4,
+              'none'
+            );
+            @include hover-scale(1, 0s);
+            text-align: center;
+          }
+        }
+
+        .heading{
+          @include homepage-buttons("Bobby-Jones-Soft",
+            20px,
+            $brown-4,
+            'none'
+          );
+          @include hover-scale(1, 0s);
+          text-align: center;
+
+          span{
+            color: $black;
+          }
+        }
+      }
+    }
+  }
+}
