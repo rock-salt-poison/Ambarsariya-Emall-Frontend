@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Box, Typography } from '@mui/material'
 import pickup from '../../Utils/images/Sell/shop_details/pickup.svg';
 import delivery from '../../Utils/images/Sell/shop_details/delivery.webp';
-import home_visit from '../../Utils/images/Sell/shop_details/home_visit.svg';
+import home_visit from '../../Utils/images/Sell/shop_details/home_visit.webp';
 import { Link } from 'react-router-dom'
 import CardBoardPopup from '../CardBoardPopupComponents/CardBoardPopup';
 import ServiceType from '../Cart/ServiceType/ServiceType';

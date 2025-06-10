@@ -3,7 +3,7 @@ import { Box, Typography } from '@mui/material'
 import pickup_truck_gif from '../../../Utils/gifs/pickup_truck.gif';
 import pickup from '../../../Utils/images/Sell/shop_details/pickup.svg';
 import delivery from '../../../Utils/images/Sell/shop_details/delivery.webp';
-import visit from '../../../Utils/images/Sell/shop_details/home_visit.svg';
+import visit from '../../../Utils/images/Sell/shop_details/home_visit.webp';
 import takeaway from '../../../Utils/images/Sell/shop_details/takeaway.webp';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import Pickup from './Pickup';

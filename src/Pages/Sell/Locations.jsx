@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import Header from '../../Components/Serve/SupplyChain/Header';
-import location_img from "../../Utils/images/Sell/esale/location.svg";
+import location_img from "../../Utils/images/Sell/esale/location.webp";
 import member_icon from '../../Utils/images/Sell/esale/life/member_icon.png';
 import events from '../../Utils/videos/events.mp4';
 import relations from '../../Utils/videos/relations.mp4';

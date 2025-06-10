@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Box, CircularProgress, Typography } from "@mui/material";
-import po_stamp from "../../Utils/images/Sell/cart/po_stamp.svg";
+import po_stamp from "../../Utils/images/Sell/cart/po_stamp.webp";
 import qr_code from "../../Utils/images/Sell/cart/qr_code.svg";
 import CartTable from "../../Components/Cart/CartTable";
-import badge_frame from "../../Utils/images/Sell/cart/badge_frame.svg";
+import badge_frame from "../../Utils/images/Sell/cart/badge_frame.webp";
 import Button2 from "../../Components/Home/Button2";
 import pickup from "../../Utils/images/Sell/shop_details/pickup.svg";
 import delivery from "../../Utils/images/Sell/shop_details/delivery.webp";
-import home_visit from "../../Utils/images/Sell/shop_details/home_visit.svg";
+import home_visit from "../../Utils/images/Sell/shop_details/home_visit.webp";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import CardBoardPopup from "../../Components/CardBoardPopupComponents/CardBoardPopup";

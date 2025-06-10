@@ -10878,6 +10878,7 @@ a {
 
             .card_img {
               height: 90px;
+              filter: drop-shadow(2px 4px 6px rgba($black, .5));
             }
           }
         }
@@ -24511,6 +24512,76 @@ textarea[readonly] {
 
           span{
             color: $black;
+          }
+        }
+
+        .container{
+          width: 85%;
+          form{
+            @include flex-center(column, center);
+            gap: 15px;
+            place-items: normal;
+
+            .form-control{
+              .form-row{
+                display: grid;
+                grid-template-columns: 200px 1fr;
+                gap: 10px;
+
+                .label{
+                  @include homepage-buttons("Bobby-Jones-Soft",
+                    18px,
+                    $brown-4,
+                    'none'
+                  );
+                  @include hover-scale(1, 0s);
+                  line-height: 18px;
+                }
+
+                .field_container{
+                  @include flex-center(column, flex-start);
+                  place-items: normal;
+                  .MuiInputBase-root{
+                    padding: 0px;
+                  }
+
+                  .MuiInputBase-input{
+                    padding: 6px 10px;
+                    background-color: rgba($dark-yellow, .3);
+                    @include homepage-buttons("Bobby-Jones-Soft",
+                      18px,
+                      $black,
+                      'none'
+                    );
+                    @include hover-scale(1, 0s);
+                    border-radius: 10px;
+
+                    &::placeholder{
+                      opacity: .8;
+                    }
+                  }
+
+                  .MuiOutlinedInput-notchedOutline{
+                    border: 0px;
+                  }
+                }
+              }
+            }
+
+            .submit_button_container {
+              @include flex-center(row, center);
+              flex: 1;
+
+              .submit_button {
+                background: linear-gradient($brown-4, #714a3f);
+                @include homepage-buttons("Bobby-Jones-Soft", 18px, $yellow, "none");
+                @include hover-scale(1, 0s);
+                margin: 0 auto 5px;
+                padding: 2px 15px;
+                border-radius: 8px;
+                transition: background-color 0.3s ease;
+              }
+            }
           }
         }
       }

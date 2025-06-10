@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Button, CircularProgress, ThemeProvider, Typography } from '@mui/material';
 import Button2 from '../../Components/Home/Button2';
-import personalIcon from '../../Utils/images/Sell/esale/personal_care.svg';
+import personalIcon from '../../Utils/images/Sell/esale/personal_care.webp';
 import EsalePersonalForm from '../../Components/Form/EsalePersonalForm';
 import createCustomTheme from '../../styles/CustomSelectDropdownTheme';
 import UserBadge from '../../UserBadge';

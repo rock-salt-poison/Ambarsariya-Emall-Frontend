@@ -1,6 +1,6 @@
 import { Box, Typography, Slider } from '@mui/material';
 import React, { useState } from 'react';
-import cost_sensitivity_icon from '../../Utils/images/Sell/shop_details/cost_sensitivity_icon.svg'
+import cost_sensitivity_icon from '../../Utils/images/Sell/shop_details/cost_sensitivity_icon.webp'
 import CardBoardPopup from '../CardBoardPopupComponents/CardBoardPopup';
 import { Link } from 'react-router-dom';
 import ShopClassComponent from './ShopClassComponent';

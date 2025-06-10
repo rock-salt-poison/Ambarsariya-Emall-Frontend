@@ -1,12 +1,12 @@
 import React from 'react'
 import { Box, Typography } from '@mui/material'
 import Button2 from '../../Components/Home/Button2';
-import conversation_1 from '../../Utils/images/Sell/grow/conversation_1.svg'
-import conversation_2 from '../../Utils/images/Sell/grow/conversation_2.svg'
-import conversation_3 from '../../Utils/images/Sell/grow/conversation_3.svg'
-import conversation_4 from '../../Utils/images/Sell/grow/conversation_4.svg'
-import conversation_5 from '../../Utils/images/Sell/grow/conversation_5.svg'
-import conversation_6 from '../../Utils/images/Sell/grow/conversation_6.svg'
+import conversation_1 from '../../Utils/images/Sell/grow/conversation_1.webp'
+import conversation_2 from '../../Utils/images/Sell/grow/conversation_2.webp'
+import conversation_3 from '../../Utils/images/Sell/grow/conversation_3.webp'
+import conversation_4 from '../../Utils/images/Sell/grow/conversation_4.webp'
+import conversation_5 from '../../Utils/images/Sell/grow/conversation_5.webp'
+import conversation_6 from '../../Utils/images/Sell/grow/conversation_6.webp'
 import success_quote from '../../Utils/images/Sell/grow/success_quote.webp'
 import Logo from '../../Components/Logo';
 import { Link, useNavigate } from 'react-router-dom';

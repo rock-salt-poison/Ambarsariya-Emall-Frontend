@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Box, ThemeProvider } from '@mui/material'
-import home_visit from '../../../Utils/images/Sell/shop_details/home_visit.svg'
+import home_visit from '../../../Utils/images/Sell/shop_details/home_visit.webp'
 import GeneralLedgerForm from '../../Form/GeneralLedgerForm';
 import createCustomTheme from '../../../styles/CustomSelectDropdownTheme';
 
