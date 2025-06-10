@@ -24474,6 +24474,7 @@ textarea[readonly] {
   }
   .cohelper_popup_content{
     padding: 40px 25px;
+    display: flex;
 
     .star_img{
       width: 80px;
@@ -24485,6 +24486,13 @@ textarea[readonly] {
     }
 
     .content{
+      align-self: stretch;
+      overflow-y: scroll;
+
+      &::-webkit-scrollbar-thumb{
+        background: $brown-4;
+      }
+
       .content-body{
         @include flex-center(column, center);
         gap: 20px;
@@ -24557,7 +24565,13 @@ textarea[readonly] {
                     border-radius: 10px;
 
                     &::placeholder{
-                      opacity: .8;
+                      opacity: .6;
+                    }
+                  }
+                  
+                  .MuiSelect-select{
+                    &::placeholder{
+                      opacity: .6;
                     }
                   }
 
@@ -24567,6 +24581,15 @@ textarea[readonly] {
                 }
               }
             }
+
+            .error_message {
+                @include homepage-buttons("Bobby-Jones-Soft",
+                  15px,
+                  $red2,
+                  "none"
+                );
+                @include hover-scale(1, 0s);
+              }
 
             .submit_button_container {
               @include flex-center(row, center);

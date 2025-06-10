@@ -61,7 +61,8 @@ export default function CoHelperPopup({ open, handleClose, content }) {
       label: "Key Services",
       name: "service",
       type: "select",
-      options : content?.services
+      options : content?.services,
+      placeholder: "Key Services"
     },
     {
       id: 5,
