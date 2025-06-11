@@ -57,12 +57,12 @@ function Notice() {
       <Box className="row">
         <Header
           back_btn_link={
-            title ? "../AmbarsariyaMall/notice" : "../AmbarsariyaMall"
+            title ? "../notice" : "../"
           }
           nextBtn={true}
           title_container={true}
           title={title ? convert_case_to_capitalize(title) : "Notice"}
-          redirectTo={title ? -1 : "../AmbarsariyaMall"}
+          redirectTo={title ? -1 : "../"}
         />
         {data?.length>0 ? (<Box className="col">
           {title ? (

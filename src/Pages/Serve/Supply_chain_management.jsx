@@ -3,7 +3,9 @@ import { Box, Button, ThemeProvider, Typography, Tooltip } from '@mui/material';
 import FormField from '../../Components/Form/FormField';
 import createCustomTheme from '../../styles/CustomSelectDropdownTheme';
 import supply_chain_management_icon from '../../Utils/images/Serve/emotional/eshop/supply_chain_management_icon.webp';
-import HR_management_icon from '../../Utils/images/Serve/emotional/eshop/HR_management_icon.png';
+// import HR_management_icon from '../../Utils/images/Serve/emotional/eshop/HR_management_icon.png';
+import supply_chain_management_icon2 from '../../Utils/images/Serve/emotional/campaign/community/icon_1.webp'
+
 import ribbon from '../../Utils/images/Serve/emotional/eshop/hr_management/ribbon.svg';
 import Button2 from '../../Components/Home/Button2';
 import PieChartComponent from '../../Components/Serve/SupplyChain/PieChartComponent';
@@ -118,7 +120,7 @@ function Supply_chain_management(props) {
     <ThemeProvider theme={theme}>
       <Box className="supply_chain_management_wrapper">
         <Box className="row">
-          <Header icon_1={supply_chain_management_icon} icon_2={HR_management_icon} title="Supply Chain" icon_1_link='../emotional/eshop/forecast' icon_2_link='../emotional/eshop/hr-management' redirectTo='../emotional/eshop'/>
+          <Header icon_1={supply_chain_management_icon} icon_2={supply_chain_management_icon2} title="Supply Chain" icon_1_link='../emotional/eshop/forecast' icon_2_link='../emotional/eshop' redirectTo='../emotional/eshop'/>
 
           <Box className="col">
             <Box className="container">
@@ -193,7 +195,7 @@ function Supply_chain_management(props) {
             <UserBadge
               handleBadgeBgClick={-1}
               handleLogin="../login"
-              handleLogoutClick="../../AmbarsariyaMall"
+              handleLogoutClick="../../"
             />
           </Box>
         </Box>

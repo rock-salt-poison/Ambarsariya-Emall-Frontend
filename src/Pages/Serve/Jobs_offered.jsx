@@ -51,7 +51,7 @@ function Jobs_offered() {
           next_btn_link=""
           title_container={true}
           title="Jobs offered by Ambarsariya Mall"
-          redirectTo="../emotional"
+          redirectTo={-1}
         />
 
         <Box className="col col-9">

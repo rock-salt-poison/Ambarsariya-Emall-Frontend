@@ -125,7 +125,7 @@ const MerchantDetailsPage = () => {
            <UserBadge
             handleBadgeBgClick="../support"
             handleLogin="../login"
-            handleLogoutClick="../../AmbarsariyaMall"
+            handleLogoutClick="../../"
           />
         </Box>
         <Box className="container">

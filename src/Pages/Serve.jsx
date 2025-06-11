@@ -67,8 +67,8 @@ function Serve() {
       <Box className="row">
         <Box className="back-button-wrapper">
         <UserBadge
-          handleLogoutClick="../../AmbarsariyaMall"
-          handleBadgeBgClick="../../AmbarsariyaMall"
+          handleLogoutClick="../../"
+          handleBadgeBgClick="../../"
           handleLogin="login"
         />
 

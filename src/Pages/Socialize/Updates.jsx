@@ -24,7 +24,7 @@ function Updates() {
                     
                     <Box className="back-button-wrapper">
                         <UserBadge
-                            handleLogoutClick="../../AmbarsariyaMall"
+                            handleLogoutClick="../../"
                             handleBadgeBgClick={-1}
                             handleLogin="login"
                         />

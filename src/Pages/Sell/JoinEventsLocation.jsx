@@ -102,7 +102,7 @@ const fetchCurrentUserData = async (token) => {
             <Typography className="title">Join</Typography>
           </Box>
           <Box className="title_container">
-              <Link to='../../AmbarsariyaMall/sell/esale/locations/events'>
+              <Link to='../../sell/esale/locations/events'>
                 <Typography className="title">events</Typography>
               </Link>
           </Box>
@@ -110,7 +110,7 @@ const fetchCurrentUserData = async (token) => {
           <UserBadge
               handleBadgeBgClick="../esale/locations/events"
               handleLogin="../login"
-              handleLogoutClick="../../AmbarsariyaMall"
+              handleLogoutClick="../../"
           />
         </Box>
 

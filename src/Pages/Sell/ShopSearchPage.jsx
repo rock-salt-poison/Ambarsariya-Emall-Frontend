@@ -61,7 +61,7 @@ function ShopSearchPage() {
                         <UserBadge
                             handleBadgeBgClick={`../esale`}
                             handleLogin="../login"
-                            handleLogoutClick="../../AmbarsariyaMall"
+                            handleLogoutClick="../../"
                         />
                     </Box>
                 </Box>

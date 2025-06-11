@@ -32,7 +32,7 @@ function Analytics() {
   return (
     <Box className="analytics_wrapper">
         <Box className="row">
-            <Header back_btn_link='../emotional/eshop' next_btn_link="../emotional/crm" title_container={true} title="Analytics & Relations" redirectTo='../emotional' />
+            <Header back_btn_link={-1} next_btn_link="../emotional/crm" title_container={true} title="Analytics & Relations" redirectTo='../emotional' />
             <Box className="col">
                 <Box className="cards_container">
                     {buttonData.map((item)=>{

@@ -93,7 +93,7 @@ function Like_share() {
                         <UserBadge
                             handleBadgeBgClick={`../${owner}/review`}
                             handleLogin="../login"
-                            handleLogoutClick="../../AmbarsariyaMall"
+                            handleLogoutClick="../../"
                         />
                     </Box>
                 </Box>

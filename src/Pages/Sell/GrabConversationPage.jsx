@@ -22,7 +22,7 @@ function GrabConversationPage() {
                 <UserBadge
                     handleBadgeBgClick="../"
                     handleLogin="../login"
-                    handleLogoutClick="../../AmbarsariyaMall"
+                    handleLogoutClick="../../"
                     />
             </Box>
 

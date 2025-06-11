@@ -26,17 +26,17 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path="/AmbarsariyaMall" element={<Home />} />
-        <Route path="/AmbarsariyaMall/notice" element={<Notice />} />
-        <Route path="/AmbarsariyaMall/notice/:title/:id" element={<Notice />} />
-        <Route path="/AmbarsariyaMall/clock" element={<ClockPage />} />
-        <Route path="/AmbarsariyaMall/sell/*" element={<SellRoutes />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/notice" element={<Notice />} />
+        <Route path="/notice/:title/:id" element={<Notice />} />
+        <Route path="/clock" element={<ClockPage />} />
+        <Route path="/sell/*" element={<SellRoutes />} />
         <Route
-          path="/AmbarsariyaMall/serve/*"
+          path="/serve/*"
           element={<ServeRoutes /> }
         />
         <Route
-          path="/AmbarsariyaMall/socialize/*"
+          path="/socialize/*"
           element={<SocializeRoutes /> }
         />
       </Routes>

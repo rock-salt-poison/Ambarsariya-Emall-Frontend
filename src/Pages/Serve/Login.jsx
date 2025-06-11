@@ -50,7 +50,7 @@ function Login() {
   }, [token, fetchShopToken]);
 
 
-  const serveRedirectTo = accessToken && "../../AmbarsariyaMall/serve";
+  const serveRedirectTo = accessToken && "../../serve";
 
 
   return (
@@ -59,9 +59,9 @@ function Login() {
         <Box className="col">
           {/* <Button2 text="Back" redirectTo={-1} /> */}
           <UserBadge
-                handleBadgeBgClick="../../AmbarsariyaMall"
+                handleBadgeBgClick="../../"
                 handleLogin="../login"
-                handleLogoutClick="../../AmbarsariyaMall"
+                handleLogoutClick="../../"
             />
         </Box>
 

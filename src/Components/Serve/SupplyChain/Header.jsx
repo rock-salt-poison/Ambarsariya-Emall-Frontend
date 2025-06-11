@@ -72,7 +72,7 @@ function Header({ icon_1, icon_2, title, span_value, icon_1_link, icon_2_link, b
             </Link>
             {span_value ? <Typography variant='span' className="span">
               {span_value}
-            </Typography> : <Link to={`../../AmbarsariyaMall/sell/support/shop/shop-detail/${user?.shop_access_token}`}><Typography variant='span' className="span">
+            </Typography> : <Link to={`../../sell/support/shop/shop-detail/${user?.shop_access_token}`}><Typography variant='span' className="span">
               Shop No: <Typography className="value" variant='span'>{(user?.shop_no)?.split('_')?.[1]}</Typography>
             </Typography></Link>}
           </Box>
@@ -84,7 +84,7 @@ function Header({ icon_1, icon_2, title, span_value, icon_1_link, icon_2_link, b
         </Link> : nextBtn ?  <UserBadge
                             handleBadgeBgClick={back_btn_link}
                             handleLogin="../login"
-                            handleLogoutClick="../../AmbarsariyaMall"
+                            handleLogoutClick="../../"
                         /> : <Typography></Typography>
       }
 

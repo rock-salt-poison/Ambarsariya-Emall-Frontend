@@ -86,7 +86,7 @@ function Products() {
                     <UserBadge
                           handleBadgeBgClick={`../support/shop?token=${token}`}
                           handleLogin="../login"
-                          handleLogoutClick="../../AmbarsariyaMall"
+                          handleLogoutClick="../../"
                       />
                     </Box>
                 </Box>

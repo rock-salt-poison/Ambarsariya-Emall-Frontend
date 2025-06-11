@@ -38,7 +38,7 @@ function EventsLocation() {
       <Box className="row">
         <Box className="col header_badge">
           <Box className="title_container">
-              <Link to='../../AmbarsariyaMall/sell/esale/locations'>
+              <Link to='../../sell/esale/locations'>
                 <Typography className="title">events</Typography>
               </Link>
           </Box>
@@ -47,7 +47,7 @@ function EventsLocation() {
           <UserBadge
               handleBadgeBgClick="../esale/locations"
               handleLogin="../login"
-              handleLogoutClick="../../AmbarsariyaMall"
+              handleLogoutClick="../../"
           />
         </Box>
 

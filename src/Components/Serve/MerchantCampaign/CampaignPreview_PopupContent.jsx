@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 function CampaignPreview_PopupContent({formData}) {
   return (
     <Box className="container">
-        <Link to="../../AmbarsariyaMall/sell/support/stationary" className="col">
+        <Link to="../../sell/support/stationary" className="col">
             <Box component="img" src={logo} alt="" className='shop_logo'/>
             <Box className="shop_detail">
               {formData.shop_name &&  <Typography className="text">Shop Name: 

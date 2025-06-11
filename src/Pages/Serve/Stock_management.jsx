@@ -135,7 +135,7 @@ function Stock_management(props) {
     <ThemeProvider theme={theme}>
       <Box className="stock_management_wrapper">
         <Box className="row">
-        <Header icon_1={stock_management_icon} icon_2={stock_management_icon2} title="Stock Management" icon_1_link='../emotional/eshop/stock-level' icon_2_link='' redirectTo='../emotional/eshop'/>
+        <Header icon_1={stock_management_icon} icon_2={stock_management_icon2} title="Stock Management" icon_1_link='../emotional/eshop/stock-level' icon_2_link='../emotional/eshop' redirectTo='../emotional/eshop'/>
 
           <Box className="col">
             <Box className="container">
@@ -226,7 +226,7 @@ function Stock_management(props) {
             <UserBadge
               handleBadgeBgClick={-1}
               handleLogin="../login"
-              handleLogoutClick="../../AmbarsariyaMall"
+              handleLogoutClick="../../"
             />
           </Box>
         </Box>

@@ -85,7 +85,7 @@ function Esale() {
               <UserBadge
                 handleBadgeBgClick={`../`}
                 handleLogin="../login"
-                handleLogoutClick="../../AmbarsariyaMall"
+                handleLogoutClick="../../"
               />
             </Box>
           </Box>

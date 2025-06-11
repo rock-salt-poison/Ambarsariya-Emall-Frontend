@@ -571,7 +571,7 @@ const renderField = (id, label, type, name, showDialog, dialogFields, addmoreBut
               <UserBadge
                 handleBadgeBgClick={`../esale`}
                 handleLogin="../login"
-                handleLogoutClick="../../AmbarsariyaMall"
+                handleLogoutClick="../../"
               />
             </Box>
           </Box>

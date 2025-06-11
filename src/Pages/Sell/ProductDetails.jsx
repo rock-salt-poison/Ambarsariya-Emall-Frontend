@@ -77,7 +77,7 @@ function ProductDetails() {
           <UserBadge
                 handleBadgeBgClick={`../shop/${token}/products`}
                 handleLogin="../login"
-                handleLogoutClick="../../AmbarsariyaMall"
+                handleLogoutClick="../../"
             />
           </Box>
         </Box>

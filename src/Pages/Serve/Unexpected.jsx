@@ -48,7 +48,7 @@ function Unexpected() {
                     <UserBadge
                 handleBadgeBgClick={`../`}
                 handleLogin="../login"
-                handleLogoutClick="../../AmbarsariyaMall"
+                handleLogoutClick="../../"
             />
                 </Box>
 

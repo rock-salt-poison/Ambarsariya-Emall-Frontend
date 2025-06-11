@@ -109,7 +109,7 @@ function Accounts_payable() {
           title="Financial Management"
           span_value="Accounts Payable"
           icon_1_link="../emotional/eshop/financial-management"
-          icon_2_link="../emotional/eshop"
+          icon_2_link="../emotional/eshop/financial-management"
           redirectTo="../emotional/eshop/financial-management"
         />
         <Box className="col">
@@ -132,7 +132,7 @@ function Accounts_payable() {
           <UserBadge
               handleBadgeBgClick={-1}
               handleLogin="../login"
-              handleLogoutClick="../../AmbarsariyaMall"
+              handleLogoutClick="../../"
           />
         </Box>
       </Box>

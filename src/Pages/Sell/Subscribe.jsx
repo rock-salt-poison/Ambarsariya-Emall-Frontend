@@ -48,7 +48,7 @@ function Subscribe() {
             <UserBadge
               handleBadgeBgClick={`../${owner}/review`}
               handleLogin="../login"
-              handleLogoutClick="../../AmbarsariyaMall"
+              handleLogoutClick="../../"
             />
             {/* <Button2 text={"Next"} redirectTo={`../${owner}/mou`}/> */}
           </Box>

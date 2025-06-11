@@ -89,7 +89,7 @@ function LogoPopup({ open, handleClose }) {
                   {/* <UserBadge
                     handleClose={handleClose}
                     handleLogin="sell/login"
-                    handleLogoutClick="../../AmbarsariyaMall"
+                    handleLogoutClick="../../"
                   /> */}
                 </Box>
                 <Box className="col-2">

@@ -82,7 +82,7 @@ function General_ledger() {
           title="Financial Management"
           span_value="General Ledger"
           icon_1_link="../emotional/eshop/financial-management"
-          icon_2_link="../emotional/eshop"
+          icon_2_link="../emotional/eshop/financial-management"
           redirectTo="../emotional/eshop/financial-management"
         />
         <Box className="col">
@@ -99,7 +99,7 @@ function General_ledger() {
           <UserBadge
             handleBadgeBgClick={-1}
             handleLogin="../login"
-            handleLogoutClick="../../AmbarsariyaMall"
+            handleLogoutClick="../../"
           />
         </Box>
       </Box>

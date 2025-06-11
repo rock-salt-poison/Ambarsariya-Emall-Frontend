@@ -92,7 +92,7 @@ function PurchasedCart() {
           <UserBadge
             handleBadgeBgClick={-1}
             handleLogin="../login"
-            handleLogoutClick="../../AmbarsariyaMall"
+            handleLogoutClick="../../"
         />
           {/* <Link to={`../${owner}/order`}> */}
         </Box>

@@ -120,7 +120,7 @@ function Sell() {
       <Box className="row_wrapper">
         <Box className="header col">
           <Box className="back-button-wrapper">
-            {/* <Button2 text="Back" redirectTo="/AmbarsariyaMall" /> */}
+            {/* <Button2 text="Back" redirectTo="/" /> */}
             {/* <Logo/> */}
           </Box>
           <Box className="title_container">
@@ -145,9 +145,9 @@ function Sell() {
           <Box className="back-button-wrapper">
             
               <UserBadge
-                handleBadgeBgClick="../../AmbarsariyaMall"
+                handleBadgeBgClick="../../"
                 handleLogin="login"
-                handleLogoutClick="../../AmbarsariyaMall"
+                handleLogoutClick="../../"
               />
           </Box>
         </Box>

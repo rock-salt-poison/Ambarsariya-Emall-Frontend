@@ -57,7 +57,7 @@ function ShopDesign({ data }) {
           {data.sector_name}
         </Typography>
       </Box>
-      <Link to={openDashboard ? '../../AmbarsariyaMall/serve': `../shop/${data.shop_access_token}/products`}>
+      <Link to={openDashboard ? '../../serve': `../shop/${data.shop_access_token}/products`}>
         <Typography className="shop_no" variant="h3">
           Shop No. {data && data.shop_no ? (data.shop_no).split('_')[1] : null}
         </Typography>

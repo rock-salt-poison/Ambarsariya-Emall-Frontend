@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, ThemeProvider, Typography } from '@mui/material';
 import createCustomTheme from '../../styles/CustomSelectDropdownTheme';
 import supply_chain_management_icon from '../../Utils/images/Serve/emotional/eshop/supply_chain_management_icon.webp';
-import HR_management_icon from '../../Utils/images/Serve/emotional/eshop/HR_management_icon.png';
+import stock_management_icon2 from '../../Utils/images/Serve/emotional/eshop/stock_management_icon2.svg';
 import ribbon from '../../Utils/images/Serve/emotional/eshop/hr_management/ribbon.svg';
 import Button2 from '../../Components/Home/Button2';
 import BarChartComponent from '../../Components/Serve/SupplyChain/BarChartComponent';
@@ -97,7 +97,7 @@ function Forecast(props) {
     <ThemeProvider theme={theme}>
       <Box className="forecast_wrapper">
         <Box className="row">
-        <Header icon_1={supply_chain_management_icon} icon_2={HR_management_icon} title="Sale Forecast" icon_1_link='../emotional/eshop' icon_2_link='../emotional/eshop/hr-management' redirectTo='../emotional/eshop'/>
+        <Header icon_1={supply_chain_management_icon} icon_2={stock_management_icon2} title="Sale Forecast" icon_1_link='../emotional/eshop' icon_2_link='../emotional/eshop' redirectTo='../emotional/eshop'/>
 
           <Box className="col">
             <Box className="container">
@@ -132,7 +132,7 @@ function Forecast(props) {
             <UserBadge
               handleBadgeBgClick={-1}
               handleLogin="../login"
-              handleLogoutClick="../../AmbarsariyaMall"
+              handleLogoutClick="../../"
             />
           </Box>
         </Box>

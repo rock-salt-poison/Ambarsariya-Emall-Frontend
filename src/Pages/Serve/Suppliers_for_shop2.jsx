@@ -168,7 +168,7 @@ function Suppliers_for_shop2(props) {
             <UserBadge
                             handleBadgeBgClick={-1}
                             handleLogin="../login"
-                            handleLogoutClick="../../AmbarsariyaMall"
+                            handleLogoutClick="../../"
                         />
           </Box>
         </Box>

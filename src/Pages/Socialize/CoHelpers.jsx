@@ -151,7 +151,7 @@ function CoHelpers() {
         // if(target.classList.contains('co_helpers')){
         //     navigate('../city-junctions/co-helpers')
         // }else if(target.classList.contains('work_from_home')){
-        //     navigate('../../AmbarsariyaMall/serve/emotional/eshop/jobs-offered')
+        //     navigate('../../serve/emotional/eshop/jobs-offered')
         // }
       }, 600);
     } else if (btn) {
@@ -207,7 +207,7 @@ function CoHelpers() {
       <Box className="row">
         <Box className="col back-button-wrapper">
           <UserBadge
-            handleLogoutClick="../../AmbarsariyaMall"
+            handleLogoutClick="../../"
             handleBadgeBgClick={-1}
             handleLogin="login"
           />

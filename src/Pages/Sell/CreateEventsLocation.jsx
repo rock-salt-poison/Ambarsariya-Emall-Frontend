@@ -44,7 +44,7 @@ function CreateEventsLocation() {
           </Box>
 
           <Box className="title_container">
-              <Link to='../../AmbarsariyaMall/sell/esale/locations/events'>
+              <Link to='../../sell/esale/locations/events'>
                 <Typography className="title">events</Typography>
               </Link>
           </Box>
@@ -52,7 +52,7 @@ function CreateEventsLocation() {
           <UserBadge
               handleBadgeBgClick="../esale/locations/events"
               handleLogin="../login"
-              handleLogoutClick="../../AmbarsariyaMall"
+              handleLogoutClick="../../"
           />
         </Box>
 

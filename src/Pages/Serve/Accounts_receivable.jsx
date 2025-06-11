@@ -87,7 +87,7 @@ function Accounts_receivable() {
           title="Financial Management"
           span_value="Accounts Receivable"
           icon_1_link="../emotional/eshop/financial-management"
-          icon_2_link="../emotional/eshop"
+          icon_2_link="../emotional/eshop/financial-management"
           redirectTo="../emotional/eshop/financial-management"
         />
 
@@ -112,7 +112,7 @@ function Accounts_receivable() {
           <UserBadge
               handleBadgeBgClick={-1}
               handleLogin="../login"
-              handleLogoutClick="../../AmbarsariyaMall"
+              handleLogoutClick="../../"
           />
         </Box>
       </Box>

@@ -80,7 +80,7 @@ function TimeTablePopup({ open, handleClose }) {
           {/* <UserBadge
                     handleClose={handleClose}
                     handleLogin="sell/login"
-                    handleLogoutClick="../../AmbarsariyaMall"
+                    handleLogoutClick="../../"
                   /> */}
             <Typography component="h1">Travel Time</Typography>
           </Box>

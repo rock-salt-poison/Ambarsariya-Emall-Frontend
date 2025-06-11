@@ -105,7 +105,7 @@ const SingleShopPage = ({ showBackButton = true, shopData }) => {
                   <UserBadge
                       handleBadgeBgClick={`../support`}
                       handleLogin="../login"
-                      handleLogoutClick="../../AmbarsariyaMall"
+                      handleLogoutClick="../../"
                   />
                 </Box>
               )}

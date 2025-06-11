@@ -72,7 +72,7 @@ export default function Order_Return_Review_Component() {
             <UserBadge
                 handleBadgeBgClick={redirectBackPageTo()}
                 handleLogin="../login"
-                handleLogoutClick="../../AmbarsariyaMall"
+                handleLogoutClick="../../"
             />
           </Box>
         </Box>

@@ -48,7 +48,7 @@ function Eshop() {
 
 
     const header = [
-        { id: 1, title: `Shop No: ${(user?.shop_no)?.split('_')?.[1]}` },
+        { id: 1, title: `Shop No: ${user?.shop_no ? (user?.shop_no)?.split('_')?.[1] : ''}` },
         { id: 2, title: user?.domain_name },
         { id: 3, title: user?.sector_name },
     ];
@@ -81,7 +81,7 @@ function Eshop() {
                                 <Box component="img" src={hanging_board2} alt="board" className='hanging_board2' />
                                 <Typography className='title' variant='h2'>
                                     <Typography className="heading" variant='span'>
-                                        Shop No: <Typography variant='span' className='values'>{(user?.shop_no)?.split('_')?.[1]}</Typography>
+                                        Shop No: <Typography variant='span' className='values'>{user?.shop_no ? (user?.shop_no)?.split('_')?.[1] : ''}</Typography>
                                     </Typography>
                                     <Typography className="heading" variant='span'>
                                         Domain: <Typography variant='span' className='values'>{user?.domain_name}</Typography>
@@ -139,7 +139,7 @@ function Eshop() {
                     <UserBadge
                             handleBadgeBgClick={`../emotional`}
                             handleLogin="../login"
-                            handleLogoutClick="../../AmbarsariyaMall"
+                            handleLogoutClick="../../"
                         />
                 </Box>
             </Box>

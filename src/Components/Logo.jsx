@@ -19,7 +19,7 @@ function Logo() {
                 
             },300);
             setTimeout(()=>{
-                navigate('../../AmbarsariyaMall');
+                navigate('../../');
             },500);
         }
     }

@@ -83,13 +83,13 @@ export default function Home() {
             setTimeout(() => {
                 stopLoading(); // Stop global loading after 800ms
                 if (btnsParentElement.classList.contains('sell')) {
-                    navigate('/AmbarsariyaMall/sell');
+                    navigate('/sell');
                 }
                 else if (btnsParentElement.classList.contains('serve')) {
-                    navigate(token ? '/AmbarsariyaMall/serve' : '/AmbarsariyaMall/serve/login');
+                    navigate(token ? '/serve' : '/serve/login');
                 }
                 else if (btnsParentElement.classList.contains('socialize')) {
-                    navigate(token ? '/AmbarsariyaMall/socialize':'/AmbarsariyaMall/socialize/login');
+                    navigate(token ? '/socialize':'/socialize/login');
                 }
             }, 1000);
         } else if (clockParentElement) {
@@ -101,7 +101,7 @@ export default function Home() {
 
             setTimeout(() => {
                 stopLoading();
-                navigate('/AmbarsariyaMall/clock');
+                navigate('/clock');
             }, 800);
             audio.play();
         }else if (noticeParentElement){
@@ -184,8 +184,8 @@ export default function Home() {
                         <LEDNotice />
                     </Box>
                 </Box>
-            {/* {token ? <Button2 optionalcName='logoutBtn' text={`Logged in as ${userType}`} onClick={() => handleLogout('../AmbarsariyaMall')}/>:<Button2 optionalcName='logoutBtn' text={`Login`} redirectTo='sell/login'/>} */}
-            <UserBadge handleLogin="sell/login" handleLogoutClick="../../AmbarsariyaMall"/>
+            {/* {token ? <Button2 optionalcName='logoutBtn' text={`Logged in as ${userType}`} onClick={() => handleLogout('../')}/>:<Button2 optionalcName='logoutBtn' text={`Login`} redirectTo='sell/login'/>} */}
+            <UserBadge handleLogin="sell/login" handleLogoutClick="../../"/>
             </Box>
             
 

@@ -54,27 +54,27 @@ function Locations() {
         {/* <Header
           icon_1={location_img}
           icon_2={member_icon}
-          icon_1_link='../../AmbarsariyaMall/sell/user'
-          icon_2_link='../../AmbarsariyaMall/sell/user'
+          icon_1_link='../../sell/user'
+          icon_2_link='../../sell/user'
           title="Locations"
           title_container={true}
-          redirectTo='../../AmbarsariyaMall/sell/esale'
+          redirectTo='../../sell/esale'
         /> */}
 
         <Box className="col header_badge">
-          <Link to={'../../AmbarsariyaMall/sell/esale'} className='icon_link'>
+          <Link to={'../../sell/esale'} className='icon_link'>
                       <Box component="img" src={location_img} alt="suppliers_for_shop" className='icon' />
                     </Link>
 
                     <Box className="title_container">
-                                <Link to={'../../AmbarsariyaMall/sell/esale'}>
+                                <Link to={'../../sell/esale'}>
                                   <Typography className="title">Locations</Typography>
                                 </Link>
                             </Box>
                             <UserBadge
             handleBadgeBgClick={'../esale'}
             handleLogin="../login"
-            handleLogoutClick="../../AmbarsariyaMall"
+            handleLogoutClick="../../"
           />
         </Box>
 

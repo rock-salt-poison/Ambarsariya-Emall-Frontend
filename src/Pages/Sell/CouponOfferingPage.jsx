@@ -253,12 +253,12 @@ function CouponOfferingPage(props) {
               <Board text="coupons offering" imgSrc={boardImg} />
               <Board text="emboss brand" imgSrc={boardImg} />
             </Box>
-            {/* <Button2 text="Back" redirectTo="/AmbarsariyaMall/sell" /> */}
+            {/* <Button2 text="Back" redirectTo="/sell" /> */}
 
             <UserBadge
               handleBadgeBgClick="../"
               handleLogin="../login"
-              handleLogoutClick="../../AmbarsariyaMall"
+              handleLogoutClick="../../"
             />
           </Box>
 

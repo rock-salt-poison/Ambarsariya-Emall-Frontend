@@ -88,7 +88,7 @@ function Preview() {
             <UserBadge
                 handleBadgeBgClick={-1}
                 handleLogin="../login"
-                handleLogoutClick="../../AmbarsariyaMall"
+                handleLogoutClick="../../"
             />
             <Box/>
         </Box>

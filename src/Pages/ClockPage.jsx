@@ -89,7 +89,7 @@ const formattedTime = updatedAt
         <Sidebar
           backButton={
             <Box ref={ref}>
-              {/* <Button2 text="Back" redirectTo="/AmbarsariyaMall" /> */}
+              {/* <Button2 text="Back" redirectTo="/" /> */}
             </Box>
           }
           componentToRender={renderComponent()}
@@ -122,9 +122,9 @@ const formattedTime = updatedAt
           componentToRender={
             <>
               <UserBadge
-                handleBadgeBgClick="/AmbarsariyaMall"
+                handleBadgeBgClick="/"
                 handleLogin="sell/login"
-                handleLogoutClick="../../AmbarsariyaMall"
+                handleLogoutClick="../../"
               />
               <TravelNeeds
                 text="ESPN Feed"

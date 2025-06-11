@@ -19,7 +19,7 @@ function Financial_management() {
     {id:2, imgSrc : accounts_payable, title:'Accounts Payable', linkTo:'accounts-payable'},
     {id:3, imgSrc : accounts_receivable, title:'Accounts Receivable', linkTo:'accounts-receivable'},
     {id:4, imgSrc : budgeting_and_forecasting, title:'Budgeting and Forecasting', linkTo:'budgeting-and-forecasting'},
-    {id:5, imgSrc : asset_management, title:'Asset Management', linkTo:'asset-management'},
+    {id:5, imgSrc : asset_management, title:'Asset Management', linkTo:''},
   ]
 
   return (
@@ -43,7 +43,7 @@ function Financial_management() {
           <UserBadge
               handleBadgeBgClick={-1}
               handleLogin="../login"
-              handleLogoutClick="../../AmbarsariyaMall"
+              handleLogoutClick="../../"
           />
       </Box>
       </Box>  

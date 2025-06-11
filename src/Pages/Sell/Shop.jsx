@@ -122,7 +122,7 @@ function Shop() {
                 <UserBadge
                     handleBadgeBgClick={`../support/shop?token=${token}`}
                     handleLogin="../login"
-                    handleLogoutClick="../../AmbarsariyaMall"
+                    handleLogoutClick="../../"
                 />
                   {/* <Button2 text="Back" redirectTo={`../support/shop?token=${token}`} /> */}
                   {/* <Button2 text="Back" redirectTo={-1} /> */}

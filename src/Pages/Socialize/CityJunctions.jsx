@@ -38,7 +38,7 @@ function CityJunctions() {
                 if(target.classList.contains('co_helpers')){
                     navigate('../city-junctions/co-helpers')
                 }else if(target.classList.contains('work_from_home')){
-                    navigate('../../AmbarsariyaMall/serve/emotional/eshop/jobs-offered')
+                    navigate('../city-junctions/jobs-offered')
                 }
             }, 600)
         }else if(title){
@@ -51,7 +51,7 @@ function CityJunctions() {
     
             setTimeout(()=>{
                 // if(target.classList.contains('work_from_home')){
-                    navigate('../../AmbarsariyaMall/socialize')
+                    navigate('../../socialize')
                 // }
             }, 1000)
         }else if(icon){
@@ -75,7 +75,7 @@ function CityJunctions() {
             <Box className="row">
                 <Box className="col">
                     <UserBadge
-                        handleLogoutClick="../../AmbarsariyaMall"
+                        handleLogoutClick="../../"
                         handleBadgeBgClick={-1}
                         handleLogin="login"
                     />

@@ -59,9 +59,9 @@ function Login() {
         <Box className="col">
           {/* <Button2 text="Back" redirectTo={-1} /> */}
           <UserBadge
-                handleBadgeBgClick="../../AmbarsariyaMall"
+                handleBadgeBgClick="../../"
                 handleLogin="../login"
-                handleLogoutClick="../../AmbarsariyaMall"
+                handleLogoutClick="../../"
             />
         </Box>
 
@@ -70,7 +70,7 @@ function Login() {
           <LoginPageCard
             title="Sell"
             imgSrc={peacock_img}
-            redirectTo={'../../AmbarsariyaMall/socialize'}
+            redirectTo={'../../socialize'}
           />
         </Box>
 
@@ -78,7 +78,7 @@ function Login() {
           <LoginPageCard
             title="Buy"
             imgSrc={lion_img}
-            redirectTo={'../../AmbarsariyaMall/socialize'}
+            redirectTo={'../../socialize'}
           />
         </Box>
       </Box>

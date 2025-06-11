@@ -283,7 +283,7 @@ function MerchantCampaign() {
                                 {formData.shop_name || formData.main_content ? (
                                       <Link className="campaign_preview"  onClick={(e) => handlePopup(e, 7)}>
                                       <Box className="campaign_preview_body">
-                                      {formData.shop_name && <Link to='../../AmbarsariyaMall/sell/support/stationary'><Typography className='text'>Shop Name : 
+                                      {formData.shop_name && <Link to='../../sell/support/stationary'><Typography className='text'>Shop Name : 
                                               <Typography variant='span'>
                                              {formData.shop_name}
                                               </Typography>
@@ -317,7 +317,7 @@ function MerchantCampaign() {
                     <UserBadge
                         handleBadgeBgClick={-1}
                         handleLogin="../login"
-                        handleLogoutClick="../../AmbarsariyaMall"
+                        handleLogoutClick="../../"
                     />
                 </Box>
             </Box>

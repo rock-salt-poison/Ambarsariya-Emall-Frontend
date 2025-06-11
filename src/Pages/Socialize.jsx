@@ -37,7 +37,7 @@ function Socialize() {
             }else if(target.classList.contains('updates')){
               navigate('../updates')
           }else if(target.classList.contains('junction')){
-              // navigate('../../AmbarsariyaMall/serve/emotional/eshop/jobs-offered')
+              // navigate('../../serve/emotional/eshop/jobs-offered')
               navigate('../city-junctions')
           }
         }, 600)
@@ -54,7 +54,7 @@ function Socialize() {
           </Box>
           <Box className="back-button-wrapper">
             <UserBadge
-              handleLogoutClick="../../AmbarsariyaMall"
+              handleLogoutClick="../../"
               handleBadgeBgClick={-1}
               handleLogin="login"
             />

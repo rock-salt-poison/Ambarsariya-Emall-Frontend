@@ -124,7 +124,7 @@ function Stock_level(props) {
     <ThemeProvider theme={theme}>
       <Box className="stock_level_wrapper">
         <Box className="row">
-        <Header icon_1={stock_management_icon} icon_2={stock_management_icon2} title="Stock Level" icon_1_link='../emotional/eshop/stock-reports' icon_2_link='' redirectTo='../emotional/eshop'/>
+        <Header icon_1={stock_management_icon} icon_2={stock_management_icon2} title="Stock Level" icon_1_link='../emotional/eshop/stock-reports' icon_2_link='../emotional/eshop' redirectTo='../emotional/eshop'/>
 
           <Box className="col">
             <Box className="container">
@@ -208,7 +208,7 @@ function Stock_level(props) {
             <UserBadge
               handleBadgeBgClick={-1}
               handleLogin="../login"
-              handleLogoutClick="../../AmbarsariyaMall"
+              handleLogoutClick="../../"
             />
           </Box>
         </Box>

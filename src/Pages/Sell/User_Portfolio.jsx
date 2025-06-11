@@ -204,7 +204,7 @@ function User_Portfolio(props) {
               <UserBadge
                 handleBadgeBgClick={`../`}
                 handleLogin="../login"
-                handleLogoutClick="../../AmbarsariyaMall"
+                handleLogoutClick="../../"
               />
             </Box>
           </Box>
@@ -212,7 +212,7 @@ function User_Portfolio(props) {
             <UserBadge
               handleBadgeBgClick={`../`}
               handleLogin="../login"
-              handleLogoutClick="../../AmbarsariyaMall"
+              handleLogoutClick="../../"
             />
             <Card />
           </Box>

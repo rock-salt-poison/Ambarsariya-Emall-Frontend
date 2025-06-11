@@ -19,7 +19,7 @@ const theme = createCustomTheme(themeProps);
     <Box className="eshop_wrapper">
       <Box className="row">
         <Box className="col">
-          {/* <Button2 text="Back" redirectTo="/AmbarsariyaMall/sell" /> */}
+          {/* <Button2 text="Back" redirectTo="/sell" /> */}
           <Box className='col-1'></Box>
           <Box className="header_board">
             <Board text="E-shop" imgSrc={boardImg} />
@@ -27,7 +27,7 @@ const theme = createCustomTheme(themeProps);
           <UserBadge
               handleBadgeBgClick={`../`}
               handleLogin="../login"
-              handleLogoutClick="../../AmbarsariyaMall"
+              handleLogoutClick="../../"
           />
         </Box>
         <Box className="col">

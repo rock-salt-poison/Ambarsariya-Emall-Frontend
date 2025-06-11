@@ -104,7 +104,7 @@ function BusinessHours({ data }) {
       <UserBadge
         handleBadgeBgClick={`../support/shop?token=${data.shop_access_token}`}
         handleLogin="../login"
-        handleLogoutClick="../../AmbarsariyaMall"
+        handleLogoutClick="../../"
       />
 
       <Box className="business_hours_wrapper">

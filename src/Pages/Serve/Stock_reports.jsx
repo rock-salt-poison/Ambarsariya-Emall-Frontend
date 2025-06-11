@@ -113,7 +113,7 @@ function Stock_reports(props) {
     <ThemeProvider theme={theme}>
       <Box className="stock_reports_wrapper">
         <Box className="row">
-          <Header icon_1={stock_management_icon} icon_2={stock_management_icon2} title="Stock Reports" icon_1_link='../emotional/eshop' icon_2_link=''  redirectTo='../emotional/eshop'/>
+          <Header icon_1={stock_management_icon} icon_2={stock_management_icon2} title="Stock Reports" icon_1_link='../emotional/eshop' icon_2_link='../emotional/eshop'  redirectTo='../emotional/eshop'/>
 
           <Box className="col">
             <Box className="container">
@@ -156,7 +156,7 @@ function Stock_reports(props) {
               <UserBadge
                 handleBadgeBgClick={-1}
                 handleLogin="../login"
-                handleLogoutClick="../../AmbarsariyaMall"
+                handleLogoutClick="../../"
               />
             </Box>
           </Box>

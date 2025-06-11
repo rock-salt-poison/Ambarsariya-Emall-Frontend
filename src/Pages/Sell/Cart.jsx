@@ -280,7 +280,7 @@ function Cart() {
           <UserBadge
             handleBadgeBgClick={-1}
             handleLogin="../login"
-            handleLogoutClick="../../AmbarsariyaMall"
+            handleLogoutClick="../../"
         />
           {/* <Button2 text={"Back"} redirectTo={-1} /> */}
           <Link to={`../${owner}/return`}>
@@ -322,7 +322,7 @@ function Cart() {
           <UserBadge
                           handleBadgeBgClick={-1}
                           handleLogin="../login"
-                          handleLogoutClick="../../AmbarsariyaMall"
+                          handleLogoutClick="../../"
                       />
           {/* <Button2 text={"Back"} redirectTo={-1} /> */}
           <Box className="offers">

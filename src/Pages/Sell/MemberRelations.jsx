@@ -171,11 +171,11 @@ function MemberRelations() {
         <Header
           icon_1={relationship_img}
           icon_2={member_icon}
-          icon_1_link="../../AmbarsariyaMall/sell/esale"
-          icon_2_link="../../AmbarsariyaMall/sell/user"
+          icon_1_link="../../sell/esale"
+          icon_2_link="../../sell/user"
           title="Relations"
           title_container={true}
-          redirectTo="../../AmbarsariyaMall/sell/esale"
+          redirectTo="../../sell/esale"
         />
 
         <Box className="col">

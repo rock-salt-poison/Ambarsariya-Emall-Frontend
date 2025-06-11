@@ -40,14 +40,14 @@ function BuyEshop(props) {
           <Box className="col">
             
             <Box className="col-1"></Box>
-            {/* <Button2 text="Back" redirectTo="/AmbarsariyaMall/sell" /> */}
+            {/* <Button2 text="Back" redirectTo="/sell" /> */}
             <Box className="header_board">
               <Board text="Book Your E-shop" imgSrc={boardImg} />
             </Box>
             <UserBadge
                   handleBadgeBgClick={`../`}
                   handleLogin="../login"
-                  handleLogoutClick="../../AmbarsariyaMall"
+                  handleLogoutClick="../../"
               />
             {/* <Button2 text="Next" redirectTo={user_access_token? "../eshop": "../login"} optionalcName={shopAccessToken ? "visible" : "hidden"}/> */}
           </Box>

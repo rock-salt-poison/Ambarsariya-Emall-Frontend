@@ -34,7 +34,7 @@ function TermsAndConditions() {
           <UserBadge
               handleBadgeBgClick={-1}
               handleLogin="../login"
-              handleLogoutClick="../../AmbarsariyaMall"
+              handleLogoutClick="../../"
           />
         </Box>
         <Box className="col quote_container">

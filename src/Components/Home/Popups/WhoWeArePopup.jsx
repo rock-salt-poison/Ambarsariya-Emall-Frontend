@@ -53,7 +53,7 @@ export default function WhoWeArePopup({ open, handleClose, handleBackClick }) {
               {/* <UserBadge
                 handleClose={handleClose}
                 handleLogin="sell/login"
-                handleLogoutClick="../../AmbarsariyaMall"
+                handleLogoutClick="../../"
               /> */}
             </Box>
             <Typography className="description">

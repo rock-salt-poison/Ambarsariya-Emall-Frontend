@@ -31,7 +31,7 @@ export default function AboutUsPopup({ open, handleClose, handleBackClick }) {
               {/* <UserBadge
                 handleClose={handleClose}
                 handleLogin="sell/login"
-                handleLogoutClick="../../AmbarsariyaMall"
+                handleLogoutClick="../../"
               /> */}
             </Box>
             <Box className="descriptionContainer">

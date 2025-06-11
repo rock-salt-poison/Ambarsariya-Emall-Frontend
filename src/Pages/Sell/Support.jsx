@@ -172,17 +172,17 @@ function Support(props) {
             {/* <UserBadge
                 handleBadgeBgClick="../"
                 handleLogin="../login"
-                handleLogoutClick="../../AmbarsariyaMall"
+                handleLogoutClick="../../"
               /> */}
           </Box>
           <Box className="col second_wrapper">
             <Box className='col-1'>
               {!userLoggedIn && <UserForm onValidation={handleFormValidation} visitorData={visitorData} visibility={userLoggedIn ? 'hidden' : 'visible'}/>}
-              {/* <Button2 text="Back" redirectTo="/AmbarsariyaMall/sell" /> */}
+              {/* <Button2 text="Back" redirectTo="/sell" /> */}
               <UserBadge
                 handleBadgeBgClick="../"
                 handleLogin="../login"
-                handleLogoutClick="../../AmbarsariyaMall"
+                handleLogoutClick="../../"
               />
             </Box>
 

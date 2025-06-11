@@ -47,9 +47,9 @@ function Login() {
   // Define the logic for redirectTo dynamically for "Sell" based on shop validity
   const sellRedirectTo = accessToken
     ? isValidShop
-      ? `../../AmbarsariyaMall/sell/support/shop/shop-detail/${accessToken}`
-      : "../../AmbarsariyaMall/sell/eshop"
-    : "../../AmbarsariyaMall/sell/eshop";
+      ? `../../sell/support/shop/shop-detail/${accessToken}`
+      : "../../sell/eshop"
+    : "../../sell/eshop";
 
   return (
     <Box className="login_wrapper">
@@ -59,7 +59,7 @@ function Login() {
           <UserBadge
                     handleBadgeBgClick="../"
                     handleLogin="../login"
-                    handleLogoutClick="../../AmbarsariyaMall"
+                    handleLogoutClick="../../"
                     />
         </Box>
 
@@ -76,7 +76,7 @@ function Login() {
           <LoginPageCard
             title="Buy"
             imgSrc={lion_img}
-            redirectTo="../../AmbarsariyaMall/sell/esale"
+            redirectTo="../../sell/esale"
           />
         </Box>
       </Box>

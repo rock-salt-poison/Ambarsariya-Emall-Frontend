@@ -47,7 +47,7 @@ function GrowConversationPage() {
                 <UserBadge
                     handleBadgeBgClick="../"
                     handleLogin="../login"
-                    handleLogoutClick="../../AmbarsariyaMall"
+                    handleLogoutClick="../../"
                 />
                 {/* <Button2 text="Next" redirectTo="../coupon-offering" optionalcName='d-sm-none'/> */}
             </Box>
@@ -62,7 +62,7 @@ function GrowConversationPage() {
             </Box>
             <Box className="col quote">
                 <Box component="img" src={success_quote} className="success_quote" alt="success" />
-                <Button2 text="Back" redirectTo="/AmbarsariyaMall/sell" optionalcName="d-lg-none" />
+                <Button2 text="Back" redirectTo="/sell" optionalcName="d-lg-none" />
                 <Button2 text="Next" redirectTo="../coupon-offering" optionalcName="d-lg-none" />
             </Box>
         </Box>

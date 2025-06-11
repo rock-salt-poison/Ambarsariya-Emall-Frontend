@@ -1,5 +1,4 @@
 import React from 'react'
-
 import revenue_projections from'../../Utils/images/Serve/emotional/eshop/financial_management/budgeting_and_forecasting/revenue_projections.webp'
 import expenses from'../../Utils/images/Serve/emotional/eshop/financial_management/general_ledger/expenses.webp'
 import profit_and_loss_statement from'../../Utils/images/Serve/emotional/eshop/financial_management/budgeting_and_forecasting/profit_and_loss_statement.png'
@@ -47,7 +46,7 @@ function Budgeting_and_forecasting() {
             title="Financial Management" 
             span_value="Budgeting and Forecasting"
             icon_1_link='../emotional/eshop/financial-management' 
-            icon_2_link='../emotional/eshop' 
+            icon_2_link='../emotional/eshop/financial-management' 
             redirectTo='../emotional/eshop/financial-management'
           />
         <Box className="col">
@@ -60,7 +59,7 @@ function Budgeting_and_forecasting() {
           <UserBadge
               handleBadgeBgClick={-1}
               handleLogin="../login"
-              handleLogoutClick="../../AmbarsariyaMall"
+              handleLogoutClick="../../"
           />
         </Box>
       </Box>  

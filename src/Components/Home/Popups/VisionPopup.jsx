@@ -41,7 +41,7 @@ export default function VisionPopup({ open, handleClose, handleBackClick }) {
               {/* <UserBadge
                 handleClose={handleClose}
                 handleLogin="sell/login"
-                handleLogoutClick="../../AmbarsariyaMall"
+                handleLogoutClick="../../"
               /> */}
             </Box>
             <ul>

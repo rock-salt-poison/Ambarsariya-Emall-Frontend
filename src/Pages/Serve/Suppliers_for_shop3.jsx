@@ -124,7 +124,7 @@ function Suppliers_for_shop3(props) {
             icon_1={suppliers_for_shop_icon} 
             icon_2={financial_management_icon2} 
             title="Suppliers For Shop" 
-            icon_1_link='../emotional/eshop/suppliers-for-shop' 
+            icon_1_link='../emotional/eshop' 
             icon_2_link='../emotional/eshop' 
             redirectTo='../emotional/eshop'
           />
@@ -225,7 +225,7 @@ function Suppliers_for_shop3(props) {
           <UserBadge
             handleBadgeBgClick={-1}
             handleLogin="../login"
-            handleLogoutClick="../../AmbarsariyaMall"
+            handleLogoutClick="../../"
           />
           </Box>
         </Box>

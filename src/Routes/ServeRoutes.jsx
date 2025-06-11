@@ -133,9 +133,9 @@ export default function ServeRoutes() {
       />
 
       <Route path="/emotional/campaign/job" element={<ProtectedRoute
-            shopElement={<Job />}
-            memberElement={<Job />}
-          />} />
+        shopElement={<Job />}
+        memberElement={<Job />}
+      />} />
       <Route path="/emotional/community" element={<Community />} />
       <Route path="/emotional/eshop/soul/discussion" element={<Discussion />} />
       <Route path="/emotional/eshop/soul/votes" element={<Votes />} />

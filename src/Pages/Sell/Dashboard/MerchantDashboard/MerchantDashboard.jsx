@@ -50,7 +50,7 @@ function MerchantDashboard(props) {
                 {edit ? <DashboardForm data={details?.[0]}/> : <DashboardComponents data={details?.[0]} date={selectedDate.toLocaleDateString()}/>}
                 <Box className="col">
                     {/* <Button2 text={edit ? "Back" : "Next"} redirectTo={edit ? -1 :'edit'} optionalcName={edit ? "" : 'align-right'}/> */}
-                    <UserBadge handleBadgeBgClick={-1} handleLogin={'../login'} handleLogoutClick={'../../AmbarsariyaMall'} optionalcName={'align-right'}/>
+                    <UserBadge handleBadgeBgClick={-1} handleLogin={'../login'} handleLogoutClick={'../../'} optionalcName={'align-right'}/>
                 </Box>
             </Box>
         </Box>

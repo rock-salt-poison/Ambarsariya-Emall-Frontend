@@ -24,7 +24,7 @@ function CommunityLocation() {
         }, 300)
 
         setTimeout(() => {
-            navigate('../../AmbarsariyaMall/serve/emotional/community');
+            navigate('create');
         }, 600)
       }
     }
@@ -64,7 +64,7 @@ function CommunityLocation() {
           <UserBadge
             handleBadgeBgClick="../esale/locations"
             handleLogin="../login"
-            handleLogoutClick="../../AmbarsariyaMall"
+            handleLogoutClick="../../"
           />
         </Box>
       </Box>
