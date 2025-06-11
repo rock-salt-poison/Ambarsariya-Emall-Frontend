@@ -41,8 +41,6 @@ export default function CustomPaginationTable({rows}) {
   const [loading, setLoading] = useState(false);
   const loggedInUserToken = useSelector((state) => state.auth.userAccessToken);
   const [canBuy, setCanBuy] = useState(true);
-
-
   
   useEffect(() => {
     const fetchShopUserData = async () => {
@@ -175,6 +173,8 @@ export default function CustomPaginationTable({rows}) {
   }
 };
 
+console.log('----------', selectedProducts);
+
 
   const isSelected = (id) =>
     selectedProducts.some((product) => product.product_no === id);
@@ -241,7 +241,7 @@ export default function CustomPaginationTable({rows}) {
         : column.id === "price"
   ? (() => {
       const selectedProduct = selectedProducts.find(p => p.product_no === row.product_no);
-      const priceToShow = selectedProduct ? selectedProduct.selling_price : row?.first_iku_price ? row?.first_iku_price : row.selling_price;
+      const priceToShow = selectedProduct ? selectedProduct.selling_price ? selectedProduct.selling_price : selectedProduct?.product_selling_price : row?.first_iku_price ? row?.first_iku_price : row.selling_price ? row.selling_price : row.product_selling_price;
       return `₹ ${priceToShow} ${row.unit !== null ? row.unit : ''}`;
     })():"";
         

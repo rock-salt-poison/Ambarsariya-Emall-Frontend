@@ -35,6 +35,7 @@ function ProductInfo() {
   });
   const navigate = useNavigate();
   
+  console.log('Selected Product : ', product);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,13 +50,15 @@ function ProductInfo() {
 
         const productResp = await get_product(resp.data?.[0]?.shop_no, resp.data?.[0]?.product_id);
         if(productResp?.valid){
-          setProduct(productResp.data?.[0])
+          setProduct(({...productResp.data?.[0], product_selling_price: resp?.data?.[0]?.product_selling_price}))
           console.log(productResp.data?.[0])
         }
         
         
         if (resp?.valid && Array.isArray(resp.data)) {
           setData(resp.data);
+          console.log(resp?.data);
+          
           setSelectedVariant(0); // Default selection
         }
       } catch (e) {
@@ -142,16 +145,16 @@ function ProductInfo() {
               <Typography variant="span" className="light">Brand : </Typography>
               {data?.[0].brand}
             </Typography>
-            <Typography className="text">
+            {data?.[selectedVariant]?.product_style && <Typography className="text">
               <Typography variant="span" className="light">Style : </Typography>
               {data?.[selectedVariant]?.item_id ? data?.[selectedVariant]?.item_id?.split('_')?.at(-2) : data?.[0]?.product_style ? data?.[0]?.product_style : '-'}
-            </Typography>
+            </Typography>}
           </Box>
         </Box>
 
         {/* Variant Selection */}
+        {data?.length > 0 && data?.[selectedVariant]?.item_id && (
         <Box className="col">
-          {data?.length > 0 && (
             <FormControl component="fieldset">
               <RadioGroup
                 row
@@ -169,8 +172,8 @@ function ProductInfo() {
                 ))}
               </RadioGroup>
             </FormControl>
-          )}
         </Box>
+        )}
 
         {/* Product Images */}
         <Box className="col">
