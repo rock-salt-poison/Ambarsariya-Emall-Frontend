@@ -5,9 +5,6 @@ import ribbon from "../../../../Utils/images/Sell/dashboard/merchant_dashboard/r
 import { useSelector } from "react-redux";
 import { get_checkDriveAccess, get_items, get_product_names, get_requestDriveAccess, get_sheetsData, get_sku, getCategoryId, getShopUserData, getUser, initializeWebSocket, post_items, post_open_file, post_open_items_csv_file, post_open_rku_csv_file, post_open_sku_csv_file, post_products, post_rku, post_sku } from "../../../../API/fetchExpressAPI";
 import { useParams } from "react-router-dom";
-import product_csv from '../../../../Sheets/Ambarsariya Mall - Product CSV.csv'
-import item_csv from '../../../../Sheets/Ambarsariya Mall - Item CSV.csv'
-import Papa from "papaparse";
 import CustomSnackbar from "../../../../Components/CustomSnackbar";
 
 function DashboardForm({data}) {
@@ -17,9 +14,11 @@ function DashboardForm({data}) {
   const [productsData, setProductsData] = useState([]);
   const [itemsData, setItemsData] = useState([]);
   const [skuData, setSKUData] = useState([]);
+  console.log(data);
+  
 
   useEffect(() => {
-    const socket = initializeWebSocket();
+    const socket = initializeWebSocket(data?.user_id);
 
     socket.on('message', (newMessage) => {
       setSnackbar({

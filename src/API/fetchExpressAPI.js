@@ -7,17 +7,28 @@ const drive_link = `${process.env.REACT_APP_EXPRESS_API_LINK}/api/drive`;
 const photo_link = `${process.env.REACT_APP_EXPRESS_API_LINK}/api/google-photo`;
 const SOCKET_SERVER_URL = process.env.REACT_APP_EXPRESS_API_LINK;
 
-export const initializeWebSocket = () => {
-  // Establish WebSocket connection using Socket.io
-  const socket = io(SOCKET_SERVER_URL);
+export const initializeWebSocket = (roomId) => {
+  const socket = io(SOCKET_SERVER_URL, {
+    transports: ['websocket'],
+  });
 
-  // Listen for messages from the server
+  socket.on('connect', () => {
+    console.log('Connected to WebSocket server');
+    if (roomId) {
+      socket.emit('join_room', roomId); // Join a specific room
+      console.log(`Joined room: ${roomId}`);
+    }
+  });
+
+  // Listen for broadcast messages from backend
   socket.on('message', (message) => {
     console.log('Received message:', message);
+    // You can trigger UI updates or toast notifications here
   });
 
   return socket;
 };
+
 
 export const fetchDomains = async () => {
   const response = await axios.get(`${link}/domains`);
