@@ -489,7 +489,7 @@ const BookEshopForm = () => {
   const [sectors, setSectors] = useState([]);
   const titleOptions = ['Mr.', 'Ms.', 'Mrs.'];
 
-  const renderFormField = (label, name, type, options = [], placeholder = '', additionalProps = {}) => (
+  const renderFormField = (label, name, type, options = [], placeholder = '', additionalProps = {}, adornmentValue, adornmentPosition) => (
     <FormField
       label={label}
       name={name}
@@ -501,6 +501,8 @@ const BookEshopForm = () => {
       options={options}
       placeholder={placeholder}
       readOnly={edit ? true : false}
+      adornmentValue={adornmentValue}
+      adornmentPosition={adornmentPosition}
       {...additionalProps}
     />
   );
@@ -575,7 +577,7 @@ const BookEshopForm = () => {
             {renderFormField('Be a merchant', 'merchant', 'switch')}
           </Box>
           {formData.merchant &&
-            renderFormField('', 'member_detail', 'text', '', 'Member username or Phone no.')}
+            renderFormField('', 'member_detail', 'text', '', 'Member username or Phone no.', undefined, <Button className="verify">verify</Button>, 'end')}
           {formData.merchant && showMemberOtp && renderFormField('Member OTP:', 'member_otp', 'text')}
         </>
         }

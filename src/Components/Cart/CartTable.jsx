@@ -48,6 +48,7 @@ function CartTable({ rows,setCartData, setSelectedCoupon }) {
   const [categoryNames, setCategoryNames] = useState({}); // Map of category IDs to names
   const { selectedCoupon } = useSelector((state) => state.discounts);
 
+  console.log(data);
   
   // Fetch category names for all products
   useEffect(() => {
@@ -196,7 +197,7 @@ function CartTable({ rows,setCartData, setSelectedCoupon }) {
 };
 
 const calculateTotal = () =>
-  data.reduce((acc, item) => acc + Number(item.selling_price * item.quantity), 0);
+  data.reduce((acc, item) => acc + Number((item.selling_price || item?.product_selling_price)  * item.quantity), 0);
 
 const calculateDiscount = () => {
     if (!selectedCoupon) return 0;
@@ -269,6 +270,13 @@ const calculateDiscount = () => {
           <CircularProgress />
         </Box>
       )}
+      <CustomSnackbar
+          open={snackbar.open}
+          handleClose={() => setSnackbar({ ...snackbar, open: false })}
+          message={snackbar.message}
+          disableAutoHide={true}
+          severity={snackbar.severity}
+        />
       <Paper className="table">
         <Box className="board_pins">
           <Box className="circle"></Box>
@@ -350,10 +358,10 @@ const calculateDiscount = () => {
                       </Box>
                     </TableCell>
                     <TableCell className="text_3" align="right">
-                      &#8377;{Number(row.selling_price).toFixed(2)}
+                      &#8377;{Number(row.selling_price || row.product_selling_price).toFixed(2)}
                     </TableCell>
                     <TableCell className="text_3 product_price" align="right">
-                      &#8377;{(row.selling_price * row.quantity).toFixed(2)}
+                      &#8377;{((row.selling_price || row.product_selling_price) * row.quantity).toFixed(2)}
                     </TableCell>
                   </TableRow>
                 ))
@@ -416,12 +424,7 @@ const calculateDiscount = () => {
           <Box className="circle"></Box>
         </Box>
       </Paper>
-      <CustomSnackbar
-          open={snackbar.open}
-          handleClose={() => setSnackbar({ ...snackbar, open: false })}
-          message={snackbar.message}
-          severity={snackbar.severity}
-        />
+      
     </Box>
   );
 }

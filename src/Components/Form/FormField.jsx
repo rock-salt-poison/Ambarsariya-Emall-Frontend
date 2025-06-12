@@ -35,7 +35,8 @@ const FormField = ({
   handleDownload, required,
   btn_text,
   defaultChecked,
-  disable=false
+  disable=false,
+  adornmentPosition="start"
 }) => {
 
   const marks = getSliderMarks ? getSliderMarks(name) : [];
@@ -311,7 +312,22 @@ const FormField = ({
                   className={`input_field ${className}`}
                   placeholder={placeholder}
                   inputProps={{ readOnly, maxLength }}
-                  InputProps={adornmentValue ? { startAdornment: <InputAdornment position="start" className='adornmentText'>{adornmentValue}</InputAdornment> } : {}}
+                  InputProps={{
+                    ...(adornmentValue && adornmentPosition === 'start' && {
+                      startAdornment: (
+                        <InputAdornment position="start" className="adornmentText">
+                          {adornmentValue}
+                        </InputAdornment>
+                      ),
+                    }),
+                    ...(adornmentValue && adornmentPosition === 'end' && {
+                      endAdornment: (
+                        <InputAdornment position="end" className="adornmentText">
+                          {adornmentValue}
+                        </InputAdornment>
+                      ),
+                    }),
+                  }}
                   {...(error && { error: true })}
                   onFocus={handleFocus}
                   onBlur={handleBlur}
