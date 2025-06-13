@@ -67,6 +67,17 @@ export const get_checkIfMemberExists = async (username, phone_no1, phone_no2) =>
   }
 }
 
+export const get_checkIfShopExists = async (username) => {
+  try {
+    if (username) {
+      const response = await axios.get(`${link}/sell/check-shop-exists?username=${username}`, );
+      return response.data;
+    }
+  } catch (e) {
+    throw e;
+  }
+}
+
 export const postEshop = async (eshopData) => {
   try {
     const response = await axios.post(`${link}/sell/eshop`, eshopData);
