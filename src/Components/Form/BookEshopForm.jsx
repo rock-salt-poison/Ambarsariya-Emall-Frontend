@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Button, Box, Typography, CircularProgress } from '@mui/material';
 import FormField from '../Form/FormField';
 import { useNavigate, useParams } from 'react-router-dom';
-import { postEshop, fetchDomains, fetchDomainSectors, fetchSectors, getShopUserData, getUser, send_otp_to_email } from '../../API/fetchExpressAPI'
+import { postEshop, fetchDomains, fetchDomainSectors, fetchSectors, getShopUserData, getUser, send_otp_to_email, postMemberData, get_checkIfMemberExists } from '../../API/fetchExpressAPI'
 import { useDispatch, useSelector } from 'react-redux';
 import { setShopToken, setShopTokenValid, setUserToken } from '../../store/authSlice';
 import CustomSnackbar from '../CustomSnackbar';
 import { setUsernameOtp } from '../../store/otpSlice';
+import ConfirmationDialog from '../ConfirmationDialog';
 
 
 const BookEshopForm = () => {
@@ -53,6 +54,8 @@ const BookEshopForm = () => {
   const [submitBtnDisable, setSubmitBtnDisable] = useState(!!formData);
   const { edit } = useParams();
   const [loading, setLoading] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false); // State for dialog
+  const [eshopData, setEshopData] = useState(null);
 
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.userAccessToken);
@@ -233,10 +236,7 @@ const BookEshopForm = () => {
     ];
 
     if (formData.paidVersion) {
-      requiredFields.push('gst', 'pan_no', 'cin_no');
-      if (formData.merchant) {
-        requiredFields.push('member_detail');
-      }
+      requiredFields.push('gst', 'pan_no');
     }
 
     requiredFields.forEach((field) => {
@@ -328,18 +328,6 @@ const BookEshopForm = () => {
       }
     }
 
-
-    if (formData.merchant) {
-      if (formData.member_otp !== validMemberOtp) {
-        newErrors.member_otp = true;
-        newErrorMessages.member_otp = 'Invalid OTP';
-        valid = false;
-      }
-      if (formData.member_otp == validMemberOtp) {
-        set_user_type('shop');
-      }
-    }
-
     setErrors(newErrors);
     setErrorMessages(newErrorMessages);
     return valid;
@@ -347,139 +335,206 @@ const BookEshopForm = () => {
 
   console.log(formData?.address);
   
+const handlePostSubmit = async (postData, shouldIncludeMember = true) => {
+  const loggedIn = !!localStorage.getItem('access_token');
+  try {
+    setLoading(true);
+
+    const response = await postEshop(postData);
+    if (response) {
+      const { user_access_token } = response;
+      dispatch(setUserToken(user_access_token));
+      localStorage.setItem('accessToken', user_access_token);
+
+      if (shouldIncludeMember) {
+        const memberData = {
+          name: formData.fullName,
+          username: formData.username.toLowerCase(),
+          password: formData.password,
+          address: formData.address.description || formData.address,
+          latitude: formData.address?.latitude || formData.latitude,
+          longitude: formData.address?.longitude || formData.longitude,
+          phone: formData.phone1,
+          gender: formData.title === 'Mr.' ? 'Male' : 'Female',
+        };
+
+        await postMemberData(memberData);
+      }
+
+      setSnackbar({
+        open: true,
+        message: 'Form submitted successfully!',
+        severity: 'success',
+      });
+
+      console.log('Form Data:', formData);
+      setTimeout(() => {
+        loggedIn ? navigate('../eshop') : navigate('../login');
+      }, 2500);
+    }
+  } catch (error) {
+    const msg = error?.response?.data?.error || '';
+    if (msg.includes('users_phone_no_1_key')) {
+      setSnackbar({
+        open: true,
+        message: 'The phone number you entered already exists. Please use a different phone number.',
+        severity: 'error',
+      });
+    } else if (msg.includes('Username') && msg.includes('already exists')) {
+      setSnackbar({
+        open: true,
+        message: 'Username already exists.',
+        severity: 'error',
+      });
+    } else {
+      setSnackbar({
+        open: true,
+        message: 'Error while submitting the form. Please try again.',
+        severity: 'error',
+      });
+    }
+    console.error("Error submitting form:", msg);
+  } finally {
+    setLoading(false);
+    setOpenDialog(false);
+  }
+};
+
+const handleConfirm = async (postData) => {
+  await handlePostSubmit(postData, true); // merchant = true
+};
+
+const handleClose = async (postData) => {
+  setFormData((prev) => ({ ...prev, merchant: false }));
+  await handlePostSubmit(postData, false); // merchant = false
+};
+
+
+console.log(errorMessages);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const loggedIn = !!localStorage.getItem('access_token');
-
-    if (!showUsernameOtp) {
-      // Validate initial form fields
-      if (validateInitialForm()) {
-        // Show OTP fields if initial validation is successful
-        try{
-          const data ={
-            username:formData.username,
-          }
-          setLoading(true);
-
-          const otp_resp = await send_otp_to_email(data)
-          console.log(otp_resp)
-          dispatch(setUsernameOtp(otp_resp.otp));
-          setLoading(false);
-          if(otp_resp.message === "OTP sent successfully"){
-            setSnackbar({ open: true, message: 'OTP sent successfully. Please check and verify.', severity: 'success' });
-          }else{
-            setSnackbar({ open: true, message: 'Failed to send OTP. Try again.', severity: 'error' });
-          }
-            console.log('Form Data:', formData);
-
-        }catch(e){
-          console.log(e);
-          setLoading(false);
-          setSnackbar({ open: true, message: 'Failed to send OTP. Try again.', severity: 'error' });
-        }
-        setShowUsernameOtp(true);
-        setShowPhoneOtp(true);
-        setShowMemberOtp(true);
-      }
-    } else {
-      // Validate OTP fields
-      if (validateOtp()) {
-        if (validateInitialForm()) {
-          try {
-            const selectedDomain = (await fetchDomains()).find(domain => domain.domain_name === formData.domain);
-            const selectedSector = (await fetchSectors()).find(sector => sector.sector_name === formData.sector);
-
-            const postData = {
-              title: formData.title,
-              fullName: formData.fullName,
-              username: (formData.username).toLowerCase(),
-              password: formData.password,
-              address: formData.address.description,
-              latitude: formData.address?.latitude,
-              longitude: formData.address?.longitude,
-              phone1: formData.phone1,
-              domain: selectedDomain?.domain_id,
-              sector: selectedSector?.sector_id,
-              domain_create: formData.domain_create ? formData.domain_create : '',
-              sector_create: formData.sector_create ? formData.sector_create : '',
-              onTime: formData.onTime,
-              offTime: formData.offTime,
-              paidVersion: formData.paidVersion,
-              merchant: formData.merchant,
-              pickup: formData.pickup,
-              homeVisit: formData.homeVisit,
-              delivery: formData.delivery,
-              user_type: user_type,
-              premiumVersion: formData.premiumVersion,
-
-              // Add phone2 if present
-              ...(formData.phone2 && { phone2: formData.phone2 }),
-
-              // Add paid version details if applicable
-              ...(formData.paidVersion && {
-                gst: formData.gst,
-                pan_no: formData.pan_no,
-                cin_no: formData.cin_no,
-                ...(formData.msme && { msme: formData.msme }),
-              }),
-
-              // Add member detail if paid version and merchant are true
-              ...(formData.paidVersion && formData.merchant && {
-                member_detail: formData.member_detail,
-              }),
-            };
-            setLoading(true);
-
-            const response = await postEshop(postData);
-
-            // Store the userAccessToken in localStorage
-            if (response) {
-              const user_access_token = response.user_access_token;
-              dispatch(setUserToken(user_access_token));
-
-              localStorage.setItem('accessToken', user_access_token);
+    if(formData?.username || formData?.phone1) {
+      try{
+        setLoading(true);
+        const check_member_exists_resp = await get_checkIfMemberExists(formData?.username, formData?.phone1, formData?.phone2);
+        console.log(check_member_exists_resp);
+        
+            if(check_member_exists_resp?.exists===false){
+              if (!showUsernameOtp) {
+                // Validate initial form fields
+                if (validateInitialForm()) {
+                  // Show OTP fields if initial validation is successful
+                  try{
+                    const data ={
+                      username:formData.username,
+                    }
+                    setLoading(true);
+          
+                    const otp_resp = await send_otp_to_email(data)
+                    console.log(otp_resp)
+                    dispatch(setUsernameOtp(otp_resp.otp));
+                    setLoading(false);
+                    if(otp_resp.message === "OTP sent successfully"){
+                      setSnackbar({ open: true, message: 'OTP sent successfully. Please check and verify.', severity: 'success' });
+                    }else{
+                      setSnackbar({ open: true, message: 'Failed to send OTP. Try again.', severity: 'error' });
+                    }
+                      console.log('Form Data:', formData);
+          
+                  }catch(e){
+                    console.log(e);
+                    setLoading(false);
+                    setSnackbar({ open: true, message: 'Failed to send OTP. Try again.', severity: 'error' });
+                  }
+                  setShowUsernameOtp(true);
+                  setShowPhoneOtp(true);
+                  setShowMemberOtp(true);
+                }
+              } else {
+                // Validate OTP fields
+                if (validateOtp()) {
+                  if (validateInitialForm()) {
+                    try {
+                      const selectedDomain = (await fetchDomains()).find(domain => domain.domain_name === formData.domain);
+                      const selectedSector = (await fetchSectors()).find(sector => sector.sector_name === formData.sector);
+          
+                      const postData = {
+                        title: formData.title,
+                        fullName: formData.fullName,
+                        username: (formData.username).toLowerCase(),
+                        password: formData.password,
+                        address: formData.address.description,
+                        latitude: formData.address?.latitude,
+                        longitude: formData.address?.longitude,
+                        phone1: formData.phone1,
+                        domain: selectedDomain?.domain_id,
+                        sector: selectedSector?.sector_id,
+                        domain_create: formData.domain_create ? formData.domain_create : '',
+                        sector_create: formData.sector_create ? formData.sector_create : '',
+                        onTime: formData.onTime,
+                        offTime: formData.offTime,
+                        paidVersion: formData.paidVersion,
+                        merchant: formData.merchant,
+                        pickup: formData.pickup,
+                        homeVisit: formData.homeVisit,
+                        delivery: formData.delivery,
+                        user_type: user_type,
+                        premiumVersion: formData.premiumVersion,
+          
+                        // Add phone2 if present
+                        ...(formData.phone2 && { phone2: formData.phone2 }),
+          
+                        // Add paid version details if applicable
+                        ...(formData.paidVersion && {
+                          gst: formData.gst,
+                          pan_no: formData.pan_no,
+                          cin_no: formData.cin_no,
+                          ...(formData.msme && { msme: formData.msme }),
+                        }),
+          
+                        // Add member detail if paid version and merchant are true
+                        // ...(formData.paidVersion && formData.merchant && {
+                        //   member_detail: formData.member_detail,
+                        // }),
+                      };
+          
+                      setEshopData(postData);
+                      setOpenDialog(true);
+                      
+                    } catch (error) {
+                      if (error.response.data.error === 'duplicate key value violates unique constraint "users_phone_no_1_key"') {
+                        setSnackbar({
+                          open: true,
+                          message: 'The phone number you entered already exists. Please use a different phone number.',
+                          severity: 'error',
+                        });
+                      } else if (error.response.data.error.includes('Username') && error.response.data.error.includes('already exists')) {
+                        setSnackbar({
+                          open: true,
+                          message: 'Username already exists.',
+                          severity: 'error',
+                        });
+                      } else {
+                        setSnackbar({
+                          open: true,
+                          message: 'Error while submitting the form. Please try again.',
+                          severity: 'error',
+                        });
+                      }
+          
+                      console.error("Error submitting form:", error.response.data.error);
+                    }
+                  }
+                }
+              }
+            }else{
+              setSnackbar({ open: true, message: check_member_exists_resp?.message, severity: 'error' });
             }
-
-            setSnackbar({ open: true, message: 'Form submitted successfully!', severity: 'success' });
-            console.log('Form Data:', formData);
-            setLoading(false);
-
-            if (formData.premiumVersion) {
-              setTimeout(() => {
-                loggedIn ? navigate('../eshop') : navigate('../login');
-              }, 2500);
-            } else {
-              setTimeout(() => {
-                loggedIn ? navigate('../eshop') : navigate('../login');
-              }, 2500);
-            }
-            console.log(postData);
-            
-          } catch (error) {
-            if (error.response.data.error === 'duplicate key value violates unique constraint "users_phone_no_1_key"') {
-              setSnackbar({
-                open: true,
-                message: 'The phone number you entered already exists. Please use a different phone number.',
-                severity: 'error',
-              });
-            } else if (error.response.data.error.includes('Username') && error.response.data.error.includes('already exists')) {
-              setSnackbar({
-                open: true,
-                message: 'Username already exists.',
-                severity: 'error',
-              });
-            } else {
-              setSnackbar({
-                open: true,
-                message: 'Error while submitting the form. Please try again.',
-                severity: 'error',
-              });
-            }
-
-            console.error("Error submitting form:", error.response.data.error);
-          }
-        }
+      }catch(e){
+        console.error(e);
+      }finally{
+        setLoading(false);
       }
     }
   };
@@ -576,9 +631,10 @@ const BookEshopForm = () => {
           <Box className="form-group-switch">
             {renderFormField('Be a merchant', 'merchant', 'switch')}
           </Box>
-          {formData.merchant &&
-            renderFormField('', 'member_detail', 'text', '', 'Member username or Phone no.', undefined, <Button className="verify">verify</Button>, 'end')}
-          {formData.merchant && showMemberOtp && renderFormField('Member OTP:', 'member_otp', 'text')}
+          
+          {/* {formData.merchant &&
+            renderFormField('', 'member_detail', 'text', '', 'Member username or Phone no.')}
+          {formData.merchant && showMemberOtp && renderFormField('Member OTP:', 'member_otp', 'text')} */}
         </>
         }
 
@@ -599,6 +655,14 @@ const BookEshopForm = () => {
         ) : ("")
       }
 
+      <ConfirmationDialog
+        open={openDialog}
+        onClose={(e) => handleClose(eshopData)}
+        onConfirm={(e)=>handleConfirm(eshopData)}
+        title="Become a Merchant"
+        message={`Are you sure you want to become a merchant`}
+        optionalCname="logoutDialog"
+      />
 
       <CustomSnackbar
         open={snackbar.open}
