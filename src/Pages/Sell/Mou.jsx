@@ -12,6 +12,7 @@ import ProductSaleLastYear from '../../Components/Sell/MOU/ProductSaleLastYear';
 import EvaluationProcess from '../../Components/Sell/MOU/EvaluationProcess';
 import AwardProcess from '../../Components/Sell/MOU/AwardProcess';
 import SigningMou from '../../Components/Sell/MOU/SigningMou';
+import UserBadge from '../../UserBadge';
 
 export default function Mou() {
     const { owner } = useParams();
@@ -40,7 +41,12 @@ export default function Mou() {
         <Box className="mou_wrapper">
             <Box className="row">
                 <Box className="col">
-                <Button2 text={"Back"} redirectTo={`../${owner}/subscribe`}/>
+                    <UserBadge
+                        handleBadgeBgClick={`../${owner}/subscribe`}
+                        handleLogin="../login"
+                        handleLogoutClick="../../"
+                    />
+                {/* <Button2 text={"Back"} redirectTo={`../${owner}/subscribe`}/> */}
                     <Typography variant='h2' className='heading'>
                         <Typography variant='span' className="span_1">
                             MOU</Typography>
