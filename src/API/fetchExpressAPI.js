@@ -9,6 +9,7 @@ const SOCKET_SERVER_URL = process.env.REACT_APP_EXPRESS_API_LINK;
 
 export const initializeWebSocket = (roomId) => {
   const socket = io(SOCKET_SERVER_URL, {
+    path: "/socket.io",
     transports: ['websocket'],
   });
 
