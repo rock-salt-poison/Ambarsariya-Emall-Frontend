@@ -339,8 +339,8 @@ const handlePostSubmit = async (postData, shouldIncludeMember = true) => {
   const loggedIn = !!localStorage.getItem('access_token');
   try {
     setLoading(true);
-
-    const response = await postEshop(postData);
+    const updatedPostData = {...postData , merchant: shouldIncludeMember}
+    const response = await postEshop(updatedPostData);
     if (response) {
       const { user_access_token } = response;
       dispatch(setUserToken(user_access_token));
