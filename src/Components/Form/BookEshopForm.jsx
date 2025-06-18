@@ -345,6 +345,8 @@ const handlePostSubmit = async (postData, shouldIncludeMember = true) => {
       const { user_access_token } = response;
       dispatch(setUserToken(user_access_token));
       localStorage.setItem('accessToken', user_access_token);
+      console.log(user_access_token);
+      
 
       if (shouldIncludeMember) {
         const memberData = {
@@ -356,6 +358,8 @@ const handlePostSubmit = async (postData, shouldIncludeMember = true) => {
           longitude: formData.address?.longitude || formData.longitude,
           phone: formData.phone1,
           gender: formData.title === 'Mr.' ? 'Male' : 'Female',
+          is_merchant : true,
+          merchant_access_token : user_access_token
         };
 
         await postMemberData(memberData);

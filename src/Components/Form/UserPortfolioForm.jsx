@@ -46,7 +46,6 @@ const UserPortfolioForm = () => {
   const fetchMemberData = async (memberToken) => {
     setLoading(true);
     const user = await getMemberData(memberToken);
-    console.log(user);
     
     if(user){
       setMemberData(user[0]);
@@ -72,9 +71,10 @@ const UserPortfolioForm = () => {
   useEffect(()=>{
     const fetchData = async () => {
       if(token){
-        const user = (await getUser(token))[0];
-        if(user.user_type === "member"){
-          fetchMemberData(user.user_access_token);
+        const user = (await getUser(token));
+        const memberUser = user.find((u)=>u.member_id !== null);
+        if(memberUser?.user_type === "member" || memberUser?.user_type === "merchant"){
+          fetchMemberData(memberUser.user_access_token);
         }
       }
     }
@@ -181,8 +181,7 @@ const UserPortfolioForm = () => {
     setErrorMessages(newErrorMessages);
     return valid;
   };
-  console.log(errorMessages);
-  
+
   const [isUsernameOtpSent, setIsUsernameOtpSent] = useState(false);
   const [isPhoneOtpSent, setIsPhoneOtpSent] = useState(false);
   
@@ -258,7 +257,6 @@ const UserPortfolioForm = () => {
           dispatch(setUserTokenValid(true));
 
           const checkAccess = await get_checkGoogleAccess(formData?.username);
-        console.log(checkAccess);
         
               if (!checkAccess.accessGranted) {
                 setSnackbar({
