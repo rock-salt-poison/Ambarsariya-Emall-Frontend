@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, LinearProgress } from '@mui/material';
+import { Box, CircularProgress, LinearProgress } from '@mui/material';
 import Logo from '../Components/Home/Logo';
 import Clock from '../Components/Home/Clock';
 import Compass from '../Components/Home/Compass';
@@ -17,7 +17,7 @@ import TimeTablePopup from '../Components/Home/Popups/TimeTablePopup';
 import AQIPopup from '../Components/Home/Popups/AQIPopup';
 import { useNavigate } from 'react-router-dom';
 import LogoPopup from '../Components/Home/Popups/LogoPopup';
-import { useLoadingContext } from '../contexts/LoadingContext'; // Import the loading context
+// import { useLoadingContext } from '../contexts/LoadingContext'; // Import the loading context
 import LoadingIndicator from '../Components/LoadingIndicator';
 import { useSelector } from 'react-redux';
 import Button2 from '../Components/Home/Button2';
@@ -27,9 +27,10 @@ import UserBadge from '../UserBadge';
 
 export default function Home() {
     const navigate = useNavigate();
-    const { startLoading, stopLoading } = useLoadingContext(); // Use loading context functions
+    // const { startLoading, stopLoading } = useLoadingContext(); // Use loading context functions
     const [audio] = useState(new Audio(hornSound));
     const [openPopup, setOpenPopup] = useState(null);
+    const [loading, setLoading] = useState(false);
     const token = useSelector((state) => state.auth.userAccessToken);
     const [userType, setUserType] = useState('');
     const handleLogout = useLogout();
@@ -78,10 +79,9 @@ export default function Home() {
             }, 500);
 
             audio.play();
-            startLoading(); // Start global loading
+            setLoading(true); // Start global loading
 
             setTimeout(() => {
-                stopLoading(); // Stop global loading after 800ms
                 if (btnsParentElement.classList.contains('sell')) {
                     navigate('/sell');
                 }
@@ -91,17 +91,18 @@ export default function Home() {
                 else if (btnsParentElement.classList.contains('socialize')) {
                     navigate(token ? '/socialize':'/socialize/login');
                 }
+                setLoading(false); // Stop global loading after 800ms
             }, 1000);
         } else if (clockParentElement) {
             clockParentElement.parentElement.previousElementSibling.classList.add('reduceSize3');
             setTimeout(() => {
                 clockParentElement.parentElement.previousElementSibling.classList.remove('reduceSize3');
             }, 300);
-            startLoading();
+            setLoading(true);
 
             setTimeout(() => {
-                stopLoading();
                 navigate('/clock');
+                setLoading(false);
             }, 800);
             audio.play();
         }else if (noticeParentElement){
@@ -139,7 +140,7 @@ export default function Home() {
     return (
         <Box className="bg banner">
             {/* Global Loading Indicator */}
-            <LoadingIndicator />
+            {loading && <Box className="loading"><CircularProgress/></Box>}
 
             <Box className="row">
                 {/* Logo */}

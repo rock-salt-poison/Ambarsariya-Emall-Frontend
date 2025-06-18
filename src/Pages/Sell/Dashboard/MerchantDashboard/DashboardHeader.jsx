@@ -13,8 +13,6 @@ function DashboardHeader({data, setSelectedDate}) {
     const { token, edit } = useParams();
     const [ openPopup, setOpenPopup ] = useState(false);
     const navigate = useNavigate();
-
-    console.log('Header -----------------------', data);
     
     const handleClose = () => {
         setOpenPopup(false);

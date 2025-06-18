@@ -9,8 +9,6 @@ function EditableCalendar({business_establishment_date, setDate}) {
     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
   ];
 
-  console.log(business_establishment_date);
-  console.log('date ', new Date());
   
   
   const [value, setValue] = useState(new Date());
@@ -19,7 +17,6 @@ function EditableCalendar({business_establishment_date, setDate}) {
   const handleChange = (value) => {
     setValue(value);
     setDate(value);
-    console.log('Controlled Change', value);
   };
 
   const openDatePicker = () => {

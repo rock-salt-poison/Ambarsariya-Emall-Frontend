@@ -39,12 +39,13 @@ function DashboardComponents({ data, date }) {
       if (shop_no && date) {
         const selectedDate = date?.replace(/\//g, "-");
         const resp = await get_purchaseOrderNo(shop_no, selectedDate);
+      
         if (resp.valid) {
           setPurchasedOrders(resp.data);
         }
       }
     } catch (e) {
-      console.log(e);
+      console.log(e.response.data?.message)
       setPurchasedOrders([]);
     } finally {
       setLoading(false);

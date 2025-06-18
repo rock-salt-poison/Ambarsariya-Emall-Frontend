@@ -23,7 +23,6 @@ function SaleOrderTable({ seller_id }) {
     severity: "success",
   });
 
-  console.log('------------sale ', products);
 
 
   const fetch_products = async (seller_id) => {
@@ -100,7 +99,7 @@ function SaleOrderTable({ seller_id }) {
             {products.map((row, index) => {
               // fetch_product_variants(row.seller_id, row.variant_group);
               return (
-                <TableRow key={row.product_id} hover>
+                <TableRow key={index} hover>
                   <TableCell>{row.so_no}</TableCell>
 
                   {/* Product Name Column - Dropdown if on Hold */}

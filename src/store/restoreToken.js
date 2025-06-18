@@ -7,7 +7,6 @@ import {
 
 export const restoreTokens = (dispatch) => {
   const userToken = localStorage.getItem('accessToken');
-  console.log(userToken);
   
   if (userToken) {
     dispatch(setUserToken(userToken));

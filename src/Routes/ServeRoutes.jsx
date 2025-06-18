@@ -83,7 +83,7 @@ export default function ServeRoutes() {
       );
     }
 
-    if (checkUser === "shop") return shopElement;
+    if (checkUser === "shop" || checkUser === "merchant") return shopElement;
     if (checkUser === "member") return memberElement;
 
     return <Navigate to="../login" />;

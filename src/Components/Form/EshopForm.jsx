@@ -59,7 +59,6 @@ const EshopForm = () => {
         setSimilarOptions(resp);
         setKeyPlayers(resp);
       }
-      console.log(shopUsersData);
       
 
       if (shopUsersData) {
@@ -96,7 +95,7 @@ const EshopForm = () => {
         // const selected_key_players = selected_key_players_array.map((key_players)=>(key_players[0].business_name))
 
         const establishment_date_only =
-          shopUsersData.establishment_date.split("T")[0];
+          shopUsersData.establishment_date?.split("T")[0];
 
         const initialFormData = {
           business_name: shopUsersData.business_name || "",

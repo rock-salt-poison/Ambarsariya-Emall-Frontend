@@ -47,6 +47,7 @@ function SocializeRoutes() {
 
     if (checkUser === "shop") return shopElement;
     if (checkUser === "member") return memberElement;
+    if (checkUser === "merchant") return shopElement;
 
     return <Navigate to="../login" />;
   };

@@ -43,8 +43,6 @@ function PurchasedOrderTable({ purchasedOrders, selectedPO }) {
 
   const [soExists, setSoExists] = useState(false);
   const [total, setTotal] = useState(0.00);
-  console.log("products : ", products );
-  console.log("updated products : ", updatedProducts );
 
   const fetch_products = async (po_no) => {
     try {
@@ -60,11 +58,11 @@ function PurchasedOrderTable({ purchasedOrders, selectedPO }) {
 
           setProducts(resp.data);
           setUpdatedProducts(updatedData);
-          console.log(updatedData);
         }
+        
       }
     } catch (e) {
-      console.log(e);
+      // console.log(e);
       setProducts([]);
       setUpdatedProducts([]);
     } finally {
@@ -196,7 +194,6 @@ const handleConfirm = async (saleOrder) => {
   try {
       setLoading(true);
       const resp = await post_saleOrder(saleOrder);
-      console.log(resp);
       setSnackbar({
         open: true,
         message: resp.message,
@@ -310,7 +307,6 @@ useEffect(()=>{
     coupon_cost : couponCost
   };
 
-  console.log("Submitted Sale Order:", saleOrderData);
   setSaleOrder(saleOrderData);
   setOpenDialog(true);
 
@@ -373,7 +369,6 @@ useEffect(()=>{
     });
   };
 
-  console.log(products);
   
   return (
     <>
@@ -435,8 +430,7 @@ useEffect(()=>{
         </TableHead>
         <TableBody>
           {updatedProducts.map((row, index) => {
-            console.log(row);
-            
+           
             const isHold = toggleStates[index] === "Hold";
             const purchasedVariant = row.items
               ?.find((i) => i?.item_id?.match(row.selected_variant))

@@ -14,7 +14,7 @@ function DashboardForm({data}) {
   const [productsData, setProductsData] = useState([]);
   const [itemsData, setItemsData] = useState([]);
   const [skuData, setSKUData] = useState([]);
-  console.log(data);
+  // console.log(data);
   
 
   useEffect(() => {
@@ -87,8 +87,8 @@ function DashboardForm({data}) {
       const totalRacks = noOfWalls * noOfRacksPerWall;
       const availableRacks = itemsData?.[0]?.no_of_racks || 0;
     
-      console.log('total racks', totalRacks);
-      console.log('available racks', availableRacks);
+      // console.log('total racks', totalRacks);
+      // console.log('available racks', availableRacks);
       
       // Check if total racks do not exceed available racks
       if (totalRacks === availableRacks && noOfWalls > 0 && noOfRacksPerWall > 0) {
@@ -177,7 +177,7 @@ function DashboardForm({data}) {
 
   const handleDownload = async (e, name) => {
     if(name==="product_csv"){
-      console.log(`Checking Drive access for: ${data?.username}`);
+      // console.log(`Checking Drive access for: ${data?.username}`);
       setSnackbar({
         open: true,
         message: `Checking Drive access for: ${data?.username}`,
@@ -203,7 +203,7 @@ function DashboardForm({data}) {
       });
       // Step 2: Open Google Drive file
       const response = await post_open_file(data?.username);
-      console.log(response);
+      // console.log(response);
       
       setLoading(false);
       if (response.success) {
@@ -244,7 +244,7 @@ function DashboardForm({data}) {
             message: `${response.message}`,
             severity: "error",
           });
-          console.error("❌ Error:", response.message);
+          // console.error("❌ Error:", response.message);
         }
 
       }catch(e){
@@ -295,7 +295,7 @@ function DashboardForm({data}) {
   };
 
 
-  console.log(itemsData.length<=0 && isRackValid)
+  // console.log(itemsData.length<=0 && isRackValid)
   // Form fields configuration (for each form)
   const formFields = {
     form1: [
@@ -573,7 +573,6 @@ function DashboardForm({data}) {
         const response = await get_sheetsData(file);
         if (response.success) {
             const result = response.sheets;
-            console.log(result);
     
             let headers = []; // Declare headers outside
     
@@ -601,7 +600,6 @@ function DashboardForm({data}) {
                   return null; // Skip this row if no sheet is found
               }
                const product = {};
-                console.log(sheet);
                 
                 headers.forEach((header, index) => {
                     product[header] = row[index]?.trim() || ""; // Handle empty strings
@@ -661,7 +659,6 @@ function DashboardForm({data}) {
     
             const uniqueCategories = [...new Set(processedData.map(product => product.category))];
             const data = { products: processedData, categories: uniqueCategories };
-            console.log(data);
             
             try{
               setLoading(true);
@@ -696,13 +693,10 @@ function DashboardForm({data}) {
       try {
         const response = await get_sheetsData(file);
         if (response.success) {
-            const result = response.sheets;
-            console.log(result);
-    
+            const result = response.sheets;    
             let headers = []; // Declare headers outside
     
             const filteredData = result.map(sheet => {
-                console.log(sheet);
     
                 headers = sheet.data[0]; // Extract headers (first row)
     
@@ -725,7 +719,6 @@ function DashboardForm({data}) {
                 });
             }).flat();
     
-            console.log(filteredData);
     
             const processedData = filteredData.map((row, index) => {
               const sheet = result.find(sheet => sheet.data.includes(row)); 
@@ -735,7 +728,6 @@ function DashboardForm({data}) {
                   return null; // Skip this row if no sheet is found
               }
                const items = {};
-                console.log(sheet);
                 
                 headers.forEach((header, index) => {
                     items[header] = row[index]?.trim() || ""; // Handle empty strings
@@ -777,13 +769,10 @@ function DashboardForm({data}) {
     
             // const uniqueCategories = [...new Set(processedData.map(product => product.category))];
             const data = { items: processedData };
-            console.log(data);
             
             try{
               setLoading(true);
-              const resp = await post_items(data);
-              console.log(resp);
-              
+              const resp = await post_items(data);              
               setSnackbar({
                 open: true,
                 message: resp.message,
@@ -816,12 +805,10 @@ function DashboardForm({data}) {
         const response = await get_sheetsData(file);
         if (response.success) {
             const result = response.sheets;
-            console.log(result);
     
             let headers = []; // Declare headers outside
     
             const filteredData = result.map(sheet => {
-                console.log(sheet);
     
                 headers = sheet.data[0]; // Extract headers (first row)
     
@@ -833,7 +820,7 @@ function DashboardForm({data}) {
                 });
             }).flat();
     
-            console.log(filteredData);
+            // console.log(filteredData);
     
             const processedData = filteredData.map((row, index) => {
               const sheet = result.find(sheet => sheet.data.includes(row)); 
@@ -843,7 +830,7 @@ function DashboardForm({data}) {
                   return null; // Skip this row if no sheet is found
               }
                const sku = {};
-                console.log(sheet);
+                // console.log(sheet);
                 
                 headers.forEach((header, index) => {
                     sku[header] = row[index]?.trim() || ""; // Handle empty strings
@@ -942,13 +929,13 @@ function DashboardForm({data}) {
         const response = await get_sheetsData(file);
         if (response.success) {
           const result = response.sheets;
-          console.log(result);
+          // console.log(result);
     
           let headers = [];
     
           const filteredData = result
             .map((sheet) => {
-              console.log(sheet);
+              // console.log(sheet);
     
               headers = sheet.data[0]; // Extract headers (first row)
     
@@ -993,7 +980,7 @@ function DashboardForm({data}) {
           Promise.all(filteredData).then((allFilteredData) => {
             const finalFilteredData = allFilteredData.flat();
     
-            console.log(finalFilteredData);
+            // console.log(finalFilteredData);
     
             if (finalFilteredData.length === 0) {
               console.warn("No valid data to send. Skipping API call.");
@@ -1031,13 +1018,13 @@ function DashboardForm({data}) {
               .filter((item) => item !== null);
     
             const data = { rku_data: processedData };
-            console.log(data);
+            // console.log(data);
     
             try {
               setLoading(true);
               post_rku(data)
                 .then((resp) => {
-                  console.log(resp);
+                  // console.log(resp);
     
                   setSnackbar({
                     open: true,
