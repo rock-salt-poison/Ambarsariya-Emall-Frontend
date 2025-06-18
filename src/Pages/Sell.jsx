@@ -33,10 +33,10 @@ function Sell() {
           setLoading(true);
           const resp = await getUser(token);
           if (resp.length > 0) {
-            console.log(resp[0]);
+            console.log(resp);
 
             const shopUser = resp?.find((u)=> u.shop_no !== null);
-            const memberUser = resp?.find((u)=> u.member_id !== null);
+            const memberUser = resp?.find((u)=> u?.member_id !== null);
             
             if (shopUser?.shop_access_token) {
               const shopData = await getShopUserData(shopUser?.shop_access_token);
@@ -49,7 +49,7 @@ function Sell() {
                   setShopToken(shopData[0].shop_access_token);
                 }
               }
-            }  if (memberUser.member_id !== null) {
+            }  if (memberUser?.member_id !== null) {
               setValidMember(true);
             }
           }
