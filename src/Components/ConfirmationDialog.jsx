@@ -10,7 +10,7 @@ import {
   useTheme,
 } from "@mui/material";
 
-function ConfirmationDialog({ open, onClose, onConfirm, title, message, optionalCname }) {
+function ConfirmationDialog({ open, onClose, onConfirm, title, message, optionalCname, confirmBtnText = 'Confirm', closeBtnText = 'Close' }) {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm")); // Fullscreen on small screens
 
@@ -30,10 +30,10 @@ function ConfirmationDialog({ open, onClose, onConfirm, title, message, optional
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} className="cancel-btn">
-          Cancel
+          {closeBtnText}
         </Button>
         <Button onClick={onConfirm} autoFocus className="confirm-btn">
-          Confirm
+          {confirmBtnText}
         </Button>
       </DialogActions>
     </Dialog>

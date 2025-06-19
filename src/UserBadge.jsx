@@ -16,7 +16,7 @@ function UserBadge({
   handleLogin,
   handleLogoutClick,
   handleBadgeBgClick,
-  handleClose
+  handleClose, optionalDialogCname
 }) {
   const [userIcon, setUserIcon] = useState(null);
   const token = useSelector((state) => state.auth.userAccessToken);
@@ -123,7 +123,7 @@ function UserBadge({
         onConfirm={handleConfirmLogout}
         title="Confirm Logout"
         message="Are you sure you want to logout?"
-        optionalCname="logoutDialog"
+        optionalCname={`${optionalDialogCname ? `${optionalDialogCname} logoutDialog` : 'logoutDialog'}`}
       />
     </>
   );

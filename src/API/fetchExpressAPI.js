@@ -79,6 +79,17 @@ export const get_checkIfShopExists = async (username) => {
   }
 }
 
+export const get_checkIfPaidShopExists = async (username) => {
+  try {
+    if (username) {
+      const response = await axios.get(`${link}/sell/check-paid-shop-exists?username=${username}`, );
+      return response.data;
+    }
+  } catch (e) {
+    throw e;
+  }
+}
+
 export const postEshop = async (eshopData) => {
   try {
     const response = await axios.post(`${link}/sell/eshop`, eshopData);
@@ -235,6 +246,19 @@ export const postMemberData = async (userData) => {
     return response.data;
   } catch (error) {
     throw error
+  }
+};
+
+
+export const updateShopUserToMerchant = async (data) => {
+  try {
+    const response = await axios.put(
+      `${link}/sell/update-merchant`,
+      data
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
   }
 };
 

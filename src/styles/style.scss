@@ -22805,9 +22805,15 @@ textarea[readonly] {
 }
 
 .logoutDialog {
+
+  &.home{
+    .MuiDialog-paper{
+      background-color: #d17f42d9 !important;
+    }
+  }
   .MuiDialog-container {
     .MuiDialog-paper {
-      background-color: #d17f42d9;
+      background-color: rgba($dark-yellow, .9);
 
       #confirm-dialog {
         @include homepage-buttons("Bobby-Jones-Soft",
@@ -22828,17 +22834,40 @@ textarea[readonly] {
             "none"
           );
           @include hover-scale(1, 0s);
+
+          span{
+            @include homepage-buttons("Bobby-Jones-Soft",
+              18px,
+              $light-yellow,
+              "none"
+            );
+            @include hover-scale(1, 0s);
+
+            &.text-light{
+              color: $light-yellow;
+            }
+
+            &.text-dark{
+              color: $brown-4;
+            }
+          }
         }
       }
 
       .cancel-btn,
       .confirm-btn {
+        padding: 3px 15px;
         @include homepage-buttons("Bobby-Jones-Soft",
           18px,
           $light-blue-bg,
           "none"
         );
         @include hover-scale(1, 0s);
+        transition: all .3s linear;
+
+        &:hover{
+          background-color: rgba($dark-yellow2, .6);
+        }
       }
     }
   }
