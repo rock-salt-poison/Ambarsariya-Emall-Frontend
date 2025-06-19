@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Box, Typography, CircularProgress } from '@mui/material';
 import FormField from '../Form/FormField';
 import { useNavigate, useParams } from 'react-router-dom';
-import { postEshop, fetchDomains, fetchDomainSectors, fetchSectors, getShopUserData, getUser, send_otp_to_email, postMemberData, get_checkIfMemberExists, get_checkIfShopExists } from '../../API/fetchExpressAPI'
+import { postEshop, fetchDomains, fetchDomainSectors, fetchSectors, getShopUserData, getUser, send_otp_to_email, postMemberData, get_checkIfMemberExists, get_checkIfShopExists, updateShopUserToMerchant } from '../../API/fetchExpressAPI'
 import { useDispatch, useSelector } from 'react-redux';
 import { setShopToken, setShopTokenValid, setUserToken } from '../../store/authSlice';
 import CustomSnackbar from '../CustomSnackbar';
@@ -362,7 +362,24 @@ const handlePostSubmit = async (postData, shouldIncludeMember = true) => {
           merchant_access_token : user_access_token
         };
 
-        await postMemberData(memberData);
+        const resp = await postMemberData(memberData);
+
+        if(resp){
+          const updateData = {
+            user_access_token: resp?.user_access_token,
+            member_id: resp?.member_id,
+            is_merchant: resp?.isMerchant
+          }
+          const update_shop_merchant = await updateShopUserToMerchant(updateData);
+          if(update_shop_merchant){
+            setSnackbar({
+              open: true,
+              message: update_shop_merchant?.message,
+              severity: 'success',
+            });
+          }
+
+        }
       }
 
       setSnackbar({
