@@ -46,6 +46,7 @@ const BookEshopForm = () => {
   const [formData, setFormData] = useState(initialFormData);
   const [errors, setErrors] = useState({});
   const [errorMessages, setErrorMessages] = useState({});
+  const [shopUser, setShopUser] = useState({});
   const [showUsernameOtp, setShowUsernameOtp] = useState(false);
   const [showPhoneOtp, setShowPhoneOtp] = useState(false);
   const [showMemberOtp, setShowMemberOtp] = useState(false);
@@ -72,7 +73,9 @@ const BookEshopForm = () => {
     const response = await getShopUserData(shop_access_token);
     if (response && response.length > 0) {
       const data = response[0];
+      setShopUser(data);
       console.log(data);
+      
       
       // Fetch domains and sectors
       const domainResp = await fetchDomains();
@@ -338,11 +341,11 @@ const BookEshopForm = () => {
 
   console.log(formData?.address);
   
-const handlePostSubmit = async (postData, shouldIncludeMember = true) => {
+const handlePostSubmit = async (postData, shouldIncludeMember = true, is_merchant) => {
   const loggedIn = !!localStorage.getItem('access_token');
   try {
     setLoading(true);
-    const updatedPostData = {...postData , merchant: shouldIncludeMember}
+    const updatedPostData = {...postData , merchant: is_merchant ||  shouldIncludeMember || formData?.merchant}
     const response = await postEshop(updatedPostData);
     if (response) {
       const { user_access_token } = response;
@@ -350,7 +353,6 @@ const handlePostSubmit = async (postData, shouldIncludeMember = true) => {
       localStorage.setItem('accessToken', user_access_token);
       console.log(user_access_token);
       
-
       if (shouldIncludeMember) {
         const memberData = {
           name: formData.fullName,
@@ -436,137 +438,274 @@ const handleClose = async (postData) => {
 
 console.log(errorMessages);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if(formData?.username || formData?.phone1) {
-      try{
-        setLoading(true);
-        const check_shop_exists_resp = await get_checkIfShopExists(formData?.username);
-        if(check_shop_exists_resp?.exists === false){
-          const check_member_exists_resp = await get_checkIfMemberExists(formData?.username, formData?.phone1, formData?.phone2);
-          console.log(check_member_exists_resp);
-          
-              if(check_member_exists_resp?.exists===false){
-                if (!showUsernameOtp) {
-                  // Validate initial form fields
-                  if (validateInitialForm()) {
-                    // Show OTP fields if initial validation is successful
-                    try{
-                      const data ={
-                        username:formData.username,
-                      }
-                      setLoading(true);
-            
-                      const otp_resp = await send_otp_to_email(data)
-                      console.log(otp_resp)
-                      dispatch(setUsernameOtp(otp_resp.otp));
-                      setLoading(false);
-                      if(otp_resp.message === "OTP sent successfully"){
-                        setSnackbar({ open: true, message: 'OTP sent successfully. Please check and verify.', severity: 'success' });
-                      }else{
-                        setSnackbar({ open: true, message: 'Failed to send OTP. Try again.', severity: 'error' });
-                      }
-                        console.log('Form Data:', formData);
-            
-                    }catch(e){
-                      console.log(e);
-                      setLoading(false);
-                      setSnackbar({ open: true, message: 'Failed to send OTP. Try again.', severity: 'error' });
-                    }
-                    setShowUsernameOtp(true);
-                    setShowPhoneOtp(true);
-                    setShowMemberOtp(true);
-                  }
-                } else {
-                  // Validate OTP fields
-                  if (validateOtp()) {
-                    if (validateInitialForm()) {
-                      try {
-                        const selectedDomain = (await fetchDomains()).find(domain => domain.domain_name === formData.domain);
-                        const selectedSector = (await fetchSectors()).find(sector => sector.sector_name === formData.sector);
-            
-                        const postData = {
-                          title: formData.title,
-                          fullName: formData.fullName,
-                          username: (formData.username).toLowerCase(),
-                          password: formData.password,
-                          address: formData.address.description,
-                          latitude: formData.address?.latitude,
-                          longitude: formData.address?.longitude,
-                          phone1: formData.phone1,
-                          domain: selectedDomain?.domain_id,
-                          sector: selectedSector?.sector_id,
-                          domain_create: formData.domain_create ? formData.domain_create : '',
-                          sector_create: formData.sector_create ? formData.sector_create : '',
-                          onTime: formData.onTime,
-                          offTime: formData.offTime,
-                          paidVersion: formData.paidVersion,
-                          merchant: formData.merchant,
-                          pickup: formData.pickup,
-                          homeVisit: formData.homeVisit,
-                          delivery: formData.delivery,
-                          user_type: user_type,
-                          premiumVersion: formData.premiumVersion,
-            
-                          // Add phone2 if present
-                          ...(formData.phone2 && { phone2: formData.phone2 }),
-            
-                          // Add paid version details if applicable
-                          ...(formData.paidVersion && {
-                            gst: formData.gst,
-                            pan_no: formData.pan_no,
-                            cin_no: formData.cin_no,
-                            ...(formData.msme && { msme: formData.msme }),
-                          }),
-            
-                          // Add member detail if paid version and merchant are true
-                          // ...(formData.paidVersion && formData.merchant && {
-                          //   member_detail: formData.member_detail,
-                          // }),
-                        };
-            
-                        setEshopData(postData);
-                        setOpenDialog(true);
-                        
-                      } catch (error) {
-                        if (error.response.data.error === 'duplicate key value violates unique constraint "users_phone_no_1_key"') {
-                          setSnackbar({
-                            open: true,
-                            message: 'The phone number you entered already exists. Please use a different phone number.',
-                            severity: 'error',
-                          });
-                        } else if (error.response.data.error.includes('Username') && error.response.data.error.includes('already exists')) {
-                          setSnackbar({
-                            open: true,
-                            message: 'Username already exists.',
-                            severity: 'error',
-                          });
-                        } else {
-                          setSnackbar({
-                            open: true,
-                            message: error.response.data.error,
-                            severity: 'error',
-                          });
-                        }
-            
-                        console.error("Error submitting form:", error.response.data.error);
-                      }
-                    }
-                  }
-                }
-              }else{
-                setSnackbar({ open: true, message: check_member_exists_resp?.message, severity: 'error' });
-              }
-        }else{
-          setSnackbar({ open: true, message: check_shop_exists_resp?.message, severity: 'error' });
+const proceedOtpAndPostData = async () => {
+  if (!showUsernameOtp) {
+    if (validateInitialForm()) {
+      try {
+        const data = { username: formData.username };
+        const otp_resp = await send_otp_to_email(data);
+
+        dispatch(setUsernameOtp(otp_resp.otp));
+        setShowUsernameOtp(true);
+        setShowPhoneOtp(true);
+        setShowMemberOtp(true);
+
+        if (otp_resp.message === "OTP sent successfully") {
+          setSnackbar({ open: true, message: 'OTP sent successfully. Please check and verify.', severity: 'success' });
+        } else {
+          setSnackbar({ open: true, message: 'Failed to send OTP. Try again.', severity: 'error' });
         }
-      }catch(e){
-        console.error(e);
-      }finally{
-        setLoading(false);
+      } catch (e) {
+        console.log(e);
+        setSnackbar({ open: true, message: 'Failed to send OTP. Try again.', severity: 'error' });
       }
     }
-  };
+  } else {
+    if (validateOtp() && validateInitialForm()) {
+      try {
+        const selectedDomain = (await fetchDomains()).find(domain => domain.domain_name === formData.domain);
+        const selectedSector = (await fetchSectors()).find(sector => sector.sector_name === formData.sector);
+
+        const postData = {
+          title: formData.title,
+          fullName: formData.fullName,
+          username: formData.username.toLowerCase(),
+          password: formData.password,
+          address: formData.address.description,
+          latitude: formData.address?.latitude,
+          longitude: formData.address?.longitude,
+          phone1: formData.phone1,
+          domain: selectedDomain?.domain_id,
+          sector: selectedSector?.sector_id,
+          domain_create: formData.domain_create || '',
+          sector_create: formData.sector_create || '',
+          onTime: formData.onTime,
+          offTime: formData.offTime,
+          paidVersion: formData.paidVersion,
+          merchant: formData.merchant,
+          pickup: formData.pickup,
+          homeVisit: formData.homeVisit,
+          delivery: formData.delivery,
+          user_type: user_type,
+          premiumVersion: formData.premiumVersion,
+          shop_access_token: shopUser?.shop_access_token || null,
+          ...(formData.phone2 && { phone2: formData.phone2 }),
+          ...(formData.paidVersion && {
+            gst: formData.gst,
+            pan_no: formData.pan_no,
+            cin_no: formData.cin_no,
+            ...(formData.msme && { msme: formData.msme }),
+          }),
+        };
+
+        
+        if(formData?.merchant){
+          setEshopData(postData);
+          handlePostSubmit(postData, false, false)
+        }else{
+          setOpenDialog(true);
+          setEshopData(postData);
+        }
+      } catch (error) {
+        if (error.response.data.error === 'duplicate key value violates unique constraint "users_phone_no_1_key"') {
+          setSnackbar({
+            open: true,
+            message: 'The phone number you entered already exists. Please use a different phone number.',
+            severity: 'error',
+          });
+        } else if (error.response.data.error.includes('Username') && error.response.data.error.includes('already exists')) {
+          setSnackbar({
+            open: true,
+            message: 'Username already exists.',
+            severity: 'error',
+          });
+        } else {
+          setSnackbar({
+            open: true,
+            message: error.response.data.error,
+            severity: 'error',
+          });
+        }
+
+        console.error("Error submitting form:", error.response.data.error);
+      }
+    }
+  }
+};
+
+
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  if (formData?.username || formData?.phone1) {
+    try {
+      setLoading(true);
+
+      // Only check for existing shop/member if shop_access_token is NOT present
+      if (!shopUser?.shop_access_token) {
+        const check_shop_exists_resp = await get_checkIfShopExists(formData?.username);
+        if (check_shop_exists_resp?.exists === false) {
+          const check_member_exists_resp = await get_checkIfMemberExists(
+            formData?.username,
+            formData?.phone1,
+            formData?.phone2
+          );
+
+          if (check_member_exists_resp?.exists === false) {
+            // Proceed to OTP logic and final postData construction
+            await proceedOtpAndPostData();
+          } else {
+            setSnackbar({ open: true, message: check_member_exists_resp?.message, severity: 'error' });
+          }
+        } else {
+          setSnackbar({ open: true, message: check_shop_exists_resp?.message, severity: 'error' });
+        }
+      } else {
+        // Bypass existence check, directly proceed to OTP logic and postData construction
+        await proceedOtpAndPostData();
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  }
+};
+
+
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   if(formData?.username || formData?.phone1) {
+  //     try{
+  //       setLoading(true);
+  //       const check_shop_exists_resp = await get_checkIfShopExists(formData?.username);
+  //       if(check_shop_exists_resp?.exists === false){
+  //         const check_member_exists_resp = await get_checkIfMemberExists(formData?.username, formData?.phone1, formData?.phone2);
+  //         console.log(check_member_exists_resp);
+          
+  //             if(check_member_exists_resp?.exists===false){
+  //               if (!showUsernameOtp) {
+  //                 // Validate initial form fields
+  //                 if (validateInitialForm()) {
+  //                   // Show OTP fields if initial validation is successful
+  //                   try{
+  //                     const data ={
+  //                       username:formData.username,
+  //                     }
+  //                     setLoading(true);
+            
+  //                     const otp_resp = await send_otp_to_email(data)
+  //                     console.log(otp_resp)
+  //                     dispatch(setUsernameOtp(otp_resp.otp));
+  //                     setLoading(false);
+  //                     if(otp_resp.message === "OTP sent successfully"){
+  //                       setSnackbar({ open: true, message: 'OTP sent successfully. Please check and verify.', severity: 'success' });
+  //                     }else{
+  //                       setSnackbar({ open: true, message: 'Failed to send OTP. Try again.', severity: 'error' });
+  //                     }
+  //                       console.log('Form Data:', formData);
+            
+  //                   }catch(e){
+  //                     console.log(e);
+  //                     setLoading(false);
+  //                     setSnackbar({ open: true, message: 'Failed to send OTP. Try again.', severity: 'error' });
+  //                   }
+  //                   setShowUsernameOtp(true);
+  //                   setShowPhoneOtp(true);
+  //                   setShowMemberOtp(true);
+  //                 }
+  //               } else {
+  //                 // Validate OTP fields
+  //                 if (validateOtp()) {
+  //                   if (validateInitialForm()) {
+  //                     try {
+  //                       const selectedDomain = (await fetchDomains()).find(domain => domain.domain_name === formData.domain);
+  //                       const selectedSector = (await fetchSectors()).find(sector => sector.sector_name === formData.sector);
+            
+  //                       const postData = {
+  //                         title: formData.title,
+  //                         fullName: formData.fullName,
+  //                         username: (formData.username).toLowerCase(),
+  //                         password: formData.password,
+  //                         address: formData.address.description,
+  //                         latitude: formData.address?.latitude,
+  //                         longitude: formData.address?.longitude,
+  //                         phone1: formData.phone1,
+  //                         domain: selectedDomain?.domain_id,
+  //                         sector: selectedSector?.sector_id,
+  //                         domain_create: formData.domain_create ? formData.domain_create : '',
+  //                         sector_create: formData.sector_create ? formData.sector_create : '',
+  //                         onTime: formData.onTime,
+  //                         offTime: formData.offTime,
+  //                         paidVersion: formData.paidVersion,
+  //                         merchant: formData.merchant,
+  //                         pickup: formData.pickup,
+  //                         homeVisit: formData.homeVisit,
+  //                         delivery: formData.delivery,
+  //                         user_type: user_type,
+  //                         premiumVersion: formData.premiumVersion,
+  //                         shop_access_token: shopUser?.shop_access_token || null,
+  //                         // Add phone2 if present
+  //                         ...(formData.phone2 && { phone2: formData.phone2 }),
+            
+  //                         // Add paid version details if applicable
+  //                         ...(formData.paidVersion && {
+  //                           gst: formData.gst,
+  //                           pan_no: formData.pan_no,
+  //                           cin_no: formData.cin_no,
+  //                           ...(formData.msme && { msme: formData.msme }),
+  //                         }),
+            
+  //                         // Add member detail if paid version and merchant are true
+  //                         // ...(formData.paidVersion && formData.merchant && {
+  //                         //   member_detail: formData.member_detail,
+  //                         // }),
+  //                       };
+            
+  //                       setEshopData(postData);
+  //                       setOpenDialog(true);
+                        
+  //                     } catch (error) {
+  //                       if (error.response.data.error === 'duplicate key value violates unique constraint "users_phone_no_1_key"') {
+  //                         setSnackbar({
+  //                           open: true,
+  //                           message: 'The phone number you entered already exists. Please use a different phone number.',
+  //                           severity: 'error',
+  //                         });
+  //                       } else if (error.response.data.error.includes('Username') && error.response.data.error.includes('already exists')) {
+  //                         setSnackbar({
+  //                           open: true,
+  //                           message: 'Username already exists.',
+  //                           severity: 'error',
+  //                         });
+  //                       } else {
+  //                         setSnackbar({
+  //                           open: true,
+  //                           message: error.response.data.error,
+  //                           severity: 'error',
+  //                         });
+  //                       }
+            
+  //                       console.error("Error submitting form:", error.response.data.error);
+  //                     }
+  //                   }
+  //                 }
+  //               }
+  //             }else{
+  //               setSnackbar({ open: true, message: check_member_exists_resp?.message, severity: 'error' });
+  //             }
+  //       }else{
+  //         setSnackbar({ open: true, message: check_shop_exists_resp?.message, severity: 'error' });
+  //       }
+  //     }catch(e){
+  //       console.error(e);
+  //     }finally{
+  //       setLoading(false);
+  //     }
+  //   }
+  // };
 
 
   const [domains, setDomains] = useState([]);
