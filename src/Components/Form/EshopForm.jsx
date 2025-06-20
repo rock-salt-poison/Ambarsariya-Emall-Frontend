@@ -39,6 +39,7 @@ const EshopForm = () => {
   const user_access_token = useSelector((state) => state.auth.userAccessToken);
   const updatedFields = useSelector((state) => state.updatedFields);
   const dispatch = useDispatch();
+  const [eshop, setEshop] = useState('');
 
   const coupons = useSelector((state) => state.coupon);
   const [snackbar, setSnackbar] = useState({
@@ -126,10 +127,13 @@ const EshopForm = () => {
       if (user_access_token) {
         try{
           setLoading(true);
-          let shop_token = (await getUser(user_access_token))[0]
-          .shop_access_token;
-          if (shop_token) {
-            fetchOtherShops(shop_token);
+          let users = (await getUser(user_access_token));
+          let shop = users.find((u)=>u.shop_no !== null);
+          console.log(shop);
+          
+          if (shop?.shop_access_token) {
+            setEshop(shop);
+            fetchOtherShops(shop?.shop_access_token);
           }
         }catch(e){
           console.log(e);
@@ -215,6 +219,7 @@ const EshopForm = () => {
     setErrorMessages(newErrorMessages);
     return valid;
   };
+  console.log(eshop);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -268,9 +273,10 @@ const EshopForm = () => {
           setLoading(true);
           // Call the function to update e-shop data
           const data = (await getUser(userAccessToken))[0];
-          console.log(data)
-          if (data.shop_access_token) {
-            const response = await updateEshopData(updatedPostData, data.shop_access_token);
+          console.log(eshop);
+          
+          if (eshop?.shop_access_token) {
+            const response = await updateEshopData(updatedPostData, eshop?.shop_access_token);
 
             if (response.message) {
               const validityStart = new Date();
@@ -292,7 +298,7 @@ const EshopForm = () => {
               };
             
               console.log(coupons_data)
-              const discount_coupons = await post_discount_coupons(coupons_data, data.shop_no);
+              const discount_coupons = await post_discount_coupons(coupons_data, eshop.shop_no);
 
               console.log(discount_coupons)
             }
@@ -307,7 +313,7 @@ const EshopForm = () => {
             
             // Navigate to the shop page after a successful submission
             setTimeout(() => {
-              navigate(`../support/shop/shop-detail/${data.shop_access_token}`);
+              navigate(`../support/shop/shop-detail/${eshop.shop_access_token}`);
             }, 2500);
           }
         } catch (error) {

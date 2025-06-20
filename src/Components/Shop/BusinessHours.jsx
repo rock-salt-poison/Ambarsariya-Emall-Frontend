@@ -22,8 +22,8 @@ function BusinessHours({ data }) {
     },[token]);
   
     const fetch_user = async (token) => {
-      const res = await getUser(token);
-      if(data.shop_access_token === res[0].shop_access_token){
+      const res = (await getUser(token))?.find((u)=>u.shop_no !== null);
+      if(data.shop_access_token === res?.shop_access_token){
         setOpenDashboard(true);
       }else {
         setOpenDashboard(false);

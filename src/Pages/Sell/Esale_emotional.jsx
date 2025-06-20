@@ -86,13 +86,13 @@ function Esale_emotional() {
 
   const fetchCurrentUserData = async (token) => {
     if(token){
-      const resp = await getUser(token);
-      if(resp?.[0].user_type === "member"){
-        setMemberId(resp?.[0]?.member_id);
-        console.log(resp?.[0]?.member_id);
+      const resp = (await getUser(token))?.find(u => u?.member_id !== null);
+      if(resp?.user_type === "member" || resp?.user_type === "merchant"){
+        setMemberId(resp?.member_id);
+        console.log(resp?.member_id);
         
 
-        const emotionalresp = await get_memberEmotional(resp?.[0]?.member_id);
+        const emotionalresp = await get_memberEmotional(resp?.member_id);
         if(emotionalresp?.valid){
           setData(emotionalresp?.data?.[0]);
           console.log(emotionalresp?.data?.[0]);

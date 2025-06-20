@@ -21,7 +21,7 @@ function BuyEshop(props) {
   useEffect(()=>{
     const fetchShopToken = async () => {
       if(user_access_token){
-        const shop_token = (await getUser(user_access_token))[0].shop_access_token;
+        const shop_token = (await getUser(user_access_token))?.find((u)=>u?.shop_no !== null)?.shop_access_token;
   
         if(shop_token){
           setShopAccessToken(shop_token);

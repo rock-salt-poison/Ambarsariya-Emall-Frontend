@@ -48,9 +48,9 @@ const fetchCurrentUserData = async (token) => {
         if (token) {
           try {
             setLoading(true);
-            const resp = await getUser(token);
-            if (resp?.[0].user_type === "member") {
-              const userData = resp?.[0];
+            const resp = (await getUser(token))?.find(u=> u?.member_id !== null);
+            if (resp?.user_type === "member" || resp?.user_type === "merchant") {
+              const userData = resp;
               setUser(userData);
 
               const relationsResp = await fetchMemberEvents(

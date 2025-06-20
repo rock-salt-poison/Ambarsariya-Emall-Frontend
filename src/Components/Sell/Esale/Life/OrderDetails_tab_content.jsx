@@ -61,9 +61,9 @@ function OrderDetails_tab_content({ title }) {
       const fetchUserType = async () => {
         try {
           setLoading(true);
-          const userData = (await getUser(token))?.[0];
+          const userData = (await getUser(token))?.find((u)=>u.member_id !== null);
 
-          if (userData.user_type === "member") {
+          if (userData.user_type === "member" || userData.user_type === "merchant") {
             fetchPurchasedOrder(userData.user_id);
           }
         } catch (e) {

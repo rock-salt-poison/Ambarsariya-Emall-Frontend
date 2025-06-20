@@ -72,7 +72,8 @@ const BookEshopForm = () => {
     const response = await getShopUserData(shop_access_token);
     if (response && response.length > 0) {
       const data = response[0];
-  
+      console.log(data);
+      
       // Fetch domains and sectors
       const domainResp = await fetchDomains();
       const sectors = await fetchSectors();
@@ -119,6 +120,8 @@ const BookEshopForm = () => {
     }
   };
   
+  console.log(formData);
+  
 
   useEffect(() => {
     const initializeForm = async () => {
@@ -132,7 +135,7 @@ const BookEshopForm = () => {
 
         // Fetch data if token exists
         if (token) {
-          let shop_token = (await getUser(token))[0].shop_access_token;
+          let shop_token = (await getUser(token))?.find((u)=>u.shop_no !== null)?.shop_access_token;
           if (shop_token) {
             await fetchUserAndShopData(shop_token);
           }

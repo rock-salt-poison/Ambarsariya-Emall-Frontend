@@ -7669,6 +7669,7 @@ a {
         .shop_name_container {
           @include full-absolute(5px, 95px, 81%, 85px);
           @include flex-center(row, center);
+          filter: drop-shadow(1px 1px 0px #155626);
         }
 
         .shop_name {
@@ -7685,12 +7686,17 @@ a {
           -webkit-text-fill-color: transparent;
           background-clip: text;
           pointer-events: none;
+          -webkit-text-stroke: .3px #165327;
+          text-stroke: .3px #165327;
+          letter-spacing: 0.3px;
+          line-height: 17px;
 
           &::before {
             content: attr(data-content);
             @include full-absolute(0px, 0px, 0px, 0px);
             z-index: -1;
-            text-shadow: -3px 3px 0px #000;
+            text-shadow: 0px 0px 0px #155626;
+            filter: drop-shadow(0px 0px 1px black);
           }
         }
 

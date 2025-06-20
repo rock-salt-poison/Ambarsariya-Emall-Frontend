@@ -85,9 +85,9 @@ export default function CustomPaginationTable({rows}) {
     const validUser = async () => {
       if(loggedInUserToken && token){
         try{
-          const fetch_details = await getUser(loggedInUserToken);
-          if(fetch_details[0].shop_access_token){
-            if(fetch_details[0].shop_access_token === token){
+          const fetch_details = (await getUser(loggedInUserToken))?.find((u)=>u.shop_no !==null);
+          if(fetch_details.shop_access_token){
+            if(fetch_details.shop_access_token === token){
               setCanBuy(false);
             }
           }
@@ -273,8 +273,12 @@ console.log('----------', selectedProducts);
   const handleBuyClick = async (loggedInUserToken) => {
     if(loggedInUserToken){
       try{
-        const userType = (await getUser(loggedInUserToken))?.[0]?.user_type;
-        if(userType === 'member' || userType ==='shop'){
+        const users= (await getUser(loggedInUserToken));
+        const matchedUser = users.find(user => ['member', 'shop', 'merchant'].includes(user.user_type));
+        console.log(matchedUser);
+        
+
+        if(matchedUser){
           navigate(`../shop/${token}/cart`);
         }else{
           navigate(`../login`);

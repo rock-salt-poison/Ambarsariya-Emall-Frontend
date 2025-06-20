@@ -102,8 +102,8 @@ function User_Portfolio(props) {
     useEffect(()=>{
       const fetchData = async () => {
         if(token){
-          const user = (await getUser(token))[0];
-          if(user.user_type === "member"){
+          const user = (await getUser(token))?.find(u=>u?.member_id !== null);
+          if(user.user_type === "member" || user.user_type === "merchant"){
             fetchMemberData(user.user_access_token);
           }
         }

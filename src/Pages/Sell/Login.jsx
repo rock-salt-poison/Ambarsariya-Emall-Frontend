@@ -19,7 +19,7 @@ function Login() {
     try {
       const resp = await getUser(token);
       if (resp.length > 0) {
-        const shopToken = resp[0].shop_access_token;
+        const shopToken = resp?.find((u) => u?.shop_no !== null)?.shop_access_token;
         const getShopDetails = await getShopUserData(shopToken);
 
         if (

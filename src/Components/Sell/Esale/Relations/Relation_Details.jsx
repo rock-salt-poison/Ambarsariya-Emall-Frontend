@@ -7,11 +7,13 @@ import {
   Typography,
 } from "@mui/material";
 import createCustomTheme from "../../../../styles/CustomSelectDropdownTheme";
-import { delete_memberRelation, get_memberRelationDetail, get_memberRelations, getUser } from "../../../../API/fetchExpressAPI";
+import {
+  get_memberRelationDetail,
+} from "../../../../API/fetchExpressAPI";
 import CustomSnackbar from "../../../CustomSnackbar";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 function Relation_Details({ data, goBack }) {
   const themeProps = {
@@ -30,34 +32,30 @@ function Relation_Details({ data, goBack }) {
   const token = useSelector((state) => state.auth.userAccessToken);
   const [relation, setRelation] = useState([]);
 
-  const handleCardClick = async (relation) => {
-    
-  }
+  const handleCardClick = async (relation) => {};
 
   const fetch_relationDetails = async (member_id, access_token) => {
-    try{
+    try {
       setLoading(true);
       const resp = await get_memberRelationDetail(member_id, access_token);
       console.log(resp);
-      if(resp.valid){
+      if (resp.valid) {
         console.log(resp.data);
         setRelation(resp.data?.[0]);
       }
-    }catch(e){
+    } catch (e) {
       console.log(e);
-    }finally{
+    } finally {
       setLoading(false);
     }
-  }
+  };
 
-  useEffect(()=> {
-    if(data){
-      fetch_relationDetails(data?.member_id, data?.access_token)
+  useEffect(() => {
+    if (data) {
+      fetch_relationDetails(data?.member_id, data?.access_token);
     }
   }, [data]);
-console.log(data);
-
-  
+  console.log(data);
 
   return (
     <ThemeProvider theme={theme}>
@@ -68,16 +66,16 @@ console.log(data);
       )}
       {relation && (
         <Box className="cards_container">
-          <Link
-            key={relation.id}
-            className="back"
-            onClick={goBack}
-          > 
-            <ArrowBackIcon/> Back
+          <Link key={relation.id} className="back" onClick={goBack}>
+            <ArrowBackIcon /> Back
           </Link>
           <Box className="col-auto">
             <Typography className="label">Relation</Typography>
-            <Typography className="label">{relation.relation !== 'Others' ? relation.relation : relation.other_relation}</Typography>
+            <Typography className="label">
+              {relation.relation !== "Others"
+                ? relation.relation
+                : relation.other_relation}
+            </Typography>
           </Box>
           <Box className="col-auto">
             <Typography className="label">Name of the place</Typography>
@@ -93,11 +91,15 @@ console.log(data);
           </Box>
           <Box className="col-auto">
             <Typography className="label">On going / left</Typography>
-            <Typography className="label">{relation.ongoing_or_left}</Typography>
+            <Typography className="label">
+              {relation.ongoing_or_left}
+            </Typography>
           </Box>
           <Box className="col-auto">
             <Typography className="label">People</Typography>
-            <Typography className="label">{relation.people?.map((people)=> people.name)?.join(', ')}</Typography>
+            <Typography className="label">
+              {relation.people?.map((people) => people.name)?.join(", ")}
+            </Typography>
           </Box>
           <Box className="col-auto">
             <Typography className="label">Name of group</Typography>
@@ -109,10 +111,12 @@ console.log(data);
           </Box>
           <Box className="col-auto">
             <Typography className="label">Member Phone no</Typography>
-            <Typography className="label">{relation.member_phone_no}</Typography>
+            <Typography className="label">
+              {relation.member_phone_no}
+            </Typography>
           </Box>
         </Box>
-      ) }
+      )}
       <CustomSnackbar
         open={snackbar.open}
         handleClose={() => setSnackbar({ ...snackbar, open: false })}

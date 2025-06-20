@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { TextField, Button, Box, IconButton, InputAdornment } from '@mui/material';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { TextField, Box, IconButton, InputAdornment } from '@mui/material';
+import { Link, useNavigate } from 'react-router-dom';
 // import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIcon from '@mui/icons-material/ArrowBackIos';
 import lock_icon from '../../Utils/images/Sell/login/lock_icon.svg';
 import tag_chain_icon from '../../Utils/images/Sell/login/tag_chain_icon.svg';
 import input_img from '../../Utils/images/Sell/login/input_bg.svg';
-import { authenticateUser, getUser } from '../../API/fetchExpressAPI';
-import { setShopToken, setUserToken, setShopTokenValid, setUserTokenValid, setMemberTokenValid, setMemberToken } from '../../store/authSlice'; 
+import { authenticateUser } from '../../API/fetchExpressAPI';
+import { setUserToken, setUserTokenValid } from '../../store/authSlice'; 
 import { useDispatch, useSelector } from 'react-redux';
 import CustomSnackbar from '../CustomSnackbar';
 import Visibility from '@mui/icons-material/Visibility';

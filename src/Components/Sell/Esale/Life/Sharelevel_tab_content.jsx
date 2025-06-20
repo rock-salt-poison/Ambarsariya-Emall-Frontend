@@ -29,8 +29,8 @@ function Sharelevel_tab_content({ title, communityData }) {
   useEffect(() => {
     const fetchData = async () => {
       if (token) {
-        const user = (await getUser(token))[0];
-        if (user.user_type === 'member') {
+        const user = (await getUser(token))?.find((u)=>u.member_id !== null);
+        if (user.user_type === 'member' || user.user_type === 'merchant') {
           console.log('User:', user);
           setMember(user);
         }

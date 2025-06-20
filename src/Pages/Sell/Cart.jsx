@@ -177,17 +177,18 @@ function Cart() {
       }
   
       const get_logged_in_user = await getUser(token);
-      if (get_logged_in_user.length > 0) {
-        const user = get_logged_in_user[0];
-        if (user.user_type === 'member') {
-          const memberData = await getMemberData(user.user_access_token);
+      if (get_logged_in_user) {
+        const memberUser = get_logged_in_user?.find((u)=>u?.member_id !== null);
+        const shopUser = get_logged_in_user?.find((u)=>u?.shop_no !== null);
+        if (memberUser?.user_type === 'member' || memberUser?.user_type === 'merchant') {
+          const memberData = await getMemberData(memberUser?.user_access_token);
           if (memberData.length > 0) {
             buyerDataFetched = memberData[0];
             setBuyerData(memberData[0]);
           }
         } 
-        if (user.user_type === 'shop') {
-          const shopData = await getShopUserData(user.shop_access_token);
+        if (shopUser.user_type === 'shop') {
+          const shopData = await getShopUserData(shopUser.shop_access_token);
           if (shopData.length > 0) {
             buyerDataFetched = shopData[0];
             setBuyerData(shopData[0]);
