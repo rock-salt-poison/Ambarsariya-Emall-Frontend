@@ -16,6 +16,7 @@ function IdentifyItem() {
 
     const [formData, setFormData] = useState(initialData);
     const [errors, setErrors] = useState({});
+    const [vendors, setVendors] = useState([]);
     const [loading, setLoading] = useState(false);
     const products = useSelector((state) => state.cart.selectedProducts);
 
@@ -42,7 +43,7 @@ function IdentifyItem() {
             label: 'Select vendor(s)',
             name: 'vendors',
             type: 'select-check',
-            options:['Vendor 1', 'Vendor 2', 'Vendor 3', 'Vendor 4', 'Vendor 5','Vendor 6', 'Vendor 7','Vendor 8','Vendor 9','Vendor 10'],
+            options:vendors?.map((v)=>v.shop_no),
         },
         {
             id: 4,
@@ -79,6 +80,7 @@ function IdentifyItem() {
                     
                     if(resp?.valid){
                         console.log(resp.data);
+                        setVendors(resp?.data);
                     }
                     
                 }catch(e){
