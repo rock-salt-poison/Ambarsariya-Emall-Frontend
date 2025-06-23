@@ -247,7 +247,8 @@ useEffect(()=>{
 
   const product_data = updatedProducts[0]; // assuming all share same PO meta
   const stockUpdates = calculateUpdatedStock(products, updatedProducts); 
-
+  console.log(product_data);
+  
 
   const soProducts = updatedProducts.map((p) => ({
     product_id: p.product_id,
@@ -304,11 +305,22 @@ useEffect(()=>{
     after_due_date_surcharges_per_day: null,
     status: headerToggleState,
     send_qr_upi_bank_details: true,
-    coupon_cost : couponCost
+    coupon_cost : couponCost,
+    buyer_shop_no : null,
+    buyer_merchant_id: null,
+    seller_member_id: null,
+    seller_merchant_id: null,
+    payment_status: null,
+    buyer_name: null,
+    buyer_phone_no: null,
+    sector: null,
+    category : null
   };
 
+  console.log(saleOrderData);
+  
   setSaleOrder(saleOrderData);
-  setOpenDialog(true);
+  // setOpenDialog(true);
 
     
   };

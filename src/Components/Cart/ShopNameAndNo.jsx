@@ -6,10 +6,10 @@ import { getShopUserData } from "../../API/fetchExpressAPI";
 function ShopNameAndNo({token}) {
 
     const [data, setData] = useState(null);
-      const navigate = useNavigate();
+    const navigate = useNavigate();
     
-      const [loading, setLoading] = useState(false);
-useEffect(() => {
+    const [loading, setLoading] = useState(false);
+    useEffect(() => {
     if (!token) {
       navigate("../login");
       return;
@@ -36,17 +36,17 @@ useEffect(() => {
 
   return (
     <>
-    {data && <Typography variant="h2" className="heading">
-      <Typography variant="span" className="span_1">
+    <Typography variant="h2" className="heading">
+      {data?.business_name && <Typography variant="span" className="span_1">
         {data?.business_name}
-      </Typography>
-      <Typography variant="span" className="span_1">
+      </Typography>}
+      {data?.shop_no && <Typography variant="span" className="span_1">
         Shop No:
         <Typography variant="span" className="span_2">
         {(data?.shop_no)?.split('_')?.[1]}
         </Typography>
-      </Typography>
-    </Typography>}
+      </Typography>}
+    </Typography>
     
     </>
   );

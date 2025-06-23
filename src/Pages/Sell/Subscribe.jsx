@@ -43,7 +43,7 @@ function Subscribe() {
         <Box className="row">
           <Box className="col">
             <Box></Box>
-            <Box></Box>
+            {/* <Box></Box> */}
             {/* <Button2 text={"Back"} redirectTo={`../${owner}/like-and-share`}/> */}
             <ShopNameAndNo token={owner}/>
             <UserBadge

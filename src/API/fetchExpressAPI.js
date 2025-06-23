@@ -1242,3 +1242,15 @@ export const get_shop_product_items = async (product_id) => {
   }
 }
 
+export const get_category_wise_shops = async (category) => {
+  try {
+    if (category) {
+      console.log(category);
+      
+      const response = await axios.get(`${link}/category-wise-shops?category=${category?.join(',')}`);
+      return response.data;
+    }
+  } catch (e) {
+    throw e;
+  }
+}

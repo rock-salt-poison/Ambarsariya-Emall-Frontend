@@ -187,14 +187,17 @@ function Cart() {
             setBuyerData(memberData[0]);
           }
         } 
-        if (shopUser.user_type === 'shop') {
-          const shopData = await getShopUserData(shopUser.shop_access_token);
-          if (shopData.length > 0) {
-            buyerDataFetched = shopData[0];
-            setBuyerData(shopData[0]);
-          }
-        } 
+        // if (shopUser.user_type === 'shop') {
+        //   const shopData = await getShopUserData(shopUser.shop_access_token);
+        //   if (shopData.length > 0) {
+        //     buyerDataFetched = shopData[0];
+        //     setBuyerData(shopData[0]);
+        //   }
+        // } 
       }
+
+      console.log(buyerDataFetched);
+      
   
       // Ensure all necessary data is available
       if (!sellerDataFetched || !buyerDataFetched || !cartData) {
@@ -213,7 +216,7 @@ function Cart() {
       }));
   
       const data = {
-        buyer_id: buyerDataFetched.user_id,
+        buyer_id: buyerDataFetched?.member_id,
         buyer_type: buyerDataFetched.user_type,
         seller_id: sellerDataFetched.shop_no,
         buyer_gst_number: buyerDataFetched.gst || null,

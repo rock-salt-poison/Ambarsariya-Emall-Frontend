@@ -25,18 +25,18 @@ const FormField = ({
   getSliderMarks,
   maxLength,
   readOnly,
-  switch_checked, 
+  switch_checked,
   handleSwitch,
   className,
   handleFocus,
-  handleBlur, 
-  adornmentValue, accept,rows,radioItems,
+  handleBlur,
+  adornmentValue, accept, rows, radioItems,
   additionalProps,
   handleDownload, required,
   btn_text,
   defaultChecked,
-  disable=false,
-  adornmentPosition="start"
+  disable = false,
+  adornmentPosition = "start"
 }) => {
 
   const marks = getSliderMarks ? getSliderMarks(name) : [];
@@ -106,134 +106,152 @@ const FormField = ({
               label={value ? 'On' : 'Off'}
             />
           </>
-        ) : type === 'address' ? 
+        ) : type === 'address' ?
           <>
             <Typography className="label">{label}</Typography>
             <Box className="field_container">
               <Address_Google_Map_Field
-              value={value ? value : ""} // Ensure value is set if it exists
-              onChange={(data) => {onChange({ target: { name, value: data } });console.log(data);
-            }}
-            placeholder={placeholder}
-            disable={disable}
-            />
-            </Box>
-          </>
-        : type === 'file' ? (
-          <>
-            {icon ? <Box component="img" src={icon} alt={label} className="icon" /> : <Typography className="label">{label}</Typography>}
-            <Box className="field_container">
-              <input
-                accept={accept}
-                style={{ display: 'none' }}
-                id={name}
-                type="file"
-                name={name}
-                onChange={!readOnly ? onChange : undefined}
-                disabled={disable}
-              />
-              <label htmlFor={name} className='file_label'>
-                <Button variant="contained" color="primary" component="span" className={`file_button ${className}`}  disabled={readOnly || disable}>
-                  {icon ? uploadFileText : uploadFileIcon ?
-                    <Box component="img" src={uploadFileIcon} alt="upload_file" className='upload_file' />
-                    : placeholder ? placeholder : "Choose File"}
-                </Button>
-              </label>
-              {value && value.name && (
-                <Typography variant="body2" className="file_name">
-                  {value.name}
-                </Typography>
-              )}
-            </Box>
-          </>
-        ) : type === 'range' ? (
-          <>
-            <Typography className="label">{label}</Typography>
-            <Box className="field_container">
-              <Slider
-                name={name}
-                value={Number(value)}
-                onChange={(e, newValue) => onSliderChange(e, newValue, name)}
-                min={0}
-                max={marks.length - 1}
-                step={0.1}
-                marks={marks}
-                size={"large"}
-                disabled={readOnly}
-                className={`input_field ${className}`} // Apply the custom className
+                value={value ? value : ""} // Ensure value is set if it exists
+                onChange={(data) => {
+                  onChange({ target: { name, value: data } }); console.log(data);
+                }}
+                placeholder={placeholder}
+                disable={disable}
               />
             </Box>
           </>
-        ) : type==="Download file" ? (
-          <>
-          <Typography className="label">{label}</Typography>
-          <Button disabled={disable} onClick={(e)=>handleDownload(e, name)} className='btn-download field_container'>
-           {btn_text}
-          </Button>
-          </>
-        ):(
-          <>
-            <Typography className={`label ${emailLabelClassname ? emailLabelClassname : ''}`}>
-              {icon ? <Box component="img" src={icon} alt={label} className="icon" /> : label}
-            </Typography>
-            <Box className="field_container">
-              {type === 'select' ? (
-                <Select
-    name={name}
-    value={value || ''}
-    onChange={!readOnly ? handleSelectChange2 : undefined}
-    displayEmpty
-    className={`input_field ${className}`}
-    {...(error && { error: true })}
-    required={required}
-    disabled={disable}
-  >
-    <MenuItem value="" disabled key={0}>
-      {placeholder}
-    </MenuItem>
-
-    {options.map((option, index) => {
-      const isObject = typeof option === 'object' && option !== null;
-      const optionValue = isObject ? option.value : option;
-      const optionLabel = isObject ? option.label : option;
-
-      return (
-        <MenuItem key={index + 1} value={optionValue}>
-          {optionLabel}
-        </MenuItem>
-      );
-    })}
-  </Select>
-              ) : type === 'select-check' ? (
-                <Select
-                  multiple
+          : type === 'file' ? (
+            <>
+              {icon ? <Box component="img" src={icon} alt={label} className="icon" /> : <Typography className="label">{label}</Typography>}
+              <Box className="field_container">
+                <input
+                  accept={accept}
+                  style={{ display: 'none' }}
+                  id={name}
+                  type="file"
                   name={name}
-                  value={defaultChecked ? options : Array.isArray(value) ? value : []} 
-                  onChange={!readOnly ? handleSelectChange : undefined}
-                  // input={<OutlinedInput label="Name" />}
-                  renderValue={(selected) => (
-                    <Box>
-                      {selected.length > 0 ? selected.join(', ') : placeholder}
-                    </Box>
-                  )}
-                  displayEmpty
-                  className={`input_field ${className}`}
+                  onChange={!readOnly ? onChange : undefined}
                   disabled={disable}
-                >
-                  <MenuItem value="" disabled>
-                    {placeholder}
-                  </MenuItem>
-                  {options.map((option) => (
-                    <MenuItem key={option} value={option} className='members_list'>
-                          <Checkbox checked={defaultChecked ? true : value.includes(option)} />
-                          <ListItemText primary={option} className='members_name' />
-                        
+                />
+                <label htmlFor={name} className='file_label'>
+                  <Button variant="contained" color="primary" component="span" className={`file_button ${className}`} disabled={readOnly || disable}>
+                    {icon ? uploadFileText : uploadFileIcon ?
+                      <Box component="img" src={uploadFileIcon} alt="upload_file" className='upload_file' />
+                      : placeholder ? placeholder : "Choose File"}
+                  </Button>
+                </label>
+                {value && value.name && (
+                  <Typography variant="body2" className="file_name">
+                    {value.name}
+                  </Typography>
+                )}
+              </Box>
+            </>
+          ) : type === 'range' ? (
+            <>
+              <Typography className="label">{label}</Typography>
+              <Box className="field_container">
+                <Slider
+                  name={name}
+                  value={Number(value)}
+                  onChange={(e, newValue) => onSliderChange(e, newValue, name)}
+                  min={0}
+                  max={marks.length - 1}
+                  step={0.1}
+                  marks={marks}
+                  size={"large"}
+                  disabled={readOnly}
+                  className={`input_field ${className}`} // Apply the custom className
+                />
+              </Box>
+            </>
+          ) : type === "Download file" ? (
+            <>
+              <Typography className="label">{label}</Typography>
+              <Button disabled={disable} onClick={(e) => handleDownload(e, name)} className='btn-download field_container'>
+                {btn_text}
+              </Button>
+            </>
+          ) : (
+            <>
+              <Typography className={`label ${emailLabelClassname ? emailLabelClassname : ''}`}>
+                {icon ? <Box component="img" src={icon} alt={label} className="icon" /> : label}
+              </Typography>
+              <Box className="field_container">
+                {type === 'select' ? (
+                  <Select
+                    name={name}
+                    value={value || ''}
+                    onChange={!readOnly ? handleSelectChange2 : undefined}
+                    displayEmpty
+                    className={`input_field ${className}`}
+                    {...(error && { error: true })}
+                    required={required}
+                    disabled={disable}
+                  >
+                    <MenuItem value="" disabled key={0}>
+                      {placeholder}
                     </MenuItem>
-                  ))}
-                </Select>
-              ) : type === 'search-select-check' ? (
 
-                <Autocomplete
+                    {options.map((option, index) => {
+                      const isObject = typeof option === 'object' && option !== null;
+                      const optionValue = isObject ? option.value : option;
+                      const optionLabel = isObject ? option.label : option;
+
+                      return (
+                        <MenuItem key={index + 1} value={optionValue}>
+                          {optionLabel}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                ) : type === 'select-check' ? (
+                  <Select
+                    multiple
+                    name={name}
+                    value={defaultChecked
+                      ? options.map(opt => (typeof opt === 'object' ? opt.value : opt))  // all values if defaultChecked
+                      : Array.isArray(value)
+                        ? value
+                        : []}
+                    onChange={!readOnly ? handleSelectChange : undefined}
+                    // input={<OutlinedInput label="Name" />}
+                    renderValue={(selected) => (
+                      <Box>
+                        {selected.length > 0
+                          ? selected
+                            .map(sel =>
+                              typeof sel === 'string'
+                                ? (options.find(opt => (typeof opt === 'object' ? opt.value === sel : opt === sel))?.label || sel)
+                                : sel
+                            )
+                            .join(', ')
+                          : placeholder}
+                      </Box>
+                    )}
+                    displayEmpty
+                    className={`input_field ${className}`}
+                    disabled={disable}
+                  >
+                    <MenuItem value="" disabled>
+                      {placeholder}
+                    </MenuItem>
+                    {options.map((option, index) => {
+                      const isObject = typeof option === 'object' && option !== null;
+
+                      const optionValue = isObject ? option.value : option;
+                      const optionLabel = isObject ? option.label : option;
+
+                      return <MenuItem key={index + 1} value={optionValue} className='members_list'>
+                        <Checkbox checked={defaultChecked ? true : value.includes(optionValue)} />
+                        {/* <ListItemText primary={optionLabel} className='members_name' /> */}
+                        {optionLabel}
+                      </MenuItem>
+                    })}
+                  </Select>
+                ) : type === 'search-select-check' ? (
+
+                  <Autocomplete
                     multiple
                     name={name}
                     className={`search_input_field ${className}`}
@@ -263,85 +281,85 @@ const FormField = ({
                     )}
                   />
 
-                
-              ) : type === "textarea" ? (
-                <TextField 
-                  multiline 
-                  variant="outlined" 
-                  rows={rows ? rows : 3} 
-                  placeholder={placeholder} 
-                  value={value} 
-                  onChange={onChange} 
-                  required 
-                  className='input_field'
-                  inputProps={{ readOnly, maxLength }}
-                  name={name} />
-              ) : type === "phone_number" ? 
-                    <MuiPhoneNumber defaultCountry={'in'} name={name}
+
+                ) : type === "textarea" ? (
+                  <TextField
+                    multiline
+                    variant="outlined"
+                    rows={rows ? rows : 3}
+                    placeholder={placeholder}
+                    value={value}
+                    onChange={onChange}
+                    required
+                    className='input_field'
+                    inputProps={{ readOnly, maxLength }}
+                    name={name} />
+                ) : type === "phone_number" ?
+                  <MuiPhoneNumber defaultCountry={'in'} name={name}
                     value={value}
                     onChange={!readOnly ? (value) => onChange({ target: { name, value } }) : undefined}
                     variant="outlined"
                     error={error}
                     disabled={readOnly}
-                    />
-              : type==="radio" ? (
-                <RadioGroup
-                  aria-labelledby="radio-buttons-group-label"
-                  defaultValue="female"
-                  name={name}
-                  value={value}
-                  className='radio_button'
-                  onChange={(e) => onChange(e)} 
-                >
-                  {
-                    radioItems.map((item)=>{
-                      return <FormControlLabel value={item.value} control={<Radio />} label={item.value} className='label' key={item.id}/>
-                    })
-                  }
-                </RadioGroup>
-              )
-              :(
-                <TextField
-                  hiddenLabel
-                  variant="outlined"
-                  name={name}
-                  type={type}
-                  value={value}
-                  onChange={onChange}
-                  required
-                  className={`input_field ${className}`}
-                  placeholder={placeholder}
-                  inputProps={{ readOnly, maxLength }}
-                  InputProps={{
-                    ...(adornmentValue && adornmentPosition === 'start' && {
-                      startAdornment: (
-                        <InputAdornment position="start" className="adornmentText">
-                          {adornmentValue}
-                        </InputAdornment>
-                      ),
-                    }),
-                    ...(adornmentValue && adornmentPosition === 'end' && {
-                      endAdornment: (
-                        <InputAdornment position="end" className="adornmentText">
-                          {adornmentValue}
-                        </InputAdornment>
-                      ),
-                    }),
-                  }}
-                  {...(error && { error: true })}
-                  onFocus={handleFocus}
-                  onBlur={handleBlur}
-                  autoCorrect="off"
-                  autoCapitalize="none"
-                  autoComplete="false"
-                  spellCheck="false"
-                  {...additionalProps}
-                  disabled={disable}
-                />
-              )}
-            </Box>
-          </>
-        )}
+                  />
+                  : type === "radio" ? (
+                    <RadioGroup
+                      aria-labelledby="radio-buttons-group-label"
+                      defaultValue="female"
+                      name={name}
+                      value={value}
+                      className='radio_button'
+                      onChange={(e) => onChange(e)}
+                    >
+                      {
+                        radioItems.map((item) => {
+                          return <FormControlLabel value={item.value} control={<Radio />} label={item.value} className='label' key={item.id} />
+                        })
+                      }
+                    </RadioGroup>
+                  )
+                    : (
+                      <TextField
+                        hiddenLabel
+                        variant="outlined"
+                        name={name}
+                        type={type}
+                        value={value}
+                        onChange={onChange}
+                        required
+                        className={`input_field ${className}`}
+                        placeholder={placeholder}
+                        inputProps={{ readOnly, maxLength }}
+                        InputProps={{
+                          ...(adornmentValue && adornmentPosition === 'start' && {
+                            startAdornment: (
+                              <InputAdornment position="start" className="adornmentText">
+                                {adornmentValue}
+                              </InputAdornment>
+                            ),
+                          }),
+                          ...(adornmentValue && adornmentPosition === 'end' && {
+                            endAdornment: (
+                              <InputAdornment position="end" className="adornmentText">
+                                {adornmentValue}
+                              </InputAdornment>
+                            ),
+                          }),
+                        }}
+                        {...(error && { error: true })}
+                        onFocus={handleFocus}
+                        onBlur={handleBlur}
+                        autoCorrect="off"
+                        autoCapitalize="none"
+                        autoComplete="false"
+                        spellCheck="false"
+                        {...additionalProps}
+                        disabled={disable}
+                      />
+                    )}
+              </Box>
+            </>
+          )}
       </Box>
       {error && <span className="error_message">{errorMessage}</span>}
     </Box>

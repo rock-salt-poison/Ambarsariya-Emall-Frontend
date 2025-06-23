@@ -3,7 +3,7 @@ import GeneralLedgerForm from '../../Form/GeneralLedgerForm';
 
 function ComparePricesQuality() {
     const initialData = {
-        items:'',
+        shops:'',
         groups:'',
         vendor_or_shop:'',
         requirements:'',
@@ -21,27 +21,28 @@ function ComparePricesQuality() {
     const formFields = [
         {
             id: 1,
-            label: 'Select item(s)',
-            name: 'items',
+            label: 'Select shop(s)',
+            name: 'shops',
             type: 'select-check',
-            options:['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5','Item 6', 'Item 7','Item 8','Item 9','Item 10'],
+            options:['Shop 1', 'Shop 2', 'Shop 3', 'Shop 4', 'Shop 5','Shop 6', 'Shop 7','Shop 8','Shop 9','Shop 10'],
         },
         {
             id: 2,
-            label: 'Select group (s)',
+            label: 'Select Attribute (s)',
             name: 'groups',
             type: 'select-check',
-            options:['Group 1', 'Group 2', 'Group 3', 'Group 4', 'Group 5','Group 6', 'Group 7','Group 8','Group 9','Group 10'],
+            options:['Cost Price', 'Expiry date', 'Storing requirements', 'Shipping methods'],
         },
         {
             id: 3,
-            label: 'Vendor / Shop Wise',
+            label: `1000700`,
             name: 'vendor_or_shop',
             type: 'text',
+            adornmentValue: 'Define Your Terms : Min Quantity * Cost Price < '
         },
         {
             id: 4,
-            label: 'Send Requirements',
+            label: 'Send Requirements : max_stock_size - quantity',
             name: 'requirements',
             type: 'text',   
         },

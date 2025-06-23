@@ -64,7 +64,7 @@ function OrderDetails_tab_content({ title }) {
           const userData = (await getUser(token))?.find((u)=>u.member_id !== null);
 
           if (userData.user_type === "member" || userData.user_type === "merchant") {
-            fetchPurchasedOrder(userData.user_id);
+            fetchPurchasedOrder(userData.member_id);
           }
         } catch (e) {
           console.log(e);

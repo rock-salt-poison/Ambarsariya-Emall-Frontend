@@ -1,6 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import GeneralLedgerForm from '../../Form/GeneralLedgerForm';
 import SearchIcon from '@mui/icons-material/Search';
+import { useSelector } from 'react-redux';
+import { get_category_wise_shops } from '../../../API/fetchExpressAPI';
+import { Box, CircularProgress } from '@mui/material';
 
 function IdentifyItem() {
     const initialData = {
@@ -13,15 +16,19 @@ function IdentifyItem() {
 
     const [formData, setFormData] = useState(initialData);
     const [errors, setErrors] = useState({});
+    const [loading, setLoading] = useState(false);
+    const products = useSelector((state) => state.cart.selectedProducts);
 
-
+    // console.log(products);
+    
     const formFields = [
         {
             id: 1,
-            label: 'Search product (s) cum',
+            label: 'Select product (s) cum',
             name: 'products',
-            type: 'search',
-            adornmentValue:<SearchIcon/>
+            type: 'select-check',
+            options : products.map((p) => ({label: p.product_name,value : p.product_id })),
+            // adornmentValue:<SearchIcon/>
         },
         {
             id: 2,
@@ -51,10 +58,44 @@ function IdentifyItem() {
         },
     ];
 
+    useEffect(()=>{
+        if(formData?.products){
+            const fetch_shops =async ()=>{
+                const selectedCategories = [
+                    ...new Set(
+                    formData.products
+                        .map((productId) => {
+                        const match = products?.find((p) => p?.product_id === productId);
+                        return match?.category || null;
+                        })
+                        .filter((cat) => cat !== null)
+                    ),
+                ];
+    
+                try{
+                    setLoading(true);
+                    const resp = await get_category_wise_shops(selectedCategories);
+                    console.log(resp);
+                    
+                    if(resp?.valid){
+                        console.log(resp.data);
+                    }
+                    
+                }catch(e){
+                    console.log(e);
+                }finally{
+                    setLoading(false);
+                }
+            }
+            fetch_shops();
+        }
+    }, [formData?.products]);
+
     
 
     const handleChange = (event) => {
         const { name, value } = event.target;
+
         setFormData({ ...formData, [name]: value });
 
         // Clear any previous error for this field
@@ -86,14 +127,17 @@ function IdentifyItem() {
         }
     };
   return (
-    <GeneralLedgerForm
-        formfields={formFields}
-        handleSubmit={handleSubmit}
-        formData={formData}
-        onChange={handleChange}
-        errors={errors}
-        submitButtonText="Create Mou"
-    />
+    <>
+        {loading && <Box className="loading"><CircularProgress/></Box> }
+        <GeneralLedgerForm
+            formfields={formFields}
+            handleSubmit={handleSubmit}
+            formData={formData}
+            onChange={handleChange}
+            errors={errors}
+            submitButtonText="Create Mou"
+        />
+    </>
   )
 }
 
