@@ -11,12 +11,6 @@ import {
 } from 'react-router-dom';
 
 
-console.log(process.env.NODE_ENV);
-if(process.env.NODE_ENV === 'development'){
-  
-  console.error = () => {};
-}
-
 const router = createBrowserRouter(
   [
     {
