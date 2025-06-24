@@ -10,6 +10,11 @@ import {
   RouterProvider,
 } from 'react-router-dom';
 
+
+if(process.env.NODE_ENV !== 'production'){
+  console.error = () => {};
+}
+
 const router = createBrowserRouter(
   [
     {
