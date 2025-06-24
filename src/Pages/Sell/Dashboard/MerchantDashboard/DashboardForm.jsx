@@ -200,7 +200,7 @@ function DashboardForm({ data }) {
 
   useEffect(() => {
     const fetchShopToken = async () => {
-      const shop_token = (await getUser(user_access_token))?.find((u)=>u.shop_no !== null)?.shop_access_token;
+      const shop_token = (await getUser(user_access_token))?.find((u)=>u?.shop_no !== null)?.shop_access_token;
       if (shop_token === token) {
         fetchData(shop_token);
       }

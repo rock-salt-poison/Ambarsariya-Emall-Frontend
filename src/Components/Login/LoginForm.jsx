@@ -147,6 +147,16 @@ const LoginForm = ({ redirectTo, title, forgotPassword }) => {
             message: 'Login Successful',
             severity: 'success',
           });
+        }else{
+          setSnackbar({
+            open: true,
+            message: data.message,
+            severity: 'error',
+          });
+
+          if (data.message === "Username not found.") {
+            setStep(0);
+          }
         }
       } catch (error) {
         console.error('Error logging in:', error);
