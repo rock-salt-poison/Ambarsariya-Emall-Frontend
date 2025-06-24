@@ -11,7 +11,7 @@ import {
 } from 'react-router-dom';
 
 
-if(process.env.NODE_ENV !== 'production'){
+if(process.env.NODE_ENV === 'production'){
   console.error = () => {};
 }
 
