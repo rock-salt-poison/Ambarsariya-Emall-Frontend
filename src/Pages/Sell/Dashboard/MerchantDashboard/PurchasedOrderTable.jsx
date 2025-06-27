@@ -320,7 +320,7 @@ useEffect(()=>{
   console.log(saleOrderData);
   
   setSaleOrder(saleOrderData);
-  // setOpenDialog(true);
+  setOpenDialog(true);
 
     
   };
