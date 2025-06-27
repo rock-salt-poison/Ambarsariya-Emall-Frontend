@@ -425,6 +425,7 @@ const handlePostSubmit = async (postData, shouldIncludeMember = true, is_merchan
     setOpenDialog(false);
   }
 };
+console.log(shopUser);
 
 const handleConfirm = async (postData) => {
   await handlePostSubmit(postData, true); // merchant = true
@@ -499,7 +500,7 @@ const proceedOtpAndPostData = async () => {
         };
 
         
-        if(formData?.merchant){
+        if(shopUser?.is_merchant && shopUser?.member_id !== null){
           setEshopData(postData);
           handlePostSubmit(postData, false, false)
         }else{
