@@ -21,6 +21,7 @@ function IdentifyItem() {
     const products = useSelector((state) => state.cart.selectedProducts);
 
     // console.log(products);
+    console.log(formData?.products);
     
     const formFields = [
         {
@@ -92,8 +93,6 @@ function IdentifyItem() {
             fetch_shops();
         }
     }, [formData?.products]);
-
-    
 
     const handleChange = (event) => {
         const { name, value } = event.target;
