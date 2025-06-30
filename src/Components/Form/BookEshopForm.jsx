@@ -421,8 +421,8 @@ const handlePostSubmit = async (postData, shouldIncludeMember = true, is_merchan
     }
     console.error("Error submitting form:", msg);
   } finally {
-    setLoading(false);
     setOpenDialog(false);
+    setLoading(false);
   }
 };
 console.log(shopUser);
