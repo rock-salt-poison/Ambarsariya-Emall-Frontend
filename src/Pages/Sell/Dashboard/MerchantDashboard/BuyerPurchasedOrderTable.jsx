@@ -25,7 +25,7 @@ import {
 import CustomSnackbar from "../../../../Components/CustomSnackbar";
 import ConfirmationDialog from "../../../../Components/ConfirmationDialog";
 
-function PurchasedOrderTable({ purchasedOrders, selectedPO }) {
+function BuyerPurchasedOrderTable({ purchasedOrders, selectedPO }) {
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState([]);
   const [updatedProducts, setUpdatedProducts] = useState([]);
@@ -387,8 +387,8 @@ useEffect(()=>{
     <>
     
     {updatedProducts?.length > 0 && <Box className="col buyer_details">
-        <Typography className="heading">Buyer Id : </Typography>
-        <Link to={`../support/shop/${token}/purchased-order/${encodeURIComponent(products?.[0]?.po_no)}`}><Typography className="text">{(products?.[0]?.po_no)?.split('&')?.[0]}</Typography></Link>
+        <Typography className="heading">P.O No : </Typography>
+        <Link to={`../support/shop/${token}/purchased-order/${encodeURIComponent(products?.[0]?.po_no)}`}><Typography className="text">{(products?.[0]?.po_no)}</Typography></Link>
     </Box>}
    
     <Box className="col">
@@ -415,7 +415,7 @@ useEffect(()=>{
             </TableCell>
             <TableCell>
               P.O Sale
-              <Typography component="span">
+              {/* <Typography component="span">
                 <ToggleButtonGroup
                   value={headerToggleState || products?.[0]?.sale_order_status}
                   exclusive
@@ -432,7 +432,7 @@ useEffect(()=>{
                     Accept
                   </ToggleButton>
                 </ToggleButtonGroup>
-              </Typography>
+              </Typography> */}
             </TableCell>
             {/* <TableCell>Total Price</TableCell>
                                 <TableCell>List of services applied</TableCell>
@@ -567,9 +567,9 @@ useEffect(()=>{
               </TableCell>
               <TableCell>₹ {total}</TableCell>
               <TableCell>
-                <Button className="btn-submit" onClick={(e) => handleSubmit(e)}>
+                {/* <Button className="btn-submit" onClick={(e) => handleSubmit(e)}>
                   Submit
-                </Button>
+                </Button> */}
               </TableCell>
             </TableRow>
           )}
@@ -600,4 +600,4 @@ useEffect(()=>{
   );
 }
 
-export default PurchasedOrderTable;
+export default BuyerPurchasedOrderTable;
