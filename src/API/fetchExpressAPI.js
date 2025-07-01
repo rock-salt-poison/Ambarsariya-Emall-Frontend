@@ -751,10 +751,12 @@ export const get_purchasedOrder = async (po_no) => {
 
 export const get_purchaseOrders = async (po_no) => {
   try {
-    if (po_no) {
+    if(po_no){
       const encodedPoNo = encodeURIComponent(po_no);
-      const resp = await axios.get(`${link}/purchase_orders/${encodedPoNo}`);
-      return resp.data;
+      if (encodedPoNo) {
+        const resp = await axios.get(`${link}/purchase_orders/${encodedPoNo}`);
+        return resp.data;
+      }
     }
   } catch (e) {
     throw e;

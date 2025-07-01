@@ -49,6 +49,7 @@ function PurchasedOrderTable({ purchasedOrders, selectedPO }) {
       setLoading(true);
       if (po_no) {
         const resp = await get_purchaseOrders(po_no);
+        console.log(resp)
         if (resp.valid) {
 
           const updatedData = resp.data?.map((product)=> {
@@ -62,7 +63,7 @@ function PurchasedOrderTable({ purchasedOrders, selectedPO }) {
         
       }
     } catch (e) {
-      // console.log(e);
+      console.log(e);
       setProducts([]);
       setUpdatedProducts([]);
     } finally {
