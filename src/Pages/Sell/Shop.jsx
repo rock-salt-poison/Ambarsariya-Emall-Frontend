@@ -80,6 +80,8 @@ function Shop() {
       };
       fetchData();
     }, [token, disableShop]);    
+    console.log(disableShop,data);
+    
 
     useEffect(()=> {
         if(loggedInUserToken){
@@ -95,9 +97,11 @@ function Shop() {
           setOpenDashboard(false);
         }
       }
+      console.log(!data?.isOpen);
+      
 
       useEffect(()=> {
-        if(!data?.is_open){
+        if(data?.is_open === false){
           if(!openDashboard){
             setDisableShop(true);
           }else{setDisableShop(false);}
