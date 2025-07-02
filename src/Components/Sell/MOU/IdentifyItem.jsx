@@ -20,7 +20,7 @@ function IdentifyItem() {
     const [loading, setLoading] = useState(false);
     const products = useSelector((state) => state.cart.selectedProducts);
 
-    // console.log(products);
+    console.log(products);
     console.log(formData?.products);
     
     const formFields = [

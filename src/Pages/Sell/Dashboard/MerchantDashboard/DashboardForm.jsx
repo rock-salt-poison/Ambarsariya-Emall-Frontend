@@ -682,7 +682,7 @@ function DashboardForm({ data }) {
                 product_name: product["Product Name"] || null,
                 product_type: product["Product Type"] || null,
                 product_description: product["Product Description"] || null,
-                price: product["Price"] || 0,
+                cost_price: product["Cost Price"] || 0,
                 unit: product["Unit"] || null,
                 brand: product["Brand"] || null,
                 iku: iku || [],
@@ -697,8 +697,8 @@ function DashboardForm({ data }) {
                 packing: product["Packing"] || null,
                 product_style: product["Product Style"] || null,
                 area_size_lateral: product["AREA (Size lateral)"] || 0,
-                inventory_or_stock_quantity:
-                  product["Inventory/Stock Quantity"] || 0,
+                max_stock_quantity:
+                  product["Max Stock Quantity"] || 0,
                 shipping_information: product["Shipping Information"] || null,
                 variant_group: product["Variant Group"] || "",
                 features: product["Attributes/Features"] || null,
@@ -723,6 +723,14 @@ function DashboardForm({ data }) {
                 selling_price: product["Selling Price"] || 0,
                 product_catalog: product["Product Catalog"] || null,
                 brand_catalog: product["Brand Catalog"] || null,
+                variation_1_max_stock_quantity: product["Variation 1 Max Stock Quantity"] || 0,
+                variation_2_max_stock_quantity: product["Variation 2 Max Stock Quantity"] || 0,
+                variation_3_max_stock_quantity: product["Variation 3 Max Stock Quantity"] || 0,
+                variation_4_max_stock_quantity: product["Variation 4 Max Stock Quantity"] || 0,
+                variation_1_stock_quantity: product["Variation 1 Stock Quantity"] || 0,
+                variation_2_stock_quantity: product["Variation 2 Stock Quantity"] || 0,
+                variation_3_stock_quantity: product["Variation 3 Stock Quantity"] || 0,
+                variation_4_stock_quantity: product["Variation 4 Stock Quantity"] || 0,
               };
             })
           );
@@ -938,16 +946,13 @@ function DashboardForm({ data }) {
                 // shelf_height: sku["Height of Shelf"] || null,
                 total_no_of_shelf: sku["Total no of Shelf"] || null,
                 total_area_of_shelf: sku["Total area of Shelf"] || null,
-                total_area_of_shelves: sku["Total area of Shelves"] || null,
-                total_shelf_area_occupied:
-                  sku["Total Shelf Area Occupied"] || null,
-                max_shelf_area_occupied: sku["Max Shelf Area Occupied"] || null,
-                no_of_shelves_occupied: sku["No of Shelves Occupied"] || null,
-                max_racks: sku["Max Racks"] || null,
-                shelves_extra: sku["Shelves extra"] || null,
+                total_area_of_shelf_in_a_rack: sku["Total area of Shelf in a Rack"] || null,
+                total_stock_racks_occupied:
+                  sku["Total Stock Racks Occupied"] || null,
+                total_shelves_extra: sku["Total Shelves Extra"] || null,
                 items_per_shelf: sku["Items Per Shelf"] || null,
                 max_rack_at_max_quantity: sku["Max Rack at Max Quantity"] || null,
-                max_shelves: sku["Max Shelves"] || null,
+                max_shelves_extra: sku["Max Shelves Extra"] || null,
                 rku_id: rku || [],
                 shop_no: shopNo,
               };
