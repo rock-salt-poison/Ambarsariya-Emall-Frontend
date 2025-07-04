@@ -249,7 +249,7 @@ console.log('----------', selectedProducts);
       column.id === "variations"
         ? (() => {
       const selectedProduct = selectedProducts.find(p => p.product_no === row.product_no);
-      const variationToShow = selectedProduct?.selectedVariant ? (selectedProduct.selectedVariant)?.split('_')?.at(-2) : row.variation_1;
+      const variationToShow = selectedProduct?.selectedVariant ? (selectedProduct.selectedVariant)?.split('_')?.at(-3) : row.variation_1;
       return variationToShow;
     })()
         : column.id === "product"
