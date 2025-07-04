@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import GeneralLedgerForm from '../../Form/GeneralLedgerForm';
 import SearchIcon from '@mui/icons-material/Search';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { get_category_wise_shops } from '../../../API/fetchExpressAPI';
 import { Box, CircularProgress } from '@mui/material';
+import { setSelectedProductAndShops } from '../../../store/mouSelectedProductsSlice';
 
 function IdentifyItem() {
     const initialData = {
@@ -18,7 +19,10 @@ function IdentifyItem() {
     const [errors, setErrors] = useState({});
     const [vendors, setVendors] = useState([]);
     const [loading, setLoading] = useState(false);
-    const products = useSelector((state) => state.cart.selectedProducts);
+    const allProducts = useSelector((state) => state.cart.selectedProducts);
+    const products = allProducts.filter((p) => p.subscribe === true);
+    const dispatch = useDispatch();
+    const selectedData = useSelector(state => state.mou.selectedProductAndShops);
 
     console.log(products);
     console.log(formData?.products);
@@ -28,8 +32,9 @@ function IdentifyItem() {
             id: 1,
             label: 'Select product (s) cum',
             name: 'products',
-            type: 'select-check',
+            type: 'select',
             options : products.map((p) => ({label: p.product_name,value : p.product_id })),
+            value : selectedData?.product_id || ''
             // adornmentValue:<SearchIcon/>
         },
         {
@@ -44,7 +49,8 @@ function IdentifyItem() {
             label: 'Select vendor(s)',
             name: 'vendors',
             type: 'select-check',
-            options:vendors?.map((v)=>v.shop_no),
+            options:vendors?.map((v)=>({label: v.business_name,value : v.shop_no })),
+            value: selectedData?.shop_nos || []
         },
         {
             id: 4,
@@ -61,22 +67,24 @@ function IdentifyItem() {
     ];
 
     useEffect(()=>{
-        if(formData?.products){
+        if(formData?.products || selectedData){
             const fetch_shops =async ()=>{
-                const selectedCategories = [
-                    ...new Set(
-                    formData.products
-                        .map((productId) => {
-                        const match = products?.find((p) => p?.product_id === productId);
-                        return match?.category || null;
-                        })
-                        .filter((cat) => cat !== null)
-                    ),
-                ];
+                // const selectedCategories = [
+                //     ...new Set(
+                //     formData.products
+                //         .map((productId) => {
+                //         const match = products?.find((p) => p?.product_id === productId);
+                //         return match?.category || null;
+                //         })
+                //         .filter((cat) => cat !== null)
+                //     ),
+                // ];
+
+                const selectedProduct = formData?.products ? products?.find(p=>p.product_id === formData?.products) : selectedData?.product_id && products?.find(p=>p.product_id === selectedData?.product_id);
     
                 try{
                     setLoading(true);
-                    const resp = await get_category_wise_shops(selectedCategories);
+                    const resp = await get_category_wise_shops(selectedProduct?.category, selectedProduct?.product_name);
                     console.log(resp);
                     
                     if(resp?.valid){
@@ -92,10 +100,16 @@ function IdentifyItem() {
             }
             fetch_shops();
         }
-    }, [formData?.products]);
+    }, [formData?.products, selectedData]);
 
     const handleChange = (event) => {
         const { name, value } = event.target;
+
+        if(name === 'vendors'){
+            if(value.length<2){
+                setErrors({ ...errors, [name]: 'Please select at least 2 options.' })
+            }
+        }
 
         setFormData({ ...formData, [name]: value });
 
@@ -122,6 +136,15 @@ function IdentifyItem() {
         event.preventDefault(); // Prevent default form submission
         if (validateForm()) {
             console.log(formData);
+
+            const selectedProduct = products.find((p)=> p.product_id === formData?.products);
+            dispatch(setSelectedProductAndShops({
+                product_name: selectedProduct?.product_name,
+                category: selectedProduct?.category,
+                product_id: selectedProduct?.product_id,
+                shop_nos: formData?.vendors
+            }));
+
             // Proceed with further submission logic, e.g., API call
         } else {
             console.log(errors);

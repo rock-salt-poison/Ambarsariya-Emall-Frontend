@@ -5,6 +5,7 @@ import editedEshopFieldsReducer from './editedEshopFieldsSlice'
 import couponReducer from './couponsSlice';
 import otpReducer from './otpSlice';
 import discountsReducer from './discountsSlice';
+import mouReducer from './mouSelectedProductsSlice';
 
 const store = configureStore({
   reducer: {
@@ -13,7 +14,8 @@ const store = configureStore({
     updatedFields: editedEshopFieldsReducer,
     coupon: couponReducer,
     otp: otpReducer,
-    discounts: discountsReducer
+    discounts: discountsReducer,
+    mou: mouReducer
   },
 });
 

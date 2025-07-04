@@ -85,7 +85,12 @@ function ProductInfo() {
     setProduct(prev => ({
       ...prev,
       selling_price: data[selectedVariant].selling_price,
-      selectedVariant: data[selectedVariant].item_id
+      selectedVariant: data[selectedVariant].item_id, 
+      subscribe: data[selectedVariant].subscribe, 
+      daily_min_quantity: data[selectedVariant].daily_min_quantity, 
+      weekly_min_quantity: data[selectedVariant].weekly_min_quantity, 
+      monthly_min_quantity: data[selectedVariant].monthly_min_quantity, 
+      editable_min_quantity: data[selectedVariant].editable_min_quantity, 
     }));
   }
 }, [selectedVariant, data]);
@@ -147,7 +152,7 @@ function ProductInfo() {
             </Typography>
             {data?.[selectedVariant]?.product_style && <Typography className="text">
               <Typography variant="span" className="light">Style : </Typography>
-              {data?.[selectedVariant]?.item_id ? data?.[selectedVariant]?.item_id?.split('_')?.at(-2) : data?.[0]?.product_style ? data?.[0]?.product_style : '-'}
+              {data?.[selectedVariant]?.item_id ? data?.[selectedVariant]?.item_id?.split('_')?.at(-3) : data?.[0]?.product_style ? data?.[0]?.product_style : '-'}
             </Typography>}
           </Box>
         </Box>

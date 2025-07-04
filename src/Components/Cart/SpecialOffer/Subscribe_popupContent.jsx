@@ -14,7 +14,10 @@ function Subscribe_popupContent({ setSubmittedData }) {
   };
 
   const theme = createCustomTheme(themeProps);
-  const products = useSelector((state) => state.cart.selectedProducts);
+  const allProducts = useSelector((state) => state.cart.selectedProducts);
+  const products = allProducts.filter((p) => p.subscribe === true);
+  console.log(products);
+  
 
   const initialData = { product: '', cost_per_unit: '', no_of_items: '' };
 
@@ -49,8 +52,9 @@ function Subscribe_popupContent({ setSubmittedData }) {
       id: 3,
       placeholder: 'Min no. of units',
       name: 'no_of_items',
-      type: 'number',
+      type: 'text',
       required: true,
+      readOnly: true,
     },
   ];
 
@@ -59,12 +63,13 @@ function Subscribe_popupContent({ setSubmittedData }) {
   const handleChange = (event, option) => {
     const { name, value } = event.target;
     let updatedData = { ...formData[option], [name]: value };
-
+    console.log(option);
     if (name === 'product') {
       const selectedProduct = products.find((p) => p.product_name === value);
-      updatedData.cost_per_unit = selectedProduct ? selectedProduct.price : '';
+      updatedData.cost_per_unit = selectedProduct ? `₹ ${selectedProduct.selling_price} /-` : '';
       updatedData.subscription_type = option;
       updatedData.product_id = selectedProduct.product_id ;
+      updatedData.no_of_items = option === 'Daily' ? `${selectedProduct?.daily_min_quantity} ${selectedProduct?.unit}` : option === 'Weekly' ? `${selectedProduct?.weekly_min_quantity} ${selectedProduct?.unit}` : option === 'Monthly' ? `${selectedProduct?.monthly_min_quantity} ${selectedProduct?.unit}` : option === 'Edit' && ``;
     }
 
     setFormData((prev) => ({ ...prev, [option]: updatedData }));

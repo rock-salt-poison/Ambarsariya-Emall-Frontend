@@ -1244,12 +1244,25 @@ export const get_shop_product_items = async (product_id) => {
   }
 }
 
-export const get_category_wise_shops = async (category) => {
+export const get_category_wise_shops = async (category, product) => {
   try {
     if (category) {
-      console.log(category);
+      console.log(category, product);
       
-      const response = await axios.get(`${link}/category-wise-shops?category=${category?.join(',')}`);
+      const response = await axios.get(`${link}/category-wise-shops?category=${category}&product=${product}`);
+      return response.data;
+    }
+  } catch (e) {
+    throw e;
+  }
+}
+
+export const get_mou_selected_shops_products = async (category, product, shop_nos) => {
+  try {
+    if (category && product && shop_nos) {
+      console.log(category, product, shop_nos);
+      
+      const response = await axios.get(`${link}/mou-selected-shops-products?shop_nos=${shop_nos?.join(',')}&category=${category}&product=${product}`);
       return response.data;
     }
   } catch (e) {

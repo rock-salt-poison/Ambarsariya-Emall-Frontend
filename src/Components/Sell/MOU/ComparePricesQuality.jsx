@@ -1,5 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import GeneralLedgerForm from '../../Form/GeneralLedgerForm';
+import { useSelector } from 'react-redux';
+import { get_mou_selected_shops_products } from '../../../API/fetchExpressAPI';
+import { Box, CircularProgress } from '@mui/material';
 
 function ComparePricesQuality() {
     const initialData = {
@@ -16,21 +19,26 @@ function ComparePricesQuality() {
 
     const [formData, setFormData] = useState(initialData);
     const [errors, setErrors] = useState({});
+    const [loading, setLoading] = useState(false);
+    const [selecteddata, setSelectedData] = useState([]);
+    const selectedData = useSelector(state => state.mou.selectedProductAndShops);
 
+    console.log(selectedData);
+    
 
     const formFields = [
         {
             id: 1,
-            label: 'Select shop(s)',
+            label: 'Select shops',
             name: 'shops',
             type: 'select-check',
-            options:['Shop 1', 'Shop 2', 'Shop 3', 'Shop 4', 'Shop 5','Shop 6', 'Shop 7','Shop 8','Shop 9','Shop 10'],
+            options:selecteddata?.map((d)=>d.business_name),
         },
         {
             id: 2,
             label: 'Select Attribute (s)',
             name: 'groups',
-            type: 'select-check',
+            type: 'select',
             options:['Cost Price', 'Expiry date', 'Storing requirements', 'Shipping methods'],
         },
         {
@@ -112,7 +120,33 @@ function ComparePricesQuality() {
             console.log(errors);
         }
     };
+
+    const fetchSelectedShopProductsData = async (data) => {
+        try{
+            setLoading(true);
+            const resp = await get_mou_selected_shops_products(data?.category, data?.product_name, data?.shop_nos);
+            if(resp?.valid){
+                setSelectedData(resp?.data)
+                console.log(resp);
+            }
+        }catch(e){
+            console.log(e);
+            
+        }finally{
+            setLoading(false);
+        }
+    }
+
+    useEffect(()=>{
+        if(selectedData){
+            fetchSelectedShopProductsData(selectedData);
+        }
+    }, [selectedData]);
+
+
   return (
+    <>
+    {loading && <Box className="loading"><CircularProgress/></Box>}
     <GeneralLedgerForm
         formfields={formFields}
         handleSubmit={handleSubmit}
@@ -121,6 +155,7 @@ function ComparePricesQuality() {
         errors={errors}
         submitButtonText="Repeat the bidding"
     />
+    </>
   )
 }
 

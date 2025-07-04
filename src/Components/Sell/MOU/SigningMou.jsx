@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import GeneralLedgerForm from '../../Form/GeneralLedgerForm';
 
 function SigningMou() {
@@ -16,6 +16,50 @@ function SigningMou() {
 
     const [formData, setFormData] = useState(initialData);
     const [errors, setErrors] = useState({});
+
+ const equations = [
+    { A: 30, B: 30, C: 900 }, // Eq1
+    { A: 25, B: 30, C: 750 }, // Eq2
+    { A: 20, B: 35, C: 700 }, // Eq3
+  ];
+
+  const [solutions, setSolutions] = useState([]);
+
+  // Cramer's Rule Solver
+  const solveTwoEquations = (eq1, eq2) => {
+    const { A: a1, B: b1, C: c1 } = eq1;
+    const { A: a2, B: b2, C: c2 } = eq2;
+
+    const D = a1 * b2 - a2 * b1;
+    const Dx = c1 * b2 - c2 * b1;
+    const Dy = a1 * c2 - a2 * c1;
+
+    if (D === 0) {
+      return { x: 'No Unique Solution', y: 'No Unique Solution' };
+    }
+
+    const x = Dx / D;
+    const y = Dy / D;
+
+    return {
+      x: x.toFixed(2),
+      y: y.toFixed(2),
+    };
+  };
+
+  useEffect(() => {
+    const sol1 = solveTwoEquations(equations[0], equations[1]); // Eq1 + Eq2
+    const sol2 = solveTwoEquations(equations[1], equations[2]); // Eq2 + Eq3
+    const sol3 = solveTwoEquations(equations[2], equations[0]); // Eq3 + Eq1
+
+    setSolutions([
+      { label: 'Eq1 & Eq2', ...sol1 },
+      { label: 'Eq2 & Eq3', ...sol2 },
+      { label: 'Eq3 & Eq1', ...sol3 },
+    ]);
+  }, []);
+  console.log(solutions);
+  
 
 
     const formFields = [
