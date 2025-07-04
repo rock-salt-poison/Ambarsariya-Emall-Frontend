@@ -17,46 +17,111 @@ function SigningMou() {
     const [formData, setFormData] = useState(initialData);
     const [errors, setErrors] = useState({});
 
- const equations = [
+  const equations = [
     { A: 30, B: 30, C: 900 }, // Eq1
     { A: 25, B: 30, C: 750 }, // Eq2
     { A: 20, B: 35, C: 700 }, // Eq3
+    { A: 10, B: 40, C: 600 }, // Eq4
   ];
 
   const [solutions, setSolutions] = useState([]);
+  const [stepsLog, setStepsLog] = useState([]);
 
-  // Cramer's Rule Solver
-  const solveTwoEquations = (eq1, eq2) => {
-    const { A: a1, B: b1, C: c1 } = eq1;
-    const { A: a2, B: b2, C: c2 } = eq2;
+  const solveByElimination = (label, eq1, eq2) => {
+    const logs = [];
+    const { A: A1, B: B1, C: C1 } = eq1;
+    const { A: A2, B: B2, C: C2 } = eq2;
 
-    const D = a1 * b2 - a2 * b1;
-    const Dx = c1 * b2 - c2 * b1;
-    const Dy = a1 * c2 - a2 * c1;
+    logs.push(`Solving ${label}`);
+    logs.push(`${A1}X + ${B1}Y = ${C1}`);
+    logs.push(`${A2}X + ${B2}Y = ${C2}`);
 
-    if (D === 0) {
-      return { x: 'No Unique Solution', y: 'No Unique Solution' };
-    }
+    // Eliminate Y by multiplying with opposite X coefficients
+    const multiplier1 = A2;
+    const multiplier2 = A1;
 
-    const x = Dx / D;
-    const y = Dy / D;
+    const newA1 = A1 * multiplier1;
+    const newB1 = B1 * multiplier1;
+    const newC1 = C1 * multiplier1;
+
+    const newA2 = A2 * multiplier2;
+    const newB2 = B2 * multiplier2;
+    const newC2 = C2 * multiplier2;
+
+    logs.push(`Multiply Eq1 by ${multiplier1} → ${newA1}X + ${newB1}Y = ${newC1}`);
+    logs.push(`Multiply Eq2 by ${multiplier2} → ${newA2}X + ${newB2}Y = ${newC2}`);
+
+    const diffB = newB1 - newB2;
+    const diffC = newC1 - newC2;
+
+    logs.push(`Subtract equations to eliminate X:`);
+    logs.push(`${diffB}Y = ${diffC}`);
+
+    const y = diffB !== 0 ? diffC / diffB : 0;
+    logs.push(`Y = ${y.toFixed(2)}`);
+
+    const x = (C1 - B1 * y) / A1;
+    logs.push(`Substitute Y = ${y.toFixed(2)} into Eq1:`);
+    logs.push(`${A1}X + ${B1}*${y.toFixed(2)} = ${C1}`);
+    logs.push(`${(A1 * x).toFixed(2)} + ${(B1 * y).toFixed(2)} = ${C1}`);
+    logs.push(`${A1}X = ${C1 - B1 * y}`);
+    logs.push(`X = ${(C1 - B1 * y) / A1}`);
+
+    const distance = Math.sqrt(x * x + y * y);
+    logs.push(`√(X² + Y²) = ${distance.toFixed(2)}`);
+    logs.push('---------------------------------');
 
     return {
+      label,
       x: x.toFixed(2),
       y: y.toFixed(2),
+      distance: distance.toFixed(2),
+      logs,
     };
   };
 
-  useEffect(() => {
-    const sol1 = solveTwoEquations(equations[0], equations[1]); // Eq1 + Eq2
-    const sol2 = solveTwoEquations(equations[1], equations[2]); // Eq2 + Eq3
-    const sol3 = solveTwoEquations(equations[2], equations[0]); // Eq3 + Eq1
+  const generateAllPairs = (eqs) => {
+    const pairs = [];
+    for (let i = 0; i < eqs.length; i++) {
+      for (let j = i + 1; j < eqs.length; j++) {
+        pairs.push({
+          eq1: eqs[i],
+          eq2: eqs[j],
+          label: `Eq${i + 1} & Eq${j + 1}`,
+        });
+      }
+    }
+    return pairs;
+  };
 
-    setSolutions([
-      { label: 'Eq1 & Eq2', ...sol1 },
-      { label: 'Eq2 & Eq3', ...sol2 },
-      { label: 'Eq3 & Eq1', ...sol3 },
-    ]);
+  useEffect(() => {
+    const pairs = generateAllPairs(equations);
+    const results = [];
+    const allLogs = [];
+
+    for (const pair of pairs) {
+      const result = solveByElimination(pair.label, pair.eq1, pair.eq2);
+      results.push(result);
+      allLogs.push(...result.logs);
+    }
+
+    // Rank by distance
+    const ranked = [...results].sort((a, b) => parseFloat(a.distance) - parseFloat(b.distance));
+    ranked.forEach((sol, i) => {
+      sol.rank = i === 0
+        ? 'Low'
+        : i === ranked.length - 1
+        ? 'High'
+        : 'Medium';
+    });
+
+    // Match rank back to original results
+    const final = results.map(r =>
+      ranked.find(s => s.label === r.label)
+    );
+
+    setSolutions(final);
+    setStepsLog(allLogs);
   }, []);
   console.log(solutions);
   

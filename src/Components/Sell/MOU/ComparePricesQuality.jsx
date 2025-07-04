@@ -43,10 +43,10 @@ function ComparePricesQuality() {
         },
         {
             id: 3,
-            label: `1000700`,
+            label: formData?.groups === 'Cost Price' ? `1000700` : formData?.groups === 'Expiry date' ? '50' : '',
             name: 'vendor_or_shop',
             type: 'text',
-            adornmentValue: 'Define Your Terms : Min Quantity * Cost Price < '
+            adornmentValue: formData?.groups === 'Cost Price' ? 'Define Your Terms : Min Quantity * Cost Price < ' : formData?.groups  === 'Expiry date' ? 'Define Your Terms : Expiry date >= ' : 'Define your Terms : '
         },
         {
             id: 4,
@@ -54,18 +54,18 @@ function ComparePricesQuality() {
             name: 'requirements',
             type: 'text',   
         },
-        {
-            id: 5,
-            label: 'Receive quote price and sample',
-            name: 'receive_quote_price',
-            type: 'text',
-        },
-        {
-            id: 6,
-            label: 'Set price and quality',
-            name: 'price_and_quality',
-            type: 'text',
-        },
+        // {
+        //     id: 5,
+        //     label: 'Receive quote price and sample',
+        //     name: 'receive_quote_price',
+        //     type: 'text',
+        // },
+        // {
+        //     id: 6,
+        //     label: 'Set price and quality',
+        //     name: 'price_and_quality',
+        //     type: 'text',
+        // },
         {
             id: 7,
             label: 'Send to vendor',
@@ -86,11 +86,23 @@ function ComparePricesQuality() {
         },
     ];
 
-    
+    const calculateDaysLeft = (expDate) => {
+        const today = new Date();
+        const expiry = new Date(expDate);
+        const timeDiff = expiry - today;
+        const msInDay = 24 * 60 * 60 * 1000;
+        const result = Math.ceil(timeDiff / msInDay);
+        console.log('Days left: ', result);
+    };
 
     const handleChange = (event) => {
         const { name, value } = event.target;
         setFormData({ ...formData, [name]: value });
+        if(name=== 'groups' && value === 'Expiry date'){
+            console.log(value);
+            
+            calculateDaysLeft('2025-07-11');
+        }
 
         // Clear any previous error for this field
         setErrors({ ...errors, [name]: null });
@@ -153,7 +165,7 @@ function ComparePricesQuality() {
         formData={formData}
         onChange={handleChange}
         errors={errors}
-        submitButtonText="Repeat the bidding"
+        submitButtonText="Send for bidding"
     />
     </>
   )

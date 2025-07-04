@@ -9,7 +9,7 @@ import { setSelectedProductAndShops } from '../../../store/mouSelectedProductsSl
 function IdentifyItem() {
     const initialData = {
         products:'',
-        groups:'',
+        group:'',
         vendors:'',
         details_of_vendor:'',
         last_conversation:'',
@@ -25,7 +25,7 @@ function IdentifyItem() {
     const selectedData = useSelector(state => state.mou.selectedProductAndShops);
 
     console.log(products);
-    console.log(formData?.products);
+    
     
     const formFields = [
         {
@@ -34,23 +34,24 @@ function IdentifyItem() {
             name: 'products',
             type: 'select',
             options : products.map((p) => ({label: p.product_name,value : p.product_id })),
-            value : selectedData?.product_id || ''
+            // value : selectedData?.product_id || ''
             // adornmentValue:<SearchIcon/>
         },
         {
             id: 2,
-            label: 'Select group (s)',
-            name: 'groups',
-            type: 'select-check',
-            options:['Group 1', 'Group 2', 'Group 3', 'Group 4', 'Group 5','Group 6', 'Group 7','Group 8','Group 9','Group 10'],
+            label: 'Group',
+            name: 'group',
+            type: 'text', 
+            placeholder: '-',
+            adornmentValue : 'Group : '
         },
         {
             id: 3,
             label: 'Select vendor(s)',
             name: 'vendors',
             type: 'select-check',
-            options:vendors?.map((v)=>({label: v.business_name,value : v.shop_no })),
-            value: selectedData?.shop_nos || []
+            options:vendors?.map((v)=>({label: v.business_name, value : v.shop_no })),
+            // value: selectedData?.shop_nos || ''
         },
         {
             id: 4,
@@ -80,16 +81,18 @@ function IdentifyItem() {
                 //     ),
                 // ];
 
-                const selectedProduct = formData?.products ? products?.find(p=>p.product_id === formData?.products) : selectedData?.product_id && products?.find(p=>p.product_id === selectedData?.product_id);
+                // const selectedProduct = formData?.products ? products?.find(p=>p.product_id === formData?.products) : selectedData?.product_id && products?.find(p=>p.product_id === selectedData?.product_id);
     
                 try{
                     setLoading(true);
-                    const resp = await get_category_wise_shops(selectedProduct?.category, selectedProduct?.product_name);
-                    console.log(resp);
-                    
+                    const resp = await get_category_wise_shops(products?.[0]?.shop_no);                    
                     if(resp?.valid){
                         console.log(resp.data);
                         setVendors(resp?.data);
+                        setFormData((prev)=>({
+                            ...prev,
+                            group: `${resp?.data?.[0]?.domain_name} - ${resp?.data?.[0]?.sector_name}`
+                        }))
                     }
                     
                 }catch(e){
@@ -105,17 +108,42 @@ function IdentifyItem() {
     const handleChange = (event) => {
         const { name, value } = event.target;
 
-        if(name === 'vendors'){
-            if(value.length<2){
-                setErrors({ ...errors, [name]: 'Please select at least 2 options.' })
+        // Handle 'vendors' validation
+        if (name === 'vendors') {
+            // Ensure value is treated as an array
+            const selected = Array.isArray(value) ? value : [];
+
+            if (selected.length < 2) {
+            setErrors((e) => ({
+                ...e,
+                [name]: 'Please select at least 2 options.',
+            }));
+            } else {
+            setErrors((e) => ({
+                ...e,
+                [name]: null,
+            }));
             }
+
+            setFormData((prev) => ({
+            ...prev,
+            [name]: selected,
+            }));
+            return; // Exit early for vendors
         }
 
-        setFormData({ ...formData, [name]: value });
+        // For all other fields
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
 
-        // Clear any previous error for this field
-        setErrors({ ...errors, [name]: null });
-    };
+        setErrors((e) => ({
+            ...e,
+            [name]: null,
+        }));
+        };
+
 
     const validateForm = () => {
         const newErrors = {};
