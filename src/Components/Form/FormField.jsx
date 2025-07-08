@@ -36,7 +36,10 @@ const FormField = ({
   btn_text,
   defaultChecked,
   disable = false,
-  adornmentPosition = "start"
+  adornmentPosition = "start",
+  handleAddClick,
+  handleRemoveClick, 
+  btn
 }) => {
 
   const marks = getSliderMarks ? getSliderMarks(name) : [];
@@ -318,7 +321,7 @@ const FormField = ({
                       }
                     </RadioGroup>
                   )
-                    : (
+                    : type ? (
                       <TextField
                         hiddenLabel
                         variant="outlined"
@@ -356,6 +359,15 @@ const FormField = ({
                         {...additionalProps}
                         disabled={disable}
                       />
+                    ):btn && (
+                      (btn==="Add" || btn==="add") ? (
+                                  <Link className="btn-link" onClick={handleAddClick}>
+                                    {btn}
+                                  </Link>
+                                ): (btn==="Remove" || btn==="remove") && (
+                                  <Link className="btn-link remove" onClick={handleRemoveClick}>
+                                    {btn}
+                                  </Link>)
                     )}
               </Box>
             </>

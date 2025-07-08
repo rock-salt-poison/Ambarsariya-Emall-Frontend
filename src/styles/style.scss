@@ -20697,6 +20697,18 @@ textarea[readonly] {
         background-size: cover;
         opacity: 0.6;
       }
+
+      .sub_fields {
+        @include flex-center(row, flex-end);
+        gap: 15px;
+        padding: 0 30px 12px;
+
+        input[type="button"]{
+          margin: 0px !important;
+          cursor: pointer;
+          border: 0px;
+        }
+      }
     }
 
     .card_board_component {
@@ -20888,20 +20900,20 @@ textarea[readonly] {
                 .submit_button_container {
                   @include flex-center(row, center);
                   flex: 1;
-
-                  .submit_button {
-                    background: linear-gradient(#9e7676, #bd8787);
-                    @include homepage-buttons("Bobby-Jones-Soft",
-                      18px,
-                      $light-yellow,
-                      "none"
-                    );
-                    @include hover-scale(1, 0s);
-                    margin: 0 auto 5px;
-                    padding: 2px 15px;
-                    border-radius: 8px;
-                    transition: background-color 0.3s ease;
-                  }
+                  
+                }
+                .submit_button, input[type="button"] {
+                  background: linear-gradient(#9e7676, #bd8787);
+                  @include homepage-buttons("Bobby-Jones-Soft",
+                    18px,
+                    $light-yellow,
+                    "none"
+                  );
+                  @include hover-scale(1, 0s);
+                  margin: 0 auto 5px;
+                  padding: 2px 15px;
+                  border-radius: 8px;
+                  transition: background-color 0.3s ease;
                 }
               }
             }

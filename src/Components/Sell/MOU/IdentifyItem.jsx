@@ -24,6 +24,7 @@ function IdentifyItem() {
     const dispatch = useDispatch();
     const selectedData = useSelector(state => state.mou.selectedProductAndShops);
 
+    console.log(allProducts);
     console.log(products);
     
     
@@ -32,7 +33,7 @@ function IdentifyItem() {
             id: 1,
             label: 'Select product (s) cum',
             name: 'products',
-            type: 'select',
+            type: 'select-check',
             options : products.map((p) => ({label: p.product_name,value : p.product_id })),
             // value : selectedData?.product_id || ''
             // adornmentValue:<SearchIcon/>
@@ -116,7 +117,12 @@ function IdentifyItem() {
             if (selected.length < 2) {
             setErrors((e) => ({
                 ...e,
-                [name]: 'Please select at least 2 options.',
+                [name]: 'Please select at least 2 shops.',
+            }));
+            }else if (selected.length > 3) {
+            setErrors((e) => ({
+                ...e,
+                [name]: 'Please select maximum 3 shops only.',
             }));
             } else {
             setErrors((e) => ({
@@ -166,10 +172,26 @@ function IdentifyItem() {
             console.log(formData);
 
             const selectedProduct = products.find((p)=> p.product_id === formData?.products);
+            // const selectedCategories = [
+            //         ...new Set(
+            //         formData.products
+            //             .map((productId) => {
+            //             const match = products?.find((p) => p?.product_id === productId);
+            //             return match?.category || null;
+            //             })
+            //             .filter((cat) => cat !== null)
+            //         ),
+            //     ];
+                const selectedProducts = 
+                    formData.products
+                        .map((productId) => {
+                        const match = products?.find((p) => p?.product_id === productId);
+                        console.log(match);
+                        
+                        return {id: productId, name : match?.product_name, category: match?.category, max_stock_size: match?.max_stock_quantity} || null;
+                        });
             dispatch(setSelectedProductAndShops({
-                product_name: selectedProduct?.product_name,
-                category: selectedProduct?.category,
-                product_id: selectedProduct?.product_id,
+                products: selectedProducts,
                 shop_nos: formData?.vendors
             }));
 

@@ -113,7 +113,12 @@ function Support(props) {
   useEffect(() => {
     if(token){
       const verifyUser = async () => {
-        const user = (await getUser(token))[0];
+        const user = await getUser(token);
+        console.log(user);
+        
+        const memberUser = user?.find((u)=>((u.user_type === 'member' || u.user_type === 'merchant') && u.member_id !== null))
+        const shopUser = user?.find((u)=>((u.user_type === 'shop' || u.user_type === 'merchant') && u.shop_no !== null))
+        const visitorUser = user?.find((u)=>(u.user_type === 'visitor'))
         
         setCurrentUser(user);
         // console.log(user);
@@ -122,25 +127,25 @@ function Support(props) {
           //   fetchData(user.user_access_token);
           // }
 
-          if(user.shop_access_token && user.user_type === 'shop'){
-            fetchShopData(user.shop_access_token, user.user_access_token);
-            if(user.support_id && user.visitor_id){
-              fetchData(user.user_access_token, user.shop_no);
+          if(shopUser.shop_access_token){
+            fetchShopData(shopUser.shop_access_token, shopUser.user_access_token);
+            if(shopUser.support_id && shopUser.visitor_id){
+              fetchData(shopUser.user_access_token, shopUser.shop_no);
             }
             setUserLoggedIn(true);
           }
 
-          else if(user.user_access_token && user.user_type === 'member'){
-            fetchMemberData(user.user_access_token)
-            if(user.support_id && user.visitor_id){
-              fetchData(user.user_access_token, user.member_id);
+          else if(memberUser.user_access_token ){
+            fetchMemberData(memberUser.user_access_token)
+            if(memberUser.support_id && memberUser.visitor_id){
+              fetchData(memberUser.user_access_token, memberUser.member_id);
             }
             setUserLoggedIn(true);
           }
 
-          else if(user.user_access_token && user.user_type === 'visitor'){
+          else if(visitorUser.user_access_token && visitorUser.user_type === 'visitor'){
             setUserLoggedIn(true);
-            fetchData(user.user_access_token, user.visitor_id);
+            fetchData(visitorUser.user_access_token, visitorUser.visitor_id);
           } 
 
           else{
@@ -151,7 +156,6 @@ function Support(props) {
     }
   }, [token]);
   
-
 
   // Handle form validation callback
   const handleFormValidation = (isValid, data) => {
