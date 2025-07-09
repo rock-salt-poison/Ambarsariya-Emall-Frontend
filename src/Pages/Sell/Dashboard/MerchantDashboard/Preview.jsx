@@ -44,9 +44,10 @@ function Preview() {
         />
       ),
     },
-    { id: 2, name: "Subscriptions", content: <SubscriptionsPreview /> },
+    { id: 2, name: "Supply Chain Management", content: <SubscriptionsPreview /> },
     { id: 3, name: "Coupons", content: <CouponsPreview /> },
-    { id: 4, name: "Last stock update", content: "" },
+    { id: 4, name: "Suppliers For Shop", content: "" },
+    { id: 5, name: "Last stock update", content: "" },
   ];
 
   useEffect(() => {
