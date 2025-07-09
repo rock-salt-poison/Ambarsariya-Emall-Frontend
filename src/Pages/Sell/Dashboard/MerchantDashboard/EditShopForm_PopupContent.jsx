@@ -24,7 +24,7 @@ function EditShopForm_PopupContent() {
         }if(id===2){
             navigate('../eshop')
         }if(id===3){
-            navigate('../id/subscribe')
+            navigate('supply')
         }if(id===4){
             navigate('preview')
         }

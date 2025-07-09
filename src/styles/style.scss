@@ -24678,3 +24678,357 @@ textarea[readonly] {
     }
   }
 }
+
+
+.supply_wrapper{
+  position: relative;
+  min-height: 100vh;
+  @include flex-center(column, flex-start);
+  place-items: normal;
+  z-index: 0;
+  background: linear-gradient(#D49B52, #F9DEB1);
+  
+  &::before{
+    content: '';
+    @include background-center-no-repeat($supplyBgImg);
+    background-size: cover;
+    background-position: center;
+    @include full-absolute(0px, 0px, 0px, 0px);
+    z-index: -1;
+    opacity: .5;
+    background-attachment: fixed;
+  }
+  
+  .row{
+    position: relative;
+    z-index: 1;
+    @include flex-center(column, flex-start);
+    gap: 30px;
+    flex: 1;
+    padding: 30px;
+
+    .col{
+      @include flex-center(row, center);
+      gap: 20px;
+
+      &:first-child{
+        justify-content: flex-end;
+        @include full-absolute(30px, 30px, auto, auto);
+      }
+
+      &:nth-child(2){
+        .arrow_icon{
+          width: 240px;
+
+          &.rotate{
+            transform: scaleX(-1);
+          }
+        }
+
+        .heading_container{
+          background: linear-gradient(rgba(#BE7A2D, .85), rgba(#DCA76B, .85));
+          padding: 13px 30px 30px 25px;
+          border-radius: 20px;
+
+          .heading{
+            @include homepage-buttons("Gladiola", 90px, $black, "none");
+            @include hover-scale(1, 0s);
+            line-height: 85px;
+          }
+        }
+      }
+
+      .img_container{
+        overflow: hidden;
+        width: 330px;
+        height: 296px;
+        border-radius: 20px;
+        border: 10px solid $black;
+        filter: drop-shadow(2px 2px 0px $black) drop-shadow(2px 2px 4px rgba($yellow, .8));
+        transition: .2s all linear;
+        
+        .b2b, .b2c{
+          width: 100%;
+          transition: .4s all linear;
+          // border-radius: 10px;
+  
+          &:hover{
+            transform: scale(1.1);
+          }
+        }
+      }
+
+    }
+
+  }
+}
+
+.b2b_wrapper{
+  position: relative;
+  min-height: 100vh;
+  @include flex-center(column, flex-start);
+  place-items: normal;
+  z-index: 0;
+  background: $dark-yellow;
+  
+  &::before{
+    content: '';
+    @include background-center-no-repeat($b2bBgImg);
+    background-size: cover;
+    background-position: center;
+    @include full-absolute(0px, 0px, 0px, 0px);
+    z-index: -1;
+    opacity: .59;
+  }
+  
+  .row{
+    position: relative;
+    z-index: 1;
+    @include flex-center(column, flex-start);
+    gap: 20px;
+    place-items: normal;
+    flex: 1;
+    padding: 30px;
+
+    .col{
+      &:first-child{
+        display: grid;
+        grid-template-columns: 120px 1fr 120px;
+        gap: 15px;
+        align-items: center;
+        place-items: center;
+
+        .title_container{
+          background: linear-gradient(rgba(#E9CF9F, .85), rgba(#CCAA6B, .85));
+          padding: 8px 19px;
+          border-radius: 10px;
+          justify-self: self-start;
+
+          .title{
+            @include homepage-buttons("Bobby-Jones-Soft", 25px, $black, "none");
+            @include hover-scale(1, 0s);
+            line-height: 25px;
+          }
+        }
+
+        .seller{
+          width: 165px;
+        }
+      }
+
+      .container{
+        form{
+          @include flex-center(row, space-between);
+          gap: 20px 40px;
+          place-items: normal;
+
+          .tooltip{
+            flex: 1;
+          }
+
+          .label {
+            display: none;
+          }
+
+          .rs-picker{
+            .rs-picker-input-group{
+              background: rgba($yellow, .85) !important;
+              border: 2px solid $brown-4;
+              border-top-width: 0px;
+              border-left-width: 0px;
+            }
+          } 
+
+          .MuiSelect-select, .rs-input{
+            padding: 8px 32px 7px 10px;
+            @include homepage-buttons("Bobby-Jones-Soft", 18px, $black, "none");
+            @include hover-scale(1, 0s);
+            min-height: max-content;
+            color: $black !important;
+          }
+
+          .input_field{
+            width: 100%;
+            background: rgba($yellow, .85);
+            border-radius: 10px;
+            border: 2px solid $brown-4;
+            border-top-width: 0px;
+            border-left-width: 0px;
+
+            .MuiOutlinedInput-notchedOutline{
+              border: 0px;
+            }            
+
+          }
+
+          .error_message {
+                @include homepage-buttons("Bobby-Jones-Soft",
+                  16px,
+                  $black,
+                  "none"
+                );
+                @include hover-scale(1, 0s);
+              }
+
+          .submit_button_container {
+        @include flex-center(row, center);
+
+        .submit_button {
+          background: $yellow;
+          @include homepage-buttons("Bobby-Jones-Soft", 18px, $brown-4, "none");
+          @include hover-scale(1, 0s);
+          margin: 0 auto 5px;
+          padding: 2px 15px;
+          border-radius: 8px;
+          transition: background-color 0.3s ease;
+        }
+      }
+
+        }
+      }
+
+      .buyer_detail{
+
+        @include flex-center(row, flex-start);
+        gap: 15px;
+
+        .icon{
+          width: 65px;
+        }
+
+        .buyer_container{
+          background-color: rgba($yellow, .85);
+          border-radius: 10px;
+          padding: 4px 19px;
+          .buyer{
+            @include homepage-buttons("Bobby-Jones-Soft", 20px, $black, "none");
+            @include hover-scale(1, 0s);
+          }
+        }
+      }
+
+      &:last-child{
+        @include flex-center(row, center);
+
+        table{
+          width: 80%;
+        }
+      }
+
+      .MuiTable-root {
+        border-spacing: 2px;
+        border-collapse: separate;
+
+        .MuiTableCell-root {
+          padding: 10px 20px;
+        }
+
+        .MuiTableHead-root {
+          .MuiTableRow-root {
+            .MuiTableCell-root {
+              background-color: rgba($yellow, .85);
+              border-top-left-radius: 10px;
+              border-top-right-radius: 10px;
+              @include homepage-buttons("Bobby-Jones-Soft",
+                18px,
+                $brown-4,
+                none);
+              @include hover-scale(1, 0s);
+
+              span {
+                @include homepage-buttons("Bobby-Jones-Soft",
+                  16px,
+                  $brown-4,
+                  none);
+                @include hover-scale(1, 0s);
+                display: block;
+              }
+
+              text-align: center;
+              border-bottom: 0px;
+
+            }
+          }
+        }
+
+        .MuiTableBody-root {
+          .MuiTableRow-root {
+            .MuiTableCell-root {
+              background-color: rgba($brown-4, .85);
+              @include homepage-buttons("Bobby-Jones-Soft",
+                18px,
+                $light-yellow,
+                none);
+              @include hover-scale(1, 0s);
+              text-align: center;
+              border-bottom: 0px;
+
+              .btn-submit {
+                background-color: #f9e0b399;
+                @include homepage-buttons("Bobby-Jones-Soft",
+                  14px,
+                  $brown-4,
+                  none);
+                @include hover-scale(1, 0s);
+                padding: 2px 12px;
+              }
+
+
+              .MuiInputAdornment-root {
+                .MuiTypography-root {
+                  color: $light-yellow;
+                }
+              }
+
+              input,
+              .MuiSelect-select {
+                padding: 0px;
+                text-align: center;
+                @include homepage-buttons("Bobby-Jones-Soft",
+                  18px,
+                  $light-yellow,
+                  none);
+                @include hover-scale(1, 0s);
+              }
+
+              .input_field.select {
+                width: 240px;
+              }
+
+              .MuiSelect-select {
+                text-align: left;
+                width: 85%;
+                text-overflow: ellipsis;
+              }
+
+              svg {
+                fill: $light-yellow;
+              }
+
+              .MuiOutlinedInput-notchedOutline {
+                border: 0px;
+              }
+            }
+
+            &:last-child {
+              .MuiTableCell-root {
+                border-bottom-left-radius: 10px;
+                border-bottom-right-radius: 10px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.b2c_wrapper{
+  @extend .b2b_wrapper;
+
+  &::before{
+    @include background-center-no-repeat($b2cBgImg);
+    background-size: cover;
+    background-position: center;
+  }
+}
