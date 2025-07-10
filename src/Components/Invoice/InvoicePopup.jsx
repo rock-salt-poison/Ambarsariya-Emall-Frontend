@@ -720,27 +720,27 @@ function InvoicePopup({ open, onClose, serviceType, invoiceNo }) {
                         </TableCell>
                       </TableRow>
 
-                      {invoice.tax_applied &&
+                      {invoice?.tax_applied &&
                         <TableRow className="bgColor">
                           <TableCell colSpan={3} className="text right">
                             Tax Rate (%)
                           </TableCell>
                           <TableCell className="text">
-                            18% = <CurrencyRupeeIcon /> {invoice.tax_applied || '-'}
+                            18% = <CurrencyRupeeIcon /> {invoice?.tax_applied || '-'}
                           </TableCell>
                         </TableRow>
                       }
 
-                      {invoice.discount_applied && <TableRow className="bgColor">
+                      {invoice?.discount_applied && <TableRow className="bgColor">
                         <TableCell colSpan={3} className="text right">
                           Discount Coupon Applied
                         </TableCell>
                         <TableCell className="text">
-                          {invoice.discount_applied?.conditions?.[1]?.value}% = -<CurrencyRupeeIcon /> {invoice?.discount_amount}
+                          {invoice?.discount_applied?.conditions?.[1]?.value}% = -<CurrencyRupeeIcon /> {invoice?.discount_amount}
                         </TableCell>
                       </TableRow>}
 
-                      {invoice.discount_amount && <TableRow className="bgColor">
+                      {invoice?.discount_amount > 0 && <TableRow className="bgColor">
                         <TableCell colSpan={3} className="text right">
                           Coupon Charges
                         </TableCell>
