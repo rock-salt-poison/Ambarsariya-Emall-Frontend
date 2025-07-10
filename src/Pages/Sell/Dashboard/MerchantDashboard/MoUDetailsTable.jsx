@@ -7,13 +7,10 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Typography,
 } from "@mui/material";
-import { get_saleOrders } from "../../../../API/fetchExpressAPI";
 import CustomSnackbar from "../../../../Components/CustomSnackbar";
-import { Link } from "react-router-dom";
 
-function B2BTable({ selectedMouType }) {
+function MoUDetailsTable({data}) {
   const [loading, setLoading] = useState(false);
   const [tableHeader, setTableHeader] = useState([]);
 
@@ -24,32 +21,17 @@ function B2BTable({ selectedMouType }) {
   });
 
   useEffect(()=>{
-    if(selectedMouType ==='new' || selectedMouType === 'waiting' || selectedMouType === 'renew for final'){
+    if(data){
       setTableHeader([
         'Item ID',
-        'Subscription Type',
-        'Selling Price',
-        'Quantity Available',
-        'Final Price & Quantity per subscription',
-      ])
-    }else if(selectedMouType ==='on-going'){
-      setTableHeader([
-        'MoU No.',
-        'Start Date & End Date',
-        'Subscription Type',
-        'Credit Balance',
-        '% of Completion',
-      ])
-    }else if(selectedMouType ==='completed'){
-      setTableHeader([
-        'S.No.',
-        'MoU',
-        'Completed Date',
-        'Renewal Status',
-        'New Bidding'
+        'Attribute for comparison',
+        'As per quote',
+        'Quote',
+        'Status',
+        'Final Fix',
       ])
     }
-  }, [selectedMouType]);
+  }, [data]);
 
 
 
@@ -70,22 +52,24 @@ function B2BTable({ selectedMouType }) {
           </TableHead>
           <TableBody>
                 <TableRow hover>
-                  <TableCell>1</TableCell>
+                  <TableCell>sdfsdsgse rtrfdrb gegdfbdreyef hbdbhdre yeyrfdhdhreedf</TableCell>
 
                   <TableCell>
-                    -
+                    ersdvsxgre dthdgngf thg
                   </TableCell>
 
                   <TableCell>
-                    -
+                    thdcg yjfh ndthbg
                   </TableCell>
                   <TableCell>
-                  -
+                  tgfb tryurn vbnbfg gfn
                   </TableCell>
                   <TableCell>
-                    -
+                    gfhfg erte er yere
                   </TableCell>
-
+                  <TableCell>
+                   ert ery eyreyedfb hg
+                  </TableCell>
                 </TableRow>
 
 {/* 
@@ -106,4 +90,4 @@ function B2BTable({ selectedMouType }) {
   );
 }
 
-export default B2BTable;
+export default MoUDetailsTable;

@@ -43,6 +43,8 @@ import ProductSearch from '../Pages/Sell/ProductSearch';
 import Community from '../Pages/Serve/Community';
 import Supply from '../Pages/Sell/Dashboard/MerchantDashboard/Supply';
 import B2B from '../Pages/Sell/Dashboard/MerchantDashboard/B2B';
+import MoUDetail from '../Pages/Sell/Dashboard/MerchantDashboard/MoUDetail';
+import MoURulesAndRegulations from '../Pages/Sell/MoURulesAndRegulations';
 
 function SellRoutes() {
   const ConditionalRoute = () => {
@@ -76,6 +78,7 @@ function SellRoutes() {
       <Route path="support/shop/:token/dashboard/:edit/preview" element={<Preview />} />
       <Route path="support/shop/:token/dashboard/:edit/supply" element={<Supply />} />
       <Route path="support/shop/:token/dashboard/:edit/supply/:type" element={<B2B />} />
+      <Route path="support/shop/:token/dashboard/:edit/supply/:type/:purchaser_id" element={<MoUDetail />} />
       <Route path="shop/:token/products" element={<Products />} />
       <Route path="shop/:token/products/:product_id" element={<ProductDetails />} />
       <Route path="shop/:token/products/detail/:product_id" element={<ProductInfo />} />
@@ -85,6 +88,7 @@ function SellRoutes() {
       <Route path="shop/:owner/cart" element={<Cart />} />
       <Route path=":owner/subscribe" element={<Subscribe />} />
       <Route path=":owner/mou" element={<Mou />} />
+      <Route path=":owner/mou/terms" element={<MoURulesAndRegulations />} />
       <Route path=":owner/:action" element={<ConditionalRoute />} />
       <Route path=":owner/like-and-share" element={<Like_share />} />
       <Route path="esale" element={<Esale />} />

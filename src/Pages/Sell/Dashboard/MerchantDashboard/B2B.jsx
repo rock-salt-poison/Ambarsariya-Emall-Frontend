@@ -38,7 +38,7 @@ function B2B() {
                 </Box>
 
                 <Box className="col">
-                    <Link className="buyer_detail">
+                    <Link className="buyer_detail" to={type === 'b2b' ? 'merchant_1': type === 'b2c' && 'member_1'}>
                         <Box component="img" src={button} alt="icon" className="icon" />
                         <Box className="buyer_container">
                             <Typography className="buyer">
@@ -48,7 +48,9 @@ function B2B() {
                     </Link>
                 </Box>
 
-                <B2BTable selectedMouType={selectedMouType.toLowerCase()} />
+                <Box className="col">
+                    <B2BTable selectedMouType={selectedMouType.toLowerCase()} />
+                </Box>
             </Box>
         </Box>
     );

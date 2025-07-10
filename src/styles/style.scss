@@ -24260,9 +24260,13 @@ textarea[readonly] {
       }
 
       @include flex-center(column, flex-start);
-      gap: 10px;
+      gap: 20px;
       place-items: normal;
 
+      .bgColor {
+        background: $invoice_bg;
+      }
+      
       .title{
         @include homepage-buttons("Arial",
           28px,
@@ -24271,7 +24275,7 @@ textarea[readonly] {
         );
         @include hover-scale(1, 0s);
         font-weight: bold;
-        margin-bottom: 15px;
+        margin-bottom: 5px;
       }
 
       .text, .MuiFormControlLabel-label{
@@ -24288,16 +24292,65 @@ textarea[readonly] {
         }
       }
 
-      ol{
+      ol, ul{
         margin: 0;
         display: flex;
         flex-direction: column;
+        gap: 20px;
+
+        li{
+          .item_container{
+            @include flex-center(column, flex-start);
+            place-items: normal;
+            gap: 15px;
+          }
+        }
+      }
+
+      ul{
         gap: 10px;
       }
 
       .emall_img{
         height: 350px;
         object-fit: cover;
+      }
+
+      table {
+        border: 1px solid $invoice_border;
+
+        svg {
+          width: 16px;
+          height: auto;
+          vertical-align: top;
+        }
+
+        tr {
+          // border-bottom: 1px solid $invoice_border;
+
+          &:last-child {
+            td {
+              border-bottom: none;
+            }
+          }
+
+          td,
+          th {
+            border-right: 1px solid $invoice_border;
+            border-bottom: 1px solid $invoice_border;
+
+            &:last-child {
+              border-right: none;
+            }
+          }
+
+          td {
+            .col-group {
+              @include flex-center(column, center);
+              gap: 6px;
+            }
+          }
+        }
       }
     }
     form{
@@ -24714,6 +24767,7 @@ textarea[readonly] {
       &:first-child{
         justify-content: flex-end;
         @include full-absolute(30px, 30px, auto, auto);
+        z-index: 1;
       }
 
       &:nth-child(2){
@@ -24760,6 +24814,87 @@ textarea[readonly] {
 
     }
 
+    @media (max-width: 992px){
+      .col{
+        &:first-child{
+          position: relative;
+          top: auto;
+          right: auto;
+          align-self: flex-end;
+        }
+
+        &:nth-child(2){
+          .arrow_icon{
+            width: 200px !important;
+          }
+
+          .heading_container{
+            padding: 13px 30px 23px 25px;
+            .heading{
+              font-size: 50px;
+              line-height: 45px;
+            }
+          }
+        }
+
+        .img_container{
+          width: 300px;
+          height: 270px;
+        }
+      }
+    }
+
+    @media (max-width: 768px){
+      .col{
+
+        &:nth-child(2){
+          .arrow_icon{
+            width: 100px !important;
+          }
+
+          .heading_container{
+            padding: 13px 30px 23px 25px;
+            .heading{
+              font-size: 50px;
+              line-height: 45px;
+            }
+          }
+        }
+
+        &:last-child{
+          // flex-direction: column !important;
+
+          .img_container{
+            width: 50%;
+            height: auto;
+          }
+        }
+      }
+    }
+
+    @media (max-width: 560px){
+      
+      .col{
+        &:nth-child(2){
+          .arrow_icon{
+            display: none;
+          }
+          .heading_container{
+            .heading{
+              font-size: 35px;
+              line-height: 30px;
+            }
+          }
+        }
+        &:last-child{
+          flex-direction: column !important;
+  
+          .img_container{
+            width: 100%;
+          }
+        }
+      }
+    }
   }
 }
 
@@ -24821,9 +24956,11 @@ textarea[readonly] {
           @include flex-center(row, space-between);
           gap: 20px 40px;
           place-items: normal;
+          flex-wrap: wrap;
 
           .tooltip{
             flex: 1;
+            min-width: 280px;
           }
 
           .label {
@@ -24910,8 +25047,14 @@ textarea[readonly] {
       &:last-child{
         @include flex-center(row, center);
 
-        table{
+        .table_container{
           width: 80%;
+          overflow-x: scroll;
+  
+          &::-webkit-scrollbar{
+            height: 3px;
+          }
+          
         }
       }
 
@@ -25020,6 +25163,63 @@ textarea[readonly] {
         }
       }
     }
+
+    @media (max-width: 992px){
+      .col{
+        &:nth-child(2){
+          flex-wrap: wrap;
+        }
+
+        .table_container{
+          width: 100% !important;
+        }
+      }
+    }
+    @media (max-width: 768px){
+      .col{
+        &:nth-child(2){
+          form{
+            flex-direction: column !important;
+            gap: 10px;
+
+            .tooltip{
+              min-width: auto;
+              width: 100%;
+            }
+
+            .rs-picker{
+              width: 100%;
+            }
+          }
+        }
+
+        .table_container{
+          width: 100% !important;
+        }
+      }
+    }
+
+    @media (max-width: 560px){
+      padding: 20px;
+      .col{
+        &:first-child{
+          grid-template-columns: repeat(2, 1fr);
+          gap: 10px;
+
+          .seller{
+            grid-column-start: 1;
+            grid-column-end: 3;
+            justify-self: center;
+            order: 2;
+          }
+
+          .badge{
+            order: 1;
+            justify-self: end;
+          }
+        }
+      }
+    }
   }
 }
 
@@ -25030,5 +25230,267 @@ textarea[readonly] {
     @include background-center-no-repeat($b2cBgImg);
     background-size: cover;
     background-position: center;
+  }
+}
+
+.mou_detail_wrapper{
+  position: relative;
+  min-height: 100vh;
+  @include flex-center(column, flex-start);
+  place-items: normal;
+  z-index: 0;
+  background: $dark-yellow;
+  
+  &::before{
+    content: '';
+    @include background-center-no-repeat($mouDetailBgImg);
+    background-size: cover;
+    background-position: center;
+    @include full-absolute(0px, 0px, 0px, 0px);
+    z-index: -1;
+    opacity: .59;
+  }
+  
+  .row{
+    position: relative;
+    z-index: 1;
+    @include flex-center(column, flex-start);
+    gap: 20px;
+    place-items: normal;
+    flex: 1;
+    padding: 30px;
+
+    .col{
+      display: grid;
+      grid-template-columns: 120px 1fr 120px;
+      gap: 20px;
+
+      &:last-child{
+        grid-template-columns: 120px 1fr;
+      }
+
+      .title_container{
+        @include flex-center(column, center);
+        gap: 10px;
+        background: rgba($brown-4, .8);
+        border-radius: 10px;
+        padding: 8px 18px;
+        width: max-content;
+        place-self: center;
+
+        .title{
+          @include homepage-buttons("Gladiola", 32px, $light-yellow, "none");
+          @include hover-scale(1, 0s);
+          text-shadow: 0.24px 0.24px 4.78px $yellow;
+          text-transform: capitalize;
+          line-height: 32px;
+          text-align: center;
+        }
+        
+        .desc{
+          @include homepage-buttons("Bobby-Jones-Soft",
+          25px,
+          $yellow,
+          "none"
+          );
+          @include hover-scale(1, 0s);
+          line-height: 25px;
+          text-align: center;
+
+          .span {
+            color: $light-yellow;
+            margin-left: 5px;
+          }
+        }
+      }
+
+      .icons{
+        @include flex-center(column, flex-start);
+        gap: 20px;
+        width: max-content;
+
+        .icon_container{
+          .icon{
+            width: 100px;
+          }
+        }
+      }
+      
+      .table_container{
+        width: 100%;
+        overflow-x: scroll;
+
+        &::-webkit-scrollbar{
+          height: 3px;
+        }
+      }
+
+      .MuiTable-root {
+        border-spacing: 2px;
+        border-collapse: separate;
+        align-self: self-start;
+
+        .MuiTableCell-root {
+          padding: 10px 20px;
+        }
+
+        .MuiTableHead-root {
+          .MuiTableRow-root {
+            .MuiTableCell-root {
+              background-color: rgba($yellow, .85);
+              border-top-left-radius: 10px;
+              border-top-right-radius: 10px;
+              @include homepage-buttons("Bobby-Jones-Soft",
+                18px,
+                $brown-4,
+                none);
+              @include hover-scale(1, 0s);
+
+              span {
+                @include homepage-buttons("Bobby-Jones-Soft",
+                  16px,
+                  $brown-4,
+                  none);
+                @include hover-scale(1, 0s);
+                display: block;
+              }
+
+              text-align: center;
+              border-bottom: 0px;
+
+            }
+          }
+        }
+
+        .MuiTableBody-root {
+          .MuiTableRow-root {
+            .MuiTableCell-root {
+              background-color: rgba($brown-4, .85);
+              @include homepage-buttons("Bobby-Jones-Soft",
+                18px,
+                $light-yellow,
+                none);
+              @include hover-scale(1, 0s);
+              text-align: center;
+              border-bottom: 0px;
+
+              .btn-submit {
+                background-color: #f9e0b399;
+                @include homepage-buttons("Bobby-Jones-Soft",
+                  14px,
+                  $brown-4,
+                  none);
+                @include hover-scale(1, 0s);
+                padding: 2px 12px;
+              }
+
+
+              .MuiInputAdornment-root {
+                .MuiTypography-root {
+                  color: $light-yellow;
+                }
+              }
+
+              input,
+              .MuiSelect-select {
+                padding: 0px;
+                text-align: center;
+                @include homepage-buttons("Bobby-Jones-Soft",
+                  18px,
+                  $light-yellow,
+                  none);
+                @include hover-scale(1, 0s);
+              }
+
+              .input_field.select {
+                width: 240px;
+              }
+
+              .MuiSelect-select {
+                text-align: left;
+                width: 85%;
+                text-overflow: ellipsis;
+              }
+
+              svg {
+                fill: $light-yellow;
+              }
+
+              .MuiOutlinedInput-notchedOutline {
+                border: 0px;
+              }
+            }
+
+            &:last-child {
+              .MuiTableCell-root {
+                border-bottom-left-radius: 10px;
+                border-bottom-right-radius: 10px;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    @media (max-width: 992px){
+      .col{
+        &:last-child{
+          @include flex-center(column, flex-start);
+          gap: 20px;
+
+          .icons{
+            flex-direction: row !important;
+
+            .icon_container{
+              .icon{
+                width: 60px;
+              }
+            }
+          }
+
+          
+        }
+      }
+    }
+
+    @media (max-width: 768px){
+      .col{
+        &:first-child{
+            grid-template-columns: repeat(2, 1fr);          
+          .badge{
+            order: 1;
+            justify-self: end;
+          }
+
+          .title_container{
+            order: 2;
+            grid-column-start: 1;
+            grid-column-end: 3;
+          }
+        }
+      }
+    }
+
+    @media (max-width: 560px){
+      padding: 20px;
+
+      .col{
+        &:first-child{
+          .title_container{
+            width: 100%;
+
+            .title{
+              font-size: 26px;
+              line-height: 26px;
+            }
+
+            .desc{
+              font-size: 20px;
+              line-height: 20px;
+            }
+          }
+        }
+      }
+    }
   }
 }

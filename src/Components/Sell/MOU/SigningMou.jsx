@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import GeneralLedgerForm from '../../Form/GeneralLedgerForm';
+import { useNavigate } from 'react-router-dom';
 
 function SigningMou() {
     const initialData = {
@@ -16,6 +17,7 @@ function SigningMou() {
 
     const [formData, setFormData] = useState(initialData);
     const [errors, setErrors] = useState({});
+    const navigate = useNavigate();
 
   const equations = [
     { A: 30, B: 30, C: 900 }, // Eq1
@@ -219,6 +221,7 @@ function SigningMou() {
         event.preventDefault(); // Prevent default form submission
         if (validateForm()) {
             console.log(formData);
+            navigate('terms');
             // Proceed with further submission logic, e.g., API call
         } else {
             console.log(errors);
@@ -231,7 +234,7 @@ function SigningMou() {
         formData={formData}
         onChange={handleChange}
         errors={errors}
-        submitBtnVisibility={false}
+        submitButtonText='Send'
     />
   )
 }
