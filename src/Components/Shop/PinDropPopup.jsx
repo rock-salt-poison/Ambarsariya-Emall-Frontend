@@ -31,13 +31,11 @@ const PinDropPopup = ({
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [loading, setLoading] = useState(false);
-  const [radius, setRadius] = useState((distance_from_pin )?.toString() || "1"); // in km
+  const [radius, setRadius] = useState((distance_from_pin)?.toString() || "1"); // in km
   const circleRef = useRef(null);
-  const [markerPosition, setMarkerPosition] = useState({ lat, lng });
   const mapRef = useRef(null);
-
+  const [markerPosition, setMarkerPosition] = useState({ lat, lng });
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
-  
 
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: API_KEY,
@@ -45,20 +43,29 @@ const PinDropPopup = ({
 
   const validLength = parseFloat(radius) || 0;
 
-  useEffect(() => {
+  // ✅ Helper to draw circle when map is ready or when radius/markerPosition changes
+  const drawCircle = (mapInstance) => {
+    if (!mapInstance || !validLength || !window.google) return;
+
     if (circleRef.current) {
       circleRef.current.setMap(null);
       circleRef.current = null;
     }
 
-    if (validLength > 0 && mapRef.current) {
-      circleRef.current = new window.google.maps.Circle({
-        center: markerPosition,
-        radius: validLength,
-        fillColor: "rgba(255, 0, 0, 0.33)",
-        strokeColor: "red",
-        map: mapRef.current,
-      });
+    circleRef.current = new window.google.maps.Circle({
+      center: markerPosition,
+      radius: validLength,
+      fillColor: "rgba(255, 0, 0, 0.33)",
+      strokeColor: "red",
+      strokeWeight: 1,
+      map: mapInstance,
+    });
+  };
+
+  // ✅ Update circle when radius or marker changes
+  useEffect(() => {
+    if (mapRef.current) {
+      drawCircle(mapRef.current);
     }
   }, [validLength, markerPosition]);
 
@@ -83,10 +90,9 @@ const PinDropPopup = ({
           message: resp?.message,
           severity: 'success',
         });
-        setTimeout(()=>{
+        setTimeout(() => {
           onClose();
-        },800);
-        
+        }, 800);
       } finally {
         setLoading(false);
       }
@@ -95,9 +101,6 @@ const PinDropPopup = ({
 
   if (loadError) return <p>Error loading maps.</p>;
   if (!isLoaded) return <p>Loading maps...</p>;
-
-  console.log("Lat:", lat, "Lng:", lng);
-
 
   return (
     <Dialog
@@ -125,11 +128,18 @@ const PinDropPopup = ({
           mapContainerStyle={mapContainerStyle}
           zoom={20}
           center={markerPosition}
-          onLoad={(map) => (mapRef.current = map)}
+          onLoad={(map) => {
+            mapRef.current = map;
+            drawCircle(map); // ✅ Draw on initial load
+          }}
         >
-          <MarkerF position={markerPosition} draggable onDragEnd={(e) =>
-    setMarkerPosition({ lat: e.latLng.lat(), lng: e.latLng.lng() })
-  }/>
+          <MarkerF
+            position={markerPosition}
+            draggable
+            onDragEnd={(e) =>
+              setMarkerPosition({ lat: e.latLng.lat(), lng: e.latLng.lng() })
+            }
+          />
         </GoogleMap>
 
         <Box component="form" onSubmit={handleSubmit} mt={2}>
@@ -151,6 +161,7 @@ const PinDropPopup = ({
           </Button>
         </Box>
       </DialogContent>
+
       <CustomSnackbar
         open={snackbar.open}
         handleClose={() => setSnackbar({ ...snackbar, open: false })}
