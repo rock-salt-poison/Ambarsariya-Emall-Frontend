@@ -110,6 +110,9 @@ function ProductInfo() {
     }, 600);
   }
 
+  console.log(data);
+  
+
   
 
   return (
@@ -152,7 +155,7 @@ function ProductInfo() {
             </Typography>
             {data?.[selectedVariant]?.product_style && <Typography className="text">
               <Typography variant="span" className="light">Style : </Typography>
-              {data?.[selectedVariant]?.item_id ? data?.[selectedVariant]?.item_id?.split('_')?.at(-3) : data?.[0]?.product_style ? data?.[0]?.product_style : '-'}
+              {data?.[0]?.product_style || '-'}
             </Typography>}
           </Box>
         </Box>
@@ -171,7 +174,7 @@ function ProductInfo() {
                     key={variant.item_id}
                     value={variant.item_id}
                     control={<Radio />}
-                    label={`Variant ${index + 1}`}
+                    label={`${data?.[index]?.item_id?.split('_')?.at(-3)}`}
                     className="variation"
                   />
                 ))}

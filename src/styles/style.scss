@@ -3969,7 +3969,7 @@ a {
           flex: 1.2;
           width: 100%;
           z-index: 0;
-          height: 90%;
+          height: 100%;
 
           .MuiList-root {
             max-width: 260px;
@@ -3989,7 +3989,7 @@ a {
             opacity: 0.87;
             box-shadow: -30px 25px 0px 7px #984a1b;
             align-self: stretch;
-            height: 75%;
+            height: 100%;
 
             .circle {
               width: 100px;
@@ -4982,7 +4982,7 @@ a {
                   @include hover-scale(1, 0s);
                   padding: 5px 10px;
                   white-space: wrap;
-                  max-width: 40%;
+                  max-width: 50%;
                   line-height: 1.2em;
                   position: relative;
                   display: inline;

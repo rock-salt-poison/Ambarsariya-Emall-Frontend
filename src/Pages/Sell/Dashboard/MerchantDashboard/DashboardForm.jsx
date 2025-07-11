@@ -953,6 +953,10 @@ function DashboardForm({ data }) {
                 items_per_shelf: sku["Items Per Shelf"] || null,
                 max_rack_at_max_quantity: sku["Max Rack at Max Quantity"] || null,
                 max_shelves_extra: sku["Max Shelves Extra"] || null,
+                quantity_area_covered_shelves : sku["Quantity Area Covered Shelves"] || null,
+                max_quantity_area_covered_shelves : sku["Max Quantity Area Covered Shelves"] || null,
+                unoccupied_area_uncovered_shelves : sku["Unoccupied Area Uncovered Shelves"] || null,
+                space_available_for_no_of_items : sku["Space Available for No of Items"] || null,
                 rku_id: rku || [],
                 shop_no: shopNo,
               };

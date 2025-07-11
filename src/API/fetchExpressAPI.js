@@ -1270,3 +1270,14 @@ export const get_mou_selected_shops_products = async (category, product, shop_no
     throw e;
   }
 }
+
+export const get_in_stock_updates = async (shop_no) => {
+  try {
+    if (shop_no) {
+      const response = await axios.get(`${link}/in-stock-products/${shop_no}`);
+      return response.data;
+    }
+  } catch (e) {
+    throw e;
+  }
+}
