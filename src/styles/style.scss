@@ -22159,6 +22159,115 @@ textarea[readonly] {
           #9aaecbc4 75%) !important;
       width: 58% !important;
 
+      .stock_update{
+        @include flex-center(column, center);
+        gap: 20px;
+
+        .container{
+          form{
+            flex-direction: row !important;
+
+            .tooltip{
+              flex: 1;
+
+              .label{
+                min-width: auto;
+              }
+            }
+
+            .error_message {
+              @include homepage-buttons("Bobby-Jones-Soft",
+                15px,
+                $red2,
+                "none"
+              );
+              @include hover-scale(1, 0s);
+            }
+
+            .submit_button_container{
+              margin: 0px;
+
+              .submit_button{
+                background: $blue;
+                color: $light-yellow;
+                padding: 1px 20px; 
+              }
+            }
+          }
+        }
+
+        .table_container{
+          width: 100%;
+          overflow-x: scroll;
+
+          &::-webkit-scrollbar{
+            height: 3px;
+          }
+
+          .MuiTable-root{
+            border: 2px solid rgba($blue, .8);
+            border-radius: 10px;
+            border-spacing: 1px;
+            overflow: hidden;
+
+            .MuiTableHead-root{
+              background: #90a4bd;
+              border-top-left-radius: 10px;
+              border-top-right-radius: 10px;
+              border-bottom: 2px solid rgba($blue, .8);
+            }
+
+            .MuiTableBody-root{
+
+            }
+
+            .MuiTableFooter-root{
+              background: rgba($blue, .75);
+              border-bottom-left-radius: 10px;
+              border-bottom-right-radius: 10px;
+              border-top: 2px solid rgba($blue, .8);
+
+              
+              .MuiTableCell-root{
+                color: $light-yellow;
+                border: 0px;
+              }
+            }
+
+            .MuiTableCell-root{
+              @include homepage-buttons("Bobby-Jones-Soft",
+                16px,
+                $black,
+                "none"
+              );
+              @include hover-scale(1, 0s);
+              text-align: center;
+              border: 0px;
+            }
+          }
+
+          
+        }
+      }
+
+
+      .heading_container{
+        @include flex-center(row, center);
+        gap: 10px;
+
+        .icon{
+          width: 50px;
+        }
+        .heading{
+          @include homepage-buttons("Bobby-Jones-Soft",
+            28px,
+            $blue,
+            "none"
+          );
+          @include hover-scale(1, 0s);
+        }
+      }
+
       .input_field {
         background: #90a4bd !important;
         color: $black !important;
@@ -25266,7 +25375,7 @@ textarea[readonly] {
       gap: 20px;
 
       &:last-child{
-        grid-template-columns: 120px 1fr;
+        grid-template-columns: 1fr;
       }
 
       .title_container{
@@ -25317,8 +25426,9 @@ textarea[readonly] {
       }
       
       .table_container{
-        width: 100%;
+        width: 85%;
         overflow-x: scroll;
+        justify-self: center;
 
         &::-webkit-scrollbar{
           height: 3px;
@@ -25391,6 +25501,10 @@ textarea[readonly] {
                 }
               }
 
+              .MuiInputBase-input{
+                width: 110px;
+              }
+
               input,
               .MuiSelect-select {
                 padding: 0px;
@@ -25403,7 +25517,7 @@ textarea[readonly] {
               }
 
               .input_field.select {
-                width: 240px;
+                width: 180px;
               }
 
               .MuiSelect-select {
@@ -25420,11 +25534,30 @@ textarea[readonly] {
                 border: 0px;
               }
             }
+          }
+        }
 
-            &:last-child {
-              .MuiTableCell-root {
-                border-bottom-left-radius: 10px;
-                border-bottom-right-radius: 10px;
+        .MuiTableFooter-root{
+          .MuiTableCell-root {
+            background-color: rgba($brown-4, .85);
+            @include homepage-buttons("Bobby-Jones-Soft",
+              18px,
+              $light-yellow,
+              none);
+            @include hover-scale(1, 0s);
+            text-align: center;
+            border-bottom: 0px;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+
+            .icons{
+              @include flex-center(row, center);
+              gap:15px;
+              justify-self: center;
+              .icon_container{
+                .icon{
+                  width: 50px;
+                }
               }
             }
           }
@@ -25437,6 +25570,10 @@ textarea[readonly] {
         &:last-child{
           @include flex-center(column, flex-start);
           gap: 20px;
+
+          .table_container{
+            width: 100%;
+          }
 
           .icons{
             flex-direction: row !important;

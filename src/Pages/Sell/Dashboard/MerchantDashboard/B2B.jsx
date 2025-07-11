@@ -2,16 +2,20 @@ import React, { useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import UserBadge from '../../../../UserBadge';
 import merchant_as_seller from '../../../../Utils/images/Sell/dashboard/merchant_dashboard/merchant_as_seller.png';
+import merchant_as_buyer from '../../../../Utils/images/Sell/dashboard/merchant_dashboard/merchant_as_buyer.png';
 import button from '../../../../Utils/images/Sell/dashboard/merchant_dashboard/button.webp';
 import hornSound from "../../../../Utils/audio/horn-sound.mp3";
 import B2BFormComponent from './B2BFormComponent';
 import B2BTable from './B2BTable';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 
 function B2B() {
     const [audio] = useState(new Audio(hornSound));
     const [selectedMouType, setSelectedMouType] = useState('New'); // default
     const { type } = useParams();
+    const location = useLocation();
+    
+     
   
     const handleClick = (e) => {
         const target = e.target.closest(".img_container");
@@ -29,7 +33,7 @@ function B2B() {
                     <Box className="title_container">
                         <Typography className="title">{type === 'b2b' ? 'B2B' : type === 'b2c' && 'B2C' }</Typography>
                     </Box>
-                    <Box component="img" src={merchant_as_seller} className="seller" />
+                    <Box component="img" src={location?.pathname?.includes('buyer') ? merchant_as_buyer : merchant_as_seller} className="seller" />
                     <UserBadge handleBadgeBgClick={-1} handleLogin={'../login'} handleLogoutClick={'../../'} optionalcName={'align-right'} />
                 </Box>
 

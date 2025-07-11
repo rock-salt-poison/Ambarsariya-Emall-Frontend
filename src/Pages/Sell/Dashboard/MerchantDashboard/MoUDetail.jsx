@@ -40,7 +40,7 @@ function MoUDetail() {
                 </Box>
                 
                 <Box className="col">
-                    <Box className="icons">
+                    {/* <Box className="icons">
                         <Link className="icon_container">
                             <Box component="img" src={mou_assign} alt="mou-assign" className='icon'/>
                         </Link>
@@ -50,7 +50,7 @@ function MoUDetail() {
                         <Link className="icon_container">
                             <Box component="img" src={mou_hold} alt="mou-hold" className='icon'/>
                         </Link>
-                    </Box>
+                    </Box> */}
                     <MoUDetailsTable data={'data'} />
                 </Box>
 

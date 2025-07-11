@@ -16,6 +16,8 @@ import CouponsPreview from "./CouponsPreview";
 import UserBadge from "../../../../UserBadge";
 import { useNavigate, useParams } from "react-router-dom";
 import { getShopUserData } from "../../../../API/fetchExpressAPI";
+// import SuppliersForShopPreview from "./SuppliersForShopPreview";
+import InStockUpdatePreview from "./InStockUpdatePreview";
 
 function Preview() {
   const themeProps = {
@@ -44,10 +46,11 @@ function Preview() {
         />
       ),
     },
-    { id: 2, name: "Supply Chain Management", content: <SubscriptionsPreview /> },
+    { id: 2, name: "Supply Chain Management", content: <SubscriptionsPreview query='supply-chain'/> },
     { id: 3, name: "Coupons", content: <CouponsPreview /> },
-    { id: 4, name: "Suppliers For Shop", content: "" },
-    { id: 5, name: "Last stock update", content: "" },
+    { id: 4, name: "Suppliers For Shop", content: <SubscriptionsPreview query='supplier' /> },
+    { id: 5, name: "In stock update", content: <InStockUpdatePreview/> },
+    { id: 6, name: "Out stock update", content: "" },
   ];
 
   useEffect(() => {

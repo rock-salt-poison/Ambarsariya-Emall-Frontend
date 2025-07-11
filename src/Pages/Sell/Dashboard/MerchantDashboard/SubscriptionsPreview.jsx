@@ -3,7 +3,7 @@ import GeneralLedgerForm from '../../../../Components/Form/GeneralLedgerForm';
 import { ThemeProvider } from '@mui/material';
 import createCustomTheme from '../../../../styles/CustomSelectDropdownTheme';
 
-function SubscriptionsPreview() {
+function SubscriptionsPreview({query}) {
 
     const themeProps = {
         popoverBackgroundColor: '#f8e3cc',
@@ -13,6 +13,8 @@ function SubscriptionsPreview() {
       const theme = createCustomTheme(themeProps);
 
     const initialData = {
+        mou_type: query === 'supplier' ? 'b2b' : '',
+        mou: '',
         member:'',
         products:'',
         subscription_type:'',
@@ -35,13 +37,27 @@ function SubscriptionsPreview() {
     const formFields = [
         {
             id: 1,
-            label: 'Select Member No.',
-            name: 'member',
+            label: query === 'supplier' ? 'MoU Type' : 'Select MoU Type',
+            name: 'mou_type',
+            type: query === 'supplier' ? 'text' : 'select',
+            options: query !== 'supplier' && ['B2B', 'B2C']
+        },
+        {
+            id: 22,
+            label: 'Select On-going MoU',
+            name: 'mou',
             type: 'select',
-            options: ['User 1','User 2', 'User 3','User 4', 'User 5','User 6','User 7','User 8','User 9','User 10']
+            options: ['MoU 1', 'MoU 2']
         },
         {
             id: 2,
+            label: 'Member No.',
+            name: 'member',
+            type: 'text',
+            // options: ['User 1','User 2', 'User 3','User 4', 'User 5','User 6','User 7','User 8','User 9','User 10']
+        },
+        {
+            id: 3,
             label: 'Product(s)',
             name: 'products',
             type: 'textarea',
@@ -50,7 +66,7 @@ function SubscriptionsPreview() {
             readOnly:true,
         },
         {
-            id:3,
+            id:4,
             label: 'Subscription Type',
             name: 'subscription_type',
             type: 'textarea',
@@ -59,21 +75,21 @@ function SubscriptionsPreview() {
             readOnly:true,
         },
         {
-            id: 4,
+            id: 5,
             label: 'Start Date',
             name: 'start_date',
             type: 'date',
             readOnly:true,
         },
         {
-            id: 5,
+            id: 6,
             label: 'End Date',
             name: 'end_date',
             type: 'date',
             readOnly:true,
         },
         {
-            id: 6,
+            id: 7,
             label: 'Credit',
             name: 'credit',
             type: 'text',
@@ -82,7 +98,7 @@ function SubscriptionsPreview() {
              adornmentValue:'Rs'
         },
         {
-            id: 7,
+            id: 8,
             label: 'Balance',
             name: 'balance',
             type: 'text',
@@ -91,21 +107,21 @@ function SubscriptionsPreview() {
              adornmentValue:'Rs'
         },
         {
-            id: 8,
+            id: 9,
             label: 'MoU date issue',
             name: 'mou_date_issue',
             type: 'date',
             readOnly:true,
         },  
         {
-            id: 9,
+            id: 10,
             label: 'End Date',
             name: 'end_date',
             type: 'date',
             readOnly:true,
         },   
         {
-            id: 10,
+            id: 11,
             label: 'MoU Reserve',
             name: 'mou_reserve',
             type: 'text',

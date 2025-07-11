@@ -78,7 +78,9 @@ function SellRoutes() {
       <Route path="support/shop/:token/dashboard/:edit/preview" element={<Preview />} />
       <Route path="support/shop/:token/dashboard/:edit/supply" element={<Supply />} />
       <Route path="support/shop/:token/dashboard/:edit/supply/:type" element={<B2B />} />
+      <Route path="support/shop/:token/dashboard/:edit/buyer/:type" element={<B2B />} />
       <Route path="support/shop/:token/dashboard/:edit/supply/:type/:purchaser_id" element={<MoUDetail />} />
+      <Route path="support/shop/:token/dashboard/:edit/buyer/:type/:purchaser_id" element={<MoUDetail />} />
       <Route path="shop/:token/products" element={<Products />} />
       <Route path="shop/:token/products/:product_id" element={<ProductDetails />} />
       <Route path="shop/:token/products/detail/:product_id" element={<ProductInfo />} />

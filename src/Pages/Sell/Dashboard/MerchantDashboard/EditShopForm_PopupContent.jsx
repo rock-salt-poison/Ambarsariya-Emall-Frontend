@@ -13,7 +13,7 @@ function EditShopForm_PopupContent() {
 
     const cards_data = [
         {id:1, imgSrc:coupons, alt:"coupons", btnText:'Coupons'},
-        {id:2, imgSrc:eshop, alt:"eshop", btnText:'Eshop'},
+        {id:2, imgSrc:eshop, alt:"purchaser", btnText:'Purchaser'},
         {id:3, imgSrc:special_offers, alt:"special_offers", btnText:'Supply'},
         {id:4, imgSrc:preview, alt:"preview", btnText:'Preview'},
     ]
@@ -22,7 +22,7 @@ function EditShopForm_PopupContent() {
         if(id===1){
             navigate('../coupon-offering')
         }if(id===2){
-            navigate('../eshop')
+            navigate('buyer/b2b')
         }if(id===3){
             navigate('supply')
         }if(id===4){

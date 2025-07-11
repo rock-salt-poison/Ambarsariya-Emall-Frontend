@@ -7,20 +7,26 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableFooter,
   TableHead,
   TableRow,
+  TextField,
   ThemeProvider,
 } from "@mui/material";
 import CustomSnackbar from "../../../../Components/CustomSnackbar";
 import createCustomTheme from "../../../../styles/CustomSelectDropdownTheme";
+import { Link } from "react-router-dom";
+import mou_assign from "../../../../Utils/images/Sell/dashboard/merchant_dashboard/mou_assign.png"
+import mou_reject from "../../../../Utils/images/Sell/dashboard/merchant_dashboard/mou_reject.webp"
+import mou_hold from "../../../../Utils/gifs/mou_hold.gif"
 
 const dummyData = [
   {
     item_id: "DUMMY001",
     attribute: "Cost Price",
     pre_quote: "₹100",
-    // current_quote: "₹95",
-    current_quote: "Waiting",
+    current_quote: "₹100",
+    current_quote_status: "Waiting",
     final_fix: "₹98",
     status: "Waiting",
   },
@@ -28,8 +34,8 @@ const dummyData = [
     item_id: "DUMMY002",
     attribute: "Expiry date",
     pre_quote: "10 days",
-    // current_quote: "12 days",
-    current_quote: "Accept",
+    current_quote: "10 days",
+    current_quote_status: "Accept",
     final_fix: "11 days",
     status: "Accept",
   },
@@ -59,6 +65,7 @@ function MoUDetailsTable({ data }) {
       "Attribute for comparison",
       "As pre-quote",
       "Quote",
+      "Quote Status",
       "Status",
       "Final Fix",
     ]);
@@ -77,7 +84,7 @@ function MoUDetailsTable({ data }) {
 
   const handleStatusChange = (index, value) => {
     const updated = [...tableData];
-    updated[index].current_quote = value;
+    updated[index].current_quote_status = value;
     setTableData(updated);
 
     setSnackbar({
@@ -86,6 +93,13 @@ function MoUDetailsTable({ data }) {
       severity: "success",
     });
   };
+
+  const handleQuoteChange = (index, value) => {
+    const updated = [...tableData];
+    updated[index].current_quote = value;
+    setTableData(updated);
+  };
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -110,8 +124,23 @@ function MoUDetailsTable({ data }) {
                 <TableCell>{row.attribute || "-"}</TableCell>
                 <TableCell>{row.pre_quote || "-"}</TableCell>
                 <TableCell>
+                  {row?.current_quote_status === 'Customizable' ? (
+                    <TextField
+                      type="text"
+                      value={row.current_quote}
+                      onChange={(e) => handleQuoteChange(index, e.target.value)}
+                      fullWidth
+                      size="small"
+                      variant="outlined"
+                    />
+                  ) : (
+                    row.current_quote || "-"
+                  )}
+                </TableCell>
+
+                <TableCell>
                   <Select
-                    value={row.current_quote}
+                    value={row.current_quote_status}
                     onChange={(e) => handleStatusChange(index, e.target.value)}
                     fullWidth
                     className="input_field select"
@@ -130,6 +159,28 @@ function MoUDetailsTable({ data }) {
               </TableRow>
             ))}
           </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TableCell colSpan={4}>
+                Final Status
+              </TableCell>
+              <TableCell>
+                <Box className="icons">
+                  <Link className="icon_container">
+                    <Box className="icon" src={mou_assign} component="img" alt="mou_assign"/>
+                  </Link>
+                  <Link className="icon_container">
+                    <Box className="icon" src={mou_reject} component="img" alt="mou_reject"/>
+                  </Link>
+                  <Link className="icon_container">
+                    <Box className="icon" src={mou_hold} component="img" alt="mou_hold"/>
+                  </Link>
+                </Box>
+              </TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+            </TableRow>
+          </TableFooter>
           
         </Table>
 
