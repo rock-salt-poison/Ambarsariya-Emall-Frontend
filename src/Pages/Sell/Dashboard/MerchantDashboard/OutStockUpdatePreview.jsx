@@ -2,16 +2,16 @@ import React, { useState } from 'react';
 import GeneralLedgerForm from '../../../../Components/Form/GeneralLedgerForm';
 import { Box, Table, TableBody, TableCell, TableFooter, TableHead, TableRow, ThemeProvider, Typography } from '@mui/material';
 import createCustomTheme from '../../../../styles/CustomSelectDropdownTheme';
-import in_stock from '../../../../Utils/images/Sell/dashboard/merchant_dashboard/in_stock_update.webp'
+import out_stock from '../../../../Utils/images/Sell/dashboard/merchant_dashboard/out_stock_update.webp'
 
-function InStockUpdatePreview() {
+function OutStockUpdatePreview() {
 
     const themeProps = {
         popoverBackgroundColor: '#f8e3cc',
         scrollbarThumb: 'var(--brown)',
-      };
-    
-      const theme = createCustomTheme(themeProps);
+    };
+
+    const theme = createCustomTheme(themeProps);
 
     const initialData = {
         date: '',
@@ -68,8 +68,8 @@ function InStockUpdatePreview() {
         <ThemeProvider theme={theme}>
         <Box className="stock_update">
             <Box className="heading_container">
-                <Box component="img" src={in_stock} alt="in-stock" className="icon"/>
-                <Typography className="heading">In-Stock update</Typography>
+                <Box component="img" src={out_stock} alt="out-stock" className="icon"/>
+                <Typography className="heading">Out-Stock update</Typography>
             </Box>
             <GeneralLedgerForm
                 formfields={formFields}
@@ -86,14 +86,16 @@ function InStockUpdatePreview() {
                             <TableCell>S.No.</TableCell>
                             <TableCell>Product ID</TableCell>
                             <TableCell>Item ID</TableCell>
-                            <TableCell>Selling price</TableCell>
-                            <TableCell>Quantity</TableCell>
-                            <TableCell>Max Storage Available</TableCell>
+                            <TableCell>Cost price</TableCell>
+                            <TableCell>Total Quantity</TableCell>
+                            <TableCell>Total Cost Price</TableCell>
+                            <TableCell>Quantity Required</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         <TableRow hover>
                             <TableCell>1</TableCell>
+                            <TableCell></TableCell>
                             <TableCell></TableCell>
                             <TableCell></TableCell>
                             <TableCell></TableCell>
@@ -110,6 +112,7 @@ function InStockUpdatePreview() {
                             <TableCell>200</TableCell>
                             <TableCell>50</TableCell>
                             <TableCell>20 </TableCell>
+                            <TableCell>20 </TableCell>
                         </TableRow>
                     </TableFooter>
                 </Table>
@@ -119,4 +122,4 @@ function InStockUpdatePreview() {
     );
 }
 
-export default InStockUpdatePreview
+export default OutStockUpdatePreview

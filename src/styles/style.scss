@@ -22205,27 +22205,40 @@ textarea[readonly] {
           }
 
           .MuiTable-root{
-            border: 2px solid rgba($blue, .8);
+            border: 2px solid rgba($blue, .4);
             border-radius: 10px;
             border-spacing: 1px;
             overflow: hidden;
 
             .MuiTableHead-root{
-              background: #90a4bd;
-              border-top-left-radius: 10px;
-              border-top-right-radius: 10px;
-              border-bottom: 2px solid rgba($blue, .8);
+              .MuiTableRow-root{
+                background: #90a4bd;
+                border-top-left-radius: 10px;
+                border-top-right-radius: 10px;
+                border-bottom: 2px solid rgba($blue, .4);
+              }
+
+              .MuiTableCell-root{
+                color: $blue;
+              }
             }
 
             .MuiTableBody-root{
-
+              border-radius: 0px;
+              .MuiTableRow-root{
+                .MuiTableCell-root{
+                  background: rgba(#90a4bd, .5) !important;
+                }
+              }
             }
 
             .MuiTableFooter-root{
-              background: rgba($blue, .75);
-              border-bottom-left-radius: 10px;
-              border-bottom-right-radius: 10px;
-              border-top: 2px solid rgba($blue, .8);
+              .MuiTableRow-root{
+                background: rgba($blue, .3);
+                border-bottom-left-radius: 10px;
+                border-bottom-right-radius: 10px;
+                border-top: 2px solid rgba($blue, .4);
+              }
 
               
               .MuiTableCell-root{
@@ -22243,6 +22256,8 @@ textarea[readonly] {
               @include hover-scale(1, 0s);
               text-align: center;
               border: 0px;
+              background: transparent !important;
+              border-radius: 0px !important;
             }
           }
 
