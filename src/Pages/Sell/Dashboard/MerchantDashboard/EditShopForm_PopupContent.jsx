@@ -22,7 +22,7 @@ function EditShopForm_PopupContent() {
         if(id===1){
             navigate('../coupon-offering')
         }if(id===2){
-            navigate('buyer/b2b')
+            navigate('supplier')
         }if(id===3){
             navigate('supply')
         }if(id===4){

@@ -25022,6 +25022,112 @@ textarea[readonly] {
   }
 }
 
+.supplier_wrapper{
+  position: relative;
+  min-height: 100vh;
+  @include flex-center(column, flex-start);
+  place-items: normal;
+  z-index: 0;
+  background: #BB9475;
+  
+  &::before{
+    content: '';
+    @include background-center-no-repeat($supplierBgImg);
+    background-size: cover;
+    background-position: center;
+    @include full-absolute(0px, 0px, 0px, 0px);
+    z-index: -1;
+    background-attachment: fixed;
+  }
+
+  &::after{
+    content: '';
+    background-color: rgba($brown-4, .1);
+    @include full-absolute(0px, 0px, 0px, 0px);
+    z-index: -1;
+    background-attachment: fixed;
+  }
+  
+  .row{
+    position: relative;
+    z-index: 1;
+    @include flex-center(column, space-between);
+    gap: 30px;
+    flex: 1;
+    padding: 30px;
+
+    .col{
+      @include flex-center(row, center);
+      place-items: normal;
+      gap: 40px;
+
+      &:first-child{
+        align-self: flex-end;
+      }
+
+      .img_container{
+        overflow: hidden;
+        width: 320px;
+        height: 320px;
+        border-radius: 20px;
+        border: 10px solid #0D2B44;
+        filter: drop-shadow(2px 2px 8px rgba($black, .5));
+        transition: .2s all linear;
+        
+        .b2b, .monitor{
+          width: 100%;
+          transition: .4s all linear;
+          opacity: .8;
+          // border-radius: 10px;
+  
+          &:hover{
+            transform: scale(1.07);
+          }
+        }
+      }
+
+    }
+
+    @media (max-width: 992px){
+      .col{
+
+        .img_container{
+          width: 300px;
+          height: 300px;
+        }
+      }
+    }
+
+    @media (max-width: 768px){
+      .col{
+
+        &:last-child{
+          // flex-direction: column !important;
+
+          .img_container{
+            width: 50%;
+            height: auto;
+          }
+        }
+      }
+    }
+
+    @media (max-width: 560px){
+      
+      .col{
+        
+        &:last-child{
+          flex-direction: column !important;
+  
+          .img_container{
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}
+
 .b2b_wrapper{
   position: relative;
   min-height: 100vh;
@@ -25640,6 +25746,145 @@ textarea[readonly] {
               font-size: 20px;
               line-height: 20px;
             }
+          }
+        }
+      }
+    }
+  }
+}
+
+.supplier_purchases_wrapper{
+  @extend .b2b_wrapper;
+  background: $dark-yellow;
+  
+  &::before{
+    content: '';
+    @include background-center-no-repeat($supplierPurchasesBgImg);
+    background-size: cover;
+    background-position: center;
+    @include full-absolute(0px, 0px, 0px, 0px);
+    z-index: -1;
+    opacity: .8;
+  }
+
+  &::after{
+    content: '';
+    background-color: rgba($brown-4, .2); 
+    @include full-absolute(0px, 0px, 0px, 0px);
+    z-index: -1;
+    opacity: .8;
+  }
+
+  .row{
+    gap: 40px;
+    padding: 20px;
+    .col{
+      .icon_link{
+        .icon{
+          width: 120px;
+        }
+      }
+
+      .title_container{
+        justify-self: center !important;
+
+        .title{
+          font-family: 'Gladiola' !important;
+          font-size: 40px !important;
+          line-height: 40px !important;
+        }
+      }
+
+      .table_container{
+        table{
+
+          .MuiTableBody-root{
+            .MuiTableCell-root{
+              border-radius: 0px !important;
+            }
+          }
+
+          .MuiTableFooter-root{
+            .MuiTableCell-root {
+              background-color: rgba(#321A12, .70);
+              @include homepage-buttons("Bobby-Jones-Soft",
+                18px,
+                $light-yellow,
+                none);
+              @include hover-scale(1, 0s);
+              text-align: center;
+              border-bottom: 0px;
+              border-bottom-left-radius: 10px;
+              border-bottom-right-radius: 10px;
+            }
+          }
+        }
+      }
+    }
+    @media (max-width: 560px) {
+        .col{
+          &:first-child{
+            grid-template-columns: repeat(2, 1fr) !important;
+
+            .icon_link{
+              justify-self: flex-start;
+            }
+            
+            .title_container{
+              order: 2; 
+              grid-column-start: 1;
+              grid-column-end: 3;
+
+              .title{
+                font-size: 30px !important;
+                line-height: 30px !important;
+              }
+            }
+          }
+        }
+    }
+  }
+}
+
+.supplier_monitoring_dashboard_wrapper{
+  @extend .supplier_purchases_wrapper;
+
+  &::before{
+    @include background-center-no-repeat($supplierMonitoringDashboardBgImg);
+    background-size: cover;
+    background-position: center;
+  }
+
+  .row{
+    .col{
+      &:first-child{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 10px;
+        flex-wrap: wrap;
+
+        .icon_container{
+          .icon{
+            width: 100px;
+          }
+        }
+      }
+
+      .table_container{
+        table{
+          .MuiTableHead-root{
+            .MuiTableRow-root{
+              &:last-child{
+                .MuiTableCell-root{
+                  border-radius: 0px;
+                }
+              }
+            }
+          }
+
+          .MuiTableCell-root{
+            padding: 10px 15px;
           }
         }
       }

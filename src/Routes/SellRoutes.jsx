@@ -45,6 +45,9 @@ import Supply from '../Pages/Sell/Dashboard/MerchantDashboard/Supply';
 import B2B from '../Pages/Sell/Dashboard/MerchantDashboard/B2B';
 import MoUDetail from '../Pages/Sell/Dashboard/MerchantDashboard/MoUDetail';
 import MoURulesAndRegulations from '../Pages/Sell/MoURulesAndRegulations';
+import Supplier from '../Pages/Sell/Dashboard/MerchantDashboard/Supplier';
+import SupplierPurchases from '../Pages/Sell/Dashboard/MerchantDashboard/SupplierPurchases';
+import SupplierMonitoringDashboard from '../Pages/Sell/Dashboard/MerchantDashboard/SupplierMonitoringDashboard';
 
 function SellRoutes() {
   const ConditionalRoute = () => {
@@ -77,6 +80,9 @@ function SellRoutes() {
       <Route path="support/shop/:token/dashboard/:edit" element={<MerchantDashboard />} />
       <Route path="support/shop/:token/dashboard/:edit/preview" element={<Preview />} />
       <Route path="support/shop/:token/dashboard/:edit/supply" element={<Supply />} />
+      <Route path="support/shop/:token/dashboard/:edit/supplier" element={<Supplier />} />
+      <Route path="support/shop/:token/dashboard/:edit/supplier/monitor" element={<SupplierMonitoringDashboard />} />
+      <Route path="support/shop/:token/dashboard/:edit/supplier/purchases" element={<SupplierPurchases />} />
       <Route path="support/shop/:token/dashboard/:edit/supply/:type" element={<B2B />} />
       <Route path="support/shop/:token/dashboard/:edit/buyer/:type" element={<B2B />} />
       <Route path="support/shop/:token/dashboard/:edit/supply/:type/:purchaser_id" element={<MoUDetail />} />
