@@ -162,9 +162,18 @@ export default function CustomPaginationTable({rows}) {
     // Check if the product is already in selectedProducts
     const existingProduct = selectedProducts.find(p => p.product_no === row.product_no);
 
-    const selectedRow = existingProduct?.selectedVariant
-      ? row // already has selectedVariant, use as-is
-      : { ...row, selectedVariant: row.item_ids ? (row?.item_ids)?.find((ids)=>ids?.match(row.iku_id?.[0])?.input) : null}; // add selectedVariant if missing
+   const selectedRow = existingProduct?.selectedVariant
+  ? row // already has selectedVariant, use as-is
+  : {
+      ...row,
+      selectedVariant: row?.matched_item_id || null
+    };
+
+
+    //  const selectedRow = existingProduct?.selectedVariant
+    //   ? row // already has selectedVariant, use as-is
+    //   : { ...row, selectedVariant: row.item_ids ? (row?.item_ids)?.find((ids)=>ids?.match(row.iku_id?.[0])?.input) : null}; // add selectedVariant if missing
+
 
     dispatch(addProduct(selectedRow));
     console.log(selectedRow);
@@ -179,8 +188,14 @@ console.log('----------', selectedProducts);
   const isSelected = (id) =>
     selectedProducts.some((product) => product.product_no === id);
 
-  const handleClick = (e, product_id) => {
-    navigate(`../shop/${token}/products/${product_id}`);
+  const handleClick = (e, product_id, item_id) => {
+    console.log(item_id);
+    
+    if(item_id){
+      navigate(`../shop/${token}/products/${product_id}/${encodeURIComponent(item_id)}`);
+    }else{
+      navigate(`../shop/${token}/products/${product_id}`);
+    }
   };
 
   const handleSelectAllClick = (event) => {
@@ -221,14 +236,17 @@ console.log('----------', selectedProducts);
 
   // Render table cell content
   const renderTableCellContent = (column, row) => {
+    console.log(row, selectedProducts);
+    
     if (column.id === "sample") {
+      const selectedProduct = selectedProducts.find(p => p.product_no === row.product_no);
       return (
         <Box
           component="img"
           src={convertDriveLink(row.product_images[0])}
           alt="product_image"
           className="product_image"
-          onClick={(e) => handleClick(e, row.product_id)}
+          onClick={(e) => handleClick(e, row.product_id, selectedProduct?.selectedVariant ? selectedProduct?.selectedVariant : row?.matched_item_id)}
         />
       );
     }
@@ -241,7 +259,7 @@ console.log('----------', selectedProducts);
         : column.id === "price"
   ? (() => {
       const selectedProduct = selectedProducts.find(p => p.product_no === row.product_no);
-      const priceToShow = selectedProduct ? selectedProduct.selling_price ? selectedProduct.selling_price : selectedProduct?.product_selling_price : row?.first_iku_price ? row?.first_iku_price : row.selling_price ? row.selling_price : row.product_selling_price;
+      const priceToShow = selectedProduct ? selectedProduct.matched_price ? selectedProduct.matched_price : selectedProduct?.selling_price ? selectedProduct?.selling_price : selectedProduct?.product_selling_price : row?.matched_price ? row?.matched_price : row.selling_price ? row.selling_price : row.product_selling_price;
       return `₹ ${priceToShow} ${row.unit !== null ? row.unit : ''}`;
     })():"";
         
@@ -249,7 +267,7 @@ console.log('----------', selectedProducts);
       column.id === "variations"
         ? (() => {
       const selectedProduct = selectedProducts.find(p => p.product_no === row.product_no);
-      const variationToShow = selectedProduct?.selectedVariant ? (selectedProduct.selectedVariant)?.split('_')?.at(-3) : row.variation_1;
+      const variationToShow = selectedProduct?.selectedVariant ? ((selectedProduct.selectedVariant)?.split('_')?.at(-3))?.replace(/-/g, ' ') : row.variation_1;
       return variationToShow;
     })()
         : column.id === "product"

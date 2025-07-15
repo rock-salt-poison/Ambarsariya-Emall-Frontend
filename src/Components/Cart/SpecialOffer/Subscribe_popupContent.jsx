@@ -66,7 +66,9 @@ function Subscribe_popupContent({ setSubmittedData }) {
     console.log(option);
     if (name === 'product') {
       const selectedProduct = products.find((p) => p.product_name === value);
-      updatedData.cost_per_unit = selectedProduct ? `₹ ${selectedProduct.selling_price} /-` : '';
+      console.log(selectedProduct);
+      
+      updatedData.cost_per_unit = selectedProduct ? selectedProduct?.matched_price ? `₹ ${selectedProduct.matched_price} /-` : selectedProduct?.selling_price ? `₹ ${selectedProduct.selling_price} /-` : selectedProduct?.product_selling_price && `₹ ${selectedProduct.product_selling_price} /-` : '';
       updatedData.subscription_type = option;
       updatedData.product_id = selectedProduct.product_id ;
       updatedData.no_of_items = option === 'Daily' ? `${selectedProduct?.daily_min_quantity} ${selectedProduct?.unit}` : option === 'Weekly' ? `${selectedProduct?.weekly_min_quantity} ${selectedProduct?.unit}` : option === 'Monthly' ? `${selectedProduct?.monthly_min_quantity} ${selectedProduct?.unit}` : option === 'Edit' && ``;

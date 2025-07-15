@@ -89,6 +89,7 @@ function SellRoutes() {
       <Route path="support/shop/:token/dashboard/:edit/buyer/:type/:purchaser_id" element={<MoUDetail />} />
       <Route path="shop/:token/products" element={<Products />} />
       <Route path="shop/:token/products/:product_id" element={<ProductDetails />} />
+      <Route path="shop/:token/products/:product_id/:item_id" element={<ProductDetails />} />
       <Route path="shop/:token/products/detail/:product_id" element={<ProductInfo />} />
       <Route path="shop/:token/products/specification/:product_id" element={<ProductInfo2 />} />
       <Route path="shop/:token/products/product-catalog/:product_id" element={<ProductCatalog />} />

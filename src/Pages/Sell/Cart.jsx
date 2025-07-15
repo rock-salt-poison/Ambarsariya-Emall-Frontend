@@ -205,15 +205,23 @@ function Cart() {
         return;
       }
   
-      const products = cartData.cart.map((cart) => ({
-        id: cart.product_id,
-        name: cart.product_name,
-        description: cart.product_description,
-        quantity: Number(cart.quantity),
-        unit_price: Number(cart.selling_price),
-        selectedVariant : cart.selectedVariant,
-        total_price: Number(parseInt(cart.selling_price) * cart.quantity),
-      }));
+      const products = cartData.cart.map((cart) => {
+        const unitPrice =
+          Number(cart.matched_price) ||
+          Number(cart.selling_price) ||
+          Number(cart.product_selling_price);
+
+        return {
+          id: cart.product_id,
+          name: cart.product_name,
+          description: cart.product_description,
+          quantity: Number(cart.quantity),
+          unit_price: unitPrice,
+          selectedVariant: cart.selectedVariant,
+          total_price: unitPrice * Number(cart.quantity),
+        };
+      });
+
   
       const data = {
         buyer_id: buyerDataFetched?.member_id,
@@ -240,7 +248,7 @@ function Cart() {
         coupon_cost : cartData.couponCost
       };
 
-      console.log(data);
+      console.log('*******************', data);
       console.log(cartData.cart);
       
   

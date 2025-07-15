@@ -421,10 +421,13 @@ export const get_products = async (shop_no) => {
   }
 }
 
-export const get_product = async (shop_no, product_id) => {
+export const get_product = async (shop_no, product_id, item_id) => {
   try {
     if (shop_no && product_id) {
-      const response = await axios.get(`${link}/sell/products/${shop_no}/${product_id}`);
+      const encodedItemID = encodeURIComponent(item_id);
+      console.log(encodedItemID);
+      
+      const response = await axios.get(`${link}/sell/products/${shop_no}/${product_id}/${encodedItemID}`);
       return response.data;
     }
   } catch (e) {

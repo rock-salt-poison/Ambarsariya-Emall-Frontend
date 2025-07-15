@@ -8,10 +8,13 @@ import { convertDriveLink, get_product, getShopUserData } from "../../API/fetchE
 import UserBadge from "../../UserBadge";
 
 function ProductDetails() {
-  const { product_id, token } = useParams();
+  
+  const { product_id, token, item_id } = useParams();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  console.log(product_id);
+  
   useEffect(() => {
     const fetchData = async () => {
       if (token && product_id) {
@@ -20,9 +23,11 @@ function ProductDetails() {
           const get_shop_no = (await getShopUserData(token))?.[0].shop_no;
           if (get_shop_no) {
             const get_product_details = (
-              await get_product(get_shop_no, product_id)
+              await get_product(get_shop_no, product_id, item_id)
             )?.data[0];
             if (get_product_details) {
+              console.log(get_product_details);
+              
               setData(get_product_details);
               setLoading(false);
             }
@@ -154,7 +159,7 @@ function ProductDetails() {
                       .join(", ")}{" "}
                     {/* Join the remaining values with a comma and space */}
                   </Typography>
-                  <Typography variant="span price">&#8377; {data?.first_iku_price ?  data?.first_iku_price : data?.selling_price} {data?.unit} </Typography>
+                  <Typography variant="span price">&#8377; {data?.final_price ?  data?.final_price : data?.selling_price} {data?.unit} </Typography>
                 </Typography>
               </Box>
             </Box>
