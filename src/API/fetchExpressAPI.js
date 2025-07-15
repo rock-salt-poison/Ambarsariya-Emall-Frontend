@@ -1247,13 +1247,13 @@ export const get_shop_product_items = async (product_id) => {
   }
 }
 
-export const get_category_wise_shops = async (shop_no) => {
+export const get_category_wise_shops = async (shop_no,purchaser_shop_no) => {
   try {
     if (shop_no) {
-      console.log(shop_no);
+      console.log(shop_no, purchaser_shop_no);
       
       // const response = await axios.get(`${link}/category-wise-shops?category=${category}&product=${product}`);
-      const response = await axios.get(`${link}/category-wise-shops?shop_no=${shop_no}`);
+      const response = await axios.get(`${link}/category-wise-shops?shop_no=${shop_no}&purchaser_shop_no=${purchaser_shop_no}`);
       return response.data;
     }
   } catch (e) {

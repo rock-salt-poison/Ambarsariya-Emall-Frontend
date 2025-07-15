@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import GeneralLedgerForm from '../../Form/GeneralLedgerForm';
 import SearchIcon from '@mui/icons-material/Search';
 import { useDispatch, useSelector } from 'react-redux';
-import { get_category_wise_shops } from '../../../API/fetchExpressAPI';
+import { get_category_wise_shops, getUser } from '../../../API/fetchExpressAPI';
 import { Box, CircularProgress } from '@mui/material';
 import { setSelectedProductAndShops } from '../../../store/mouSelectedProductsSlice';
 
@@ -21,12 +21,25 @@ function IdentifyItem() {
     const [loading, setLoading] = useState(false);
     const allProducts = useSelector((state) => state.cart.selectedProducts);
     const products = allProducts.filter((p) => p.subscribe === true);
+    const token = useSelector((state) => state.auth.userAccessToken);
+    const [purchaserShopNo, setPurchaserShopNo] = useState('');
     const dispatch = useDispatch();
     const selectedData = useSelector(state => state.mou.selectedProductAndShops);
 
     console.log(allProducts);
     console.log(products);
     
+    useEffect(()=>{
+        if(token){
+            const fetchPurchaserShopNo = async () => {
+                const resp = (await getUser(token))?.find((u)=>u?.shop_no !==null);
+                if(resp?.user_type === 'merchant' || resp?.user_type === 'shop'){
+                    setPurchaserShopNo(resp?.shop_no);
+                }
+            }
+            fetchPurchaserShopNo();
+        }
+    }, [token]);
     
     const formFields = [
         {
@@ -86,7 +99,7 @@ function IdentifyItem() {
     
                 try{
                     setLoading(true);
-                    const resp = await get_category_wise_shops(products?.[0]?.shop_no);                    
+                    const resp = await get_category_wise_shops(products?.[0]?.shop_no, purchaserShopNo);                    
                     if(resp?.valid){
                         console.log(resp.data);
                         setVendors(resp?.data);

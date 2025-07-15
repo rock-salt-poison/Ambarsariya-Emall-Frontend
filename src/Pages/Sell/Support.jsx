@@ -127,7 +127,7 @@ function Support(props) {
           //   fetchData(user.user_access_token);
           // }
 
-          if(shopUser.shop_access_token){
+          if(shopUser?.shop_access_token){
             fetchShopData(shopUser.shop_access_token, shopUser.user_access_token);
             if(shopUser.support_id && shopUser.visitor_id){
               fetchData(shopUser.user_access_token, shopUser.shop_no);
@@ -135,7 +135,7 @@ function Support(props) {
             setUserLoggedIn(true);
           }
 
-          else if(memberUser.user_access_token ){
+          else if(memberUser?.user_access_token ){
             fetchMemberData(memberUser.user_access_token)
             if(memberUser.support_id && memberUser.visitor_id){
               fetchData(memberUser.user_access_token, memberUser.member_id);
@@ -143,7 +143,7 @@ function Support(props) {
             setUserLoggedIn(true);
           }
 
-          else if(visitorUser.user_access_token && visitorUser.user_type === 'visitor'){
+          else if(visitorUser?.user_access_token && visitorUser?.user_type === 'visitor'){
             setUserLoggedIn(true);
             fetchData(visitorUser.user_access_token, visitorUser.visitor_id);
           } 
