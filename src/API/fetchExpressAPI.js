@@ -1284,3 +1284,14 @@ export const get_in_stock_updates = async (shop_no) => {
     throw e;
   }
 }
+
+export const post_identification_of_mou = async (mou) => {
+  try {
+    if (mou) {
+      const response = await axios.post(`${link}/sell/identification-of-mou`, { mou });
+      return response.data;
+    }
+  } catch (e) {
+    throw e;
+  }
+}

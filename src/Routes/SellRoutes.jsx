@@ -97,6 +97,7 @@ function SellRoutes() {
       <Route path="shop/:owner/cart" element={<Cart />} />
       <Route path=":owner/subscribe" element={<Subscribe />} />
       <Route path=":owner/mou" element={<Mou />} />
+      <Route path=":owner/mou/:mou_access_token" element={<Mou />} />
       <Route path=":owner/mou/terms" element={<MoURulesAndRegulations />} />
       <Route path=":owner/:action" element={<ConditionalRoute />} />
       <Route path=":owner/like-and-share" element={<Like_share />} />

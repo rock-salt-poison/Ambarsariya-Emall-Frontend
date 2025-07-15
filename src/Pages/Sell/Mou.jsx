@@ -28,7 +28,7 @@ export default function Mou() {
     }
 
     const mou_tabs = [
-        {id:1, title:'Identification of item / product', bodyContent:<IdentifyItem/>},
+        {id:1, title:'Identification of item / product', bodyContent:<IdentifyItem handleClose={handleClose} />},
         {id:2, title:'Compare prices and quality', bodyContent:<ComparePricesQuality/>},
         {id:3, title:'Contract process', bodyContent:<ContractProcess/>},
         {id:4, title:'Last year prices & market prices', bodyContent:<ProductSaleLastYear/>},
