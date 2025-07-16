@@ -19661,7 +19661,7 @@ textarea[readonly] {
     width: 100%;
   }
 
-  .MuiPaper-root {
+  .MuiDialog-container > .MuiPaper-root {
     max-width: 100%;
     width: 65%;
     max-height: 90vh;
@@ -20683,7 +20683,7 @@ textarea[readonly] {
       background-color: #de8d8c80;
     }
 
-    .MuiPaper-root {
+    .MuiDialog-container > .MuiPaper-root {
       width: 500px;
       position: relative;
       background-color: #f8ded4;
@@ -20831,6 +20831,95 @@ textarea[readonly] {
                   align-self: stretch;
                 }
 
+                .details_of_vendors, .last_conversation{
+                  @include flex-center(column, flex-start);
+                  border-bottom: 2px solid #9e7676;
+                  align-self: stretch;
+                  place-items: normal;
+                  
+                  .label{
+                    padding: 0 30px 12px;
+                    @include homepage-buttons("Bobby-Jones-Soft",
+                    18px,
+                    $brown-4,
+                    none);
+                    @include hover-scale(1, 0s);
+                  }
+                  
+                  .table_container{
+                    padding: 0 20px 12px;
+                    width: 100%;
+                    overflow-x: scroll;
+                    &::-webkit-scrollbar{
+                      height: 3px;
+                    }
+
+                    &::-webkit-scrollbar-thumb{
+                      background: $brown-4;
+                    }
+
+                    table{
+                      // border: 1px solid $purple;
+                      // border-radius: 10px;
+
+                      .MuiTableHead-root{
+                        .MuiTableCell-root{
+                          padding: 6px 10px 6px;
+                          @include homepage-buttons("Bobby-Jones-Soft",
+                            15px,
+                            rgba($brown-4, .87),
+                            none);
+                          @include hover-scale(1, 0s);
+                          line-height: 17px;
+                        }
+                      }
+
+                      .MuiTableCell-root{
+                        border: 0px;
+                      }
+
+                      .MuiTableBody-root{
+                        .MuiTableCell-root{
+                          padding: 6px 10px;
+                          @include homepage-buttons("Bobby-Jones-Soft",
+                            18px,
+                            $brown-4,
+                            none);
+                          @include hover-scale(1, 0s);
+                          line-height: 20px;
+                        }
+                      }
+                    }
+                  }
+
+                  .cards{
+                    @include flex-center(column, flex-start);
+                    place-items: normal;
+                    gap: 15px;
+
+                    .card{
+                      // background: rgba($pink, .4);
+
+                      border: 1px solid $purple;
+                      border-radius: 10px;
+                      padding: 10px;
+                      @include flex-center(row, flex-start);
+
+                      
+                      .col{
+                        
+                        .heading{
+                          @include homepage-buttons("Bobby-Jones-Soft",
+                            14px,
+                            $brown-4,
+                            none);
+                          @include hover-scale(1, 0s);
+                        }
+                      }
+                    }
+                  }
+                }
+
                 .form-control {
                   border-bottom: 2px solid #9e7676;
                   padding: 0 30px 12px;
@@ -20955,6 +21044,31 @@ textarea[readonly] {
                     margin-left: 8px;
                   }
                 }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    @media (max-width: 560px){
+      .card_board_component{
+        .content{
+          .content_body{
+            .header{
+              flex-direction: column !important;
+              gap: 10px;
+              .col{
+                &:first-child{
+                  display: none;
+                }
+                &:last-child{
+                  order: 1;
+                  align-self: flex-end;
+                }
+              }
+              .title_container{
+                order: 2;
               }
             }
           }

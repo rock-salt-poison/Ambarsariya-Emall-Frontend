@@ -21,6 +21,8 @@ function GeneralLedgerForm({
   radioItems,
   handleDownload,
   noValidate = true,
+  showDetails = true,
+  details
 }) {
   const { afterToday } = DateRangePicker;
   const handleNumeric = (e, behavior) => {
@@ -213,7 +215,7 @@ function GeneralLedgerForm({
             </React.Fragment>
           );
         })}
-
+        {showDetails && details}
         {submitBtnVisibility && (
           <Box className="submit_button_container">
             <Button type="submit" variant="contained" className="submit_button">

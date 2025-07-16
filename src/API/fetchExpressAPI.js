@@ -1295,3 +1295,28 @@ export const post_identification_of_mou = async (mou) => {
     throw e;
   }
 }
+
+export const get_vendor_details = async (shop_no) => {
+  try {
+    if (shop_no) {
+      const query = shop_no.join(',');
+      console.log(query);
+      
+      const response = await axios.get(`${link}/sell/mou/vendor-details?shop_no=${query}`);
+      return response.data;
+    }
+  } catch (e) {
+    throw e;
+  }
+}
+
+export const get_mou = async (access_token) => {
+  try {
+    if (access_token) {      
+      const response = await axios.get(`${link}/sell/mou?access_token=${access_token}`);
+      return response.data;
+    }
+  } catch (e) {
+    throw e;
+  }
+}
