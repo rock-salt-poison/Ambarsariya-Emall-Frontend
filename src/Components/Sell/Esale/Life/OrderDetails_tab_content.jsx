@@ -24,6 +24,7 @@ import { Link } from "react-router-dom";
 import ConfirmationDialog from "../../../ConfirmationDialog";
 import InvoicePopup from "../../../Invoice/InvoicePopup";
 import CustomSnackbar from "../../../CustomSnackbar";
+import { HandleRazorpayPayment } from "../../../../API/HandleRazorpayPayment";
 
 function OrderDetails_tab_content({ title }) {
   const [purchasedOrders, setPurchasedOrders] = useState([]);
@@ -275,21 +276,32 @@ const buyerResponse = await get_buyer_data(selectedOrder?.[0]?.buyer_id);
     console.log(data);
     
 
-    const invoiceResp = await post_invoiceOrder(data);
-    if(invoiceResp.message){
-      console.log(invoiceResp.message);
-      setSnackbar({
-        open: true,
-        message: invoiceResp.message,
-        severity: "success",
-      });
-      setInvoiceNo(invoiceResp?.invoice_no);
+
+    // const invoiceResp = await post_invoiceOrder(data);
+    // if(invoiceResp.message){
+    //   console.log(invoiceResp.message);
+    //   setSnackbar({
+    //     open: true,
+    //     message: invoiceResp.message,
+    //     severity: "success",
+    //   });
+    //   setInvoiceNo(invoiceResp?.invoice_no);
       if(status === 'Accept'){
-        setTimeout(()=>{
-          setOpenInvoice(true);
-        }, 1500);
+        // setTimeout(()=>{
+        //   setOpenInvoice(true);
+        // }, 1500);
+        const totalAmount = selectedOrder?.[0].total_amount || 0;
+        console.log(totalAmount);
+        
+        const paymentResp = await HandleRazorpayPayment({amount: totalAmount,buyerDetails: {
+          buyer_name: buyerData?.full_name,
+          buyer_contact_no: buyerData?.phone_no_1,
+          buyer_email: buyerData?.username,
+        }});
+        console.log(paymentResp);
+        setLoading(false);
       }
-    }
+    // }
     }catch(e){
       console.error(e);
     }finally{
@@ -591,13 +603,14 @@ const buyerResponse = await get_buyer_data(selectedOrder?.[0]?.buyer_id);
         title="Confirm Sale Order"
         message={`Are you sure you want to ${openDialog.status} this order?`}
         optionalCname="logoutDialog"
+        confirmBtnText={openDialog.status === 'Accept' ? "Make Payment" : 'Confirm'}
       />
-      <InvoicePopup
+      {/* <InvoicePopup
         open={openInvoice}
         onClose={() => setOpenInvoice(false)}
         serviceType={openDialog.status}
         invoiceNo={invoiceNo}
-      />
+      /> */}
       <CustomSnackbar
         open={snackbar.open}
         handleClose={() => setSnackbar({ ...snackbar, open: false })}

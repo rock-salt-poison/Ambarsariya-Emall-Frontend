@@ -42,6 +42,7 @@ const OFFER_TYPES = [
   },
   {
     type: "Rs 10/per day",
+    heading: "Shops Available",
     popup: true,
     popup_body_content: (onClose) => <RsTenPerDayContent onClose={onClose} />,
     optionalCName: "rs_per_day",
@@ -264,10 +265,11 @@ function CouponOfferingPage(props) {
 
           <Box className="col">
             {OFFER_TYPES.map(
-              ({ type, popup, popup_body_content, optionalCName }) => (
+              ({ type,heading, popup, popup_body_content, optionalCName }) => (
                 <Offers
                   key={type}
                   text={type}
+                  heading={heading}
                   popup={popup}
                   popup_body_content={popup_body_content}
                   onClick={
@@ -300,9 +302,9 @@ function CouponOfferingPage(props) {
               ))}
             </Box>
             <Typography className="total">
-              Total= {total}
-              <Typography variant="span"> + </Typography>
-              {rsPerDay} ₹ per day
+              Total = {total} discount coupons
+              {/* <Typography variant="span"> + </Typography>
+              {rsPerDay} ₹ per day */}
             </Typography>
             <Offers
               text="make a wish"

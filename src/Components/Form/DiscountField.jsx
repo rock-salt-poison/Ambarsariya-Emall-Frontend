@@ -8,12 +8,14 @@ const DiscountField = ({
   handleOnChange,
   handleCheckboxChange,
   percentagePlaceholder,
+  field1 = true,
   field2 = true,
   minOrderPlaceholder,
   additionalText,
   additionalText2,
   value = {},
   checked = false, // New prop for managing checkbox state
+  disable = false,
 }) => {
   return (
     <Box className="form-control">
@@ -25,13 +27,14 @@ const DiscountField = ({
               checked={checked} // Controlled checkbox state
               onChange={handleCheckboxChange} // Separate handler for checkbox
               className="checkbox"
+              disabled={disable}
             />
           }
           label={
             <Box className="label-content">
               <Typography variant="span" className="label2">{label}</Typography>
               <Box className="content2">
-                <TextField
+                {field1 && <TextField
                   hiddenLabel
                   variant="outlined"
                   name={name1}
@@ -42,7 +45,7 @@ const DiscountField = ({
                   placeholder={percentagePlaceholder}
                   value={value[name1] || ''}
                   inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-                />
+                />}
                 <Typography variant="span" className="label2">
                   {additionalText}
                 </Typography>

@@ -16560,6 +16560,11 @@ body .MuiBackdrop-root {
           );
           @include hover-scale(1, 0s);
           line-height: normal;
+
+          &.dark{
+            color: rgba($black, .8) !important;
+            text-align: left;
+          }
         }
 
         .label {
@@ -16629,6 +16634,16 @@ body .MuiBackdrop-root {
           place-items: normal;
           gap: 15px;
           align-self: stretch;
+
+          &.description{
+            .label-content{
+              .label2{
+                color: rgba($black, .8);
+                font-size: 18px;
+                line-height: 18px;
+              }
+            }
+          }
 
           .form-control {
             .form-row {
@@ -16840,6 +16855,14 @@ body .MuiBackdrop-root {
         .offerings_popup_form {
           @include flex-center(column, flex-start);
           gap: 25px;
+
+          &.form2{
+            .label-content{
+              .label2{
+                line-height: 1.2em !important;
+              }
+            }
+          }
 
           .MuiFormControlLabel-root {
             width: 100%;

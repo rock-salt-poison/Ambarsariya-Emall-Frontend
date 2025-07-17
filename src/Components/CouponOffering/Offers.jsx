@@ -4,7 +4,7 @@ import plus_icon from '../../Utils/images/Sell/coupon_offering_page/plus_icon.sv
 import { Link } from 'react-router-dom';
 import CardBoardPopup from '../CardBoardPopupComponents/CardBoardPopup';
 
-function Offers({ text, onClick, optionalCname, popup, popup_body_content }) {
+function Offers({ text, heading, onClick, optionalCname, popup, popup_body_content }) {
   const [anchorEl, setAnchorEl] = useState(null);
 
   // Open popover on hover
@@ -36,7 +36,7 @@ function Offers({ text, onClick, optionalCname, popup, popup_body_content }) {
 
       {/* Use the separate Popover component */}
 
-      <CardBoardPopup open={open} handleClose={handlePopoverClose} title={text} body_content={popup_body_content ? popup_body_content(handlePopoverClose) : null} />
+      <CardBoardPopup open={open} handleClose={handlePopoverClose} title={heading || text} body_content={popup_body_content ? popup_body_content(handlePopoverClose) : null} />
     </Box>
   );
 }

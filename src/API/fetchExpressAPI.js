@@ -4,6 +4,7 @@ import { io } from 'socket.io-client';
 const link = `${process.env.REACT_APP_EXPRESS_API_LINK}/api/ambarsariya`;
 const admin_link = `${process.env.REACT_APP_EXPRESS_API_LINK}/admin/api`;
 const drive_link = `${process.env.REACT_APP_EXPRESS_API_LINK}/api/drive`;
+const payment_link = `${process.env.REACT_APP_EXPRESS_API_LINK}/api/payment`;
 const photo_link = `${process.env.REACT_APP_EXPRESS_API_LINK}/api/google-photo`;
 const SOCKET_SERVER_URL = process.env.REACT_APP_EXPRESS_API_LINK;
 
@@ -1314,6 +1315,17 @@ export const get_mou = async (access_token) => {
   try {
     if (access_token) {      
       const response = await axios.get(`${link}/sell/mou?access_token=${access_token}`);
+      return response.data;
+    }
+  } catch (e) {
+    throw e;
+  }
+}
+
+export const post_createOrder = async (amount) => {
+  try {
+    if (amount) {      
+      const response = await axios.post(`${payment_link}/create-order`, {amount});
       return response.data;
     }
   } catch (e) {
