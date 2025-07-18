@@ -28,7 +28,7 @@ import InvoicePopup from "../../../Invoice/InvoicePopup";
 import CustomSnackbar from "../../../CustomSnackbar";
 import { HandleRazorpayPayment } from "../../../../API/HandleRazorpayPayment";
 
-function OrderDetails_tab_content({ title }) {
+function OrderStatus_tab_content({ title }) {
   const [purchasedOrders, setPurchasedOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState([]); // Store selected order
   const token = useSelector((state) => state.auth.userAccessToken);
@@ -49,10 +49,10 @@ function OrderDetails_tab_content({ title }) {
     try {
       setLoading(true);
       const resp = await get_allPurchaseOrderDetails(buyer_id);
-      
       if (resp.valid) {
-        const filteredOrders = resp.data.filter(order => order.sale_order_status !== null);
+        const filteredOrders = resp.data.filter(order => order.sale_order_status === null);
         console.log(filteredOrders);
+        
         setPurchasedOrders(filteredOrders);
       }
     } catch (e) {
@@ -643,11 +643,11 @@ const buyerResponse = await get_buyer_data(selectedOrder?.[0]?.buyer_id);
               </Box>
               <Box className="col status">
                 <Typography className="text">
-                  {order.sale_order_status === "Accept"
+                  {order.purchase_order_status === "Accept"
                     ? "Accepted"
-                    : order.sale_order_status === "Deny"
+                    : order.purchase_order_status === "Deny"
                     ? "Denied"
-                    : order.sale_order_status || "Hold"}
+                    : order.purchase_order_status === "Hold" ? "Hold" : "Pending"}
                 </Typography>
               </Box>
             </Box>
@@ -679,4 +679,4 @@ const buyerResponse = await get_buyer_data(selectedOrder?.[0]?.buyer_id);
   );
 }
 
-export default OrderDetails_tab_content;
+export default OrderStatus_tab_content;

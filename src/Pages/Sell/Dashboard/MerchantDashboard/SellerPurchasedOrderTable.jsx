@@ -53,8 +53,10 @@ function SellerPurchasedOrderTable({ purchasedOrders, selectedPO, cardType }) {
         if (resp.valid) {
 
           const updatedData = resp.data?.map((product)=> {
-            const selected_variant = product?.selected_variant?.split('_');
-            return {...product, product_name: `${selected_variant?.at(8)} - ${selected_variant?.at(10)}`,status: product.status || "Hold" }
+            const selected_variant = product?.selected_variant?.split('_') || [];
+            console.log(selected_variant);
+            
+            return {...product, product_name: `${selected_variant?.[8] || 'N/A'} - ${selected_variant?.[10] || 'N/A'}`,status: product.status || "Hold" }
           })
 
           setProducts(resp.data);
@@ -129,6 +131,9 @@ function SellerPurchasedOrderTable({ purchasedOrders, selectedPO, cardType }) {
       );
     }
   };
+
+  console.log(updatedProducts);
+  
 
   const calculateUpdatedStock = (originalProducts, modifiedProducts) => {
   const stockUpdates = [];
@@ -355,9 +360,12 @@ useEffect(()=>{
     );
     if (!selectedItem) return;
 
+    console.log(selectedItem.item_id);
     const variations = selectedItem.item_id.split("_");
+    
     const newVariantLabel = `${variations.at(8)} - ${variations.at(10)}`;
-
+    console.log(newVariantLabel);
+    
     setEditedValues((prevState) => ({
       ...prevState,
       [index]: {
@@ -443,11 +451,14 @@ useEffect(()=>{
         </TableHead>
         <TableBody>
           {updatedProducts.map((row, index) => {
+           console.log(row);
            
             const isHold = toggleStates[index] === "Hold";
-            const purchasedVariant = row.items
-              ?.find((i) => i?.item_id?.match(row.selected_variant))
+            const purchasedVariant = row?.items
+              ?.find((i) => i?.item_id?.match(row?.selected_variant))
               ?.item_id?.split("_");
+            console.log( purchasedVariant)
+            console.log(row)
             // fetch_product_variants(row.seller_id, row.variant_group);
             return (
               <TableRow key={row.product_id} hover>
@@ -468,8 +479,10 @@ useEffect(()=>{
                       className="input_field select"
                     >
                       {row.items?.map((i) => {
-                        const v = i.item_id.split("_");
-                        const label = `${v.at(8)} - ${v.at(10)}`;
+                        if (!i?.item_id || typeof i.item_id !== "string") return null;
+
+  const v = i?.item_id?.split("_");
+  const label = `${v?.at(8) || "N/A"} - ${v?.at(10) || "N/A"}`;
                         return (
                           <MenuItem key={i.item_id} value={i.item_id}>
                             {label}
