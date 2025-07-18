@@ -28,13 +28,20 @@ export const HandleRazorpayPayment = async ({ amount, buyerDetails }) => {
         theme: {
           color: "#3399cc",
         },
+        modal: {
+          // Handle user closing the modal (popup)
+          ondismiss: () => {
+            reject(new Error("Payment popup closed by user without completing the payment."));
+          }
+        }
       };
 
       const rzp = new window.Razorpay(options);
+
       rzp.open();
 
       rzp.on("payment.failed", (error) => {
-        reject(error.error);
+        reject(error.error); // also handles payment failures
       });
     });
   } catch (err) {

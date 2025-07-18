@@ -1168,7 +1168,8 @@ export const get_seller_data = async (shop_no) => {
 export const get_purchased_products_details = async (product_id, item_id) => {
   try {
     if (product_id && item_id) {
-      const response = await axios.get(`${link}/purchased-products-data/${product_id}/${item_id}`);
+      const encodedItemId =  encodeURIComponent(item_id)
+      const response = await axios.get(`${link}/purchased-products-data/${product_id}/${encodedItemId}`);
       return response.data;
     }
   } catch (e) {
@@ -1326,6 +1327,28 @@ export const post_createOrder = async (amount) => {
   try {
     if (amount) {      
       const response = await axios.post(`${payment_link}/create-order`, {amount});
+      return response.data;
+    }
+  } catch (e) {
+    throw e;
+  }
+}
+
+export const post_createFundAccount = async (data) => {
+  try {
+    if (data) {      
+      const response = await axios.post(`${payment_link}/create-fund-account`, data);
+      return response.data;
+    }
+  } catch (e) {
+    throw e;
+  }
+}
+
+export const post_payoutToShopkeeper = async (data) => {
+  try {
+    if (data) {      
+      const response = await axios.post(`${payment_link}/payout`, data);
       return response.data;
     }
   } catch (e) {

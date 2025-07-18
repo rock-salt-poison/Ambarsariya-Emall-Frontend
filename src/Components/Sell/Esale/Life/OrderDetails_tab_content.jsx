@@ -16,7 +16,9 @@ import {
   get_purchaseOrders,
   get_seller_data,
   getUser,
+  post_createFundAccount,
   post_invoiceOrder,
+  post_payoutToShopkeeper,
 } from "../../../../API/fetchExpressAPI";
 import { useSelector } from "react-redux";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
@@ -277,28 +279,81 @@ const buyerResponse = await get_buyer_data(selectedOrder?.[0]?.buyer_id);
     
 
 
-    // const invoiceResp = await post_invoiceOrder(data);
-    // if(invoiceResp.message){
-    //   console.log(invoiceResp.message);
-    //   setSnackbar({
-    //     open: true,
-    //     message: invoiceResp.message,
-    //     severity: "success",
-    //   });
-    //   setInvoiceNo(invoiceResp?.invoice_no);
+    
       if(status === 'Accept'){
-        // setTimeout(()=>{
-        //   setOpenInvoice(true);
-        // }, 1500);
+       
         const totalAmount = selectedOrder?.[0].total_amount || 0;
         console.log(totalAmount);
-        
-        const paymentResp = await HandleRazorpayPayment({amount: totalAmount,buyerDetails: {
-          buyer_name: buyerData?.full_name,
-          buyer_contact_no: buyerData?.phone_no_1,
-          buyer_email: buyerData?.username,
-        }});
-        console.log(paymentResp);
+        try {
+          // 1. Razorpay Checkout
+          const paymentResp = await HandleRazorpayPayment({
+            amount: totalAmount,
+            buyerDetails: {
+              buyer_name: buyerData?.full_name,
+              buyer_contact_no: buyerData?.phone_no_1,
+              buyer_email: buyerData?.username,
+            },
+          });
+
+          console.log("Payment response:", paymentResp);
+          
+
+          if (paymentResp?.razorpay_payment_id) {
+            // 2. Create Fund Account for Shopkeeper
+            const fundAccountResp = await post_createFundAccount({
+              name: sellerData?.poc_name,
+              contact: sellerData?.phone_no_1,
+              email: sellerData?.username,
+              upi_id: sellerData?.upi_id
+            })
+            console.log(fundAccountResp);
+            
+            const fundAccountId = fundAccountResp.fundAccountId;
+            console.log("Fund Account created:", fundAccountId);
+
+            // 3. Trigger Payout
+            const payoutResp = await post_payoutToShopkeeper({
+              fund_account_id: fundAccountId,
+              amount: totalAmount,
+            });
+
+            console.log("Payout response:", payoutResp.data);
+            setSnackbar({
+              open: true,
+              message: "Payout to shopkeeper successful!",
+              severity: "success",
+            });
+
+            const invoiceResp = await post_invoiceOrder(data);
+              if(invoiceResp.message){
+                console.log(invoiceResp.message);
+                setSnackbar({
+                  open: true,
+                  message: invoiceResp.message,
+                  severity: "success",
+                });
+                setInvoiceNo(invoiceResp?.invoice_no);
+                setTimeout(()=>{
+                  setOpenInvoice(true);
+                }, 1500);
+              }
+          } else {
+            setSnackbar({
+              open: true,
+              message: "Payment failed or was cancelled",
+              severity: "success",
+            });
+          }
+        } catch (error) {
+          console.error("Error in payment/payout:", error);
+          setSnackbar({
+              open: true,
+              message: "Error during transaction",
+              severity: "success",
+            });
+        }finally{
+          setLoading(false);
+        }
         setLoading(false);
       }
     // }
@@ -605,12 +660,12 @@ const buyerResponse = await get_buyer_data(selectedOrder?.[0]?.buyer_id);
         optionalCname="logoutDialog"
         confirmBtnText={openDialog.status === 'Accept' ? "Make Payment" : 'Confirm'}
       />
-      {/* <InvoicePopup
+      <InvoicePopup
         open={openInvoice}
         onClose={() => setOpenInvoice(false)}
         serviceType={openDialog.status}
         invoiceNo={invoiceNo}
-      /> */}
+      />
       <CustomSnackbar
         open={snackbar.open}
         handleClose={() => setSnackbar({ ...snackbar, open: false })}
