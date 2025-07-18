@@ -604,7 +604,8 @@ const buyerResponse = await get_buyer_data(selectedOrder?.[0]?.buyer_id);
               {selectedOrder?.[0].so_subtotal && (
                 <Box className="col">
                   <Typography className="heading">Sale Order Status</Typography>
-                  <Select
+                  <Typography className="heading">{selectedOrder?.[0].sale_order_status}</Typography>
+                  {/* <Select
                     size="small"
                     value={saleOrderStatus}
                     onChange={(e) => {
@@ -617,7 +618,7 @@ const buyerResponse = await get_buyer_data(selectedOrder?.[0]?.buyer_id);
                     <MenuItem value="Accept">Accept</MenuItem>
                     <MenuItem value="Deny">Deny</MenuItem>
                     <MenuItem value="Hold">Hold</MenuItem>
-                  </Select>
+                  </Select> */}
                 </Box>
               )}
             </Box>
