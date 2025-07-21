@@ -7,6 +7,7 @@ import {
   getShopUserData,
   getUser,
   otherShops,
+  post_createFundAccount,
   post_discount_coupons,
   updateEshopData,
 } from "../../API/fetchExpressAPI";
@@ -39,7 +40,8 @@ const EshopForm = () => {
   const user_access_token = useSelector((state) => state.auth.userAccessToken);
   const updatedFields = useSelector((state) => state.updatedFields);
   const dispatch = useDispatch();
-  const [eshop, setEshop] = useState('');
+  const [eshop, setEshop] = useState("");
+  const [shopUserData, setShopUserData] = useState(null);
 
   const coupons = useSelector((state) => state.coupon);
   const [snackbar, setSnackbar] = useState({
@@ -56,11 +58,12 @@ const EshopForm = () => {
       setLoading(true);
       const resp = await otherShops(token);
       const shopUsersData = (await getShopUserData(token))?.[0];
+      setShopUserData(shopUsersData);
+
       if (resp) {
         setSimilarOptions(resp);
         setKeyPlayers(resp);
       }
-      
 
       if (shopUsersData) {
         const domain_id = shopUsersData.domain_id;
@@ -72,12 +75,14 @@ const EshopForm = () => {
         }));
         setCategories(formattedCategories);
 
-        const selectedCategories = shopUsersData.category?.map((category_id) => {
-          const resp = formattedCategories.filter(
-            (category) => category.id === category_id
-          );
-          return resp[0].name;
-        });
+        const selectedCategories = shopUsersData.category?.map(
+          (category_id) => {
+            const resp = formattedCategories.filter(
+              (category) => category.id === category_id
+            );
+            return resp[0].name;
+          }
+        );
 
         const selected_key_players = shopUsersData.key_players
           ?.map((shop_no) =>
@@ -125,19 +130,19 @@ const EshopForm = () => {
   useEffect(() => {
     const fetchData = async () => {
       if (user_access_token) {
-        try{
+        try {
           setLoading(true);
-          let users = (await getUser(user_access_token));
-          let shop = users.find((u)=>u.shop_no !== null);
+          let users = await getUser(user_access_token);
+          let shop = users.find((u) => u.shop_no !== null);
           console.log(shop);
-          
+
           if (shop?.shop_access_token) {
             setEshop(shop);
             fetchOtherShops(shop?.shop_access_token);
           }
-        }catch(e){
+        } catch (e) {
           console.log(e);
-        }finally{
+        } finally {
           setLoading(false);
         }
       }
@@ -250,6 +255,24 @@ const EshopForm = () => {
         : [];
 
       console.log(selectedCategoryIds);
+      
+      const fundAccountResp = await post_createFundAccount({
+        name: shopUserData?.full_name,
+        contact: shopUserData?.phone_no_1,
+        email: shopUserData?.username,
+        upi_id: shopUserData?.upi_id,
+        type: 'vendor'
+      })
+      console.log(fundAccountResp);
+      
+      const fundAccountId = fundAccountResp.fundAccountId;
+      console.log("Fund Account created:", fundAccountId);
+
+      setSnackbar({
+        open: true,
+        message: "Contact Created!",
+        severity: "success",
+      });
       // Prepare the updated post data
       const updatedPostData = {
         business_name: formData.business_name,
@@ -265,6 +288,8 @@ const EshopForm = () => {
         key_players: selectedKeyPlayers,
       };
 
+      
+
       // Get the userAcessToken (either from localStorage or wherever it's stored)
       const userAccessToken = localStorage.getItem("accessToken");
 
@@ -272,37 +297,47 @@ const EshopForm = () => {
         try {
           setLoading(true);
           // Call the function to update e-shop data
-          const data = (await getUser(userAccessToken))[0];
-          console.log(eshop);
+
           
+
           if (eshop?.shop_access_token) {
-            const response = await updateEshopData(updatedPostData, eshop?.shop_access_token);
+            const response = await updateEshopData(
+              updatedPostData,
+              eshop?.shop_access_token
+            );
 
             if (response.message) {
               const validityStart = new Date();
-              
+
               // Format validity_start as 'YYYY-MM-DD'
-              const formattedValidityStart = validityStart.toLocaleString().split('T')[0];
-              
+              const formattedValidityStart = validityStart
+                .toLocaleString()
+                .split("T")[0];
+
               // Calculate validity_end as one year after validity_start
               const validityEnd = new Date(validityStart);
               validityEnd.setFullYear(validityStart.getFullYear() + 1);
-            
+
               // Format validity_end as 'YYYY-MM-DD'
-              const formattedValidityEnd = validityEnd.toLocaleString().split('T')[0];
-            
+              const formattedValidityEnd = validityEnd
+                .toLocaleString()
+                .split("T")[0];
+
               const coupons_data = {
                 validity_start: formattedValidityStart,
                 validity_end: formattedValidityEnd,
-                data: coupons 
+                data: coupons,
               };
-            
-              console.log(coupons_data)
-              const discount_coupons = await post_discount_coupons(coupons_data, eshop.shop_no);
 
-              console.log(discount_coupons)
+              console.log(coupons_data);
+              const discount_coupons = await post_discount_coupons(
+                coupons_data,
+                eshop.shop_no
+              );
+
+              console.log(discount_coupons);
             }
-            
+
             setLoading(false);
 
             setSnackbar({
@@ -310,22 +345,26 @@ const EshopForm = () => {
               message: response.message,
               severity: "success",
             });
-            
+
             // Navigate to the shop page after a successful submission
             setTimeout(() => {
-              navigate(`../support/shop/shop-detail/${eshop.shop_access_token}`);
+              navigate(
+                `../support/shop/shop-detail/${eshop.shop_access_token}`
+              );
             }, 2500);
           }
         } catch (error) {
           setLoading(false);
           console.error("Error updating e-shop data:", error);
-          if(error.response.data.error==="File size exceeds the 1MB limit."){
+          if (
+            error.response.data.error === "File size exceeds the 1MB limit."
+          ) {
             setSnackbar({
               open: true,
               message: "File size should not exceed the 1MB limit.",
               severity: "error",
             });
-          }else{
+          } else {
             setSnackbar({
               open: true,
               message: error.error,
@@ -377,6 +416,8 @@ const EshopForm = () => {
     type,
     options = [],
     placeholder = "",
+    readOnly,
+    disable,
     additionalProps = {}
   ) => {
     let additionalClass = "";
@@ -385,8 +426,8 @@ const EshopForm = () => {
     // Define accept types based on field name
     if (name === "usp_values") {
       accept = "application/pdf";
-    // } else if (name === "products") {
-    //   accept = ".csv";
+      // } else if (name === "products") {
+      //   accept = ".csv";
     } else if (name === "advt_video") {
       accept = "video/mp4";
     }
@@ -417,7 +458,7 @@ const EshopForm = () => {
         getSliderMarks={getSliderMarks}
         className={`${additionalClass} ${updatedFieldClass}`}
         accept={accept}
-        // readOnly={edit ? true : false}
+        readOnly={readOnly}
         {...additionalProps}
       />
     );
@@ -425,23 +466,40 @@ const EshopForm = () => {
 
   return (
     <Box component="form" noValidate autoComplete="off" onSubmit={handleSubmit}>
-      {loading && <Box className="loading">
-                <CircularProgress />
-              </Box>}
+      {loading && (
+        <Box className="loading">
+          <CircularProgress />
+        </Box>
+      )}
       <Box className="form-group">
-        {renderFormField("Name of the business :", "business_name", "text")}
+        {renderFormField(
+          "Name of the business :",
+          "business_name",
+          "text",
+          "",
+          "",
+          edit && true
+        )}
         {renderFormField(
           "Date of establishment :",
           "date_of_establishment",
-          "date"
+          "date",
+          "", 
+          "",
+          edit && true
         )}
-        {renderFormField("USP Values (PDF) :", "usp_values", "file")}
+        {renderFormField(
+          "USP Values (PDF) :", 
+          "usp_values", 
+          "file", 
+        )}
         {renderFormField(
           "Product Sample :",
           "product_samples",
           "url",
           "",
-          "Add gmeet link"
+          "Add gmeet link",
+          edit && true
         )}
         <Box className="form-group2">
           {/* {renderFormField(
@@ -451,11 +509,7 @@ const EshopForm = () => {
             similarOptions.map((option) => option.business_name),
             "Select"
           )} */}
-          {renderFormField(
-            "UPI Id :",
-            "upi_id",
-            "text",
-          )}
+          {renderFormField("UPI Id :", "upi_id", "text")}
           {renderFormField(
             "Key players :",
             "key_players",
@@ -485,7 +539,8 @@ const EshopForm = () => {
           "category",
           "select-check",
           categories.map((cat) => cat.name),
-          "Select categories"
+          "Select categories",
+          edit && true
         )}
         {renderFormField(
           "Advertisement Video :",
@@ -517,15 +572,19 @@ const EshopForm = () => {
           <Button type="submit" variant="contained" className="submit_button">
             Submit
           </Button>
-          {!edit && <Button
-            variant="contained"
-            className="submit_button"
-            onClick={() => navigate("../support/shop/shop-detail/dashboard/edit/preview")}
-          >
-            Form Preview
-          </Button>}
+          {!edit && (
+            <Button
+              variant="contained"
+              className="submit_button"
+              onClick={() =>
+                navigate("../support/shop/shop-detail/dashboard/edit/preview")
+              }
+            >
+              Form Preview
+            </Button>
+          )}
         </Box>
-    }
+      }
       <CustomSnackbar
         open={snackbar.open}
         handleClose={() => setSnackbar({ ...snackbar, open: false })}
