@@ -307,7 +307,8 @@ const buyerResponse = await get_buyer_data(selectedOrder?.[0]?.buyer_id);
               name: sellerData?.poc_name,
               contact: sellerData?.phone_no_1,
               email: sellerData?.username,
-              upi_id: sellerData?.upi_id
+              upi_id: sellerData?.upi_id,
+              type:'vendor'
             })
             console.log(fundAccountResp);
             

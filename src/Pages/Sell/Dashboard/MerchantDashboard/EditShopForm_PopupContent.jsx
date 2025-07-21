@@ -6,8 +6,10 @@ import preview from '../../../../Utils/images/Sell/dashboard/merchant_dashboard/
 import special_offers from '../../../../Utils/images/Sell/cart/special_offers/special_offer.webp';
 import swastik from '../../../../Utils/images/Sell/dashboard/merchant_dashboard/swastik.webp';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 function EditShopForm_PopupContent() {
+    const token = useSelector((state) => state.auth.userAccessToken);
 
     const navigate = useNavigate();
 
@@ -20,7 +22,7 @@ function EditShopForm_PopupContent() {
 
     const handleClick = (e, id) => {
         if(id===1){
-            navigate('../coupon-offering')
+            navigate(`../coupon-offering/${token}`)
         }if(id===2){
             navigate('supplier')
         }if(id===3){

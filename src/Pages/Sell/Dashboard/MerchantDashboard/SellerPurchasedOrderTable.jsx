@@ -54,7 +54,7 @@ function SellerPurchasedOrderTable({ purchasedOrders, selectedPO, cardType }) {
 
           const updatedData = resp.data?.map((product)=> {
             const selected_variant = product?.selected_variant?.split('_') || [];
-            console.log(selected_variant);
+            // console.log(selected_variant);
             
             return {...product, product_name: `${selected_variant?.[8] || 'N/A'} - ${selected_variant?.[10] || 'N/A'}`,status: product.status || "Hold" }
           })
@@ -97,6 +97,7 @@ function SellerPurchasedOrderTable({ purchasedOrders, selectedPO, cardType }) {
 
 
   const handleToggleChange = async (index, newValue) => {
+    
     if (newValue !== null) {
       setToggleStates((prevState) => ({ ...prevState, [index]: newValue }));
 
@@ -355,12 +356,12 @@ useEffect(()=>{
 
 
   const handleItemChange = (index, selectedItemId, row) => {
+    
     const selectedItem = row.items?.find(
       (item) => item.item_id === selectedItemId
     );
     if (!selectedItem) return;
 
-    console.log(selectedItem.item_id);
     const variations = selectedItem.item_id.split("_");
     
     const newVariantLabel = `${variations.at(8)} - ${variations.at(10)}`;
@@ -451,14 +452,16 @@ useEffect(()=>{
         </TableHead>
         <TableBody>
           {updatedProducts.map((row, index) => {
-           console.log(row);
+           console.log(row?.items
+              ?.find((i) => i?.item_id === row?.selected_variant)
+              ?.item_id?.split("_"));
            
             const isHold = toggleStates[index] === "Hold";
             const purchasedVariant = row?.items
-              ?.find((i) => i?.item_id?.match(row?.selected_variant))
+              ?.find((i) => i?.item_id === row?.selected_variant)
               ?.item_id?.split("_");
             console.log( purchasedVariant)
-            console.log(row)
+            // console.log(row)
             // fetch_product_variants(row.seller_id, row.variant_group);
             return (
               <TableRow key={row.product_id} hover>

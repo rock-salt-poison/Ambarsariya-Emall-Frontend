@@ -417,7 +417,7 @@ const EshopForm = () => {
         getSliderMarks={getSliderMarks}
         className={`${additionalClass} ${updatedFieldClass}`}
         accept={accept}
-        readOnly={edit ? true : false}
+        // readOnly={edit ? true : false}
         {...additionalProps}
       />
     );
@@ -495,7 +495,7 @@ const EshopForm = () => {
           "Add youtube video link"
         )}
       </Box>
-      {!edit ? (
+      {/* {!edit ? (
         <Box className="submit_button_container">
           <Button type="submit" variant="contained" className="submit_button">
             Submit
@@ -510,7 +510,22 @@ const EshopForm = () => {
         </Box>
       ) : (
         ""
-      )}
+      )} */}
+
+      {
+        <Box className="submit_button_container">
+          <Button type="submit" variant="contained" className="submit_button">
+            Submit
+          </Button>
+          {!edit && <Button
+            variant="contained"
+            className="submit_button"
+            onClick={() => navigate("../support/shop/shop-detail/dashboard/edit/preview")}
+          >
+            Form Preview
+          </Button>}
+        </Box>
+    }
       <CustomSnackbar
         open={snackbar.open}
         handleClose={() => setSnackbar({ ...snackbar, open: false })}

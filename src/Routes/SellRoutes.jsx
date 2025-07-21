@@ -70,6 +70,7 @@ function SellRoutes() {
       <Route path="support/shop" element={<SingleShopPage />} />
       <Route path="support/shops-near" element={<MerchantDetailsPage />} />
       <Route path="coupon-offering" element={<CouponOfferingPage />} />
+      <Route path="coupon-offering/:token" element={<CouponOfferingPage />} />
       <Route path="book-eshop" element={<BuyEshop />} />
       <Route path="login" element={<Login />} />
       <Route path="/forgot-password" element={<Login />} />

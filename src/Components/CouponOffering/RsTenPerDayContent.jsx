@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import DiscountField from '../Form/DiscountField';
 import AddIcon from '@mui/icons-material/Add';
 import { addCoupon } from '../../store/couponsSlice';
 import CustomSnackbar from '../CustomSnackbar';
 import { HandleRazorpayPayment } from '../../API/HandleRazorpayPayment';
+import { getShopUserData, getUser, post_createFundAccount } from '../../API/fetchExpressAPI';
+import { useParams } from 'react-router-dom';
 
 function RsTenPerDayContent({ onClose }) {
   const dispatch = useDispatch();
@@ -17,6 +19,10 @@ function RsTenPerDayContent({ onClose }) {
   });
 
   const rsTenPerDay = useSelector((state) => state.coupon.rsTenPerDay);
+  const user_access_token = useSelector((state) => state.auth.userAccessToken);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const {token} = useParams();
 
   const [discounts, setDiscounts] = useState({
     basicEdition: { checked: false },
@@ -30,6 +36,39 @@ function RsTenPerDayContent({ onClose }) {
       setDiscounts(rsTenPerDay.discounts);
     }
   }, [rsTenPerDay]);
+
+  useEffect(() => {
+    if (user_access_token) {
+      const fetchUserType = async () => {
+        try {
+          setLoading(true);
+          const userData = (await getUser(user_access_token))?.find((u)=>u.shop_no !== null);
+          
+
+          if (userData?.user_type === "shop" || userData?.user_type === "merchant") {
+            try{
+              setLoading(true);
+              const response = await getShopUserData(userData?.shop_access_token);
+              
+              if (response && response.length > 0) {
+                const data = response[0];               
+                setUser(data);
+              }
+            }catch(e){
+              console.log(e);
+            }finally{
+              setLoading(false);
+            }
+          }
+        } catch (e) {
+          console.log(e);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchUserType();
+    }
+  }, [user_access_token]);
 
   const handleOnChange = (event, field) => {
     const { name, value } = event.target;
@@ -69,11 +108,11 @@ function RsTenPerDayContent({ onClose }) {
 
     try {
       // If productUpload is selected, trigger Razorpay
-      if (discounts.productUpload?.checked) {
+      if (token && discounts.productUpload?.checked) {
         const buyerDetails = {
-          name: 'Retailer Name',         // Replace with actual user info
-          email: 'retailer@email.com',   // Optional
-          contact: '9999999999',         // Optional
+          name: user?.full_name,         // Replace with actual user info
+          email: user?.username,   // Optional
+          contact: user?.phone_no_1,         // Optional
         };
 
         const amount = 500; // Razorpay takes amount in paisa (₹500)
@@ -82,11 +121,33 @@ function RsTenPerDayContent({ onClose }) {
 
         console.log('Payment successful:', paymentResp);
 
-        setSnackbar({
-          open: true,
-          message: 'Payment successful. Coupon activated.',
-          severity: 'success',
-        });
+        if (paymentResp?.razorpay_payment_id) {
+          // 2. Create Fund Account for Shopkeeper
+          const fundAccountResp = await post_createFundAccount({
+            name: user?.full_name,
+            contact: user?.phone_no_1,
+            email: user?.username,
+            upi_id: user?.upi_id,
+            type: 'customer'
+          })
+          console.log(fundAccountResp);
+          
+          const fundAccountId = fundAccountResp.fundAccountId;
+          console.log("Fund Account created:", fundAccountId);
+
+          setSnackbar({
+            open: true,
+            message: "Payment successful!",
+            severity: "success",
+          });
+
+
+        // setSnackbar({
+        //   open: true,
+        //   message: 'Payment successful. Coupon activated.',
+        //   severity: 'success',
+        // });
+        }
 
       } else {
         setSnackbar({
@@ -137,6 +198,8 @@ function RsTenPerDayContent({ onClose }) {
   ];
 
   return (
+    <>
+    {loading && <Box className="loading"><CircularProgress/></Box>}
     <Box
       component="form"
       noValidate
@@ -166,7 +229,9 @@ function RsTenPerDayContent({ onClose }) {
         ))}
       </Box>
 
-        <Box className="description checkbox-group">
+        {token &&
+          <>
+          <Box className="description checkbox-group">
           <DiscountField
             label="Pay Rs. 500 for Stock inventory managment and for products upload"
             value={discounts.productUpload}
@@ -182,6 +247,8 @@ function RsTenPerDayContent({ onClose }) {
       <Typography className="description dark">
         Or See the video
       </Typography>
+      </>
+      }
 
       <Box className="description total" sx={{ textAlign: 'center' }}>
         <Typography component="span" className="description">
@@ -210,6 +277,7 @@ function RsTenPerDayContent({ onClose }) {
         severity={snackbar.severity}
       />
     </Box>
+    </>
   );
 }
 
