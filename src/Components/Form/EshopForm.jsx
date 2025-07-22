@@ -266,6 +266,7 @@ const EshopForm = () => {
       console.log(fundAccountResp);
       
       const fundAccountId = fundAccountResp.fundAccountId;
+      const contactId = fundAccountResp.contact_id;
       console.log("Fund Account created:", fundAccountId);
 
       setSnackbar({
@@ -286,6 +287,8 @@ const EshopForm = () => {
         category: selectedCategoryIds, // Hardcoded category, make sure to replace if needed
         advt_video: formData.advt_video, // Placeholder, replace as needed
         key_players: selectedKeyPlayers,
+        razorpay_contact_id : contactId || null,
+        razorpay_fund_account_id: fundAccountId || null,
       };
 
       

@@ -51,9 +51,11 @@ function OrderDetails_tab_content({ title }) {
       const resp = await get_allPurchaseOrderDetails(buyer_id);
       
       if (resp.valid) {
+        setLoading(true);
         const filteredOrders = resp.data.filter(order => order.sale_order_status !== null);
         console.log(filteredOrders);
         setPurchasedOrders(filteredOrders);
+        setLoading(false);
       }
     } catch (e) {
       console.log(e);
@@ -625,7 +627,7 @@ const buyerResponse = await get_buyer_data(selectedOrder?.[0]?.buyer_id);
           </>
         ) : (
           /* Show order list when no order is selected */
-          purchasedOrders.map((order, index) => (
+          purchasedOrders?.length > 0 ? purchasedOrders.map((order, index) => (
             <Box
               key={index}
               className="card"
@@ -653,6 +655,10 @@ const buyerResponse = await get_buyer_data(selectedOrder?.[0]?.buyer_id);
               </Box>
             </Box>
           ))
+          : 
+          <Box className="no_order">
+            <Typography className="text">No Order exists.</Typography>
+          </Box>
         )}
       </Box>
       <ConfirmationDialog

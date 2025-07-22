@@ -17936,6 +17936,12 @@ body .MuiBackdrop-root {
             @include flex-center(column, flex-start);
             place-items: normal;
             gap: 20px;
+            flex: 1;
+
+            .no_order{
+              @include flex-center(row, center);
+              flex: 1;
+            }
 
             .order_details_info {
               @include flex-center(column, flex-start);
