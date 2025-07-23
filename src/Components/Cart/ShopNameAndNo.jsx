@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { getShopUserData } from "../../API/fetchExpressAPI";
+import { getShopUserData, getUser } from "../../API/fetchExpressAPI";
 
 function ShopNameAndNo({token}) {
 
@@ -18,7 +18,8 @@ function ShopNameAndNo({token}) {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const resp = await getShopUserData(token);
+        const user = (await getUser(token))?.find((u)=>u?.shop_no !== null)
+        const resp = await getShopUserData(user?.shop_access_token);
         if (resp?.length > 0) {
           setData(resp[0]);
         } else {

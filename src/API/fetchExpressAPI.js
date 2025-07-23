@@ -1365,6 +1365,24 @@ export const postEshopReview = async (data) => {
   }
 };
 
+export const postEshopReviewComment = async (data) => {
+  try {
+    const response = await axios.post(`${link}/sell/shop-comment`, {data});
+    return response.data;
+  } catch (error) {
+    throw error
+  }
+};
+
+export const postEshopReviewCommentReply = async (data) => {
+  try {
+    const response = await axios.post(`${link}/sell/shop-comment-reply`, {data});
+    return response.data;
+  } catch (error) {
+    throw error
+  }
+};
+
 export const getMemberEshopReview = async (data) => {
   try {
     const response = await axios.get(`${link}/sell/shop-review/${data?.shop_no}/${data?.reviewer_id}`);
