@@ -255,12 +255,14 @@ const EshopForm = () => {
         : [];
 
       console.log(selectedCategoryIds);
+      console.log(shopUserData);
+      
       
       const fundAccountResp = await post_createFundAccount({
         name: shopUserData?.full_name,
         contact: shopUserData?.phone_no_1,
         email: shopUserData?.username,
-        upi_id: shopUserData?.upi_id,
+        upi_id: formData.upi_id,
         type: 'vendor'
       })
       console.log(fundAccountResp);

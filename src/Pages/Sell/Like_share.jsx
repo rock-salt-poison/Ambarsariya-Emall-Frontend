@@ -114,6 +114,7 @@ function Like_share() {
                                         onChange={handleCommentsChange}
                                         variant="outlined"
                                         placeholder='Add comment...'
+                                        sx={{height:'auto'}}
                                     />
                                     <Box className="submit_button_container">
                                         <Button type="submit" variant="contained" className="submit_button">

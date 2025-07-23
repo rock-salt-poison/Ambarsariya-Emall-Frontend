@@ -167,8 +167,8 @@ function OrderDetails() {
           severity: "success",
         });
         setSwitchCheckedReview(false);
-setReview(null);
-setOpenDialog(false);
+        setReview(null);
+        setOpenDialog(false);
       }
     }catch(e){
       console.log(e);
