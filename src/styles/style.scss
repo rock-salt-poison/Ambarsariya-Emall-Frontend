@@ -9961,6 +9961,20 @@ a {
               }
             }
           }
+
+          .submit_button_container {
+            @include flex-center(row, center);
+            flex: 1;
+
+            .submit_button {
+              background: linear-gradient($brown-4, #714a3f);
+              @include homepage-buttons("Bobby-Jones-Soft", 18px, $yellow, "none");
+              @include hover-scale(1, 0s);
+              padding: 2px 15px;
+              border-radius: 8px;
+              transition: background-color 0.3s ease;
+            }
+          }
         }
       }
     }

@@ -1355,3 +1355,32 @@ export const post_payoutToShopkeeper = async (data) => {
     throw e;
   }
 }
+
+export const postEshopReview = async (data) => {
+  try {
+    const response = await axios.post(`${link}/sell/shop-review`, {data});
+    return response.data;
+  } catch (error) {
+    throw error
+  }
+};
+
+export const getMemberEshopReview = async (data) => {
+  try {
+    const response = await axios.get(`${link}/sell/shop-review/${data?.shop_no}/${data?.reviewer_id}`);
+    return response.data;
+  } catch (error) {
+    throw error
+  }
+};
+
+export const delete_shopReview = async (id) => {
+  try {
+    if (id) {
+      const response = await axios.delete(`${link}/sell/shop-review/${id}`);
+      return response.data;
+    }
+  } catch (e) {
+    throw e;
+  }
+}

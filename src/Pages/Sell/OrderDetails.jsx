@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { Box, Typography, CircularProgress } from '@mui/material';
 import Switch_On_Off from '../../Components/Form/Switch_On_Off';
-import { fetchService, get_purchaseOrderDetails } from '../../API/fetchExpressAPI';
+import { delete_shopReview, fetchService, get_purchaseOrderDetails, getMemberEshopReview } from '../../API/fetchExpressAPI';
+import ConfirmationDialog from '../../Components/ConfirmationDialog';
+import CustomSnackbar from '../../Components/CustomSnackbar';
 
 // Reusable DetailRow component
 const DetailRow = ({ title, description, isReturn = false, isReview = false, isClickable = false, handleSwitchChange, switchChecked, owner }) => (
@@ -30,6 +32,13 @@ function OrderDetails() {
   const [loading, setLoading] = useState(false);
   const [switchCheckedReturn, setSwitchCheckedReturn] = useState(false);
   const [switchCheckedReview, setSwitchCheckedReview] = useState(false);
+  const [review, setReview] = useState(null);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
   const navigate = useNavigate();
   const { owner } = useParams();
 
@@ -104,7 +113,7 @@ function OrderDetails() {
     setSwitchCheckedReturn(isChecked);
     if (isChecked) {
       setTimeout(() => {
-        navigate(`../${owner}/return`);
+        navigate(`../${orderDetails?.access_token}/return`);
       }, 400);
     }
   };
@@ -114,10 +123,66 @@ function OrderDetails() {
     setSwitchCheckedReview(isChecked);
     if (isChecked) {
       setTimeout(() => {
-        navigate(`../${owner}/review`);
+        navigate(`../${orderDetails?.access_token}/review`);
       }, 400);
+    }else if (!isChecked){
+      setOpenDialog(true);
     }
   };
+
+
+
+  const get_member_shop_reviews = async (data) => {
+      try{
+        setLoading(true);
+        
+        const resp = await getMemberEshopReview(data);
+        if(resp?.data){
+          setReview(resp?.data);
+          setSwitchCheckedReview(true);
+        }
+      }catch(e){
+        console.log(e);
+      }finally{
+        setLoading(false);
+      }
+    }
+  
+    useEffect(()=>{
+      if(orderDetails?.buyer_id && orderDetails?.seller_id){
+        get_member_shop_reviews({shop_no: orderDetails?.seller_id, reviewer_id: orderDetails?.buyer_id });
+      }
+    }, [orderDetails?.buyer_id, orderDetails?.seller_id])
+
+  const handleConfirm = async () => {
+    try{
+      setLoading(true);
+      console.log(review);
+      
+      const resp = await delete_shopReview(review?.review_id);
+      if(resp){
+        setSnackbar({
+          open: true,
+          message: resp?.message,
+          severity: "success",
+        });
+        setSwitchCheckedReview(false);
+setReview(null);
+setOpenDialog(false);
+      }
+    }catch(e){
+      console.log(e);
+    }finally{
+      setLoading(false);
+    }
+  }
+
+  const handleClose = async () => { 
+    setOpenDialog(false);
+    setSwitchCheckedReview(true);
+  }
+
+  
 
   if (loading) {
     return <Box className="loading"><CircularProgress /></Box>; // Show loading indicator while fetching data
@@ -133,6 +198,22 @@ function OrderDetails() {
       <DetailRow title="Location" description={orderDetails?.shipping_address} />
       <DetailRow title="Return" isReturn handleSwitchChange={handleSwitchChangeReturn} switchChecked={switchCheckedReturn} />
       <DetailRow title="Review" isReview handleSwitchChange={handleSwitchChangeReview} switchChecked={switchCheckedReview} />
+
+      <CustomSnackbar
+        open={snackbar.open}
+        handleClose={() => setSnackbar({ ...snackbar, open: false })}
+        message={snackbar.message}
+        severity={snackbar.severity}
+        disableAutoHide={true}
+      />
+      <ConfirmationDialog
+        open={openDialog}
+        onClose={() => handleClose()}
+        onConfirm={(e)=>handleConfirm(e)}
+        title="Confirm Review"
+        message={`Are you sure you want to delete your review ?`}
+        optionalCname="logoutDialog"
+      />
     </Box>
   );
 }

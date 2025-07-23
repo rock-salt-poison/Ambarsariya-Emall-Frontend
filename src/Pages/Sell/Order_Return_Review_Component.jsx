@@ -52,9 +52,9 @@ export default function Order_Return_Review_Component() {
     if(action==="order"){
       return `../shop/products?token=${owner}`
     }else if(action === "return"){
-      return `../${owner}/order`
+      return -1
     }else if(action === "review"){
-      return `../${owner}/order`
+      return -1
     }
   }
 
