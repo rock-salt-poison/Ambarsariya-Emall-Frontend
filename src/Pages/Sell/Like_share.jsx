@@ -309,7 +309,8 @@ function Like_share() {
         replier_name: buyerData?.name,
         reply: reply,
       };
-
+      console.log(reply_data);
+      
       const resp = await postEshopReviewCommentReply(reply_data);
 
       if (resp?.reply_id) {

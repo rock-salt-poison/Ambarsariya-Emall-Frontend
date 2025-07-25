@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { Box, Typography, CircularProgress } from '@mui/material';
 import Switch_On_Off from '../../Components/Form/Switch_On_Off';
-import { delete_shopReview, fetchService, get_purchaseOrderDetails, getMemberEshopReview } from '../../API/fetchExpressAPI';
+import { fetchService, get_purchaseOrderDetails, getMemberEshopReview, set_visibilityMemberReview } from '../../API/fetchExpressAPI';
 import ConfirmationDialog from '../../Components/ConfirmationDialog';
 import CustomSnackbar from '../../Components/CustomSnackbar';
 
@@ -126,17 +126,41 @@ function OrderDetails() {
     }
   };
 
-  const handleSwitchChangeReview = (event) => {
-    const isChecked = event.target.checked;
-    setSwitchCheckedReview(isChecked);
-    if (isChecked) {
-      setTimeout(() => {
-        navigate(`../${orderDetails?.access_token}/review`);
-      }, 400);
-    }else if (!isChecked){
-      setOpenDialog(true);
+  const handleSwitchChangeReview = async (event) => {
+  const isChecked = event.target.checked;
+
+  // Switch turned ON
+  if (isChecked) {
+    // If review exists but currently hidden, make it visible
+    if (review?.visible === false) {
+      try {
+        setLoading(true);
+        const resp = await set_visibilityMemberReview(review.review_id, 'true');
+        if (resp) {
+          setSnackbar({
+            open: true,
+            message: resp?.message || "Review made visible",
+            severity: "success",
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      } finally {
+        setLoading(false);
+      }
     }
-  };
+    setSwitchCheckedReview(true);
+    setTimeout(() => {
+      navigate(`../${orderDetails?.access_token}/review`);
+    }, 400);
+  }
+
+  // Switch turned OFF
+  else {
+    setOpenDialog(true);
+  }
+};
+
 
 
 
@@ -147,7 +171,8 @@ function OrderDetails() {
         const resp = await getMemberEshopReview(data);
         if(resp?.data){
           setReview(resp?.data);
-          setSwitchCheckedReview(true);
+          setSwitchCheckedReview(resp.data.visible === true);
+          // setSwitchCheckedReview(true);
         }
       }catch(e){
         console.log(e);
@@ -167,7 +192,9 @@ function OrderDetails() {
       setLoading(true);
       console.log(review);
       
-      const resp = await delete_shopReview(review?.review_id);
+      const resp = await set_visibilityMemberReview(review?.review_id, 'false');
+      console.log(resp);
+      
       if(resp){
         setSnackbar({
           open: true,

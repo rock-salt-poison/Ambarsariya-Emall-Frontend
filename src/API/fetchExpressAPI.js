@@ -1401,10 +1401,10 @@ export const getEshopCommentsAndReplies = async (shop_no) => {
   }
 };
 
-export const delete_shopReview = async (id) => {
+export const set_visibilityMemberReview = async (id, visible) => {
   try {
-    if (id) {
-      const response = await axios.delete(`${link}/sell/shop-review/${id}`);
+    if (id && visible) {
+      const response = await axios.put(`${link}/sell/shop-review/${id}/${visible}`);
       return response.data;
     }
   } catch (e) {
