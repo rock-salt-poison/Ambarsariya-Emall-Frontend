@@ -7,10 +7,18 @@ import ConfirmationDialog from '../../Components/ConfirmationDialog';
 import CustomSnackbar from '../../Components/CustomSnackbar';
 
 // Reusable DetailRow component
-const DetailRow = ({ title, description, isReturn = false, isReview = false, isClickable = false, handleSwitchChange, switchChecked, owner }) => (
+const DetailRow = ({ title, description, isReturn = false, isReview = false, isClickable = false, handleSwitchChange, switchChecked, owner,  }) => (
   <Box className="detail_row">
     <Box className="col_1">
-      <Typography className="title">{title}</Typography>
+      {
+        isReview ? (
+          <Link to={`../${owner}/review`}>
+            <Typography className="title">{title}</Typography>
+          </Link>
+        ): (
+          <Typography className="title">{title}</Typography>
+        )
+      }
     </Box>
     <Box className="col_1">
       {isReturn || isReview ? (
@@ -197,7 +205,7 @@ function OrderDetails() {
       <DetailRow title="Pickup Schedule" description={orderDetails?.pickupSchedule || '-'} />
       <DetailRow title="Location" description={orderDetails?.shipping_address} />
       <DetailRow title="Return" isReturn handleSwitchChange={handleSwitchChangeReturn} switchChecked={switchCheckedReturn} />
-      <DetailRow title="Review" isReview handleSwitchChange={handleSwitchChangeReview} switchChecked={switchCheckedReview} />
+      <DetailRow title="Review" isReview handleSwitchChange={handleSwitchChangeReview} switchChecked={switchCheckedReview} owner={orderDetails?.access_token}/>
 
       <CustomSnackbar
         open={snackbar.open}
@@ -211,7 +219,7 @@ function OrderDetails() {
         onClose={() => handleClose()}
         onConfirm={(e)=>handleConfirm(e)}
         title="Confirm Review"
-        message={`Are you sure you want to delete your review ?`}
+        message={`Are you sure you want to disable your review ?`}
         optionalCname="logoutDialog"
       />
     </Box>

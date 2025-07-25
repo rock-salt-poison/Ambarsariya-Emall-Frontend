@@ -16,6 +16,7 @@ import WhoWeArePopup from "../Popups/WhoWeArePopup";
 import VisionPopup from "../Popups/VisionPopup";
 import AboutUsPopup from "../Popups/AboutUsPopup";
 import UserBadge from "../../../UserBadge";
+import ReturnRefundPolicyPopup from "./ReturnRefundPolicyPopup";
 
 function LogoPopup({ open, handleClose }) {
   const [openPopup, setOpenPopup] = useState(open ? "logo" : null);
@@ -80,12 +81,15 @@ function LogoPopup({ open, handleClose }) {
               />
               <Box className="content-body">
                 <Box className="col-1">
-                  <Box
-                    component="img"
-                    src={rock_salt_poison_logo}
-                    alt="rock-salt-poison"
-                    className="logo"
-                  />
+                  <Link to='' onClick={(e)=>{handleClick(e,'return_refund_policy')}}>
+                    <Box
+                      component="img"
+                      src={rock_salt_poison_logo}
+                      alt="rock-salt-poison"
+                      className="logo"
+                    />
+                  </Link>
+                  
                   {/* <UserBadge
                     handleClose={handleClose}
                     handleLogin="sell/login"
@@ -114,6 +118,9 @@ function LogoPopup({ open, handleClose }) {
       )}
       {openPopup === "vision" && (
         <VisionPopup open={true} handleClose={handleBackClick} />
+      )}
+      {openPopup === "return_refund_policy" && (
+        <ReturnRefundPolicyPopup open={true} handleClose={handleBackClick} />
       )}
     </>
   );

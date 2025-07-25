@@ -1,192 +1,377 @@
-import React, { useEffect, useState } from 'react';
-import { Box, Typography, TextField, Button, CircularProgress } from '@mui/material';
-import { useParams, Link } from 'react-router-dom';
-import like from '../../Utils/gifs/like.gif';
-import comment_bg_1 from '../../Utils/images/Sell/like_share/comment_bg.png';
-import comment_bg_2 from '../../Utils/images/Sell/like_share/comment_bg_2.png';
-import share from '../../Utils/gifs/share.gif';
-import MessageIcon from '@mui/icons-material/Message';
-import shareBg from '../../Utils/images/Sell/like_share/share_bg.png';
-import contacts_img from '../../Utils/images/Sell/like_share/contacts.png';
-import social_media_img from '../../Utils/images/Sell/like_share/social_media.webp';
-import budget_img from '../../Utils/images/Sell/like_share/budget.webp';
-import vector_line from '../../Utils/images/Sell/like_share/vector_line.png';
-import arrow_icon from '../../Utils/images/Sell/like_share/arrow.svg';
-import UserBadge from '../../UserBadge';
-import ShopNameAndNo from '../../Components/Cart/ShopNameAndNo';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { getMemberEshopReview, getUser } from '../../API/fetchExpressAPI';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from "react";
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  CircularProgress,
+} from "@mui/material";
+import { useParams, Link } from "react-router-dom";
+import like from "../../Utils/gifs/like.gif";
+import comment_bg_1 from "../../Utils/images/Sell/like_share/comment_bg.png";
+import comment_bg_2 from "../../Utils/images/Sell/like_share/comment_bg_2.png";
+import share from "../../Utils/gifs/share.gif";
+import MessageIcon from "@mui/icons-material/Message";
+import shareBg from "../../Utils/images/Sell/like_share/share_bg.png";
+import contacts_img from "../../Utils/images/Sell/like_share/contacts.png";
+import social_media_img from "../../Utils/images/Sell/like_share/social_media.webp";
+import budget_img from "../../Utils/images/Sell/like_share/budget.webp";
+import vector_line from "../../Utils/images/Sell/like_share/vector_line.png";
+import arrow_icon from "../../Utils/images/Sell/like_share/arrow.svg";
+import UserBadge from "../../UserBadge";
+import ShopNameAndNo from "../../Components/Cart/ShopNameAndNo";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import { getEshopCommentsAndReplies, getMemberEshopReview, getUser, postEshopReview, postEshopReviewComment, postEshopReviewCommentReply } from "../../API/fetchExpressAPI";
+import { useSelector } from "react-redux";
+import CustomSnackbar from "../../Components/CustomSnackbar";
 
 function Like_share() {
   const { owner } = useParams();
   const token = useSelector((state) => state.auth.userAccessToken);
-  const [comments, setComments] = useState('');
-  const [reply, setReply] = useState('');
+  const [comments, setComments] = useState("");
+  const [reply, setReply] = useState("");
   const [showCommentBox, setShowCommentBox] = useState(false);
   const [showReplyBox, setShowReplyBox] = useState(false);
   const [currentReplyIndex, setCurrentReplyIndex] = useState(0);
-  const [currentCommentIndex, setCurrentCommentIndex] = useState(0);
+  const [currentCommentId, setCurrentCommentId] = useState(null);
   const [review, setReview] = useState(null);
   const [sellerData, setSellerData] = useState(null);
-    const [buyerData, setBuyerData] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [snackbar, setSnackbar] = useState({
-        open: false,
-        message: "",
-        severity: "success",
-    });
+  const [buyerData, setBuyerData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
+
+  const fetch_shop_comments_and_reviews = async (shop_no) => {
+    try{
+      setLoading(true);
+      const resp = await getEshopCommentsAndReplies(shop_no);
+      if(resp){
+        setAllComments(resp);
+      }
+    }catch(e){
+      console.log(e);
+    }finally{
+      setLoading(false);
+    }
+  }
+
+  useEffect(()=>{
+    if(sellerData?.shop_no){
+      fetch_shop_comments_and_reviews(sellerData?.shop_no);
+    }
+  },[sellerData?.shop_no])
+
+  const [allComments, setAllComments] = useState([]);
+
+  // const [allComments, setAllComments] = useState([
+  //   {
+  //     comment_id: 101,
+  //     user: "Ashwani Kumar",
+  //     text: "Great product! Really loved the quality.",
+  //     replies: [
+  //       { reply_id: 1, user: "Muskan", text: "Thanks a lot!" },
+  //       { reply_id: 2, user: "ABC", text: "Glad you liked it!" },
+  //     ],
+  //   },
+  //   {
+  //     comment_id: 102,
+  //     user: "Muskan",
+  //     text: "Is there a return policy for this item?",
+  //     replies: [
+  //       { reply_id: 3, user: "ABC", text: "Yes, 7-day return policy." },
+  //     ],
+  //   },
+  // ]);
+
+  useEffect(() => {
+    if (allComments.length > 0 && currentCommentId === null) {
+      setCurrentCommentId(allComments[0].comment_id);
+    }
+  }, [allComments]);
 
   const get_buyer_data = async (buyer_token) => {
-      try{
-        setLoading(true);
-        const resp = (await getUser(buyer_token))?.find((u)=>u.member_id !== null);
-        setBuyerData(resp);      
-      }catch(e){
-        console.log(e);
-      }finally{
-        setLoading(false);
-      }
+    try {
+      setLoading(true);
+      const resp = (await getUser(buyer_token))?.find(
+        (u) => u.member_id !== null
+      );
+
+      console.log(resp);
+      
+      setBuyerData(resp);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setLoading(false);
     }
-    
-    const get_seller_data = async (seller_token) => {
-      try{
-        setLoading(true);
-        const resp = (await getUser(seller_token))?.find((u)=>u.shop_no !== null);
-        setSellerData(resp);
-      }catch(e){
-        console.log(e);
-      }finally{
-        setLoading(false);
-      }
+  };
+
+  const get_seller_data = async (seller_token) => {
+    try {
+      setLoading(true);
+      const resp = (await getUser(seller_token))?.find(
+        (u) => u.shop_no !== null
+      );
+      setSellerData(resp);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setLoading(false);
     }
-  
-    const get_member_shop_reviews = async (data) => {
-      try{
-        setLoading(true);
-        
-        const resp = await getMemberEshopReview(data);
-        if(resp?.data){
-            setReview(resp?.data);      
+  };
+
+  const get_member_shop_reviews = async (data) => {
+    try {
+      setLoading(true);
+      const resp = await getMemberEshopReview(data);
+      if (resp?.data) {
+        setReview(resp?.data);
+      }
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (token) get_buyer_data(token);
+  }, [token]);
+
+  useEffect(() => {
+    if (sellerData && buyerData) {
+      get_member_shop_reviews({
+        shop_no: sellerData?.shop_no,
+        reviewer_id: buyerData?.member_id,
+      });
+    }
+  }, [sellerData, buyerData]);
+
+  useEffect(() => {
+    if (owner) get_seller_data(owner);
+  }, [owner]);
+
+  const handleCommentsChange = (event) => setComments(event.target.value);
+  const handleReplyChange = (event) => setReply(event.target.value);
+
+  const currentCommentIndex = allComments.findIndex(
+    (c) => c.comment_id === currentCommentId
+  );
+  const currentComment = allComments[currentCommentIndex] || {};
+  const currentReplies = currentComment?.replies || [];
+
+  const handleCommentSubmit = async (e) => {
+  e.preventDefault();
+  if (!comments.trim()) return;
+
+  try {
+    setLoading(true);
+
+    let reviewId = review?.review_id;
+
+    // 1. If review does not exist, create it
+    if (!reviewId) {
+      const shopReviewData = {
+        shop_no: sellerData?.shop_no,
+        reviewer_id: buyerData?.member_id,
+        review_date: new Date().toLocaleDateString(),
+        user_type: buyerData?.user_type,
+      };
+
+      const reviewResp = await postEshopReview(shopReviewData);
+
+      if (reviewResp?.review_id) {
+        reviewId = reviewResp.review_id;
+
+        // 🔁 Fetch complete review object now
+        const updatedReviewResp = await getMemberEshopReview({
+          shop_no: sellerData?.shop_no,
+          reviewer_id: buyerData?.member_id,
+        });
+
+        if (updatedReviewResp?.data) {
+          setReview(updatedReviewResp.data);
         }
-      }catch(e){
-        console.log(e);
-      }finally{
-        setLoading(false);
+
+        setSnackbar({
+          open: true,
+          message: reviewResp?.message || "Review created successfully",
+          severity: "success",
+        });
+      } else {
+        throw new Error("Failed to create review");
       }
     }
-  
-    useEffect(()=>{
-      if(token){
-        get_buyer_data(token);
-      }
-    },[token]);
-  
-    useEffect(()=>{
-      if(sellerData && buyerData){
-        get_member_shop_reviews({shop_no: sellerData?.shop_no, reviewer_id: buyerData?.member_id });
-      }
-    }, [sellerData, buyerData])
-  
-    useEffect(()=>{
-      if(owner){
-        get_seller_data(owner);
-      }
-    },[owner]);
 
-  const [allComments, setAllComments] = useState([
-    {
-      user: 'User 1',
-      text: 'Great product! Really loved the quality.',
-      replies: [
-        { user: 'Owner', text: 'Thanks a lot!' },
-        { user: 'Owner', text: 'Glad you liked it!' },
-      ],
-    },
-    {
-      user: 'User 2',
-      text: 'Is there a return policy for this item?',
-      replies: [
-        { user: 'Owner', text: 'Yes, 7-day return policy.' },
-        { user: 'Owner', text: 'Please keep the invoice safe.' },
-      ],
-    },
-    {
-      user: 'User 3',
-      text: 'I received the order today, very satisfied.',
-      replies: [
-        { user: 'Owner', text: 'Thanks for the feedback!' },
-        { user: 'Owner', text: 'Hope to serve you again.' },
-      ],
-    },
-  ]);
+    // 2. Now post the comment
+    const commentData = {
+      review_id: reviewId,
+      commenter_id: buyerData?.member_id,
+      commenter_name: buyerData?.name,
+      comment: comments,
+    };
 
-  const handleCommentsChange = (event) => {
-    setComments(event.target.value);
-  };
+    const commentResp = await postEshopReviewComment(commentData);
 
-  const handleReplyChange = (event) => {
-    setReply(event.target.value);
-  };
-
-  const handleCommentSubmit = (e) => {
-    e.preventDefault();
-    if (comments.trim()) {
+    if (commentResp?.comment_id) {
       const newComment = {
-        user: 'New User', // Replace with dynamic user if available
-        text: comments,
+        comment_id: commentResp.comment_id,
+        text: commentData.comment,
+        user: commentData.commenter_name,
+        commenter_id: commentData.commenter_id,
         replies: [],
       };
-      const updatedComments = [...allComments, newComment];
-      console.log(newComment);
-      
-      setAllComments(updatedComments);
-      setCurrentCommentIndex(updatedComments.length - 1);
-      setComments('');
-      setReply('');
-      setCurrentReplyIndex(0);
-      setShowReplyBox(false);
-    }
-  };
+      setAllComments((prev) => [...prev, newComment]);
+      setCurrentCommentId(commentResp.comment_id);
 
-  const handleReplySubmit = (e) => {
-    e.preventDefault();
-    if (reply.trim()) {
-      const updatedComments = [...allComments];
-      updatedComments[currentCommentIndex].replies.push({
-        user: 'Owner', // Replace with dynamic user if available
-        text: reply,
+      setSnackbar({
+        open: true,
+        message: commentResp?.message || "Comment added",
+        severity: "success",
       });
-
-      console.log(updatedComments);
-      
-      setAllComments(updatedComments);
-      setReply('');
-      setShowReplyBox(false);
-      setCurrentReplyIndex(updatedComments[currentCommentIndex].replies.length - 1);
+    } else {
+      throw new Error("Failed to post comment");
     }
-  };
+  } catch (error) {
+    console.log(error);
+    setSnackbar({
+      open: true,
+      message: error?.message || "Error occurred",
+      severity: "error",
+    });
+  } finally {
+    setLoading(false);
+    setComments("");
+    setReply("");
+    setShowReplyBox(false);
+    fetch_shop_comments_and_reviews(sellerData?.shop_no);
+  }
+};
 
-  const handleMessageIconClick = () => {
-    setShowReplyBox(true);
-  };
+
+  const handleReplySubmit = async (e) => {
+  e.preventDefault();
+
+  if (!reply.trim()) return;
+
+  if (
+    currentCommentIndex >= 0 &&
+    allComments?.[currentCommentIndex]?.commenter_id !== buyerData?.member_id
+  ) {
+    try {
+      setLoading(true);
+
+      let reviewId = review?.review_id;
+
+      // Step 1: Create review if it doesn't exist
+      if (!reviewId) {
+        const shopReviewData = {
+          shop_no: sellerData?.shop_no,
+          reviewer_id: buyerData?.member_id,
+          review_date: new Date().toLocaleDateString(),
+          user_type: buyerData?.user_type,
+        };
+
+        const reviewResp = await postEshopReview(shopReviewData);
+
+        if (reviewResp?.review_id) {
+          reviewId = reviewResp.review_id;
+
+          // Step 2: Fetch complete review data
+          const updatedReviewResp = await getMemberEshopReview({
+            shop_no: sellerData?.shop_no,
+            reviewer_id: buyerData?.member_id,
+          });
+
+          if (updatedReviewResp?.data) {
+            setReview(updatedReviewResp.data);
+          }
+
+          setSnackbar({
+            open: true,
+            message: reviewResp?.message || "Review created successfully",
+            severity: "success",
+          });
+        } else {
+          throw new Error("Failed to create review before replying");
+        }
+      }
+
+      // Step 3: Post reply
+      const reply_data = {
+        review_id: reviewId,
+        comment_id: allComments?.[currentCommentIndex]?.comment_id,
+        replier_id: buyerData?.member_id,
+        replier_name: buyerData?.name,
+        reply: reply,
+      };
+
+      const resp = await postEshopReviewCommentReply(reply_data);
+
+      if (resp?.reply_id) {
+        const newReply = {
+          reply_id: resp.reply_id,
+          text: reply_data.reply,
+          user: reply_data.replier_name,
+        };
+
+        // Optimistic update
+        setAllComments((prev) =>
+          prev.map((c) =>
+            c.comment_id === currentComment.comment_id
+              ? { ...c, replies: [...(c.replies || []), newReply] }
+              : c
+          )
+        );
+
+        setCurrentReplyIndex(currentReplies.length);
+
+        setSnackbar({
+          open: true,
+          message: resp?.message || "Reply added",
+          severity: "success",
+        });
+      } else {
+        throw new Error("Failed to post reply");
+      }
+    } catch (error) {
+      console.log(error);
+      setSnackbar({
+        open: true,
+        message: error?.message || "An error occurred",
+        severity: "error",
+      });
+    } finally {
+      setLoading(false);
+      setReply("");
+      setShowReplyBox(false);
+      fetch_shop_comments_and_reviews(sellerData?.shop_no);
+    }
+  }
+};
+
+
+  const handleMessageIconClick = () => setShowReplyBox(true);
 
   const handlePrevComment = () => {
     if (currentCommentIndex > 0) {
+      setCurrentCommentId(allComments[currentCommentIndex - 1].comment_id);
       setShowCommentBox(false);
-      setCurrentCommentIndex(currentCommentIndex - 1);
-      setCurrentReplyIndex(0);
       setShowReplyBox(false);
+      setCurrentReplyIndex(0);
     }
   };
 
   const handleNextComment = () => {
     if (currentCommentIndex < allComments.length - 1) {
-      setCurrentCommentIndex(currentCommentIndex + 1);
-      setCurrentReplyIndex(0);
-      setShowReplyBox(false);
+      setCurrentCommentId(allComments[currentCommentIndex + 1].comment_id);
       setShowCommentBox(false);
+      setShowReplyBox(false);
+      setCurrentReplyIndex(0);
     }
   };
 
@@ -197,34 +382,31 @@ function Like_share() {
   };
 
   const handleNextReply = () => {
-    const replies = allComments[currentCommentIndex]?.replies || [];
-    if (currentReplyIndex < replies.length - 1) {
+    if (currentReplyIndex < currentReplies.length - 1) {
       setCurrentReplyIndex(currentReplyIndex + 1);
     }
   };
 
-  const currentReplies = allComments[currentCommentIndex]?.replies || [];
-
   const share_type_data = [
     {
       id: 1,
-      type: 'Contacts',
-      alt: 'contacts',
+      type: "Contacts",
+      alt: "contacts",
       imgSrc: contacts_img,
-      linkTo: 'https://contacts.google.com/',
+      linkTo: "https://contacts.google.com/",
       openInNewTab: true,
     },
     {
       id: 2,
-      type: 'Social Media',
-      alt: 'social-media',
+      type: "Social Media",
+      alt: "social-media",
       imgSrc: social_media_img,
-      linkTo: '../user',
+      linkTo: "../user",
     },
     {
       id: 3,
-      type: 'Budget',
-      alt: 'budget',
+      type: "Budget",
+      alt: "budget",
       imgSrc: budget_img,
       linkTo: `../${owner}/budget`,
     },
@@ -232,16 +414,20 @@ function Like_share() {
 
   return (
     <Box className="like_share_wrapper">
-        {loading && <Box className="loading"><CircularProgress/></Box> }
+      {loading && (
+        <Box className="loading">
+          <CircularProgress />
+        </Box>
+      )}
       <Box className="row">
         <Box className="col">
-            <Box></Box>
+          <Box className="container"></Box>
           <Box className="container">
             <ShopNameAndNo token={owner} />
           </Box>
           <Box className="container">
             <UserBadge
-              handleBadgeBgClick={`../${owner}/review`}
+              handleBadgeBgClick={-1}
               handleLogin="../login"
               handleLogoutClick="../../"
             />
@@ -252,17 +438,26 @@ function Like_share() {
           <Box className="container col-6">
             <Box className="row">
               <Box component="img" src={like} className="like_gif" alt="like" />
-
               <Box className="comment">
-                <Box component="img" src={comment_bg_1} className="comment_bg_1" alt="comment" />
-                <Box component="form" noValidate autoComplete="off" onSubmit={(e) => e.preventDefault()}>
+                <Box
+                  component="img"
+                  src={comment_bg_1}
+                  className="comment_bg_1"
+                  alt="comment"
+                />
+                <Box
+                  component="form"
+                  noValidate
+                  autoComplete="off"
+                  onSubmit={(e) => e.preventDefault()}
+                >
                   {allComments?.length > 0 && !showCommentBox && (
                     <>
                       <Typography className="comments">
-                        {allComments?.[currentCommentIndex]?.text}
+                        {currentComment?.text}
                       </Typography>
                       <Typography className="commented_by">
-                        ~{allComments?.[currentCommentIndex]?.user}
+                        ~{currentComment?.user}
                       </Typography>
                     </>
                   )}
@@ -274,13 +469,17 @@ function Like_share() {
                       onChange={handleCommentsChange}
                       variant="outlined"
                       placeholder="Add comment..."
-                      sx={{ height: 'auto', width: '100%' }}
+                      sx={{ width: "100%" }}
                       required
                     />
                   )}
                   <Box
                     className="submit_button_container"
-                    sx={{ display: 'flex', justifyContent: 'space-between', mt: 1 }}
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      mt: 1,
+                    }}
                   >
                     <Box className="pagination">
                       <Button
@@ -301,7 +500,10 @@ function Like_share() {
                         className="nextButton"
                         sx={{
                           ml: 1,
-                          opacity: currentCommentIndex >= allComments.length - 1 ? 0.8 : 1,
+                          opacity:
+                            currentCommentIndex >= allComments.length - 1
+                              ? 0.8
+                              : 1,
                         }}
                       >
                         <ChevronRightIcon />
@@ -310,28 +512,27 @@ function Like_share() {
                     <Box>
                       {showCommentBox ? (
                         <Button
-                          type="submit"
                           variant="contained"
-                          className="submit_button"
                           onClick={handleCommentSubmit}
+                          className="submit_button"
                         >
                           Comment
                         </Button>
                       ) : (
                         <Button
-                          type="button"
                           variant="contained"
+                          onClick={() => setShowCommentBox(true)}
                           className="submit_button"
-                          onClick={() => {
-                            setShowCommentBox(true);
-                          }}
                         >
                           Comment
                         </Button>
                       )}
-                      <Button className="reply_button" onClick={handleMessageIconClick}>
+                      {currentComment?.commenter_id !== buyerData?.member_id && <Button
+                        className="reply_button"
+                        onClick={handleMessageIconClick}
+                      >
                         <MessageIcon />
-                      </Button>
+                      </Button>}
                     </Box>
                   </Box>
                 </Box>
@@ -340,7 +541,12 @@ function Like_share() {
 
             <Box className="row">
               <Box className="comment">
-                <Box component="img" src={comment_bg_2} className="comment_bg_2" alt="comment" />
+                {(currentReplies.length > 0 || showReplyBox) && <Box
+                  component="img"
+                  src={comment_bg_2}
+                  className="comment_bg_2"
+                  alt="comment"
+                />}
                 {currentReplies.length > 0 && !showReplyBox ? (
                   <>
                     <Box className="replies_container">
@@ -362,7 +568,9 @@ function Like_share() {
                       </Button>
                       <Button
                         onClick={handleNextReply}
-                        disabled={currentReplyIndex === currentReplies.length - 1}
+                        disabled={
+                          currentReplyIndex === currentReplies.length - 1
+                        }
                         className="prevButton"
                         sx={{ opacity: currentReplyIndex === currentReplies.length - 1 ? 0.8 : 1 }}
                       >
@@ -371,7 +579,12 @@ function Like_share() {
                     </Box>
                   </>
                 ) : showReplyBox ? (
-                  <Box component="form" noValidate autoComplete="off" onSubmit={handleReplySubmit}>
+                  <Box
+                    component="form"
+                    noValidate
+                    autoComplete="off"
+                    onSubmit={handleReplySubmit}
+                  >
                     <TextField
                       multiline
                       rows={5}
@@ -393,23 +606,51 @@ function Like_share() {
         </Box>
 
         <Box className="vector_line">
-          <Box component="img" src={vector_line} alt="line" className="vector_line" />
+          <Box
+            component="img"
+            src={vector_line}
+            alt="line"
+            className="vector_line"
+          />
         </Box>
 
         <Box className="col">
           <Box className="container share_wrapper">
-            <Box component="img" src={shareBg} className="share_bg" alt="share_bg" />
-            <Box className="share_gif" component="img" src={share} alt="share" />
+            <Box
+              component="img"
+              src={shareBg}
+              className="share_bg"
+              alt="share_bg"
+            />
+            <Box
+              className="share_gif"
+              component="img"
+              src={share}
+              alt="share"
+            />
             <Box className="share_row">
               {share_type_data.map((item) => (
                 <Box className="card" key={item.id}>
                   <Box className="card_img">
-                    <Box component="img" src={item.imgSrc} alt={item.alt} className="img" />
+                    <Box
+                      component="img"
+                      src={item.imgSrc}
+                      alt={item.alt}
+                      className="img"
+                    />
                   </Box>
-                  <Link to={item.linkTo} target={item.openInNewTab ? '_blank' : '_self'}>
+                  <Link
+                    to={item.linkTo}
+                    target={item.openInNewTab ? "_blank" : "_self"}
+                  >
                     <Typography className="title" variant="h3">
                       {item.type}
-                      <Box component="img" src={arrow_icon} alt="arrow" className="arrow_icon" />
+                      <Box
+                        component="img"
+                        src={arrow_icon}
+                        alt="arrow"
+                        className="arrow_icon"
+                      />
                     </Typography>
                   </Link>
                 </Box>
@@ -418,6 +659,13 @@ function Like_share() {
           </Box>
         </Box>
       </Box>
+      <CustomSnackbar
+        open={snackbar.open}
+        handleClose={() => setSnackbar({ ...snackbar, open: false })}
+        message={snackbar.message}
+        severity={snackbar.severity}
+        disableAutoHide={true}
+      />
     </Box>
   );
 }

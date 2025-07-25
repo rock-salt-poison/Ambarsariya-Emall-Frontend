@@ -2643,9 +2643,20 @@ a {
 
             @include flex-center(row, space-between);
             align-items: flex-start;
+            
+            a{
+              transition: all .2s linear;
+            }
 
             .logo {
               width: 150px;
+              border: 1px solid $gray;
+              box-shadow: 0px 0px 7px 1px rgba($black, .4);
+              transition: all .3s linear;
+
+              &:hover{
+                transform: scale(1.06);
+              }
             }
           }
 
@@ -2961,7 +2972,167 @@ a {
         }
 
         &::-webkit-scrollbar-thumb {
-          background: $dark-yellow2;
+          background: $brown-4;
+          border-radius: 10px;
+        }
+
+        &::-webkit-scrollbar {
+          width: 8px;
+          /* Width of the entire scrollbar */
+          // height: 12px; /* Height of the entire scrollbar */
+        }
+
+        &::-webkit-scrollbar-track {
+          background: $yellow;
+          opacity: 0.8;
+          border-radius: 10px;
+        }
+      }
+    }
+
+    @media (max-width:600px) {
+      width: auto !important;
+      max-height: max-content !important;
+      border-radius: 0px;
+
+      .aboutPopupDialogBoxContent {
+        .content {
+          height: auto !important;
+          overflow: visible
+        }
+      }
+    }
+  }
+}
+
+.refund-return-policy-paper{
+   overflow: auto;
+
+  .MuiDialog-paper {
+    max-width: 100vw;
+    min-width: 40vw;
+    width: 50vw;
+    max-height: 80vh;
+    background-color: #fff;
+    position: relative;
+    z-index: 1;
+    border-radius: 18px;
+    overflow: visible;
+
+    &::after {
+      content: "";
+      @include full-absolute(0px, 0px, 0px, 0px);
+      z-index: -1;
+      background-color: $dark-yellow2;
+      opacity: 0.7;
+    }
+
+    &::before {
+      content: "";
+      @include full-absolute(0px, 0px, 0px, 0px);
+      background: url("#{$hall-gate-bg}") $white center no-repeat;
+      background-size: cover;
+      opacity: 0.25;
+      z-index: 0;
+    }
+
+    .notification_container{
+      @include flex-center(column, center);
+      align-self: center;
+      margin-top: -26px;
+      position: relative;
+      filter: drop-shadow(1px 2px 1px rgba($black, .45));
+      
+      .alert_number{
+        @include full-absolute(-15px, -15px, auto, auto);
+        width: 40px;
+        height: 40px;
+        border-radius: 50px;
+        background: $red2;
+        @include flex-center(column, center);
+        box-shadow: inset 1px -2px 4px 1px $maroon;
+      }
+
+      .notification_icon{
+        background: $brown-2;
+        padding: 8px 30px;
+        border-radius: 10px;
+        box-shadow: inset 0px 0px 5px 0px rgba($black, .3);
+
+        .icon{
+          font-size: 40px !important;
+        }
+      }
+      .icon{
+        font-size: 30px;
+        fill: $white;
+        filter: drop-shadow(3px 3px 3px rgba($black, .5));
+      }
+    }
+
+    .refundReturnPopupDialogBoxContent {
+      position: relative;
+      z-index: 1;
+      // backdrop-filter: blur(2.2px);
+      padding: 30px;
+      overflow: auto;
+      @include flex-center(row, center);
+      place-items: normal;
+
+      .content {
+        height: auto;
+        overflow: auto;
+
+        .content-body {
+          @include flex-center(column, flex-start);
+          place-items: normal;
+          padding: 0 10px;
+          gap: 20px;
+
+          .header {
+            @include flex-center(row, space-between);
+          }
+
+          h2 {
+            @include custom-heading(2.1em);
+            // text-align: center
+          }
+
+          
+
+          .description {
+            @include custom-text(20px, 30px, 6px);
+
+            &:last-child{
+              margin-bottom: 0px;
+            }
+
+            &.bold {
+              font-weight: bold;
+              font-size: 27px;
+              line-height: 40px;
+              margin: 8px 5px 0 0;
+              /* Optional: adds space between lines */
+            }
+
+            & .blockLevelSpan {
+              display: block;
+            }
+
+            // text-align: center
+          }
+
+          @include backButton($light-yellow,
+            $dark-yellow2,
+            6px,
+            "yellow-blur-shadow",
+            0px,
+            flex-start,
+            18px);
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background: $brown-4;
           border-radius: 10px;
         }
 

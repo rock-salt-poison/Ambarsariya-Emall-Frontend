@@ -1392,6 +1392,15 @@ export const getMemberEshopReview = async (data) => {
   }
 };
 
+export const getEshopCommentsAndReplies = async (shop_no) => {
+  try {
+    const response = await axios.get(`${link}/sell/shop-comments-and-replies?shop_no=${shop_no}`);
+    return response.data;
+  } catch (error) {
+    throw error
+  }
+};
+
 export const delete_shopReview = async (id) => {
   try {
     if (id) {
