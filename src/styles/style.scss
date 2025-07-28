@@ -8062,9 +8062,54 @@ a {
             }
           }
 
+          .parking_status_container{
+            @include flex-center(row, space-between);
+            // place-items: normal;
+            gap: 10px;
+
+            .parking_slider{
+              width: 80px;
+            color: $yellow;
+            margin-top: 0px;
+
+            .MuiSlider-track {
+              height: 10px;
+              background: transparent;
+              border: 0px;
+            }
+
+            .MuiSlider-rail {
+              background: linear-gradient(90deg, #2ba704, #ffda4a, #ff0000);
+              opacity: 1;
+            }
+
+            .MuiSlider-mark {
+              color: $white;
+            }
+
+            .MuiSlider-thumb {
+              width: 15px;
+              height: 15px;
+              background-color: $white;
+            }
+            }
+
+            .open_close{
+              .status{
+              font-size: 18px;
+              margin-top: 0px;
+            }
+
+          }
+          .h_line{
+            margin: 0px;
+          }
+          }
+
           .open_close_slider {
             width: 80px;
             color: $yellow;
+            margin-top: -10px;
 
             .MuiSlider-track {
               height: 2px;
@@ -8077,14 +8122,20 @@ a {
           }
 
           .open_close {
-            @include flex-center(row, center);
+            @include flex-center(column, center);
             gap: 10px;
             flex-wrap: wrap;
+
+            .status{
+              font-size: 22px;
+              margin-top: -8px;
+            }
           }
 
           .h_line {
             border: 1px solid $yellow;
-            margin-top: 10px;
+            margin-top: -10px;
+            margin-bottom: 20px;
             width: 80px;
             position: relative;
 
@@ -16749,6 +16800,10 @@ body .MuiBackdrop-root {
       height: 100%;
       overflow-y: scroll;
       padding: 0 15px;
+
+      &.shop_class{
+        padding: 0 23px 0 15px;
+      }
 
       .content_header {
         .heading {

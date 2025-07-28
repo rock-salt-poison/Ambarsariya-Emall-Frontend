@@ -1,21 +1,24 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import RatingComponent from '../RatingComponent'
-import { Box, Slider, Typography } from '@mui/material'
+import { Box, CircularProgress, Slider, Typography } from '@mui/material'
+import { get_vendor_details } from '../../API/fetchExpressAPI';
 
-function ShopClassComponent() {
+function ShopClassComponent({shopData}) {
 
     const data = [
-        { id: 1, title: 'Quality of compliance', value: 3, readOnly: true, star_rating: true, range_slider: false },
-        { id: 2, title: 'Quality of service', value: 4, readOnly: true, star_rating: true, range_slider: false },
-        { id: 3, title: 'Cost Effective', value: 2.5, readOnly: true, star_rating: true, range_slider: false },
-        { id: 4, title: 'Daily Walkin', value: 1, readOnly: true, star_rating: false, range_slider: true, range_max_value: 4 },
-        { id: 5, title: 'Years of experience', value: 10, readOnly: true, star_rating: false, range_slider: true, range_max_value: 100 }
+        { id: 1, title: 'Quality of compliance', value: shopData?.quality_of_compliance, readOnly: true, star_rating: true, range_slider: false },
+        { id: 2, title: 'Quality of service', value: shopData?.quality_of_service, readOnly: true, star_rating: true, range_slider: false },
+        { id: 3, title: 'Cost Effective', value: shopData?.price_effective, readOnly: true, star_rating: true, range_slider: false },
+        { id: 4, title: 'Daily Walkin', value: shopData?.daily_walkin, readOnly: true, star_rating: false, range_slider: true, range_max_value: 4 },
+        { id: 5, title: 'Years of experience', value: shopData?.years_in_business_score, readOnly: true, star_rating: false, range_slider: true, range_max_value: 4 }
     ];
 
+    console.log(shopData);
+
+    
 
     return (
         <Box className="rating_container">
-
             {data.map((item) => {
                 return <Box className="col" key={item.id}>
                     <Typography className="title">{item.title}</Typography>

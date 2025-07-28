@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Box, CircularProgress, Slider, Typography } from '@mui/material';
 import CircularText from '../Home/CircularText';
 import UserBadge from '../../UserBadge';
-import { getUser, updateEshopStatus } from '../../API/fetchExpressAPI';
+import { getUser, updateEshopParkingStatus, updateEshopStatus } from '../../API/fetchExpressAPI';
 import CustomSnackbar from '../CustomSnackbar';
 import { useSelector } from 'react-redux';
 
 function BusinessHours({ data }) {
   const [sliderValue, setSliderValue] = useState(typeof data?.is_open === 'boolean' ? Number(data.is_open) : 0); // 0 = Closed, 1 = Open
+  const [parkingSliderValue, setParkingSliderValue] = useState(data?.parking_availability || 0); 
   const [loading, setLoading] =  useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
@@ -95,6 +96,33 @@ function BusinessHours({ data }) {
     }
   };
 
+
+  const handleParkingSliderChange = async (event, newValue) => {
+    try{
+      setLoading(true);
+      const obj = {
+        parking_availability: newValue,
+        shop_access_token : data?.shop_access_token,
+      }
+
+      const resp = await updateEshopParkingStatus(obj);
+       setSnackbar({
+          open: true,
+          message: resp.message,
+          severity: 'success',
+        });
+      setParkingSliderValue(newValue);
+    }catch(e){
+       setSnackbar({
+          open: true,
+          message: e.response.data.message,
+          severity: 'error',
+        });
+    }finally{
+      setLoading(false);
+    }
+  };
+
   console.log(data);
   
   return (
@@ -109,6 +137,7 @@ function BusinessHours({ data }) {
 
       <Box className="business_hours_wrapper">
         <CircularText text="Business Hours" />
+        <Box className="hours_container">
         {!openDashboard ? <Box className="h_line"></Box> : <Slider
           value={sliderValue}
           onChange={handleSliderChange}
@@ -129,6 +158,47 @@ function BusinessHours({ data }) {
           <Typography className="status">
             {sliderValue === 1 ? 'Open' : 'Closed'}
           </Typography>
+        </Box>
+        </Box>
+
+        <Box className="parking_status_container">
+          <Box className="open_close">
+          <Typography className="status">
+            Parking
+          </Typography>
+        </Box>
+        {!openDashboard ? (
+  <Slider
+    value={parkingSliderValue}
+    min={0}
+    max={2}
+    step={1}
+    marks={[
+      { value: 0 },
+      { value: 1 },
+      { value: 2 },
+    ]}
+    size="large"
+    disabled
+    className="input_field parking_slider"
+  />
+) : (
+  <Slider
+    value={parkingSliderValue}
+    onChange={handleParkingSliderChange}
+    min={0}
+    max={2}
+    step={1}
+    marks={[
+      { value: 0 },
+      { value: 1 },
+      { value: 2 },
+    ]}
+    size="large"
+    className="input_field parking_slider"
+  />
+)}
+
         </Box>
 
         <Typography className="time">

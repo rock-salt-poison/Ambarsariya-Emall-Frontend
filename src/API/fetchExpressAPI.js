@@ -141,6 +141,19 @@ export const updateEshopStatus = async (data) => {
   }
 };
 
+
+export const updateEshopParkingStatus = async (data) => {
+  try {
+    const response = await axios.put(
+      `${link}/sell/eshop/update-parking-status`,
+      data
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const getShopUserData = async (shopAccessToken) => {
   try {
     const response = await axios.get(`${link}/sell/shop-user-data?shop_access_token=${shopAccessToken}`);
