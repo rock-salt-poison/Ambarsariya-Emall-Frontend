@@ -23994,6 +23994,16 @@ textarea[readonly] {
         &.header_badge{
           grid-template-columns: 1fr 80px !important;
         }  
+        .title_container{
+          .title{
+            font-size: 28px;
+            text-align: left;
+          }
+        }
+
+        .board{
+          max-width: 100%;
+        }
       }
       
       
@@ -24059,7 +24069,7 @@ textarea[readonly] {
     width: 80px;
 
     .badge_icon{
-          @include full-absolute(15px, 20px, 20px, 18px);
+          @include full-absolute(15px, 31px, 20px, 18px);
         }
   }
 }
