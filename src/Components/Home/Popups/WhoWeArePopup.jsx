@@ -3,6 +3,7 @@ import {
   Box,
   Dialog,
   DialogContent,
+  IconButton,
   Typography,
   useMediaQuery,
   useTheme,
@@ -13,6 +14,7 @@ import harsh_kumar from "../../../Utils/images/harsh-kumar.webp";
 import pardeep_kumar from "../../../Utils/images/pardeep-kumar.webp";
 import ashwani_kumar from "../../../Utils/images/ashwani-kumar.webp";
 import UserBadge from "../../../UserBadge";
+import CloseIcon from '@mui/icons-material/Close';
 
 export default function WhoWeArePopup({ open, handleClose, handleBackClick }) {
   const theme = useTheme();
@@ -50,6 +52,14 @@ export default function WhoWeArePopup({ open, handleClose, handleBackClick }) {
           <Box className="content-body">
             <Box className="header">
               <Typography variant="h2">Who we are !</Typography>
+              <IconButton
+                edge="start"
+                color="inherit"
+                onClick={handleClose}
+                aria-label="close"
+              >
+                <CloseIcon />
+              </IconButton>
               {/* <UserBadge
                 handleClose={handleClose}
                 handleLogin="sell/login"

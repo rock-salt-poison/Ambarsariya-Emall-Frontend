@@ -312,41 +312,68 @@ a {
   .row {
     display: flex;
     align-items: stretch;
-    position: relative;
+    // position: relative;
     z-index: 1;
-    padding: 0 28%;
+    // padding: 0 28%;
+    width: 45%;
     gap: 8px 0;
+    margin: 0 auto;
     flex-direction: column;
     justify-content: space-between;
     min-height: 100vh;
 
-    @media (min-width: 1349px) and (max-width: 1439px) {
-      padding: 0 28%; // Adjust padding for screens between 1349px and 1439px
-    }
+    // @media (min-width: 1349px) and (max-width: 1439px) {
+    //   padding: 0 28%; // Adjust padding for screens between 1349px and 1439px
+    // }
 
-    @media (max-width: 1349px) {
-      padding: 0 28%; // Adjust padding for screens smaller than 1349px
-    }
+    // @media (max-width: 1349px) {
+    //   padding: 0 28%; // Adjust padding for screens smaller than 1349px
+    // }
 
-    @media (min-width: 110%) {
-      padding: 0 28%; // Default padding for screens larger than 110%
-    }
+    // @media (min-width: 110%) {
+    //   padding: 0 28%; // Default padding for screens larger than 110%
+    // }
 
-    @media (max-width: 1024px) {
-      padding: 0 18%; // Adjust padding for screens smaller than 1024px
+    @media (max-width: 1100px) {
+      width: 54%;
     }
 
     @media (max-width: 990px) {
-      padding: 0 15%; // Adjust padding for screens smaller than 990px
+      width : 58%; // Adjust padding for screens smaller than 990px
+    }
+
+    @media (max-width: 875px) {
+      width: 62%; // Adjust padding for screens smaller than 768px
     }
 
     @media (max-width: 768px) {
-      padding: 0 5%; // Adjust padding for screens smaller than 768px
+      width: 76%; // Adjust padding for screens smaller than 768px
     }
 
-    @media (max-width: 480px) {
-      padding: 0 10%; // Adjust padding for screens smaller than 480px
+    @media (max-width: 650px) {
+      width: 88%; // Adjust padding for screens smaller than 768px
     }
+
+    @media (max-width: 560px) {
+      width: 70%; 
+    }
+
+    @media (max-width: 500px) {
+      width: 76%; 
+    }
+
+    @media (max-width: 460px) {
+      width: 80%;
+    }
+
+    @media (max-width: 400px) {
+      width: 95%; 
+    }
+    
+
+    // @media (max-width: 480px) {
+    //   padding: 0 10%; // Adjust padding for screens smaller than 480px
+    // }
 
     div {
       display: flex;
@@ -500,7 +527,7 @@ a {
       bottom: 0;
 
       .radio {
-        width: 105px;
+        width: 100%;
         position: absolute;
         top: 0;
         left: 0;
@@ -509,8 +536,13 @@ a {
       }
 
       .radioGif {
-        width: 30px;
+        width: 20px;
         z-index: 1;
+      }
+
+      iframe{
+        z-index: 1;
+
       }
 
       .marquee {
@@ -542,7 +574,8 @@ a {
     .ledNoticeParent {
       position: relative;
       bottom: 0px;
-      left: 20px;
+      flex: 1;
+      // left: 20px;
 
       // height: 75px;
       .ledBoardImg {
@@ -577,7 +610,7 @@ a {
 
     .logoutBtn,
     .loginBtn {
-      @include full-absolute(40px, 60px, auto, auto);
+      @include full-absolute(40px, 40px, auto, auto);
       z-index: 9999;
     }
 
@@ -705,6 +738,218 @@ a {
       }
     }
   }
+
+  @media (max-width: 560px){
+    @include background-center-no-repeat($hall-gate-mobile-bg);
+    background-size: cover;
+    background-position-x: 51%;
+
+    .row{
+      gap: 10px;
+      justify-content: flex-start;
+
+      .logoParent{
+        height: 183px;
+        .logo{
+          img{
+            width: 88%;
+            top: 33px;
+            left: 10px;
+          }
+        }
+      }
+
+      .timeTable{
+        width: 65px;
+        left: 0px;
+        height: max-content;
+
+        img{
+          width: 100%;
+          height: 100%;
+        }
+
+        p{
+          font-size: 26px;
+          line-height: 26px;
+          text-align: center;
+        }
+      }
+
+      .aqi{
+        width: 59px;
+        height: 30px;
+        top: 0px;
+        align-self: center;
+
+        img{
+          width: 100%;
+          height: 100%;
+        }
+
+        p{
+          font-size: 26px;
+        }
+      }
+
+      .clockParent{
+        height: 60px;
+        left: 0px;
+        top: 0px;
+
+        .clockImg{
+          width: 60px;
+        }
+
+        .wrapper{
+          .sub-wrapper{
+            .hr-wrapper{
+              .hr{
+                height: 15px;
+              }
+            }
+            .min-wrapper{
+              .min{
+                height: 20px;
+              }
+            }
+            .sec-wrapper{
+              .sec{
+                height: 22px;
+              }
+            }
+          }
+        }
+      }
+
+      .compassParent{
+        top: 0px;
+        .compassGif{
+          width: 60px;
+        }
+      }
+
+      .noticeBoardParent{
+        width: max-content;
+        height: 68px;
+        left: 0px;
+        z-index: 2;
+
+        .noticeBoardImg{
+          width: 100%;
+          height: 100%;
+        }
+
+        p{
+          top: 15px;
+          font-size: 24px;
+          padding: 0px 5px;
+        }
+      }
+
+      .radioBoardParent{
+        left: 0px;
+        width: 54px;
+        height: 54px;
+
+        .radioBoardImg{
+        }
+
+        p{
+          font-size: 24px;
+          top: 8px;
+        }
+      }
+
+      .container_group {
+        flex: 1;
+      }
+
+      .radioMusicParent {
+      top: 0px;
+      width: 60px;
+
+      .content{
+        padding: 0px 5px 0px 5px;
+      }
+
+      .radio {
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 0;
+      }
+
+      .radioGif {
+        width: 17px;
+        align-self: self-end;
+        z-index: 1;
+      }
+
+      iframe{
+        z-index: 1;
+        height: 20px;
+        top: -3px;
+        position: relative;
+      }
+      }
+
+      .row2{
+        bottom: 13%;
+        
+        .sell {
+      right: 30px;
+      transform: rotateY(46deg) skewX(19deg);
+
+      
+        }
+
+        .serve {
+          right: 0px;
+          top: 0px;
+
+         
+        }
+
+        .socialize {
+          left: 40px;
+          top: -10px;
+
+          p {
+            top: 7px;
+            @include homepage-buttons("EFCO", 36px, $yellow, "none");
+
+            // -webkit-text-stroke:.4px;
+            &::before {
+              content: "Socialize";
+              @include full-absolute(0px, 0px, 0px, 0px);
+              z-index: -1;
+              font-weight: 700;
+
+              -webkit-text-stroke: 0.4px $dark-yellow;
+              @include homepage-buttons("EFCO", 36px, $dark-yellow, "none");
+            }
+
+            &::after {
+              content: "Socialize";
+            }
+          }
+        }
+      }
+
+      .logoutBtn{
+        width: 80px;
+        top: 17px;
+        right: 10px;
+
+        .badge_icon{
+          @include full-absolute(15px, 31px, 20px, 18px);
+        }
+      }
+    }
+  }
 }
 
 .reduceSize3 {
@@ -813,7 +1058,8 @@ a {
     min-width: 40vw;
     width: 40vw;
     max-height: 95vh;
-    height: 95vh;
+    height: max-content;
+    min-height: 80vh;
     background: url("#{$timetablebg}") no-repeat;
     background-position: 49% 61%; // Adjust the background position as needed
     background-size: inherit;
@@ -860,10 +1106,23 @@ a {
 
     .timeTableDialogBoxContent {
       @include flex-center;
+      place-items: flex-start;
+
+      .closeBtn{
+        @include full-absolute(20px, 20px, auto, auto);
+        svg{
+          fill: $light-yellow;
+        }
+      }
 
       .content {
-        @include flex-center(column, center);
+        @include flex-center(column, flex-start);
+        overflow-y: scroll;
         gap: 40px;
+        height: auto;
+        max-height: -webkit-fill-available;
+        align-self: center;
+
 
         .content-header {
           @include flex-center(column, center);
@@ -1154,6 +1413,31 @@ a {
         }
       }
     }
+
+    @media (max-width: 990px){
+      width: 70vw;
+    }
+
+    @media (max-width:600px) {
+      width: auto !important;
+      max-height: 100% !important;
+      height: 100% !important;
+      min-width: auto !important;
+      max-width: 100% !important;
+      border-radius: 0px;
+
+      .timeTableDialogBoxContent{
+        padding: 20px 15px;
+
+        .content{
+          .content-body{
+            .row2{
+              gap: 8px 0px;
+            }
+          }
+        }
+      }
+    }
   }
 
   .MuiPaper-root.MuiDialog-paper {
@@ -1165,15 +1449,17 @@ a {
     z-index: 1;
     color: $black;
   }
+
+ 
 }
 
 .aqi-dialog-paper {
   overflow: hidden;
 
   .MuiDialog-paper {
-    max-width: 70vw;
+    max-width: 100vw;
     min-width: 40vw;
-    width: 45vw;
+    width: 50vw;
     max-height: 95vh;
     background-color: $golden;
     position: relative;
@@ -1200,11 +1486,16 @@ a {
       z-index: 0;
       opacity: 0.6;
     }
-  }
+  
 
   .aqiDialogBoxContent {
     position: relative;
     z-index: 1;
+
+    .closeBtn{
+      @include full-absolute(20px, 15px, auto, auto);
+      z-index: 2;
+    }
 
     .content {
       padding: 10px 30px 0px;
@@ -1229,7 +1520,7 @@ a {
             @include hover-scale(1, 0s);
             font-weight: 600;
             position: relative;
-            top: -25px;
+            margin-top: -25px;
             z-index: 1;
             -webkit-text-stroke: 0.2px $black;
             text-shadow: -2px 4px 2.5px rgba(124, 33, 127, 0.25);
@@ -1243,7 +1534,7 @@ a {
         .row {
           width: 100%;
           @include flex-center(column, center);
-          gap: 35px;
+          gap: 30px;
           place-items: normal;
         }
 
@@ -1253,6 +1544,7 @@ a {
 
         .col {
           @include flex-center(row, space-between);
+          flex-wrap: wrap;
 
           .wrapper-one {
             @include flex-center(row, flex-start);
@@ -1294,8 +1586,8 @@ a {
 
               &.Sunset {
                 position: relative;
-                left: -50px;
-                top: 10px;
+                margin-left: -50px;
+                margin-top: 10px;
               }
 
               div {
@@ -1419,6 +1711,7 @@ a {
           }
 
           .wrapper-two {
+            margin-left: auto;
             .scene {
               width: 120px;
               height: 74px;
@@ -1442,10 +1735,10 @@ a {
                 }
 
                 .cube__face--front {
-                  transform: translateZ(58px);
-                  height: 50px;
+                  transform: translateZ(57px);
+                  height: 58px;
                   border-radius: 2px 0px 2px 2px;
-                  width: 120px;
+                  width: 129px;
                   @include flex-center(column, start);
                   background-color: $purple;
                   padding: 4px;
@@ -1527,7 +1820,7 @@ a {
                 }
 
                 .cube__face--right {
-                  transform: rotateY(93deg) translateZ(104px) translateX(-52px) translateY(-5px) skewX(-1deg);
+                  transform: rotateY(93deg) translateZ(104px) translateX(-53px) translateY(-5px) skewX(-1deg);
                   width: 49px;
                   border-radius: 0px 8px 3px 3px;
                   height: 57px;
@@ -1593,7 +1886,76 @@ a {
         }
       }
     }
+
   }
+  @media (max-width:990px) {
+    width: 75vw !important;
+  }
+
+  @media (max-width:768px) {
+    width: 90vw !important;
+  }
+
+  @media (max-width:600px) {
+    width: 100% !important;
+    max-height: 100% !important;
+    height: 100% !important;
+    min-width: auto !important;
+    max-width: 100% !important;
+    border-radius: 0px;
+  }
+
+  @media (max-width:520px) {
+    .aqiDialogBoxContent{
+      @include flex-center(column, flex-center);
+      gap: 20px;
+
+      .closeBtn{
+        position: relative;
+        top: 0px;
+        right: 0px;
+        left: auto;
+        margin-left: auto;
+      }
+      .content{
+        padding: 0px;
+        align-self: stretch;
+
+        .content-header{
+          .heading{
+            h1{
+              font-size: 35px !important;
+              margin-top: -22px;
+            }
+          }
+
+          .calendar{
+            .calendarBorder{
+              width: 75px;
+              height: 75px;
+            }
+          }
+        }
+
+        .content-body{
+          .row{
+            gap : 50px;
+            .col{
+              flex-direction: column;
+              place-items: normal;
+
+              .wrapper-two{
+                .aqiweather{
+                  margin-top: -20px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
 }
 
 .flightDetailsPopup {
@@ -1612,6 +1974,11 @@ a {
       @include full-absolute(0, 0, 0, 0);
       background-color: transparent;
       z-index: 0;
+    }
+
+    .closeBtn{
+      @include full-absolute(20px, 20px, auto, auto);
+      z-index: 2;
     }
 
     .flightPopupDialogContent {
@@ -1668,6 +2035,7 @@ a {
                 .row {
                   @include flex-center(row, space-between);
                   height: max-content;
+                  gap: 10px;
                   margin-bottom: 20px;
 
                   .col {
@@ -1749,6 +2117,48 @@ a {
         }
       }
     }
+
+    // @media (max-width: 990px){
+    //   width: 80%;
+    // }
+
+    @media (max-width:990px) {
+      width: 100% !important;
+      max-height: 100% !important;
+      height: 100% !important;
+      min-width: auto !important;
+      max-width: 100% !important;
+      border-radius: 0px;
+
+      .flightPopupDialogContent{
+        .flight{
+          &.container{
+            .row{
+              flex-direction: column;
+            }
+          }
+        }
+      }
+    }
+
+    @media (max-width:560px) {
+
+      .flightPopupDialogContent{
+        .flight{
+          &.container{
+            .row{
+              .col-1, .col-2{
+                padding: 20px;
+
+                .flightDataContainer{
+                  padding: 30px 0 0;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
 
@@ -1774,6 +2184,11 @@ a {
       padding: 0;
       overflow: hidden;
 
+      .closeBtn{
+        @include full-absolute(20px, 20px, auto, auto);
+        z-index: 2;
+      }
+
       .train {
         &.container {
           width: 100%;
@@ -1788,6 +2203,8 @@ a {
 
             img {
               width: 100%;
+              object-position: 17%;
+              object-fit: cover;
               // width:100%;
               // height: 595px;
             }
@@ -1807,19 +2224,22 @@ a {
             place-items: normal;
             padding: 0px 20px;
             min-height: 100%;
+            gap: 50px;
+            overflow-y: auto;
+            height: 100%;
 
             .col-1 {
               @include flex-center(column, center);
-              // @include full-absolute(64px, auto, auto, 140px);
               position: relative;
-              transform: translate(108%, 87%);
+              // transform: translate(90%, 75%);
+              margin-top: 60px;
+              margin-left: 145px;
               width: max-content;
               padding: 4px;
               background-color: #d49932b3;
               border: 2px solid #d49932;
 
               p {
-                // padding: 4px 10px;
                 text-transform: uppercase;
                 @include homepage-buttons("Bobby-Jones-Soft",
                   16px,
@@ -1844,28 +2264,36 @@ a {
             }
 
             .col-2 {
+              overflow-x: auto;
+
+              .table_container{
+                width: 100%;
+                overflow-x: auto;
+                margin-bottom: 20px;
+
+                &::-webkit-scrollbar{
+                  height: 5px;
+                }
+                &::-webkit-scrollbar-thumb{
+                  background: $light-yellow;
+                }
+              }
+
               .table {
                 max-width: 60%;
-                margin-bottom: 20px;
+                // margin-bottom: 20px;
                 border: 4px solid #d499326f;
-                @include flex-center(column, center);
-                place-items: normal;
                 gap: 0px;
                 border-radius: 4px;
                 background-color: #f0d7a4ad;
 
                 .thead {
-                  width: 100%;
 
                   .theadRow {
-                    @include flex-center(row, space-between);
-                    place-items: normal;
-                    align-items: center;
                     border-bottom: 4px solid #d499326f;
                     background-color: #d4993291;
 
                     .th {
-                      flex: 1;
                       border-bottom: 0px;
                       border-right: 4px solid #d499326f;
                       padding: 8px;
@@ -1885,13 +2313,9 @@ a {
 
                 .tableRow {
                   border-bottom: 4px solid #d499326f;
-                  @include flex-center(row, space-between);
-                  place-items: normal;
-                  align-items: center;
 
                   .tableCell1 {
                     border-right: 4px solid #d499326f;
-                    flex: 1;
 
                     &:last-child {
                       border-right: 0px;
@@ -1899,7 +2323,6 @@ a {
                   }
 
                   .tableCell2 {
-                    flex: 1;
                     padding: 10px;
                   }
 
@@ -1932,6 +2355,50 @@ a {
         }
       }
     }
+
+    @media (max-width:990px) {
+      width: 100% !important;
+      max-height: 100% !important;
+      height: 100% !important;
+      min-width: auto !important;
+      max-width: 100% !important;
+      border-radius: 0px;
+    }
+
+    @media (max-width:600px) {
+     .trainPopupDialogContent{
+      .train{
+        &.container{
+          .wrapper{
+            .bgImg{
+              object-position: 32%;
+            }
+          }
+          .row{
+            .col-1{
+              margin-left: 8%;
+              margin-right: auto;
+            }
+          }
+        }
+      }
+     }
+    }
+
+    @media (max-width:400px) {
+     .trainPopupDialogContent{
+      .train{
+        &.container{
+          .row{
+            .col-1{
+              margin-left: 0%;
+              margin-right: auto;
+            }
+          }
+        }
+      }
+     }
+    }
   }
 }
 
@@ -1955,6 +2422,11 @@ a {
     .busPopupDialogContent {
       padding: 0;
 
+      .closeBtn{
+        @include full-absolute(20px, 20px, auto, auto);
+        z-index: 2;
+      }
+
       .bus {
         &.container {
           width: 100%;
@@ -1968,6 +2440,7 @@ a {
             background-size: 95%;
             z-index: 1;
             background-position: 50% 28%;
+            background-attachment: fixed;
             opacity: 0.5;
 
             &::after {
@@ -1983,7 +2456,7 @@ a {
             z-index: 1;
             @include flex-center(column, center);
             place-items: normal;
-            padding: 10px 40px;
+            padding: 20px;
             margin: 0 auto;
 
             .col {
@@ -1991,6 +2464,9 @@ a {
 
               .row-1 {
                 flex: 1;
+                img{
+                  width: 100%;
+                }
               }
 
               .row-2 {
@@ -2039,6 +2515,7 @@ a {
                       "none"
                     );
                     @include hover-scale(1, 0s);
+                    text-align: center;
                     padding: 0 30px;
                     border-radius: 15px;
                   }
@@ -2067,7 +2544,7 @@ a {
                   );
                   @include hover-scale(1, 0s);
                   position: relative;
-                  bottom: 15px;
+                  margin-top: -13px;
                 }
               }
             }
@@ -2121,6 +2598,7 @@ a {
                     "none"
                   );
                   @include hover-scale(1, 0s);
+                  line-height: 18px;
                 }
 
                 .expectedTime,
@@ -2131,10 +2609,60 @@ a {
                     "none"
                   );
                   @include hover-scale(1, 0s);
+                  line-height: 18px;
                 }
               }
             }
           }
+        }
+      }
+    }
+
+    @media (max-width:900px) {
+      width: 100% !important;
+      max-height: 100% !important;
+      height: 100% !important;
+      min-width: auto !important;
+      max-width: 100% !important;
+      border-radius: 0px;
+
+      .busPopupDialogContent{
+        .bus{
+          &.container {
+            .row{
+              .col{
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+                .row-1{
+                  order: 0;
+                  flex: 0;
+                  width: auto;
+
+                  img{
+                    width: 70px;
+                  }
+                }
+                .row-2{
+                  order: 2;
+                  width: 100%;
+                  flex: none;
+                }
+                .row-3{
+                  order: 1;
+                  flex: 0;
+                  width: max-content;
+                }
+              }
+
+              .col-2{
+                .table{
+                  max-width: 100%;
+                  right: 0px;
+                }
+              }
+            }
+          };
         }
       }
     }
@@ -2449,7 +2977,7 @@ a {
   overflow: hidden;
 
   .MuiDialog-paper {
-    max-width: 70vw;
+    max-width: 100vw;
     min-width: 40vw;
     width: 50vw;
     max-height: 95vh;
@@ -2469,7 +2997,6 @@ a {
       z-index: 0;
       opacity: 0.4;
     }
-  }
 
   .compassDialogBoxContent {
     position: relative;
@@ -2482,6 +3009,12 @@ a {
       place-items: normal;
 
       .content-header {
+        @include flex-center(row, center);
+        place-items: flex-start;
+        position: relative;
+        .closeBtn{
+          @include full-absolute(0px, 0px, auto, auto);
+        }
         .heading {
           @include flex-center(row, center);
 
@@ -2607,6 +3140,65 @@ a {
       }
     }
   }
+
+  @media (max-width: 990px){
+    width: 75vw;
+  }
+
+  @media (max-width: 600px){
+    width: 100% !important;
+      max-height: 100% !important;
+      height: 100% !important;
+      min-width: auto !important;
+      max-width: 100% !important;
+      border-radius: 0px;
+
+      .compassDialogBoxContent{
+        padding: 20px;
+        .content{
+          .content-body{
+            gap: 25px;
+            .row{
+              display: grid;
+              grid-template-columns: 1fr 35px;
+              gap: 5px 15px;
+              justify-items: left;
+
+              .col-1{
+                .icon{
+                  height: 45px;
+                }
+              }
+
+              .col-2{
+                .title{
+                  font-size: 18px;
+                  white-space: wrap;
+                }
+              }
+
+              .col-3{
+                grid-row-end: 1;
+                grid-row-start: 3;
+                grid-column-start: 2;
+                grid-column-end: 3;
+                .on_off_component_parent{
+                  .backButton{
+                    a{
+                      p{
+                        padding: 4px 6px 2px;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+  }
+
+}
 }
 
 .logo-popup-dialog-paper {
@@ -2627,10 +3219,18 @@ a {
       position: relative;
       z-index: 1;
       padding: 0px;
+      @include flex-center(column,flex-start);
 
       .content {
+        @include flex-center(column, flex-start);
+        place-items: normal;
+        flex: 1;
         .bgImg {
           width: 100%;
+        }
+
+        .closeBtn{
+          @include full-absolute(15px, 15px, auto, auto);
         }
 
         .content-body {
@@ -2676,7 +3276,7 @@ a {
       }
     }
 
-    @media (max-width:600px) {
+    @media (max-width:900px) {
       width: auto !important;
       max-height: none !important;
       max-width: max-content !important;
@@ -2685,7 +3285,7 @@ a {
       .logoPopupDialogBoxContent {
         .content {
           .bgImg {
-            height: 100vh;
+            height: 100%;
             object-fit: cover;
           }
 
@@ -2772,6 +3372,18 @@ a {
       width: auto !important;
       max-height: max-content !important;
       border-radius: 0px;
+
+      .visionPopupDialogBoxContent{
+        padding: 20px;
+
+        .content{
+          .content-body{
+            ul{
+              padding-left: 20px;
+            }
+          }
+        }
+      }
     }
   }
 }
@@ -2869,6 +3481,22 @@ a {
       width: auto !important;
       max-height: max-content !important;
       border-radius: 0px;
+
+      .whowearePopupDialogBoxContent{
+        padding: 20px;
+
+        .content{
+          .content-body{
+            .row{
+              gap: 20px;
+
+              .col{
+                flex: 1;
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
@@ -2922,6 +3550,10 @@ a {
 
           .header {
             @include flex-center(row, space-between);
+          }
+
+          .descriptionContainer{
+            @include flex-center(column, flex-start);
           }
 
           h2 {
@@ -2996,9 +3628,20 @@ a {
       border-radius: 0px;
 
       .aboutPopupDialogBoxContent {
+        padding: 20px;
         .content {
           height: auto !important;
-          overflow: visible
+          overflow: visible;
+          
+          .content-body{
+            padding: 0px;
+
+            .descriptionContainer{
+              ol{
+                padding-left: 20px;
+              }
+            }
+          }
         }
       }
     }
@@ -3030,10 +3673,15 @@ a {
     &::before {
       content: "";
       @include full-absolute(0px, 0px, 0px, 0px);
-      background: url("#{$hall-gate-bg}") $white center no-repeat;
+      background: url("#{$hall-gate-mobile-bg}") $white center no-repeat;
       background-size: cover;
       opacity: 0.25;
       z-index: 0;
+    }
+
+    .closeBtn{
+      @include full-absolute(20px, 20px, auto, auto);
+      z-index: 9;
     }
 
     .notification_container{
@@ -3152,13 +3800,33 @@ a {
 
     @media (max-width:600px) {
       width: auto !important;
-      max-height: max-content !important;
+      max-height: 100% !important;
       border-radius: 0px;
 
-      .aboutPopupDialogBoxContent {
+      .notification_container{
+        margin-top: 30px;
+      }
+      
+      .refundReturnPopupDialogBoxContent {
+        margin: 20px 0;
+        padding: 0 20px;
         .content {
-          height: auto !important;
-          overflow: visible
+          height: max-content !important;
+          .content-body {
+            padding: 0px;
+
+            h2{
+              font-size: 28px;
+              line-height: 28px;
+            }
+
+            .description{
+              &.bold{
+                font-size: 25px;
+                line-height: 35px;
+              }
+            }
+          }
         }
       }
     }
@@ -23322,6 +23990,13 @@ textarea[readonly] {
 
     @media (max-width: 560px) {
 
+      .col{
+        &.header_badge{
+          grid-template-columns: 1fr 80px !important;
+        }  
+      }
+      
+      
       padding: 15px;
     }
   }
@@ -23378,6 +24053,14 @@ textarea[readonly] {
     &:hover {
       transform: scale(1.05);
     }
+  }
+
+  @media (max-width: 560px){
+    width: 80px;
+
+    .badge_icon{
+          @include full-absolute(15px, 20px, 20px, 18px);
+        }
   }
 }
 

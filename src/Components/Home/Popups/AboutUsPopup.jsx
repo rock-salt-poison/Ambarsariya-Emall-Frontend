@@ -3,12 +3,14 @@ import {
   Box,
   Dialog,
   DialogContent,
+  IconButton,
   Typography,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
 import Button2 from "../Button2";
 import UserBadge from "../../../UserBadge";
+import CloseIcon from '@mui/icons-material/Close';
 
 export default function AboutUsPopup({ open, handleClose, handleBackClick }) {
   const theme = useTheme();
@@ -33,6 +35,15 @@ export default function AboutUsPopup({ open, handleClose, handleBackClick }) {
                 handleLogin="sell/login"
                 handleLogoutClick="../../"
               /> */}
+
+              <IconButton
+                edge="start"
+                color="inherit"
+                onClick={handleClose}
+                aria-label="close"
+              >
+                <CloseIcon />
+              </IconButton>
             </Box>
             <Box className="descriptionContainer">
               <Typography className="description">

@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Box, Dialog, DialogContent, Typography } from "@mui/material";
+import { Box, Dialog, DialogContent, IconButton, Typography, useMediaQuery, useTheme } from "@mui/material";
 import flightImg from "../../../Utils/images/flightPass1.png";
 import FlightTable from "../TimeTablePopupComponents/FlightTable";
 import { get_travel_time } from "../../../API/fetchExpressAPI";
+import CloseIcon from '@mui/icons-material/Close';
 
 function FlightDetailsPopup({ open, handleClose, id }) {
   const [heading, setHeading] = useState("");
   const [data, setData] = useState([]);
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
   useEffect(() => {
     const travelType = id === "arrival" ? "Arrival" : "Departure";
@@ -45,7 +48,19 @@ function FlightDetailsPopup({ open, handleClose, id }) {
           backgroundColor: "rgba(0, 0, 0, 0.5)", // Slight opacity for better focus
         },
       }}
+      maxWidth="md"
+      fullScreen={fullScreen}
+      fullWidth
     >
+      <IconButton
+        edge="start"
+        color="inherit"
+        onClick={handleClose}
+        aria-label="close"
+        className="closeBtn"
+      >
+        <CloseIcon />
+      </IconButton>
       <DialogContent className="flightPopupDialogContent">
         <Box className="flight container">
           <Box className="wrapper"></Box>

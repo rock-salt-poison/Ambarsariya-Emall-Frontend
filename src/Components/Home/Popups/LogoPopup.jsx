@@ -4,6 +4,7 @@ import {
   Box,
   Dialog,
   DialogContent,
+  IconButton,
   Typography,
   useMediaQuery,
   useTheme,
@@ -17,12 +18,14 @@ import VisionPopup from "../Popups/VisionPopup";
 import AboutUsPopup from "../Popups/AboutUsPopup";
 import UserBadge from "../../../UserBadge";
 import ReturnRefundPolicyPopup from "./ReturnRefundPolicyPopup";
+import CloseIcon from '@mui/icons-material/Close';
+
 
 function LogoPopup({ open, handleClose }) {
   const [openPopup, setOpenPopup] = useState(open ? "logo" : null);
   const [audio] = useState(new Audio(hornSound));
   const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("sm")); // Fullscreen on small screens
+  const fullScreen = useMediaQuery(theme.breakpoints.down("md")); // Fullscreen on small screens
 
   const obj = [
     {
@@ -67,7 +70,7 @@ function LogoPopup({ open, handleClose }) {
           open={open}
           onClose={handleClose}
           className="logo-popup-dialog-paper"
-          maxWidth="sm"
+          maxWidth="md"
           fullScreen={fullScreen}
           fullWidth
         >
@@ -79,6 +82,15 @@ function LogoPopup({ open, handleClose }) {
                 alt="rock-salt-poison"
                 className="bgImg"
               />
+              <IconButton
+                edge="start"
+                color="inherit"
+                onClick={handleClose}
+                aria-label="close"
+                className="closeBtn"
+              >
+                <CloseIcon />
+              </IconButton>
               <Box className="content-body">
                 <Box className="col-1">
                   <Link to='' onClick={(e)=>{handleClick(e,'return_refund_policy')}}>

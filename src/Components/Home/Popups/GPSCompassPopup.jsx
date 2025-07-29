@@ -1,11 +1,12 @@
 import React from 'react';
-import { Box, Dialog, DialogContent, Typography } from '@mui/material';
+import { Box, Dialog, DialogContent, IconButton, Typography, useMediaQuery, useTheme } from '@mui/material';
 import location_sharing_img from '../../../Utils/images/live-location-sharing-img.png';
 import schedule_shopping_img from '../../../Utils/images/schedule-shopping-img.png';
 import banner_notification_img from '../../../Utils/images/banner-img.png';
 import announcements_img from '../../../Utils/images/announcements-img.png';
 import camera_img from '../../../Utils/images/camera-img.png';
 import OnOffComponent from '../NavigatorPopupComponents/OnOffComponent';
+import CloseIcon from '@mui/icons-material/Close';
 
 const obj = [
     { id: 1, title: 'Live location sharing', imgSrc: location_sharing_img, altText: 'live-location-sharing' },
@@ -16,11 +17,16 @@ const obj = [
 ];
 
 function GPSCompassPopup({ open, handleClose }) {
+    const theme = useTheme();
+    const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
     return (
         <Dialog
             open={open}
             onClose={handleClose}
             className="compass-dialog-paper"
+            maxWidth="sm"
+            fullScreen={fullScreen}
+            fullWidth
         >
             <DialogContent className='compassDialogBoxContent'>
                 <Box className="content">
@@ -30,6 +36,15 @@ function GPSCompassPopup({ open, handleClose }) {
                                 Security Check
                             </Typography>
                         </Box>
+                <IconButton
+                    edge="start"
+                    color="inherit"
+                    onClick={handleClose}
+                    aria-label="close"
+                    className="closeBtn"
+                >
+                    <CloseIcon />
+                </IconButton>
                     </Box>
                     <Box className="content-body">
                         {obj.map((data, index) => (

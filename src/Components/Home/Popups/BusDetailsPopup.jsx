@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { Box, Dialog, DialogContent, Typography } from "@mui/material";
+import { Box, Dialog, DialogContent, IconButton, Typography, useMediaQuery, useTheme } from "@mui/material";
 import BusTable from "../TimeTablePopupComponents/BusTable";
 import busArrival from "../../../Utils/images/busArrival.png";
 import busDeparture from "../../../Utils/images/bus-departure.png";
 import { get_travel_time } from "../../../API/fetchExpressAPI";
+import CloseIcon from '@mui/icons-material/Close';
+
 
 function BusDetailsPopup({ open, handleClose, id }) {
   const [heading, setHeading] = useState("");
   const [imgSrc, setImgSrc] = useState("");
   const [data, setData] = useState([]);
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
   useEffect(() => {
     if (id == "arrival") {
@@ -51,8 +55,20 @@ function BusDetailsPopup({ open, handleClose, id }) {
           backgroundColor: "transparent !important",
         },
       }}
+      maxWidth="md"
+      fullScreen={fullScreen}
+      fullWidth
     >
       <DialogContent className="busPopupDialogContent">
+        <IconButton
+          edge="start"
+          color="inherit"
+          onClick={handleClose}
+          aria-label="close"
+          className="closeBtn"
+        >
+          <CloseIcon />
+        </IconButton>
         <Box className="bus container">
           <Box className="wrapper"></Box>
           <Box className="row">

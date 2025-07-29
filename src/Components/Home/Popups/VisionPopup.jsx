@@ -3,12 +3,14 @@ import {
   Box,
   Dialog,
   DialogContent,
+  IconButton,
   Typography,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
 import Button2 from "../Button2";
 import UserBadge from "../../../UserBadge";
+import CloseIcon from '@mui/icons-material/Close';
 
 export default function VisionPopup({ open, handleClose, handleBackClick }) {
   const theme = useTheme();
@@ -38,6 +40,14 @@ export default function VisionPopup({ open, handleClose, handleBackClick }) {
           <Box className="content-body">
             <Box className="header">
               <Typography variant="h2">Vision</Typography>
+              <IconButton
+                edge="start"
+                color="inherit"
+                onClick={handleClose}
+                aria-label="close"
+              >
+                <CloseIcon />
+              </IconButton>
               {/* <UserBadge
                 handleClose={handleClose}
                 handleLogin="sell/login"

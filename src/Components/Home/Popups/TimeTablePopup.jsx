@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Dialog, DialogContent, Typography, Button, Divider } from '@mui/material';
+import { Box, Dialog, DialogContent, Typography, Button, Divider, useTheme, useMediaQuery, IconButton } from '@mui/material';
 import star from '../../../Utils/images/star.png';
 import astronautVector from '../../../Utils/images/astronaut-vector.webp';
 import meteorite from '../../../Utils/images/meteorite.png';
@@ -21,9 +21,12 @@ import TrainDetailsPopup from './TrainDetailsPopup';  // New Component
 import Coupon from '../TimeTablePopupComponents/Coupon';
 import StarAdvt from '../TimeTablePopupComponents/StarAdvt';
 import UserBadge from '../../../UserBadge';
+import CloseIcon from '@mui/icons-material/Close';
 
 function TimeTablePopup({ open, handleClose }) {
   const [openDetails, setOpenDetails] = useState(null);
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleLinkClick = (e, type) => {
     e.preventDefault();
@@ -69,12 +72,24 @@ function TimeTablePopup({ open, handleClose }) {
       open={open}
       onClose={handleClose}
       className="custom-dialog-paper"
+      maxWidth="sm"
+      fullScreen={fullScreen}
+      fullWidth
     >
       {data.map((data) => (
         <Box key={data.id} component='img' src={data.src} alt={data.alt} className={data.cName} />
       ))}
 
       <DialogContent className='timeTableDialogBoxContent'>
+        <IconButton
+          edge="start"
+          color="inherit"
+          onClick={handleClose}
+          aria-label="close"
+          className="closeBtn"
+        >
+          <CloseIcon />
+        </IconButton>
         <Box className="content">
           <Box className="content-header">
           {/* <UserBadge

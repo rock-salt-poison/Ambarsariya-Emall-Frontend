@@ -1,6 +1,6 @@
 // src/components/AQIPopup.js
 import React, { useState, useEffect } from 'react';
-import { Box, Dialog, DialogContent, Typography } from '@mui/material';
+import { Box, Dialog, DialogContent, IconButton, Typography, useMediaQuery, useTheme } from '@mui/material';
 import Calendar from '../AQIPopupComponents/Calendar';
 import Sunrise_Sunset from '../AQIPopupComponents/Sunrise_Sunset';
 import sunriseImg from '../../../Utils/images/sunrise.png';
@@ -10,10 +10,13 @@ import Cube from '../AQIPopupComponents/Cube';
 import AQIResult from '../AQIPopupComponents/AQIResult';
 import { fetchWeatherData } from '../../../API/weathermapapi';
 import { fetchAQIData } from '../../../API/AQIapi';
+import CloseIcon from '@mui/icons-material/Close';
 
 function AQIPopup({ open, handleClose }) {
     const [sunriseSunsetData, setSunriseSunsetData] = useState({ sunrise: null, sunset: null, temp: '' });
     const [aqiData, setAqiData] = useState('');
+    const theme = useTheme();
+    const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
     const [city, setCity] = useState('Amritsar');
 
     useEffect(() => {
@@ -46,8 +49,20 @@ function AQIPopup({ open, handleClose }) {
             open={open}
             onClose={handleClose}
             className="aqi-dialog-paper"
+            maxWidth="sm"
+            fullScreen={fullScreen}
+            fullWidth
         >
             <DialogContent className='aqiDialogBoxContent'>
+            <IconButton
+                edge="start"
+                color="inherit"
+                onClick={handleClose}
+                aria-label="close"
+                className="closeBtn"
+            >
+                <CloseIcon />
+            </IconButton>
                 <Box className="content">
                     <Box className="content-header">
                         <Box className='heading'>

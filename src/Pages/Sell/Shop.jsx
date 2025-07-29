@@ -134,7 +134,7 @@ function Shop() {
                 {data && <ShopDesign data={data} />}
                 {data && <WomanPointingShopName data={data}/>}
                 {data && <BusinessHours data={data} />}
-                {data && <TypeOfServices />}                
+                {data && <TypeOfServices data={data?.type_of_services}/>}                
                 {data && <ShopDetails2 data={data} />}
                 {data && <GetInTouch data={data} />}
               </Box>

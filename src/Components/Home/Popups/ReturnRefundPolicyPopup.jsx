@@ -3,6 +3,7 @@ import {
   Box,
   Dialog,
   DialogContent,
+  IconButton,
   Typography,
   useMediaQuery,
   useTheme,
@@ -11,6 +12,7 @@ import Button2 from "../Button2";
 import UserBadge from "../../../UserBadge";
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
+import CloseIcon from '@mui/icons-material/Close';
 
 export default function ReturnRefundPolicyPopup({ open, handleClose, handleBackClick }) {
   const theme = useTheme();
@@ -26,6 +28,15 @@ export default function ReturnRefundPolicyPopup({ open, handleClose, handleBackC
       fullScreen={fullScreen}
       fullWidth
     >
+      <IconButton
+                      edge="start"
+                      color="inherit"
+                      onClick={handleClose}
+                      aria-label="close"
+                      className="closeBtn"
+                    >
+                      <CloseIcon />
+                    </IconButton>
             <Box className="notification_container">
               <Box className="notification_icon">
                   <NotificationsIcon className="icon"/>

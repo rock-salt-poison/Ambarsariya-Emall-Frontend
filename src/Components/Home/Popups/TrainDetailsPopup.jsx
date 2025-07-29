@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Box, Dialog, DialogContent, Typography } from "@mui/material";
+import { Box, Dialog, DialogContent, IconButton, Typography, useMediaQuery, useTheme } from "@mui/material";
 import TrainTable from "../../../Components/Home/TimeTablePopupComponents/TrainTable";
 import trainbg from "../../../Utils/images/trainbg.webp";
 import { get_travel_time } from "../../../API/fetchExpressAPI";
+import CloseIcon from '@mui/icons-material/Close';
+
 
 function TrainDetailsPopup({ open, handleClose, id }) {
   const [heading, setHeading] = useState("");
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
   // const { id } = useParams();
 
   const [data, setData] = useState([]);
@@ -47,8 +51,20 @@ function TrainDetailsPopup({ open, handleClose, id }) {
           backgroundColor: "transparent !important",
         },
       }}
+      maxWidth="md"
+      fullScreen={fullScreen}
+      fullWidth
     >
       <DialogContent className="trainPopupDialogContent">
+        <IconButton
+          edge="start"
+          color="inherit"
+          onClick={handleClose}
+          aria-label="close"
+          className="closeBtn"
+        >
+          <CloseIcon />
+        </IconButton>
         <Box className="train container">
           <Box className="wrapper">
             <Box component="img" src={trainbg} alt="shadow" className="bgImg" />
@@ -69,7 +85,9 @@ function TrainDetailsPopup({ open, handleClose, id }) {
             </Box>
 
             <Box className="col-2">
-              <TrainTable id={heading} data={data} />
+              <Box className="table_container">
+                <TrainTable id={heading} data={data} />
+              </Box>
             </Box>
           </Box>
         </Box>

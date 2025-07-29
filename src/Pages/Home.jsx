@@ -177,11 +177,11 @@ export default function Home() {
                 </Box>
 
                 {/* Sixth Row Notice */}
-                <Box sx={{ flexDirection: 'column' }}>
+                <Box sx={{ flexDirection: 'column' }} className="container_group">
                     <Box>
                         <RadioSong />
                     </Box>
-                    <Box>
+                    <Box className="led_board_container">
                         <LEDNotice />
                     </Box>
                 </Box>

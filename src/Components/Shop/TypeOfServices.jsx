@@ -11,11 +11,11 @@ import Pickup from '../Cart/ServiceType/Pickup';
 import Visit from '../Cart/ServiceType/Visit';
 
 const services = [
-    {id: 1, type:'Pickup', icon:pickup, popupContent: <ServiceType />,
-        cName: "service_type_popup"},
-    {id: 2, type:'Delivery', icon:delivery, popupContent: <Delivery />,
+    {id: 1, type:'Delivery', icon:delivery, popupContent: <Delivery />,
         cName: "service_type_popup delivery",},
-    {id: 3, type:'Home Visit', icon:home_visit, popupContent: <Visit />,
+    {id: 2, type:'Home Visit', icon:home_visit, popupContent: <Visit />,
+        cName: "service_type_popup"},
+    {id: 3, type:'Pickup', icon:pickup, popupContent: <ServiceType />,
         cName: "service_type_popup delivery visit",},
 ]
 
