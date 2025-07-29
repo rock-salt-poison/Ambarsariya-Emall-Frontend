@@ -23970,7 +23970,7 @@ textarea[readonly] {
       .col {
 
         &:first-child {
-          grid-template-columns: 1fr 120px;
+          grid-template-columns: 1fr 120px !important;
 
           .col-1 {
             display: none;
