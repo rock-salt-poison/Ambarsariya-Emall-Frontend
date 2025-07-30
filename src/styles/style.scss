@@ -315,43 +315,31 @@ a {
     // position: relative;
     z-index: 1;
     // padding: 0 28%;
-    width: 45%;
-    gap: 8px 0;
+    width: 46%;
+    gap: 25px 0;
     margin: 0 auto;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
     min-height: 100vh;
-
-    // @media (min-width: 1349px) and (max-width: 1439px) {
-    //   padding: 0 28%; // Adjust padding for screens between 1349px and 1439px
-    // }
-
-    // @media (max-width: 1349px) {
-    //   padding: 0 28%; // Adjust padding for screens smaller than 1349px
-    // }
-
-    // @media (min-width: 110%) {
-    //   padding: 0 28%; // Default padding for screens larger than 110%
-    // }
 
     @media (max-width: 1100px) {
       width: 54%;
     }
 
     @media (max-width: 990px) {
-      width : 58%; // Adjust padding for screens smaller than 990px
+      width : 58%; 
     }
 
     @media (max-width: 875px) {
-      width: 62%; // Adjust padding for screens smaller than 768px
+      width: 62%; 
     }
 
     @media (max-width: 768px) {
-      width: 76%; // Adjust padding for screens smaller than 768px
+      width: 76%; 
     }
 
     @media (max-width: 650px) {
-      width: 88%; // Adjust padding for screens smaller than 768px
+      width: 88%; 
     }
 
     @media (max-width: 560px) {
@@ -363,18 +351,26 @@ a {
     }
 
     @media (max-width: 460px) {
-      width: 80%;
+      width: 100%;
     }
 
     @media (max-width: 400px) {
-      width: 95%; 
+      width: 100%; 
     }
-    
 
-    // @media (max-width: 480px) {
-    //   padding: 0 10%; // Adjust padding for screens smaller than 480px
-    // }
-
+    .img_container{
+      @include flex-center(column, flex-start);
+      place-items: normal;
+      .hall_gate{
+        display: none;
+      }
+      .body_content{
+        @include flex-center(column, flex-start);
+        gap: 15px;
+        place-items: normal;
+      }
+    }
+  
     div {
       display: flex;
       justify-content: space-between;
@@ -427,6 +423,7 @@ a {
     .aqi {
       position: relative;
       top: 28px;
+      right: 10px;
       @include flex-center;
       width: 89px;
       height: 40px;
@@ -465,7 +462,7 @@ a {
     .compassParent {
       @include flex-end;
       position: relative;
-      left: 5px;
+      right: 10px;
       top: 10px;
 
       .compassGif {
@@ -500,7 +497,7 @@ a {
       position: relative;
       width: 85px;
       height: 85px;
-      left: 10px;
+      right: 5px;
       @include flex-center;
 
       p {
@@ -623,11 +620,42 @@ a {
       18px,
       7px 16px);
 
-    .row2 {
-      @include full-absolute(auto, 0px, 7%, 0px);
-      flex-direction: column;
-      z-index: 1;
-      transition: all 0.2s linear;
+    // .row2 {
+    //   @include full-absolute(auto, 0px, 7%, 0px);
+    //   flex-direction: column;
+    //   z-index: 1;
+    //   transition: all 0.2s linear;
+    // }
+
+    .row2{
+      display: grid;
+      grid-template-columns: 85px 1fr 85px;
+      justify-items: center;
+
+      .container{
+        @include flex-center(column, center);
+        position: relative;
+        top: 18px;
+        left: 12px;
+
+        .sell{
+          top: 0px;
+        }
+
+        .serve{
+          top: 0px;
+          margin-top: -20px;
+        }
+
+        .socialize{
+          top: 0px;
+          margin-top: -20px;
+        }
+      }
+
+      .radioMusicParent{
+        align-self: center;
+      }
     }
 
     .sell {
@@ -745,8 +773,23 @@ a {
     background-position-x: 51%;
 
     .row{
-      gap: 10px;
-      justify-content: flex-start;
+      gap: 15px;
+      justify-content: center;
+      
+      .img_container{
+        position: relative;
+        margin-top: -40px;
+        .hall_gate{
+          display: block;
+          width: 100%;
+          position: relative;
+          z-index: -1;
+        }
+        .body_content{
+          @include full-absolute(84px, 10px, 20px, 20px);
+        }
+
+      }
 
       .logoParent{
         height: 183px;
@@ -760,8 +803,8 @@ a {
       }
 
       .timeTable{
-        width: 65px;
-        left: 0px;
+        width: auto;
+        left: -5px;
         height: max-content;
 
         img{
@@ -779,7 +822,7 @@ a {
       .aqi{
         width: 59px;
         height: 30px;
-        top: 0px;
+        top: 13px;
         align-self: center;
 
         img{
@@ -794,7 +837,7 @@ a {
 
       .clockParent{
         height: 60px;
-        left: 0px;
+        left: 10px;
         top: 0px;
 
         .clockImg{
@@ -823,7 +866,8 @@ a {
       }
 
       .compassParent{
-        top: 0px;
+        // top: 10px;
+        right: 5px;
         .compassGif{
           width: 60px;
         }
@@ -868,6 +912,7 @@ a {
       .radioMusicParent {
       top: 0px;
       width: 60px;
+      align-self: baseline;
 
       .content{
         padding: 0px 5px 0px 5px;
@@ -897,8 +942,21 @@ a {
       }
 
       .row2{
-        bottom: 13%;
-        
+        // bottom: 13%;
+        margin-top: -10px;
+        grid-template-columns: 1fr;
+
+        .container{
+          order: 1;
+          margin-top: -90px;
+          left: 0px;
+          top: 21px;
+        }
+
+        .radioMusicParent{
+          order: 0;
+        }
+
         .sell {
       right: 30px;
       transform: rotateY(46deg) skewX(19deg);

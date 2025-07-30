@@ -13,6 +13,7 @@ import timeTableButtonImg from '../Utils/images/timetable-button-bg.png';
 import AQIButtonImg from '../Utils/images/aqi-button-bg.png';
 import hornSound from '../Utils/audio/horn-sound.mp3';
 import _3SbgImg from '../Utils/images/3s-button-bg.png';
+import hall_gate from '../Utils/images/hall_gate_mobile.webp';
 import TimeTablePopup from '../Components/Home/Popups/TimeTablePopup';
 import AQIPopup from '../Components/Home/Popups/AQIPopup';
 import { useNavigate } from 'react-router-dom';
@@ -146,45 +147,74 @@ export default function Home() {
                 {/* Logo */}
                 <Logo handleClickFunction={(e) => handleClick(e, 'logo')} />
 
-                {/* Second Row Time Table & AQI */}
-                <Box>
-                    {
-                        buttonsData.slice(0, 2).map((data) => {
-                            return <Buttons key={data.id} cName={data.cName} text={data.text} imgSrc={data.imgSrc} alt={data.alt} handleClickFunction={data.handleClickFunction} />
-                        })
-                    }
-                </Box>
-
-                {/* Third Row Clock & Compass */}
-                <Box>
-                    <Clock handleClick={(e) => { handleClick(e) }} />
-                    <Compass />
-                </Box>
-
-                {/* Fourth Row Notice & Radio Board */}
-                <Box>
-                    <Boards parentClassName="noticeBoardParent" text="Notice" imgClassName="noticeBoardImg" imgSrc={noticeBoardImg} alt="notice-board" handleClick = {(e) => { handleClick(e) }}/>
-                    <Boards parentClassName="radioBoardParent" text="Radio" imgClassName="radioBoardImg" alt="radio-board" imgSrc={RadioboardImg} />
-                </Box>
-
-                {/* Fifth Row Song Playing */}
-                <Box className="row2">
-                    {
-                        buttonsData.slice(2).map((data) => {
-                            return <Buttons key={data.id} cName={data.cName} text={data.text} imgSrc={data.imgSrc} alt={data.alt} handleClickFunction={data.handleClickFunction} />
-                        })
-                    }
-                </Box>
-
-                {/* Sixth Row Notice */}
-                <Box sx={{ flexDirection: 'column' }} className="container_group">
+                
+                <Box className="img_container">
+                    <Box component="img" src={hall_gate} alt="hall-gate" className='hall_gate'/>
+                    <Box className="body_content">
+    {/* Second Row Time Table & AQI */}
                     <Box>
-                        <RadioSong />
+                        {
+                            buttonsData.slice(0, 2).map((data) => {
+                                return <Buttons key={data.id} cName={data.cName} text={data.text} imgSrc={data.imgSrc} alt={data.alt} handleClickFunction={data.handleClickFunction} />
+                            })
+                        }
                     </Box>
-                    <Box className="led_board_container">
-                        <LEDNotice />
+
+                    {/* Third Row Clock & Compass */}
+                    <Box>
+                        <Clock handleClick={(e) => { handleClick(e) }} />
+                        <Compass />
                     </Box>
+
+                    {/* Fourth Row Notice & Radio Board */}
+                    <Box>
+                        <Boards parentClassName="noticeBoardParent" text="Notice" imgClassName="noticeBoardImg" imgSrc={noticeBoardImg} alt="notice-board" handleClick = {(e) => { handleClick(e) }}/>
+                        <Boards parentClassName="radioBoardParent" text="Radio" imgClassName="radioBoardImg" alt="radio-board" imgSrc={RadioboardImg} />
+                    </Box>
+
+                    {/* Fifth Row Song Playing */}
+                    {/* <Box className="row2">
+                        {
+                            buttonsData.slice(2).map((data) => {
+                                return <Buttons key={data.id} cName={data.cName} text={data.text} imgSrc={data.imgSrc} alt={data.alt} handleClickFunction={data.handleClickFunction} />
+                            })
+                        }
+                    </Box> */}
+
+                    {/* Sixth Row Notice */}
+                    {/* <Box sx={{ flexDirection: 'column' }} className="container_group">
+                        <Box>
+                            <RadioSong />
+                        </Box>
+                        <Box className="led_board_container">
+                            <LEDNotice />
+                        </Box>
+                    </Box> */}
+
+                    <Box className="row2">
+                        <Box></Box>
+                        <Box className="container">
+                            {
+                                buttonsData.slice(2).map((data) => {
+                                    return <Buttons key={data.id} cName={data.cName} text={data.text} imgSrc={data.imgSrc} alt={data.alt} handleClickFunction={data.handleClickFunction} />
+                                })
+                            }
+                        </Box>
+                        {/* <Box> */}
+                            <RadioSong />
+                        {/* </Box> */}
+                    </Box>
+
+                        
+                        <Box className="led_board_container">
+                            <LEDNotice />
+                        </Box>
+                    </Box>
+
                 </Box>
+
+                
+
             {/* {token ? <Button2 optionalcName='logoutBtn' text={`Logged in as ${userType}`} onClick={() => handleLogout('../')}/>:<Button2 optionalcName='logoutBtn' text={`Login`} redirectTo='sell/login'/>} */}
             <UserBadge handleLogin="sell/login" handleLogoutClick="../../" optionalDialogCname='home'/>
             </Box>
