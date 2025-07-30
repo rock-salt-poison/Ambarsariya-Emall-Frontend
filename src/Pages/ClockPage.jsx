@@ -115,6 +115,11 @@ const formattedTime = updatedAt
         <Box className="wrapper-2">
           <Clock />
         </Box>
+        <UserBadge
+                handleBadgeBgClick="/"
+                handleLogin="sell/login"
+                handleLogoutClick="../../"
+              />
       </Box>
       <Box className="col-1">
         <Sidebar

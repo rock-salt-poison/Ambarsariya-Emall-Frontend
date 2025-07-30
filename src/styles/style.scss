@@ -293,6 +293,8 @@ a {
 
 .bg {
   @include background-center-no-repeat($hall-gate-bg);
+  background-attachment: local;
+  overflow-y: auto;
   background-size: cover;
   position: relative;
   border-radius: 15px;
@@ -301,7 +303,12 @@ a {
 
   &::after {
     content: "";
-    @include full-absolute;
+    position: fixed;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    // @include full-absolute;
     background: url("#{$home-shadow}") no-repeat;
     background-size: cover;
     background-position: 5% center;
@@ -322,24 +329,60 @@ a {
     justify-content: flex-start;
     min-height: 100vh;
 
+    @media (max-width: 1226px) {
+      width: 51%;
+    }
+
     @media (max-width: 1100px) {
-      width: 54%;
+      width: 59%;
+    }
+
+    @media (max-width: 1022px) {
+      width: 61%;
     }
 
     @media (max-width: 990px) {
-      width : 58%; 
+      width : 62%; 
     }
 
-    @media (max-width: 875px) {
-      width: 62%; 
+    @media (max-width: 960px) {
+      width : 64%; 
     }
 
-    @media (max-width: 768px) {
-      width: 76%; 
+    @media (max-width: 930px) {
+      width : 66%; 
+    }
+
+    @media (max-width: 900px) {
+      width : 68%; 
+    }
+
+    @media (max-width: 850px) {
+      width : 72%; 
+    }
+
+    @media (max-width: 800px) {
+      width: 78%; 
+    }
+
+    @media (max-width: 750px) {
+      width: 86%; 
+    }
+    
+    @media (max-width: 700px) {
+      width: 89%; 
+    }
+
+    @media (max-width: 680px) {
+      width: 92%; 
     }
 
     @media (max-width: 650px) {
-      width: 88%; 
+      width: 95%; 
+    }
+
+    @media (max-width: 600px) {
+      width: 100%; 
     }
 
     @media (max-width: 560px) {
@@ -770,6 +813,7 @@ a {
   @media (max-width: 560px){
     @include background-center-no-repeat($hall-gate-mobile-bg);
     background-size: cover;
+    background-attachment: local;
     background-position-x: 51%;
 
     .row{
@@ -2261,7 +2305,7 @@ a {
 
             img {
               width: 100%;
-              object-position: 17%;
+              object-position: top;
               object-fit: cover;
               // width:100%;
               // height: 595px;
@@ -2290,8 +2334,8 @@ a {
               @include flex-center(column, center);
               position: relative;
               // transform: translate(90%, 75%);
-              margin-top: 60px;
-              margin-left: 145px;
+              margin-top: 72px;
+              margin-left: 168px;
               width: max-content;
               padding: 4px;
               background-color: #d49932b3;
@@ -2323,6 +2367,10 @@ a {
 
             .col-2 {
               overflow-x: auto;
+
+              &::-webkit-scrollbar-thumb{
+                background: $brown-4;
+              }
 
               .table_container{
                 width: 100%;
@@ -2421,6 +2469,22 @@ a {
       min-width: auto !important;
       max-width: 100% !important;
       border-radius: 0px;
+    }
+
+    @media (max-width:768px) {
+     .trainPopupDialogContent{
+      .train{
+        &.container{
+          .row{
+            .col-1{
+              margin-left: 14%;
+              margin-right: auto;
+              margin-top: 6%;
+            }
+          }
+        }
+      }
+     }
     }
 
     @media (max-width:600px) {
@@ -2997,6 +3061,10 @@ a {
       height: 100%;
     }
 
+    .logoutBtn{
+      display: none;
+    }
+
     .wrapper-2 {
       @include flex-center(row, center);
       @include full-absolute(0px, 0px, 0px, 0px);
@@ -3028,6 +3096,127 @@ a {
         }
       }
     }
+  }
+
+  @media (max-width: 1080px){
+    display: grid;
+    grid-template-columns: 48% 48%;
+    gap: 0px 20px;
+
+    .col-1{
+      order: 1;
+
+      .logoutBtn{
+        display: none;
+      }
+
+      .sidebar-wrapper{
+        padding: 0px 5px 30px;
+        .travelWrapper{
+          .neonBorderImg{
+            width: 100%;
+          }
+
+          .player-wrapper{
+            @include full-absolute(20px, 30px, auto, 40px);
+          }
+        }
+        .currency-wrapper{
+          padding: 18px 0px 0px 20px;
+          &.currency-wrapper-2{
+            padding: 18px 20px 0px 0px;
+          }
+        }
+      }
+    }
+
+    .col-2{
+      order: 0;
+      grid-column-start: 1;
+      grid-column-end: 3;
+
+      .clockBgImg{
+        height: 110px;
+        width: 100%;
+        object-fit: cover;
+      }
+
+      .wrapper-2{
+        .clockParent{
+          top: -5px;
+        }
+      }
+
+      
+    }
+
+  }
+
+  @media (max-width: 768px){
+    @include flex-center(column, flex-start);
+    place-items: normal;
+    gap: 20px;
+
+    .col-1{
+      order: 1;
+
+      .logoutBtn{
+        display: none;
+      }
+
+      .sidebar-wrapper{
+
+        .date-time-and-weather-wrapper{
+          .col-2{
+            place-items: normal;
+          }
+        }
+
+        .travelWrapper{
+          .neonBorderImg{
+            width: 100%;
+          }
+          .player-wrapper{
+            @include full-absolute(20px, 30px, auto, 40px);
+          }
+        }
+        .currency-wrapper{
+          padding: 18px 20px 0px 20px;
+
+          .table{
+            width: 100%;
+          }
+
+          &.currency-wrapper-2{
+            padding: 18px 20px 0px 20px;
+          }
+        }
+      }
+    }
+
+    .col-2{
+      order: 0;
+      grid-column-start: 1;
+      grid-column-end: 3;
+
+      .clockBgImg{
+        height: 110px;
+        width: 100%;
+        object-fit: cover;
+      }
+
+      .wrapper-2{
+        .clockParent{
+          top: -5px;
+        }
+      }
+      .logoutBtn{
+        @include full-absolute(15px, 20px, auto, auto);
+        z-index: 2;
+        display: block;
+      }
+    }
+
   }
 }
 
@@ -24123,7 +24312,7 @@ textarea[readonly] {
     }
   }
 
-  @media (max-width: 560px){
+  @media (max-width: 990px){
     width: 80px;
 
     .badge_icon{
