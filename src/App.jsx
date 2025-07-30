@@ -14,6 +14,7 @@ import Notice from './Pages/Notice';
 import SocializeRoutes from './Routes/SocializeRoutes';
 import { restoreTokens } from './store/restoreToken';
 import { useDispatch } from 'react-redux';
+import OrientationWarning from './Pages/OrientationWarning';
 
 function App() {
 
@@ -25,6 +26,7 @@ function App() {
   
   return (
     <>
+    <OrientationWarning />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/notice" element={<Notice />} />
