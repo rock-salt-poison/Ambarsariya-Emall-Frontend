@@ -9251,7 +9251,7 @@ a {
       }
 
       .business_hours_container {
-        .backButton {
+        .logoutBtn {
           display: none !important;
         }
       }
@@ -22743,6 +22743,14 @@ textarea[readonly] {
       gap: 10px;
       flex: 1;
       flex-wrap: wrap;
+
+      &:nth-child(2), &:nth-child(3){
+        overflow-x: auto;
+
+        &::-webkit-scrollbar{
+          height: 4px;
+        }
+      }
 
       &.buyer_details {
         justify-content: flex-start;
