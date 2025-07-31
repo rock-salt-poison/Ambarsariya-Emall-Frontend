@@ -9372,6 +9372,27 @@ a {
       }
     }
 
+    @media (max-width: 992px) and (orientation: landscape) {
+      .row{
+        > .col:first-child{
+            flex-direction: column;
+          }
+
+        .col{
+          .get_in_touch_wrapper{
+            .contact_row{
+              .col{
+                height: max-content;
+              }
+            }
+          }
+          .shop_details_col2{
+            align-self: center;
+          }
+        }
+      }
+    }
+
     @media (max-width: 992px) {
       .row {
         .col {
@@ -9680,12 +9701,17 @@ a {
 
           .MuiTableContainer-root {
             margin-top: -30px;
+            
+            &::-webkit-scrollbar{
+              height: 4px;
+            }
 
             .MuiTable-root {
               max-width: 100%;
-              overflow: auto;
+              overflow-x: auto;
               border-spacing: 40px 15px;
               border-collapse: separate;
+
 
               .MuiTableHead-root {
                 .MuiTableRow-root {
@@ -9998,21 +10024,22 @@ a {
       padding: 20px;
 
       .col {
-        flex-direction: column;
+        // flex-direction: column;
         gap: 15px;
 
         .sub_col {
           &:first-child {
-            align-self: flex-start;
+            display: none;
           }
 
           .heading {
             font-size: 38px;
             line-height: 36px;
+            text-align: left;
           }
 
           &:last-child {
-            display: none;
+            // display: none;
           }
         }
 
