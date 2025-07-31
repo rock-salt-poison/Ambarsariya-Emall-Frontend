@@ -9278,6 +9278,17 @@ a {
           .get_in_touch_wrapper {
             width: 100%;
           }
+
+          .get_in_touch_wrapper{
+            .contact_row{
+              .col{
+                max-width: 100%;
+                p{
+                  white-space: wrap;
+                }
+              }
+            }
+          }
         }
       }
     }
