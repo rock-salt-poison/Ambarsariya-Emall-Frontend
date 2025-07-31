@@ -215,6 +215,11 @@ function Support(props) {
                     visitorData={visitorData ? visitorData : shopData ? shopData : memberData ? memberData : null} 
                     shopData ={shopData}
                     currentUser={currentUser} />
+                    <UserBadge
+                      handleBadgeBgClick="../"
+                      handleLogin="../login"
+                      handleLogoutClick="../../"
+                    />
                 </Box>
               </>
             )}

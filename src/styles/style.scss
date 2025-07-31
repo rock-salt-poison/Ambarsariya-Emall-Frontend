@@ -4754,7 +4754,7 @@ a {
   position: relative;
   width: 100%;
   min-height: 100vh;
-  max-height: 100vh;
+  // max-height: 100vh;
   @include background-center-no-repeat($supportBgImg);
   background-size: cover;
   background-position: center top;
@@ -4785,7 +4785,6 @@ a {
         @include flex-center(row, space-between);
         gap: 20px;
         flex-wrap: wrap;
-
       }
 
       .badge {
@@ -5094,6 +5093,10 @@ a {
           width: 100%;
           z-index: 0;
           height: 100%;
+
+          .logoutBtn{
+            display: none;
+          }
 
           .MuiList-root {
             max-width: 260px;
@@ -5538,6 +5541,33 @@ a {
             align-self: flex-end;
           }
         }
+
+        &.second_wrapper{
+          .col-1{
+            .logoutBtn{
+              display: none;
+            }
+          }
+
+          .col-3{
+            .logoutBtn{
+              display: block;
+              margin-top: 30px;
+            }
+
+            .container{
+              .content{
+                .form_container{
+                  form{
+                    .tooltip{
+                      position: static;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
 
@@ -5746,7 +5776,7 @@ a {
             .swiper {
               max-width: 200px;
               flex: 1;
-              align-self: stretch;
+              align-self: center;
               margin: 0px !important;
 
               .swiper-wrapper {
@@ -5873,6 +5903,27 @@ a {
           border-left: 1px solid #fffbf58c;
           flex: 1;
           @include flex-center(column, center);
+        }
+      }
+    }
+  }
+
+  @media (max-width: 990px) {
+    .row{
+      .container {
+        width: 100%;
+
+        .col-2 {
+          width: 100%;
+          flex-direction: column;
+
+          .sub_col_1 {
+            width: 100% !important;
+
+            .shop_details {
+              flex-direction: column !important; 
+            }
+          }
         }
       }
     }
@@ -6019,7 +6070,7 @@ a {
             .swiper {
               max-width: 200px;
               flex: 1;
-              align-self: stretch;
+              align-self: center;
               margin: 0px !important;
 
               .swiper-wrapper {
@@ -9701,7 +9752,7 @@ a {
 
           .MuiTableContainer-root {
             margin-top: -30px;
-            
+
             &::-webkit-scrollbar{
               height: 4px;
             }
