@@ -20118,8 +20118,26 @@ body .MuiBackdrop-root {
       }
     }
 
+    @media (max-width: 992px){
+      .col{
+        &:first-child {
+         display: grid;
+         grid-template-columns: 80px 1fr 80px;
+       }
+      }
+    }
+
     @media (max-width: 768px) {
       .col {
+        .title_container{
+          order: unset;
+        }
+        .icon_link{
+          .icon{
+            height: 80px;
+          }
+        }
+
         .container {
           .card {
             width: 100% !important;
@@ -20128,7 +20146,31 @@ body .MuiBackdrop-root {
       }
     }
 
+    @media (max-width: 560px) {
+      .col {
+        &.header_badge{
+          grid-template-columns: 1fr 1fr !important;
 
+          .icon_link{
+            order:0;
+
+            .icon{
+              height: 80px;
+            }
+          }
+
+          .title_container{
+            order: 2;
+            grid-column-start: 1; 
+            grid-column-end: 3; 
+          }
+
+          .logoutBtn{
+            order: 1;
+          }
+        }
+      }
+    }
 
   }
 
@@ -20376,7 +20418,20 @@ body .MuiBackdrop-root {
 
     @media (max-width: 992px) {
       .col {
+        &:first-child{
+          .heading_container{
+            padding: 7px 15px;
+            justify-self: flex-start;
+            .title{
+              font-size: 24px !important;
+            }
+          }
+        }
+
         &:last-child {
+          .form_container{
+            width: 80%;
+          }
           form {
             gap: 20px !important;
           }
@@ -20403,11 +20458,18 @@ body .MuiBackdrop-root {
           .title_container {
             order: 0 !important;
           }
+
+          .heading_container{
+            padding: 6px 10px;
+            .title{
+              font-size: 22px !important;
+            }
+          }
         }
 
         &:last-child {
           .form_container {
-            width: 80% !important;
+            width: 90% !important;
           }
         }
       }
@@ -20597,6 +20659,17 @@ body .MuiBackdrop-root {
 
     @media (max-width: 992px) {
       .col {
+
+        &:first-child{
+          .heading_container{
+            padding: 7px 15px;
+            justify-self: flex-start;
+            .title{
+              font-size: 24px !important;
+            }
+          }
+        }
+
         &:last-child {
           width: 80% !important;
         }
@@ -20608,6 +20681,14 @@ body .MuiBackdrop-root {
         &:first-child {
           .title_container {
             order: 0;
+          }
+
+          .heading_container{
+            padding: 6px 10px;
+            justify-self: flex-start;
+            .title{
+              font-size: 22px !important;
+            }
           }
         }
 
@@ -20963,6 +21044,11 @@ body .MuiBackdrop-root {
         border-radius: 8px;
         transition: background-color 0.3s ease;
       }
+    }
+
+
+    @media (max-width: 990px){
+      width: 65%;
     }
   }
 }
