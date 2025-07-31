@@ -9257,6 +9257,14 @@ a {
       }
     }
 
+    @media (max-width: 1233px) and (orientation: landscape) {
+      .business_hours_container {
+        .logoutBtn {
+          display: none !important;
+        }
+      }
+    }
+
     @media (max-width: 992px) {
       .row {
         .col {
