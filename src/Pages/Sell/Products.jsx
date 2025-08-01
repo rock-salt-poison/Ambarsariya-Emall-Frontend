@@ -4,7 +4,6 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import Button2 from '../../Components/Home/Button2';
 import AutoCompleteSearchField from '../../Components/Products/AutoCompleteSearchField';
 import ProductsTable from '../../Components/Products/ProductsTable';
-// import rows from '../../API/productsRowData';
 import { get_products, getShopUserData } from '../../API/fetchExpressAPI';
 import UserBadge from '../../UserBadge';
 

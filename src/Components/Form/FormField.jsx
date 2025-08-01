@@ -24,6 +24,7 @@ const FormField = ({
   options,
   getSliderMarks,
   maxLength,
+  minLength,
   readOnly,
   switch_checked,
   handleSwitch,
@@ -332,7 +333,7 @@ const FormField = ({
                         required
                         className={`input_field ${className}`}
                         placeholder={placeholder}
-                        inputProps={{ readOnly, maxLength }}
+                        inputProps={{ readOnly, maxLength, minLength }}
                         InputProps={{
                           ...(adornmentValue && adornmentPosition === 'start' && {
                             startAdornment: (

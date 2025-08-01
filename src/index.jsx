@@ -3,7 +3,8 @@ import { createRoot } from 'react-dom/client';
 import './index.css';
 import App from './App';
 import { Provider } from 'react-redux';
-import store from './store';
+import store, { persistor } from './store';
+import { PersistGate } from 'redux-persist/integration/react';
 
 import {
   createBrowserRouter,
@@ -32,8 +33,10 @@ const router = createBrowserRouter(
 
 createRoot(document.getElementById('root')).render(
   <Provider store={store}>
-    <StrictMode>
-      <RouterProvider router={router} />
-    </StrictMode>
+    <PersistGate loading={null} persistor={persistor}>
+      <StrictMode>
+        <RouterProvider router={router} />
+      </StrictMode>
+    </PersistGate>
   </Provider>
 );

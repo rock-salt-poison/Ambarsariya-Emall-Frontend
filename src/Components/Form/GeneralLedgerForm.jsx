@@ -79,10 +79,13 @@ function GeneralLedgerForm({
                         disable={field.disable}
                         options={field.options}
                         readOnly={field.readOnly}
+                        minLength={field.minLength}
+                        maxLength={field.maxLength}
                         handleFocus={field.handleFocus}
                         placeholder={placeholder}
                         rows={field.rows}
                         adornmentValue={field.adornmentValue}
+                        adornmentPosition={field.adornmentPosition}
                         radioItems={field.radioItems}
                         accept={field.accept}
                         handleDownload={handleDownload}

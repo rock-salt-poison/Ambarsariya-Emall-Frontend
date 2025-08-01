@@ -1424,3 +1424,55 @@ export const set_visibilityMemberReview = async (id, visible) => {
     throw e;
   }
 }
+
+export const post_coHelper = async (data) => {
+  try {
+    if (data) {
+      console.log(data);
+      
+      const response = await axios.post(`${link}/sell/co-helper`, {data});
+      return response.data;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const get_coHelper = async (member_id, co_helper_type) => {
+  if(member_id && co_helper_type){
+    try {
+      console.log(member_id, co_helper_type);
+      
+      const response = await axios.get(`${link}/sell/co-helper/${member_id}/${co_helper_type}`);
+      return response.data;
+    } catch (error) {
+      throw error
+    }
+  }
+};
+
+export const get_coHelpers_by_type_and_service = async (co_helper_type, key_service) => {
+  if(key_service && co_helper_type){
+    try {
+      console.log(key_service, co_helper_type);
+      
+      const response = await axios.get(`${link}/sell/co-helpers-by-type-and-service/${co_helper_type}/${key_service}`);
+      return response.data;
+    } catch (error) {
+      throw error
+    }
+  }
+};
+
+export const get_coHelper_by_type_service_member_id = async (co_helper_type, key_service, member_id) => {
+  if(key_service && co_helper_type && member_id){
+    try {
+      console.log(key_service, co_helper_type, member_id);
+      
+      const response = await axios.get(`${link}/sell/co-helper-by-type-service-member/${co_helper_type}/${key_service}/${member_id}`);
+      return response.data;
+    } catch (error) {
+      throw error
+    }
+  }
+};

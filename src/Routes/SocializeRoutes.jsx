@@ -105,7 +105,10 @@ function SocializeRoutes() {
         path="/city-junctions/terms-and-conditions"
         element={<TermsAndConditions />}
       />
-      <Route path="/city-junctions/co-helpers" element={<CoHelpers />} />
+      <Route path="/city-junctions/co-helpers" element={<ProtectedRoute
+            shopElement={<CoHelpers />}
+            memberElement={<CoHelpers />}
+          />} />
       <Route
         path="/city-junctions/jobs-offered"
         element={
