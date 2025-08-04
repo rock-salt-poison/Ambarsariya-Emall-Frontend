@@ -122,7 +122,6 @@ export default function CoHelperTypePopup({ open, handleClose, content }) {
   return (
     <>
     <ThemeProvider theme={theme}>
-      {loading && <Box className="loading"><CircularProgress/></Box> }
       <Dialog
         open={open}
         onClose={handleClose}
@@ -130,7 +129,8 @@ export default function CoHelperTypePopup({ open, handleClose, content }) {
         maxWidth="sm"
         fullScreen={fullScreen}
         fullWidth
-      >
+        >
+        {loading && <Box className="loading"><CircularProgress/></Box> }
         <DialogContent className="cohelper_popup_content">
           <Box component="img" src={star} alt="star" className="star_img" />
           <Box className="content">
