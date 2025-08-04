@@ -17,7 +17,7 @@ import AnimatedButton from "../../Components/UserPortfolio/AnimatedButton";
 import services_icon from "../../Utils/images/Sell/user_portfolio/services_icon.svg";
 import gmail_services_icon from "../../Utils/images/Sell/user_portfolio/gmail_services_icon.svg";
 import social_links_icon from "../../Utils/images/Sell/user_portfolio/social_links_icon.svg";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import CardBoardPopup from "../../Components/CardBoardPopupComponents/CardBoardPopup";
 import DetailsPopupContent from "../../Components/CardBoardPopupComponents/DetailsPopupContent";
 import ServicesPopupContent from "../../Components/CardBoardPopupComponents/ServicesPopupContent";
@@ -32,6 +32,7 @@ import { useSelector } from "react-redux";
 
 function User_Portfolio(props) {
   const [openPopup, setOpenPopup] = useState(false);
+  const {owner} = useParams();
   const [userData , setUserData] = useState(null);
   const themeProps = {
     popoverBackgroundColor: props.popoverBackgroundColor || "var(--yellow)",
@@ -40,8 +41,8 @@ function User_Portfolio(props) {
 
   const theme = createCustomTheme(themeProps);
 
-  const token = useSelector((state) => state.auth.userAccessToken);
-
+  const authToken = useSelector((state) => state.auth.userAccessToken);
+  const token = owner || authToken;
   const buttonsData = [
     {
       id: 1,

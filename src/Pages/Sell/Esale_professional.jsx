@@ -8,6 +8,7 @@ import UserBadge from '../../UserBadge';
 import { get_memberProfessional, getUser, post_memberProfessional } from '../../API/fetchExpressAPI';
 import { useSelector } from 'react-redux';
 import CustomSnackbar from '../../Components/CustomSnackbar';
+import { useParams } from 'react-router-dom';
 
 function Esale_professional() {
   const themeProps = {
@@ -119,7 +120,9 @@ function Esale_professional() {
   const [dialogErrors, setDialogErrors] = useState({});
   const [user, setUser] = useState({});
   const [data, setData] = useState({});
-  const token = useSelector((state) => state.auth.userAccessToken);
+  const {owner} = useParams();
+  const authToken = useSelector((state) => state.auth.userAccessToken);
+  const token = owner || authToken;
   const [loading, setLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
   
@@ -569,7 +572,7 @@ const renderField = (id, label, type, name, showDialog, dialogFields, addmoreBut
             <Box className="container" display="flex" justifyContent="flex-end">
               {/* <Button2 text="Next" redirectTo="../esale/emotional" /> */}
               <UserBadge
-                handleBadgeBgClick={`../esale`}
+                handleBadgeBgClick={owner ? `../esale/${owner}`: `../esale`}
                 handleLogin="../login"
                 handleLogoutClick="../../"
               />
@@ -583,11 +586,11 @@ const renderField = (id, label, type, name, showDialog, dialogFields, addmoreBut
                   return renderField(id, label, type, name, showDialog, dialogFields, addmoreButton, removeButton, readOnly);
                 })}
 
-                <Box className="submit_button_container">
+                {token === authToken && <Box className="submit_button_container">
                   <Button type="submit" variant="contained" className="submit_button" onClick={handleSubmit}>
                     Submit
                   </Button>
-                </Box>
+                </Box>}
               </Box>
 
               <Box component="img" src={professional_gif} alt="professional" className="gif" />

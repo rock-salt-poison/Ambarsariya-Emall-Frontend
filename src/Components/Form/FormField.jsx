@@ -330,7 +330,7 @@ const FormField = ({
                         type={type}
                         value={value}
                         onChange={onChange}
-                        required
+                        required={required}
                         className={`input_field ${className}`}
                         placeholder={placeholder}
                         inputProps={{ readOnly, maxLength, minLength }}

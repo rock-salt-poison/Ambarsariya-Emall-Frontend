@@ -3,11 +3,14 @@ import { Box, Button, CircularProgress, Typography } from '@mui/material';
 import Switch_On_Off2 from '../Form/Switch_On_Off2';
 import { get_userScopes, getMemberData, getUser, post_requestDynamicGoogleAccess } from '../../API/fetchExpressAPI';
 import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
 function GmailServicesPopupContent(props) {
   const [scopes, setScopes] = useState([]);
   const [loading, setLoading] = useState(false);
-  const token = useSelector((state) => state.auth.userAccessToken);
+  const {owner} = useParams();
+  const authToken = useSelector((state) => state.auth.userAccessToken);
+  const token = owner || authToken;
   const [user, setUser] = useState(null);
 
   const [serviceSwitches, setServiceSwitches] = useState({
@@ -186,11 +189,11 @@ function GmailServicesPopupContent(props) {
         </Box>
 
       </Box>
-      <Box className="submit_button_container" onClick={handleSubmit}>
+      {token === authToken && <Box className="submit_button_container" onClick={handleSubmit}>
         <Button type="submit" variant="contained" className="submit_button">
           Submit
         </Button>
-      </Box>
+      </Box>}
     </Box>
   );
 }

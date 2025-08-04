@@ -1,6 +1,7 @@
-import { Box, Typography } from "@mui/material";
-import React from "react";
+import { Box, CircularProgress, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { get_vendor_details } from "../../API/fetchExpressAPI";
 
 function ShopDetails({ column }) {
   function mapCostSensitivity(value) {
@@ -16,6 +17,31 @@ function ShopDetails({ column }) {
       return "unknown"; // In case of values outside the 0 - 3 range
     }
   }
+
+  const [shopClassData, setShopClassData] = useState(null);
+
+  console.log(column);
+
+  const fetchShopClass = async (shopNo) => {
+    try{
+        // setLoading(true);
+        const resp = await get_vendor_details([shopNo]);
+        if(resp?.valid){
+          setShopClassData(resp?.data?.[0]);
+        }
+    }catch(e){
+        console.log(e);
+    }finally{
+        // setLoading(false);
+    }
+  }
+
+  useEffect(()=>{
+      if(column?.shop_no){
+          fetchShopClass(column?.shop_no);
+      }
+  },[column?.shop_no]);
+  
 
   return (
     <Box className="shop_details_col">
@@ -50,7 +76,7 @@ function ShopDetails({ column }) {
 
       <Box className="shop_details">
         <Typography>Shop Type: </Typography>
-        <Typography>Class B</Typography>
+        <Typography>{shopClassData?.shop_class ? `Class ${shopClassData?.shop_class}`: <CircularProgress/>}</Typography>
       </Box>
       <Box className="shop_details">
         <Typography>Cost Sensitivity: </Typography>

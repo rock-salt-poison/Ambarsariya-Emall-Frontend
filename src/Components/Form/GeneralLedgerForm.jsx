@@ -79,6 +79,7 @@ function GeneralLedgerForm({
                         disable={field.disable}
                         options={field.options}
                         readOnly={field.readOnly}
+                        required={field.required}
                         minLength={field.minLength}
                         maxLength={field.maxLength}
                         handleFocus={field.handleFocus}

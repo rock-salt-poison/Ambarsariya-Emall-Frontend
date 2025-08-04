@@ -76,6 +76,7 @@ function SellRoutes() {
       <Route path="/forgot-password" element={<Login />} />
       <Route path="eshop" element={<Eshop />} />
       <Route path="user" element={<User_Portfolio />} />
+      <Route path="user/:owner" element={<User_Portfolio />} />
       <Route path="support/shop/shop-detail/:token" element={<Shop />} />
       <Route path="support/shop/:token/dashboard" element={<MerchantDashboard />} />
       <Route path="support/shop/:token/dashboard/:edit" element={<MerchantDashboard />} />
@@ -103,9 +104,13 @@ function SellRoutes() {
       <Route path=":owner/:action" element={<ConditionalRoute />} />
       <Route path=":owner/like-and-share" element={<Like_share />} />
       <Route path="esale" element={<Esale />} />
+      <Route path="esale/:owner" element={<Esale />} />
       <Route path="esale/emotional" element={<Esale_emotional />} />
+      <Route path="esale/:owner/emotional" element={<Esale_emotional />} />
       <Route path="esale/personal" element={<Esale_personal />} />
+      <Route path="esale/:owner/personal" element={<Esale_personal />} />
       <Route path="esale/professional" element={<Esale_professional />} /> 
+      <Route path="esale/:owner/professional" element={<Esale_professional />} /> 
       <Route path="shops" element={<ShopSearchPage />} />
       {/* <Route path=":owner/:action/budget" element={<Budget />} /> */}
       <Route path=":owner/budget" element={<Budget />} />

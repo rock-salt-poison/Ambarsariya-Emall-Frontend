@@ -19,7 +19,7 @@ const services = [
         cName: "service_type_popup delivery visit",},
 ]
 
-function TypeOfServices() {
+function TypeOfServices({data}) {
     const [selectedServices, setSelectedServices] = useState(new Set());
 
     const handleServiceTypeClick = (e, service) => {
@@ -40,12 +40,14 @@ function TypeOfServices() {
 
     const [openServicePopup, setOpenServicePopup] = useState(null);
 
-
+    console.log(data);
+    
   return (
     <Box className="services_wrapper">
         <Typography variant="h2">Type of services</Typography>
         <Box className="services_container">
-            {services.map((item) => (
+            {services?.filter((item) => data?.includes(item.type))
+    .map((item) =>  (
                 <Link
                     key={item.id}
                     onClick={(e) => handleServiceTypeClick(e, item)}

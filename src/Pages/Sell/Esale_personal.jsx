@@ -8,6 +8,7 @@ import UserBadge from '../../UserBadge';
 import { get_memberPersonal, getUser, post_memberPersonal } from '../../API/fetchExpressAPI';
 import { useSelector } from 'react-redux';
 import CustomSnackbar from '../../Components/CustomSnackbar';
+import { useParams } from 'react-router-dom';
 
 function Esale_personal(props) {
 
@@ -42,7 +43,9 @@ function Esale_personal(props) {
   const [loading, setLoading] = useState(false);
   const [memberId, setMemberId] = useState('');
   const [data, setData] = useState(null);
-  const token = useSelector((state) => state.auth.userAccessToken); 
+  const {owner} = useParams();
+  const authToken = useSelector((state) => state.auth.userAccessToken); 
+  const token = owner || authToken;
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
    
 
@@ -228,7 +231,7 @@ function Esale_personal(props) {
             <Box className="container" display="flex" justifyContent="flex-end">
               {/* <Button2 text="Next" redirectTo="../esale/professional" /> */}
               <UserBadge
-                handleBadgeBgClick={`../esale`}
+                handleBadgeBgClick={owner ? `../esale/${owner}` : '../esale'}
                 handleLogin="../login"
                 handleLogoutClick="../../"
             />
@@ -247,11 +250,11 @@ function Esale_personal(props) {
                   return renderField(id, label, name, label || placeholder , tooltip, innerFields)
                 })}
 
-                <Box className="submit_button_container">
+                {token === authToken && <Box className="submit_button_container">
                   <Button type="submit" variant="contained" className="submit_button">
                     Submit
                   </Button>
-                </Box>
+                </Box>}
               </Box>
 
               <Box className="board_pins">

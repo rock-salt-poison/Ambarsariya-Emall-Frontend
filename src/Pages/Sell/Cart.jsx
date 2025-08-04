@@ -62,6 +62,8 @@ function Cart() {
         try {
             const resp = await getShopUserData(owner);
             setShopData(resp?.[0]);
+            console.log(resp?.[0]);
+            
         } catch (e) {
           setShopData(null);
         }
@@ -106,21 +108,21 @@ function Cart() {
     {
       id: 3,
       imgSrc: pickup,
-      service: "pickup",
+      service: "Pickup",
       popupContent: <ServiceType />,
       cName: "service_type_popup",
     },
     {
       id: 1,
       imgSrc: delivery,
-      service: "delivery",
+      service: "Delivery",
       popupContent: <Delivery />,
       cName: "service_type_popup delivery",
     },
     {
       id: 2,
       imgSrc: home_visit,
-      service: "home visit",
+      service: "Home Visit",
       popupContent: <Visit />,
       cName: "service_type_popup delivery visit",
     },
@@ -365,7 +367,7 @@ function Cart() {
             ))}
           </Box>
           <Box className="type_of_service">
-            {service_type.map((item) => (
+            {service_type?.filter((item)=>shopData?.type_of_service?.includes(item?.service))?.map((item) => (
               <Box
                 key={item.id}
                 onClick={(e) => handleServiceTypeClick(e, item)}

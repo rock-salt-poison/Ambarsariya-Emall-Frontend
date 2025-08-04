@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, Box, Typography, CircularProgress } from "@mui/material";
 import FormField from "./FormField";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   get_checkGoogleAccess,
   get_checkIfPaidShopExists,
@@ -66,7 +66,9 @@ const UserPortfolioForm = () => {
   const [loading, setLoading] = useState(false);
 
   const otp_token = useSelector((state) => state.otp.usernameOtp);
-  const token = useSelector((state) => state.auth.userAccessToken);
+  const {owner} = useParams();
+  const authToken = useSelector((state) => state.auth.userAccessToken);
+  const token = owner || authToken;
   
   const [isUsernameOtpSent, setIsUsernameOtpSent] = useState(false);
   const [isPhoneOtpSent, setIsPhoneOtpSent] = useState(false);
@@ -655,12 +657,12 @@ const UserPortfolioForm = () => {
       <Box className="submit_button_container">
         {memberData !== null && (
           <Button variant="contained" className="submit_button">
-            <Link to="../esale">Dashboard</Link>
+            <Link to={owner ? `../esale/${owner}` : "../esale"}>Dashboard</Link>
           </Button>
         )}
-        <Button type="submit" variant="contained" className="submit_button">
+        {token === authToken && <Button type="submit" variant="contained" className="submit_button">
           Submit
-        </Button>
+        </Button>}
       </Box>
 
       <ConfirmationDialog

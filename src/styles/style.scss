@@ -6224,6 +6224,12 @@ a {
                 &:first-child {
                   color: $light-yellow;
                 }
+
+                .MuiCircularProgress-root{
+                    width: 25px !important;
+                    height: 25px !important;
+                    color: $light-yellow;
+                  }
               }
 
               .options {
@@ -17868,6 +17874,12 @@ body .MuiBackdrop-root {
         text-align: end;
         white-space: nowrap;
       }
+
+      .MuiCircularProgress-root{
+        width: 25px;
+        height: 25px;
+        color: $light-yellow;
+      }
     }
 
     .options {
@@ -26501,7 +26513,7 @@ textarea[readonly] {
 
 .cohelper_popup{
 
-  .MuiPaper-root{
+  .MuiDialog-container > .MuiPaper-root{
     overflow: visible;
     max-width: 50%;
     background: $yellow;
@@ -26600,6 +26612,8 @@ textarea[readonly] {
                 .field_container{
                   @include flex-center(column, flex-start);
                   place-items: normal;
+                  width: 100%;
+                  overflow-x: hidden;
                   .MuiInputBase-root{
                     padding: 6px 10px;
                     background-color: rgba($dark-yellow, .3);
@@ -26637,8 +26651,15 @@ textarea[readonly] {
                   }
                   
                   .MuiSelect-select{
+                    width: 91%;
+                    overflow-x: auto;
+                    
                     &::placeholder{
                       opacity: .6;
+                    }
+
+                    &::-webkit-scrollbar{
+                      height: 3px;
                     }
                   }
 

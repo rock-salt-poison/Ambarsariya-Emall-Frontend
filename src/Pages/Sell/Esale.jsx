@@ -33,17 +33,20 @@ const data = [
   },
 ];
 
-const imgData = [
+
+
+function Esale() {
+  const { owner } = useParams();
+  const authToken = useSelector((state) => state.auth.userAccessToken);
+  const token = owner || authToken;
+  const [userData , setUserData] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const imgData = [
   { id: 1, imgSrc: life_img, linkTo: "life" },
   { id: 2, imgSrc: relationship_img, linkTo: "relations" },
   { id: 3, imgSrc: location_img, linkTo: "locations" },
 ];
-
-function Esale() {
-  const { owner } = useParams();
-  const token = useSelector((state) => state.auth.userAccessToken);
-  const [userData , setUserData] = useState(null);
-  const [loading, setLoading] = useState(false);
 
 
   const fetchMemberData = async (memberToken) => {
@@ -83,7 +86,7 @@ function Esale() {
             </Box>
             <Box className="container" display="flex" justifyContent="flex-end">
               <UserBadge
-                handleBadgeBgClick={`../`}
+                handleBadgeBgClick={-1}
                 handleLogin="../login"
                 handleLogoutClick="../../"
               />
@@ -92,7 +95,7 @@ function Esale() {
           <Box className="row_2">
             <Box className="col">
               <Box className="sub_col">
-                <Link className="profile_col" to="../user">
+                <Link className="profile_col" to={owner ? `../user/${owner}` : "../user"}>
                   <Box
                     component="img"
                     src={userData?.profile_img || female_user}
@@ -132,8 +135,8 @@ function Esale() {
             <Box className="col">
               <Box className="sub_col">
                 <Box className="life">
-                  {imgData.map((item) => {
-                    return (
+                  {imgData.map((item) => (
+                    !owner ? (
                       <Link to={item.linkTo} key={item.id}>
                         <Box
                           component="img"
@@ -142,8 +145,15 @@ function Esale() {
                           className="img"
                         />
                       </Link>
-                    );
-                  })}
+                    ) : (
+                        <Box
+                          component="img"
+                          alt="img"
+                          src={item.imgSrc}
+                          className="img"
+                        />
+                    )
+                  ))}
                 </Box>
               </Box>
               <Box className="sub_col">

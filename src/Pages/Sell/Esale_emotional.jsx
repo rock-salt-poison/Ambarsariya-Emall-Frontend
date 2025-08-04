@@ -16,12 +16,15 @@ import timetable from '../../Utils/images/Sell/esale/emotional/timetable.png'
 import UserBadge from '../../UserBadge';
 import { get_memberEmotional, getUser, post_memberEmotional } from '../../API/fetchExpressAPI';
 import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
 function Esale_emotional() {
   const [data, setData] = useState(null);
   const [joyBarCount, setJoyBarCount] = useState(1);
   const [sadnessBarCount, setSadnessBarCount] = useState(1);
-  const token = useSelector((state) => state.auth.userAccessToken);
+  const { owner } = useParams();
+  const authToken = useSelector((state) => state.auth.userAccessToken);
+  const token = owner || authToken;
   const [memberId, setMemberId] = useState('');
   const [loading , setLoading] = useState(false);
 
@@ -132,10 +135,12 @@ function Esale_emotional() {
 
   // Handle icon click for specific question
   const handleIconClick = (question, icon) => {
-    setSelectedIcons((prevState) => ({
-      ...prevState,
-      [question]: icon,
-    }));
+    if(token === authToken){
+      setSelectedIcons((prevState) => ({
+        ...prevState,
+        [question]: icon,
+      }));
+    }
   };
 
   return (
@@ -155,9 +160,9 @@ function Esale_emotional() {
           <Box className="container" display="flex" justifyContent="flex-end">
             {/* <Button2 text="Next" redirectTo="../esale/personal" /> */}
             <UserBadge
-                handleBadgeBgClick={`../esale`}
-                handleLogin="../login"
-                handleLogoutClick="../../"
+              handleBadgeBgClick={owner ? `../esale/${owner}` : '../esale'}
+              handleLogin="../login"
+              handleLogoutClick="../../"
             />
           </Box>
         </Box>
@@ -180,9 +185,9 @@ function Esale_emotional() {
                 <Box className="col">
                   <Typography className="title">Joy</Typography>
                   <Box className="range">
-                    <RemoveIcon onClick={() => handleRemoveBar(setJoyBarCount, joyBarCount)} />
+                    {token === authToken && <RemoveIcon onClick={() => handleRemoveBar(setJoyBarCount, joyBarCount)} />}
                     {renderBars(joyBarCount)}
-                    <AddIcon onClick={() => handleAddBar(setJoyBarCount, joyBarCount)} />
+                    {token === authToken && <AddIcon onClick={() => handleAddBar(setJoyBarCount, joyBarCount)} />}
                   </Box>
                   <Typography className="title">Excitement</Typography>
                 </Box>
@@ -190,9 +195,9 @@ function Esale_emotional() {
                 <Box className="col">
                   <Typography className="title">Sadness</Typography>
                   <Box className="range">
-                    <RemoveIcon onClick={() => handleRemoveBar(setSadnessBarCount, sadnessBarCount)} />
+                    {token === authToken && <RemoveIcon onClick={() => handleRemoveBar(setSadnessBarCount, sadnessBarCount)} />}
                     {renderBars(sadnessBarCount)}
-                    <AddIcon onClick={() => handleAddBar(setSadnessBarCount, sadnessBarCount)} />
+                    {token === authToken && <AddIcon onClick={() => handleAddBar(setSadnessBarCount, sadnessBarCount)} />}
                   </Box>
                   <Typography className="title">Anger</Typography>
                 </Box>
@@ -291,7 +296,7 @@ function Esale_emotional() {
                 <Switch_On_Off
                   name="stressSwitch"
                   checked={stressSwitch}
-                  onChange={() => setStressSwitch(!stressSwitch)}
+                  onChange={() => token === authToken && setStressSwitch(!stressSwitch)}
                   text1='Yes' text2='No'
                 />
               </Box>
@@ -302,7 +307,7 @@ function Esale_emotional() {
                 <Switch_On_Off
                   name="angerSwitch"
                   checked={angerSwitch}
-                  onChange={() => setAngerSwitch(!angerSwitch)}
+                  onChange={() => token === authToken && setAngerSwitch(!angerSwitch)}
                   text1='Yes' text2='No'
                 />
               </Box>

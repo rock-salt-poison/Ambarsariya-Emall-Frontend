@@ -3,7 +3,7 @@ import { Box, TextField, Tooltip, Typography, SpeedDial, Dialog, DialogTitle, Di
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import form_field_bg from '../../Utils/images/Sell/esale/personal/form_field_bg.png';
 import form_field_bg_dark from '../../Utils/images/Sell/esale/personal/form_field_bg_dark.webp';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { Close } from '@mui/icons-material';
 
 function EsalePersonalForm({
@@ -19,6 +19,7 @@ function EsalePersonalForm({
     const handleDialogClose = () => {
             setIsDialogOpen(false)
     };
+    const {owner} = useParams();
 
     const handleDialogSubmit = () => {
         if(Object.keys(dialogErrors).length === 0){
@@ -194,11 +195,11 @@ function EsalePersonalForm({
                         
                         
 
-                            <Box className="submit_button_container">
+                           {!owner && <Box className="submit_button_container">
                                 <Button type="submit" variant="contained" className="submit_button" onClick={handleDialogSubmit}>
                                     Submit
                                 </Button>
-                            </Box>
+                            </Box>}
                         </Box>
                     </DialogContent>
                 </Dialog>

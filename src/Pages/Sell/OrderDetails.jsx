@@ -120,9 +120,10 @@ function OrderDetails() {
     const isChecked = event.target.checked;
     setSwitchCheckedReturn(isChecked);
     if (isChecked) {
-      setTimeout(() => {
-        navigate(`../${orderDetails?.access_token}/return`);
-      }, 400);
+      setOpenDialog(true);
+      // setTimeout(() => {
+      //   navigate(`../${orderDetails?.access_token}/return`);
+      // }, 400);
     }
   };
 

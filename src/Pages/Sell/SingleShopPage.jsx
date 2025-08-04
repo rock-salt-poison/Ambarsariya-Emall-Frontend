@@ -47,6 +47,9 @@ const SingleShopPage = ({ showBackButton = true, shopData }) => {
   const [openPopup, setOpenPopup] = useState(false);
   const handleClose = () => setOpenPopup(false);
 
+  console.log(data);
+  
+
   useEffect(() => {
     const fetchData = async () => {
       if (token) {
