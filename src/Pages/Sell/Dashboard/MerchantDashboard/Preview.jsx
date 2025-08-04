@@ -52,6 +52,7 @@ function Preview() {
     { id: 4, name: "Suppliers For Shop", content: <SubscriptionsPreview query='supplier' /> },
     { id: 5, name: "In stock update", content: <InStockUpdatePreview/> },
     { id: 6, name: "Out stock update", content: <OutStockUpdatePreview/> },
+    { id: 7, name: "Notifications", content: 'Notifications' },
   ];
 
   useEffect(() => {
