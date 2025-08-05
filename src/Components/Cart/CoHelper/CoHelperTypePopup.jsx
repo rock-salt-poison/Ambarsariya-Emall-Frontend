@@ -20,6 +20,8 @@ import {
   get_coHelper_by_type_service_member_id,
   getUser,
   post_coHelperNotification,
+  post_scheduleGoogleCalendarAppointment,
+  getMemberData,
 } from "../../../API/fetchExpressAPI";
 import CustomSnackbar from "../../CustomSnackbar";
 import { addCoHelper } from "../../../store/CoHelperSlice";
@@ -44,6 +46,7 @@ export default function CoHelperTypePopup({ open, handleClose, content }) {
     last_salary: "",
     task_date: "",
     task_time: "",
+    task_location: "",
     details_of_task: "",
     estimated_hr: "",
     offerings: "",
@@ -68,8 +71,17 @@ export default function CoHelperTypePopup({ open, handleClose, content }) {
     try{
       setLoading(true);
       const resp= (await getUser(token))?.find((u)=>u?.member_id !== null);
+      console.log('currentUser ', resp);
+      
       if(resp){
-        setCurrentUser(resp);
+
+        const memberData = await getMemberData(resp?.user_access_token);
+        if(memberData?.length>0){
+          setCurrentUser(()=>({
+            ...resp,
+            username: memberData?.[0]?.username
+          }));
+        }
       }
     }catch(e){
       console.log(e);
@@ -115,6 +127,8 @@ export default function CoHelperTypePopup({ open, handleClose, content }) {
         const data = resp?.data?.[0];
         if (data) {
           setMemberDetails(data);
+          console.log('co_helper_data', data);
+          
           setFormData((prev) => ({
             ...prev,
             experience: data?.experience_in_this_domain,
@@ -222,13 +236,20 @@ export default function CoHelperTypePopup({ open, handleClose, content }) {
           },
           {
             id: 9,
-            label: "Details of the task",
-            name: "details_of_task",
-            type: "text",
+            label: "Task Location",
+            name: "task_location",
+            type: "address",
             required:true,
           },
           {
             id: 10,
+            label: "Details of the task",
+            name: "task_details",
+            type: "text",
+            required:true,
+          },
+          {
+            id: 11,
             label: "Estimated hour",
             name: "estimated_hr",
             type: "number",
@@ -236,7 +257,7 @@ export default function CoHelperTypePopup({ open, handleClose, content }) {
             adornmentPosition: "end",
           },
           {
-            id: 11,
+            id: 12,
             label: "Offerings",
             name: "offerings",
             type: "text",
@@ -277,6 +298,7 @@ export default function CoHelperTypePopup({ open, handleClose, content }) {
         task_date: formData?.task_date,
         task_time: formData?.task_time,
         task_details: formData?.task_details,
+        task_location: formData?.task_location?.description,
         estimated_hours: formData?.estimated_hr,
         offerings: formData?.offerings
       };
@@ -285,11 +307,35 @@ export default function CoHelperTypePopup({ open, handleClose, content }) {
           setLoading(true);
           const resp = await post_coHelperNotification(data);
           if(resp){
+
+            const calendarData = {
+              co_helper_email: memberDetails?.username,
+              co_helper_id: memberDetails?.id,
+              task_date: formData?.task_date,
+              task_time: formData?.task_time,
+              task_details: formData?.task_details,
+              task_location: formData?.task_location?.description,
+              estimated_hours: formData?.estimated_hr,
+              offerings: formData?.offerings,
+              requester_email: currentUser?.username,
+              requester_name: (currentUser?.name)?.split(' ').map((word)=>word.at(0).toUpperCase()+word.slice(1)).join(' '),
+              co_helper_type: content?.title,
+            }
+
+            const calendarResp = await post_scheduleGoogleCalendarAppointment(calendarData);
+
+            console.log(calendarResp);
+            
+
             setSnackbar({
               open: true,
               message: resp?.message,
               severity: "success",
             });
+
+            setTimeout(()=>{
+              handleClose();
+            }, 2000)
           }
         }catch(e){
           console.log(e);

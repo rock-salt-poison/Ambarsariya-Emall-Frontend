@@ -14,7 +14,7 @@ import star from "../../Utils/images/Socialize/city_junctions/co_helpers/star.sv
 import GeneralLedgerForm from "../Form/GeneralLedgerForm";
 import createCustomTheme from "../../styles/CustomSelectDropdownTheme";
 import { useDispatch, useSelector } from "react-redux";
-import { get_coHelper, getUser } from "../../API/fetchExpressAPI";
+import { get_coHelper, get_requestGoogleAccess, getMemberData, getUser, post_checkCalendarAccess } from "../../API/fetchExpressAPI";
 import CustomSnackbar from "../CustomSnackbar";
 import { addCoHelper } from "../../store/CoHelperSlice";
 
@@ -45,31 +45,43 @@ export default function CoHelperPopup({ open, handleClose, content }) {
 
   const token = useSelector((state) => state.auth.userAccessToken);
   const coHelpers = useSelector((state) => state.co_helper.coHelpers);  
+  const [member, setMember] = useState(null);
 
-  useEffect(()=>{
-    if(token){
-      fetchUserDetails(token);
-    }else{
-      setSnackbar({
-        open: true,
-        message: 'Co-helper applications are exclusive to E-mall members. Join us today to get started !',
-        severity: 'info',
-      });
-    }
-  }, [token, coHelpers]);
+  useEffect(() => {
+  if (!open) return; // Only run when popup is open
+  if (token) {
+    fetchUserDetails(token);
+  } else {
+    setSnackbar({
+      open: true,
+      message: 'Co-helper applications are exclusive to E-mall members. Join us today to get started !',
+      severity: 'info',
+    });
+  }
+}, [token, open]); // ✅ only trigger when popup opens
+
 
   const fetchUserDetails = async (token) => {
     try{
       setLoading(true);
       const userData = (await getUser(token))?.find((u)=> u.member_id !== null);
-      const member_id = (userData?.member_id)?.replace(/_/g,' ');
-      if(member_id){
-        setFormData((prev)=>({
-          ...prev,
-          member_id
-        }))
-        fetch_coHelper(userData?.member_id, content?.title);
+      console.log(userData);
+
+      if(userData){
+        const memberData = await getMemberData(userData?.user_access_token);
+        if(memberData?.length>0){
+          setMember(memberData?.[0]);
+        }
+        const member_id = (userData?.member_id)?.replace(/_/g,' ');
+        if(member_id){
+          setFormData((prev)=>({
+            ...prev,
+            member_id
+          }))
+          fetch_coHelper(userData?.member_id, content?.title);
+        }
       }
+      
     }catch(e){
       console.log(e);
       setSnackbar({
@@ -195,7 +207,7 @@ export default function CoHelperPopup({ open, handleClose, content }) {
     return Object.keys(newErrors).length === 0; // Return true if no errors
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
   event.preventDefault();
 
   if (validateForm()) {
@@ -204,14 +216,39 @@ export default function CoHelperPopup({ open, handleClose, content }) {
       member_id : (formData?.member_id)?.replace(/\s/g,'_'),
       co_helper_type: content?.title, // Important for identifying co-helper type
     };
-
-    dispatch(addCoHelper(dataWithType)); // ✅ Store in Redux (and persist if set up)
+    try{
+      setLoading(true);
+      dispatch(addCoHelper(dataWithType)); // ✅ Store in Redux (and persist if set up)
+    const checkCalendarAccess = await post_checkCalendarAccess(member?.username);
+    console.log(checkCalendarAccess);
     
+    if (checkCalendarAccess.needsPermission) {
+      setSnackbar({
+        open: true,
+        message: `Redirecting for Google access`,
+        severity: "info",
+      });
+      setTimeout(()=>{
+        get_requestGoogleAccess(member?.username, `${process.env.REACT_APP_FRONTEND_LINK}/socialize/city-junctions/co-helpers`);
+        return;
+      }, 1500);
+    }
+    setSnackbar({
+      open: true,
+      message: `Access granted`,
+      severity: "success",
+    });
     setSnackbar({
       open: true,
       message: "Co-helper info saved locally.",
       severity: "success",
     });
+    }catch(e){
+      console.log(e);
+    }finally{
+      setLoading(false);
+    }
+    
 
     setTimeout(()=>{
       handleClose(); // Optional: close dialog on submit
@@ -225,7 +262,6 @@ export default function CoHelperPopup({ open, handleClose, content }) {
   return (
     <>
     <ThemeProvider theme={theme}>
-      {loading && <Box className="loading"><CircularProgress/></Box> }
       <Dialog
         open={open}
         onClose={handleClose}
@@ -233,7 +269,8 @@ export default function CoHelperPopup({ open, handleClose, content }) {
         maxWidth="sm"
         fullScreen={fullScreen}
         fullWidth
-      >
+        >
+        {loading && <Box className="loading"><CircularProgress/></Box>}
         <DialogContent className="cohelper_popup_content">
           <Box component="img" src={star} alt="star" className="star_img" />
           <Box className="content">

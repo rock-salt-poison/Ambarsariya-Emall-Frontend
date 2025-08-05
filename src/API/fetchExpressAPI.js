@@ -619,14 +619,29 @@ export const get_requestDriveAccess = () => {
   window.location.href = `${drive_link}/request-drive-access`;
 };
 
-export const get_requestGoogleAccess = (username) => {
-  window.location.href = `${drive_link}/request-google-access/${username}`;
+export const get_requestGoogleAccess = (username, redirectUri) => {
+  window.location.href = `${drive_link}/request-google-access/${username}?redirect_url=${redirectUri}`;
 };
 
 export const post_requestDynamicGoogleAccess = async (data) => {
     try{
       if(data){
           const resp = await axios.post(`${drive_link}/request-dynamic-google-access`, data, {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          return resp.data;
+      }
+    }catch(e){
+      throw e;
+    }
+};
+
+export const post_scheduleGoogleCalendarAppointment = async (data) => {
+    try{
+      if(data){
+          const resp = await axios.post(`${drive_link}/schedule-google-appointment`, data, {
             headers: {
               'Content-Type': 'application/json',
             },
@@ -659,6 +674,17 @@ export const get_userScopes = async (oauth_access_token, oauth_refresh_token) =>
     throw e;
   }
 };
+
+export const post_checkCalendarAccess = async (email) => {
+  try {
+    if (email) {
+      const response = await axios.post(`${drive_link}/check-calendar-access`, {email});
+      return response.data;
+    }
+  } catch (e) {
+    throw e;
+  }
+}
 
 // export const post_convertGooglePhotos = async (data) => {
 //   try{
