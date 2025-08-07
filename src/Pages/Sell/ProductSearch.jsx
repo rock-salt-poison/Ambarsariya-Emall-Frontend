@@ -23,6 +23,8 @@ import {
   getUser,
 } from "../../API/fetchExpressAPI";
 import { useSelector } from "react-redux";
+import NotificationsPopup from "../../Components/Sell/Esale/ProductSearch/NotificationsPopup.jsx";
+
 
 function ProductSearch() {
   const initialFormData = {
@@ -37,12 +39,17 @@ function ProductSearch() {
   const [loading, setLoading] = useState(false);
   const token = useSelector((state) => state.auth.userAccessToken);
   const [userData, setUserData] = useState(null);
+  const [open, setOpen] = useState(false);
 
   const themeProps = {
     popoverBackgroundColor: "#f8e3cc",
     scrollbarThumb: "var(--brown)",
   };
   const theme = createCustomTheme(themeProps);
+
+  const handleClose = () => {
+    setOpen(false);
+  }
 
   const handleChange = async (e) => {
     const { name, type, files, value } = e.target;
@@ -157,6 +164,10 @@ function ProductSearch() {
     }
   }, [formData]);
 
+  const handleNotificationClick = () => {
+    setOpen(true);
+  }
+
   return (
     <ThemeProvider theme={theme}>
       {loading && (
@@ -195,7 +206,7 @@ function ProductSearch() {
               </Box>
             </Link>
 
-            <Link to="../esale/life?q=7" className="icon_container">
+            <Link onClick={handleNotificationClick} className="icon_container">
               <Box
                 className="icon"
                 component="img"
@@ -335,6 +346,8 @@ function ProductSearch() {
           </Box>
         </Box>
       </Box>
+
+      <NotificationsPopup open={open} handleClose={handleClose} />
     </ThemeProvider>
   );
 }

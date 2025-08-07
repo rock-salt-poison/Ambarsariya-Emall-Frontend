@@ -15,7 +15,7 @@ const libraries = ['places'];
 const autocompleteService = { current: null };
 const placesService = { current: null };
 
-export default function Address_Google_Map_Field({ value, label, onChange, placeholder, disable }) {
+export default function Address_Google_Map_Field({ value, label, onChange, placeholder, disable, readOnly }) {
   const [inputValue, setInputValue] = React.useState('');
   const [updatedValue, setUpdatedValue] = React.useState('');
   const [options, setOptions] = React.useState([]);
@@ -130,6 +130,7 @@ export default function Address_Google_Map_Field({ value, label, onChange, place
       noOptionsText="No locations"
       className="input_field"
       disabled={disable}
+      readOnly={readOnly}
       isOptionEqualToValue={(option, value) => option?.description === value?.description}
       placeholder={placeholder}
       onChange={handlePlaceSelect}

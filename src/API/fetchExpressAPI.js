@@ -653,6 +653,36 @@ export const post_scheduleGoogleCalendarAppointment = async (data) => {
     }
 };
 
+export const post_updateGoogleCalendarEventResponse = async (data) => {
+    try{
+      if(data){
+          const resp = await axios.post(`${drive_link}/update-google-calendar-event-status`, data, {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          return resp.data;
+      }
+    }catch(e){
+      throw e;
+    }
+};
+
+export const delete_googleCalendarEvent = async (data) => {
+    try{
+      if(data){
+          const resp = await axios.delete(`${drive_link}/delete-google-calendar-event`, data, {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          return resp.data;
+      }
+    }catch(e){
+      throw e;
+    }
+};
+
 export const get_googleContacts = async (member_id, user_id) => {
   try {
     if (member_id && user_id) {
@@ -1515,3 +1545,25 @@ export const get_coHelper_by_type_service_member_id = async (co_helper_type, key
     }
   }
 };
+
+export const get_co_helper_member_notifications = async (member_id) => {
+  try {
+    if (member_id) {
+      const resp = await axios.get(`${link}/sell/co-helper-member-notifications/${member_id}`);
+      return resp.data;
+    }
+  } catch (e) {
+    throw e;
+  }
+}
+
+export const get_co_helper_details_popup = async (id, member_id) => {
+  try {
+    if (id && member_id) {
+      const resp = await axios.get(`${link}/sell/co-helper-details/${id}/${member_id}`);
+      return resp.data;
+    }
+  } catch (e) {
+    throw e;
+  }
+}

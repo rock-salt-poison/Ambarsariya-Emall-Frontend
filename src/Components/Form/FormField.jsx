@@ -121,6 +121,7 @@ const FormField = ({
                 }}
                 placeholder={placeholder}
                 disable={disable}
+                readOnly={readOnly}
               />
             </Box>
           </>
@@ -192,6 +193,7 @@ const FormField = ({
                     {...(error && { error: true })}
                     required={required}
                     disabled={disable}
+                    readOnly={readOnly}
                   >
                     <MenuItem value="" disabled key={0}>
                       {placeholder}

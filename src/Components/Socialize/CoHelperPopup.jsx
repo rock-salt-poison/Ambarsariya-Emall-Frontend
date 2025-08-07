@@ -30,6 +30,7 @@ export default function CoHelperPopup({ open, handleClose, content }) {
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm")); // Fullscreen on small screens
   const initialData = {
     member_id: "",
+    member_name: "",
     experience:"",
     last_job_skills:"",
     key_services:"",
@@ -69,6 +70,8 @@ export default function CoHelperPopup({ open, handleClose, content }) {
 
       if(userData){
         const memberData = await getMemberData(userData?.user_access_token);
+        console.log(memberData?.[0]);
+        
         if(memberData?.length>0){
           setMember(memberData?.[0]);
         }
@@ -76,7 +79,8 @@ export default function CoHelperPopup({ open, handleClose, content }) {
         if(member_id){
           setFormData((prev)=>({
             ...prev,
-            member_id
+            member_id,
+            member_name: userData?.name
           }))
           fetch_coHelper(userData?.member_id, content?.title);
         }
@@ -104,7 +108,8 @@ export default function CoHelperPopup({ open, handleClose, content }) {
         const responseData = co_helper_data?.data?.[0];
         setFormData((prev)=>({
           ...prev,
-          member_id: responseData?.member_id,
+          // member_id: responseData?.member_id,
+          // member_name: responseData?.member_name,
           experience: responseData?.experience_in_this_domain,
           last_job_skills: responseData?.last_job_fundamentals_or_skills_known,
           key_services: responseData?.key_services,
@@ -137,9 +142,18 @@ export default function CoHelperPopup({ open, handleClose, content }) {
       name: "member_id",
       type: "text",
       placeholder:'Member ID',
+      readOnly: true,
     },
     {
       id: 2,
+      label: "Member Name",
+      name: "member_name",
+      type: "text",
+      placeholder:'Member Name',
+      readOnly: true,
+    },
+    {
+      id: 3,
       label: "Experience In this Domain",
       name: "experience",
       type: "textarea",
@@ -148,7 +162,7 @@ export default function CoHelperPopup({ open, handleClose, content }) {
       minLength: 50,
     },
     {
-      id: 3,
+      id: 4,
       label: "Last Job (Fundamentals and skills known)",
       name: "last_job_skills",
       type: "textarea",
@@ -157,7 +171,7 @@ export default function CoHelperPopup({ open, handleClose, content }) {
       minLength: 50,
     },
     {
-      id: 4,
+      id: 5,
       label: "Key Services",
       name: "key_services",
       type: "select-check",
@@ -165,7 +179,7 @@ export default function CoHelperPopup({ open, handleClose, content }) {
       placeholder: "Key Services"
     },
     {
-      id: 5,
+      id: 6,
       label: "Enter Average Salary",
       name: "average_salary",
       type: "text",
@@ -174,7 +188,7 @@ export default function CoHelperPopup({ open, handleClose, content }) {
       adornmentPosition: 'end'
     },
     {
-      id: 6,
+      id: 7,
       label: "Enter Last Salary",
       name: "last_salary",
       type: "text",
@@ -216,6 +230,8 @@ export default function CoHelperPopup({ open, handleClose, content }) {
       member_id : (formData?.member_id)?.replace(/\s/g,'_'),
       co_helper_type: content?.title, // Important for identifying co-helper type
     };
+    console.log(dataWithType);
+    
     try{
       setLoading(true);
       dispatch(addCoHelper(dataWithType)); // ✅ Store in Redux (and persist if set up)
@@ -301,8 +317,6 @@ export default function CoHelperPopup({ open, handleClose, content }) {
           />
         </DialogContent>
         
-      </Dialog>
-    </ThemeProvider>
       <CustomSnackbar
         open={snackbar.open}
         handleClose={() => setSnackbar({ ...snackbar, open: false })}
@@ -310,6 +324,8 @@ export default function CoHelperPopup({ open, handleClose, content }) {
         severity={snackbar.severity}
         disableAutoHide={true}
       />
+      </Dialog>
+    </ThemeProvider>
       </>
   );
 }
