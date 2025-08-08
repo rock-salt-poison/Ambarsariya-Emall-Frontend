@@ -5033,6 +5033,7 @@ a {
     z-index: 1;
     overflow-x: hidden;
     gap: 65px;
+    height: 100vh;
 
     .col {
       &:first-child {
@@ -5461,7 +5462,7 @@ a {
                       #984a1b,
                       "none"
                     );
-                    line-height: 18px;
+                    line-height: 22px;
                     @include hover-scale(1, 0s);
                   }
 
