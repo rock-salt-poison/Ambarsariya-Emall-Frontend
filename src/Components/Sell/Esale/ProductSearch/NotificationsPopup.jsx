@@ -10,10 +10,6 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import Button2 from "../../../Home/Button2";
-import UserBadge from "../../../../UserBadge";
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import CloseIcon from '@mui/icons-material/Close';
 import { useSelector } from "react-redux";
 import { get_co_helper_member_notifications, getUser } from "../../../../API/fetchExpressAPI";

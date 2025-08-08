@@ -3,12 +3,15 @@ import { Avatar, Badge, Box, CircularProgress, Typography } from "@mui/material"
 import VisitorShopForm from "./VisitorShopForm";
 import { Link, useNavigate } from "react-router-dom";
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import { delete_supportChatNotification, get_supportChatNotifications, post_supportChatMessage } from "../../API/fetchExpressAPI";
+import { delete_supportChatNotification, get_co_helper_member_notifications, get_supportChatNotifications, getUser, post_supportChatMessage } from "../../API/fetchExpressAPI";
 import ClearIcon from '@mui/icons-material/Clear';
 import ForumIcon from '@mui/icons-material/Forum';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import NotificationReplyForm from "./NotificationReplyForm";
+import { useSelector } from "react-redux";
+import CoHelperTypePopup from "../Cart/CoHelper/CoHelperTypePopup";
+import cards from "../../API/coHelpersData";
 dayjs.extend(relativeTime);
 
 const VisitorFormBox = ({ visitorData, shopData, currentUser }) => {
@@ -20,6 +23,12 @@ const VisitorFormBox = ({ visitorData, shopData, currentUser }) => {
   const [loading, setLoading] = useState(false);
   const [selectedNotification, setSelectedNotification] = useState(null);
   const navigate = useNavigate();  
+  const token = useSelector((state) => state.auth.userAccessToken);
+  const [popupOpen, setPopupOpen] = useState(false);
+  const [selectedCoHelperNotification, setSelectedCoHelperNotification] = useState(null);
+
+  const getContentFromType = (type) => cards.find((c) => c.title === type);
+
 
   const handleFormSubmitSuccess = (domain, sector, submit) => {
     setFormSubmitted(submit);
@@ -34,17 +43,45 @@ const VisitorFormBox = ({ visitorData, shopData, currentUser }) => {
     if (shopNo) {
       try {
         setLoading(true);
-        const response = await get_supportChatNotifications(shopNo);
-        
-        if (response.valid) {
-          // Deduplicate before setting
-          const unique = response.data.filter(
-            (item, index, self) =>
-              index === self.findIndex((t) => t.id === item.id)
-          );
-          setNotifications(unique);
-          setNotificationOpen(true);
+        let combined = [];
+
+      // Fetch shop notifications
+      if (shopData?.shop_no) {
+        const shopResp = await get_supportChatNotifications(shopData.shop_no);
+        if (shopResp?.valid) {
+          combined = [...combined, ...shopResp.data];
         }
+      }
+
+      // Fetch co-helper notifications (same as NotificationsPopup)
+      if (token) {
+        const userResp = (await getUser(token))?.find(u => u?.member_id);
+        if (userResp?.member_id) {
+          const memberNotifs = await get_co_helper_member_notifications(userResp.member_id);
+          if (memberNotifs?.valid) {
+            // Optional: normalize the shape so UI can handle both
+            const formatted = memberNotifs.data.map(n => ({
+              ...n,
+              id: n.notification_number,
+              name: n.member_name || n.requester_name,
+              notification: n.member_role === 'sender'
+                ? `You assigned a task to ${n.member_name} for ${n?.co_helper_type}.`
+                : `${n?.requester_name} assigned you a new task.`,
+              notification_received_at: n.created_at || new Date().toISOString(),
+              type: 'co_helper'
+            }));
+            combined = [...combined, ...formatted];
+          }
+        }
+      }
+
+      // Deduplicate by ID
+      const unique = combined.filter(
+        (item, index, self) => index === self.findIndex(t => t.id === item.id)
+      );
+
+      setNotifications(unique);
+      setNotificationOpen(true);
       } catch (e) {
         console.error("Error: ", e);
         // setNotificationOpen(false);
@@ -132,7 +169,15 @@ const VisitorFormBox = ({ visitorData, shopData, currentUser }) => {
   ) : (
     <Box className="list content">
       {notifications.map((msg) => (
-        <Link key={msg.id} className="card" onClick={() => handleCardClick(msg)}>
+        <Link key={msg.id} className="card" onClick={() => {
+            if (msg.type === "co_helper") {
+              setSelectedCoHelperNotification(msg);
+              setPopupOpen(true);
+            } else {
+              handleCardClick(msg);
+            }
+          }}
+        >
           <Box className="col">
             <Avatar alt={msg.name} src="/broken-image.jpg" />
           </Box>
@@ -186,7 +231,11 @@ const VisitorFormBox = ({ visitorData, shopData, currentUser }) => {
     </Box>
   </Box>
 )}
-
+<CoHelperTypePopup  open={popupOpen}
+                  handleClose={() => setPopupOpen(false)}
+                  id={selectedCoHelperNotification?.notification_number}
+                  content={getContentFromType(selectedCoHelperNotification?.co_helper_type)}
+                />
     </Box>
   );
 };
