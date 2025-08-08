@@ -12,6 +12,7 @@ import NotificationReplyForm from "./NotificationReplyForm";
 import { useSelector } from "react-redux";
 import CoHelperTypePopup from "../Cart/CoHelper/CoHelperTypePopup";
 import cards from "../../API/coHelpersData";
+import ConfirmationDialog from "../ConfirmationDialog";
 dayjs.extend(relativeTime);
 
 const VisitorFormBox = ({ visitorData, shopData, currentUser }) => {
@@ -26,6 +27,7 @@ const VisitorFormBox = ({ visitorData, shopData, currentUser }) => {
   const token = useSelector((state) => state.auth.userAccessToken);
   const [popupOpen, setPopupOpen] = useState(false);
   const [selectedCoHelperNotification, setSelectedCoHelperNotification] = useState(null);
+  const [openDialog, setOpenDialog] = useState({open: false, id:''});
 
   const getContentFromType = (type) => cards.find((c) => c.title === type);
 
@@ -101,6 +103,7 @@ const VisitorFormBox = ({ visitorData, shopData, currentUser }) => {
     e.preventDefault();
     if (id) {
       try {
+        setOpenDialog(false);
         setLoading(true);
         const resp = await delete_supportChatNotification(id);
         if (resp.valid) {
@@ -186,7 +189,7 @@ const VisitorFormBox = ({ visitorData, shopData, currentUser }) => {
           <Box className="col">
             <Box className="header">
               <Typography variant="h3">{msg?.type === 'co_helper' ? msg?.notification : msg?.name}</Typography>
-              {msg?.type !== 'co_helper' && <Link onClick={(e) => handleRemove(e, msg.id)}>
+              {msg?.type !== 'co_helper' && <Link onClick={(e) =>{e.stopPropagation(); setOpenDialog({open: true, id : msg?.id})}}>
                 <ClearIcon />
               </Link>}
             </Box>
@@ -238,6 +241,16 @@ const VisitorFormBox = ({ visitorData, shopData, currentUser }) => {
                   id={selectedCoHelperNotification?.notification_number}
                   content={getContentFromType(selectedCoHelperNotification?.co_helper_type)}
                 />
+
+                <ConfirmationDialog
+                              open={openDialog.open}
+                              onClose={() => setOpenDialog(false)}
+                              onConfirm={(e) => handleRemove(e, openDialog.id)}
+                              title="Confirm Delete"
+                              message={'Are you sure you want to delete this message.?'}
+                              optionalCname="logoutDialog"
+                              confirmBtnText='Confirm'
+                            />
     </Box>
   );
 };

@@ -576,6 +576,7 @@ export default function CoHelperTypePopup({ open, handleClose, content, id }) {
 
       if(data){
         try{
+          setOpenDialog(false);
           setLoading(true);
           const calendarResp = await post_scheduleGoogleCalendarAppointment(data);
           console.log(calendarResp);
@@ -632,7 +633,6 @@ export default function CoHelperTypePopup({ open, handleClose, content, id }) {
         }
       }
     }
-    setOpenDialog(false);
   }
 
   return (
