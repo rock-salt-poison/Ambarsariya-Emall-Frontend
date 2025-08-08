@@ -701,11 +701,11 @@ export default function CoHelperTypePopup({ open, handleClose, content, id }) {
                   </Button>
                 </Box>}
 
-                {(id && coHelperDetail?.member_role === 'sender') && <Box className="submit_button_container">
+                {/* {(id && coHelperDetail?.member_role === 'sender') && <Box className="submit_button_container">
                   <Button className="submit_button" onClick={handleDelete}>
                     Delete
                   </Button>
-                </Box>}
+                </Box>} */}
 
                 {/* {memberDetails && <Box className="member_details">
               <Typography className="heading">

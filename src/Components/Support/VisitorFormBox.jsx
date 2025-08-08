@@ -67,7 +67,7 @@ const VisitorFormBox = ({ visitorData, shopData, currentUser }) => {
               notification: n.member_role === 'sender'
                 ? `You assigned a task to ${n.member_name} for ${n?.co_helper_type}.`
                 : `${n?.requester_name} assigned you a new task.`,
-              notification_received_at: n.created_at || new Date().toISOString(),
+              notification_received_at: n.notification_created_at || new Date().toISOString(),
               type: 'co_helper'
             }));
             combined = [...combined, ...formatted];
@@ -183,12 +183,12 @@ const VisitorFormBox = ({ visitorData, shopData, currentUser }) => {
           </Box>
           <Box className="col">
             <Box className="header">
-              <Typography variant="h3">{msg.name}</Typography>
-              <Link onClick={(e) => handleRemove(e, msg.id)}>
+              <Typography variant="h3">{msg?.type === 'co_helper' ? msg?.notification : msg?.name}</Typography>
+              {msg?.type !== 'co_helper' && <Link onClick={(e) => handleRemove(e, msg.id)}>
                 <ClearIcon />
-              </Link>
+              </Link>}
             </Box>
-            <Typography className="message">{msg.notification}</Typography>
+            <Typography className="message">{msg?.type=== 'co_helper' ? `Date : ${(msg?.task_date)?.split('T')?.[0]}, \n Time : ${msg?.task_time}`: msg.notification}</Typography>
             <Typography className="time">
               {dayjs(msg.notification_received_at).fromNow()}
             </Typography>
