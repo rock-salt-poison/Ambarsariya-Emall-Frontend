@@ -41,6 +41,8 @@ const NotificationReplyForm = ({ visitorData, selectedNotification, currentUser 
           setMessages(resp.data);
         }
       } catch (err) {
+        console.log(err);
+        
         setSnackbar({
           open: true,
           message: "Failed to load chat",
@@ -83,7 +85,7 @@ const NotificationReplyForm = ({ visitorData, selectedNotification, currentUser 
         visitor_id: selectedNotification.visitor_id,
         notification_id: selectedNotification.id,
         support_id: selectedNotification.support_id,
-        sender_id: currentUser.user_type === 'shop' ? currentUser.shop_no : currentUser.user_type === 'member' ? currentUser.member_id : currentUser.user_type === 'visitor' ? currentUser.visitor_id :  null,
+        sender_id: currentUser.user_type === 'merchant' ? currentUser.merchant_id : currentUser.user_type === 'shop' ? currentUser.shop_no : currentUser.user_type === 'member' ? currentUser.member_id : currentUser.user_type === 'visitor' ? currentUser.visitor_id :  null,
         sender_type: currentUser.user_type,
         receiver_id: selectedNotification.sent_from,
         receiver_type: selectedNotification.user_type,
@@ -109,6 +111,8 @@ const NotificationReplyForm = ({ visitorData, selectedNotification, currentUser 
   
   const getCurrentUserId = () => {
     switch (currentUser.user_type) {
+      case 'merchant':
+        return currentUser.merchant_id;
       case 'shop':
         return currentUser.shop_no;
       case 'member':

@@ -62,7 +62,7 @@ function Support(props) {
     }
   };
 
-  const fetchShopData = async (shop_token, user_token) => {
+  const fetchShopData = async (shop_token, user_token, isMerchant=false) => {
     try{
       setLoading(true);
       const resp = await getShopUserData(shop_token);
@@ -73,7 +73,7 @@ function Support(props) {
     if (Object.keys(shopUserData).length > 0) {
       setShopData((prev) => ({
         ...shopUserData,
-        user_type: "shop",
+        user_type: isMerchant ? "merchant" : "shop",
         access_token: user_token
       }));
     }
@@ -87,7 +87,7 @@ function Support(props) {
     }
   }
 
-  const fetchMemberData = async (user_access_token) => {
+  const fetchMemberData = async (user_access_token, isMerchant = false) => {
     try{
       setLoading(true);
       const resp = await getMemberData(user_access_token);
@@ -96,7 +96,7 @@ function Support(props) {
       if (Object.keys(memberUserData).length > 0) {
       setMemberData((prev) => ({
         ...memberUserData,
-        user_type: "member",
+        user_type: isMerchant ? "merchant" : "member",
         access_token : user_access_token
       }));
     } 
@@ -111,50 +111,72 @@ function Support(props) {
   }
 
   useEffect(() => {
-    if(token){
-      const verifyUser = async () => {
-        const user = await getUser(token);
-        console.log(user);
-        
+  if (token) {
+    const verifyUser = async () => {
+      const user = await getUser(token);
+      console.log(user);
+
+      const merchantUser = user?.find((u)=>(u.user_type === 'merchant'))
         const memberUser = user?.find((u)=>((u.user_type === 'member' || u.user_type === 'merchant') && u.member_id !== null))
         const shopUser = user?.find((u)=>((u.user_type === 'shop' || u.user_type === 'merchant') && u.shop_no !== null))
         const visitorUser = user?.find((u)=>(u.user_type === 'visitor'))
-        
-        setCurrentUser(user);
-        // console.log(user);
-        
-          // if(user.support_id && user.visitor_id){
-          //   fetchData(user.user_access_token);
-          // }
 
-          if(shopUser?.shop_access_token){
-            fetchShopData(shopUser.shop_access_token, shopUser.user_access_token);
-            if(shopUser.support_id && shopUser.visitor_id){
-              fetchData(shopUser.user_access_token, shopUser.shop_no);
-            }
-            setUserLoggedIn(true);
+      // If merchant, fetch both shop and member data
+      if (merchantUser) {
+        setCurrentUser(merchantUser);
+        if (shopUser?.shop_access_token) {
+          await fetchShopData(shopUser.shop_access_token, shopUser.user_access_token, true);
+          if (shopUser.support_id && shopUser.visitor_id) {
+            await fetchData(shopUser.user_access_token, merchantUser.merchant_id);
           }
-
-          else if(memberUser?.user_access_token ){
-            fetchMemberData(memberUser.user_access_token)
-            if(memberUser.support_id && memberUser.visitor_id){
-              fetchData(memberUser.user_access_token, memberUser.member_id);
-            }
-            setUserLoggedIn(true);
+        }
+        if (memberUser?.user_access_token) {
+          await fetchMemberData(memberUser.user_access_token, true);
+          if (memberUser.support_id && memberUser.visitor_id) {
+            await fetchData(memberUser.user_access_token, merchantUser.merchant_id);
           }
-
-          else if(visitorUser?.user_access_token && visitorUser?.user_type === 'visitor'){
-            setUserLoggedIn(true);
-            fetchData(visitorUser.user_access_token, visitorUser.visitor_id);
-          } 
-
-          else{
-            setUserLoggedIn(false);
-          }
+        }
+        setUserLoggedIn(true);
+        return;
       }
-      verifyUser();
-    }
-  }, [token]);
+
+      // If only shop user
+      if (shopUser?.shop_access_token) {
+        setCurrentUser(shopUser);
+        await fetchShopData(shopUser.shop_access_token, shopUser.user_access_token);
+        if (shopUser.support_id && shopUser.visitor_id) {
+          await fetchData(shopUser.user_access_token, shopUser.shop_no);
+        }
+        setUserLoggedIn(true);
+        return;
+      }
+
+      // If only member user
+      if (memberUser?.user_access_token) {
+        setCurrentUser(memberUser);
+        await fetchMemberData(memberUser.user_access_token);
+        if (memberUser.support_id && memberUser.visitor_id) {
+          await fetchData(memberUser.user_access_token, memberUser.member_id);
+        }
+        setUserLoggedIn(true);
+        return;
+      }
+
+      // If visitor user
+      if (visitorUser?.user_access_token && visitorUser.user_type === 'visitor') {
+        setCurrentUser(visitorUser);
+        setUserLoggedIn(true);
+        await fetchData(visitorUser.user_access_token, visitorUser.visitor_id);
+        return;
+      }
+
+      setUserLoggedIn(false);
+    };
+
+    verifyUser();
+  }
+}, [token]);
+
   
 
   // Handle form validation callback

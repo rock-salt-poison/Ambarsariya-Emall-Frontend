@@ -29,6 +29,8 @@ const VisitorFormBox = ({ visitorData, shopData, currentUser }) => {
 
   const getContentFromType = (type) => cards.find((c) => c.title === type);
 
+  console.log(currentUser);
+  
 
   const handleFormSubmitSuccess = (domain, sector, submit) => {
     setFormSubmitted(submit);

@@ -43,6 +43,8 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields, setSelected
 
   const getCurrentUserId = () => {
     switch (currentUser.user_type) {
+      case 'merchant':
+        return currentUser.merchant_id;
       case 'shop':
         return currentUser.shop_no;
       case 'member':
@@ -397,6 +399,7 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields, setSelected
         <Box className="notifications">
           {
             visitorData.response.map((merchant, index)=>{
+              console.log(merchant);
               
               const selectedNotification = {
                 visitor_id: visitorData.visitor_id,
