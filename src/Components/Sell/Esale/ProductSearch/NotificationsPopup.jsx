@@ -99,9 +99,9 @@ export default function NotificationsPopup({ open, handleClose }) {
                   <Box className="col">
                     <Typography className="heading">
                       {member?.member_role === 'sender' ? (
-                        `You assigned a task to ${member.member_id}.`
+                        `You assigned a task to ${member.member_name} for ${member?.co_helper_type}.`
                       ) : member?.member_role === 'receiver' && (
-                        `${member?.requester_id} assigned you a new task.`
+                        `${member?.requester_name} assigned you a new task.`
                       )}
                     </Typography>
                     <Typography className="description">

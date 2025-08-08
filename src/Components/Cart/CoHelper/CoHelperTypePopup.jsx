@@ -28,12 +28,16 @@ import {
   post_updateGoogleCalendarEventResponse,
   delete_googleCalendarEvent,
   get_userScopes,
+  get_shop_details_with_shop_access_token,
 } from "../../../API/fetchExpressAPI";
 import CustomSnackbar from "../../CustomSnackbar";
 import { addCoHelper } from "../../../store/CoHelperSlice";
 import { toBeRequired } from "@testing-library/jest-dom/matchers";
 import { Link, useParams } from "react-router-dom";
 import ConfirmationDialog from "../../ConfirmationDialog";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc"
+import timezone from "dayjs/plugin/timezone.js"
 
 export default function CoHelperTypePopup({ open, handleClose, content, id }) {
   const themeProps = {
@@ -41,6 +45,8 @@ export default function CoHelperTypePopup({ open, handleClose, content, id }) {
     scrollbarThumb: "var(--brown)",
     dialogBackdropColor: "var(--brown)",
   };
+  dayjs.extend(utc);
+  dayjs.extend(timezone);
 
   const theme = createCustomTheme(themeProps);
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm")); // Fullscreen on small screens
@@ -65,6 +71,7 @@ export default function CoHelperTypePopup({ open, handleClose, content, id }) {
   const [loading, setLoading] = useState(false);
   const [memberDetails, setMemberDetails] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
+  const [shopKeeper, setShopKeeper] = useState(null);
   const [coHelperDetail, setCoHelperDetail] = useState(null);
   const [members, setMembers] = useState([]);
   const [openDialog, setOpenDialog] = useState({open: false, status:'', text:''});
@@ -85,6 +92,38 @@ export default function CoHelperTypePopup({ open, handleClose, content, id }) {
     }
   }, [id, currentUser?.member_id]);
 
+  useEffect(()=>{
+    if(owner){
+      console.log(owner);
+      
+      fetchShopDetails(owner);
+    }
+  }, [owner]);
+
+  const fetchShopDetails = async (shop_access_token) =>{
+    try{
+      setLoading(true);
+      const resp = await get_shop_details_with_shop_access_token(shop_access_token);
+      if(resp.data){
+        console.log(resp?.data);
+        
+        setShopKeeper(resp?.data);
+      }
+    }catch(e){
+      console.log(e);
+      setSnackbar({
+        open: true,
+        message: e.response.data.message,
+        severity: "error",
+      });
+    }finally{
+      setLoading(false);
+    }
+  }
+
+  console.log(coHelperDetail);
+  
+
   const fetchCoHelperDetail = async (id, member_id) => {
     try{
       setLoading(true);
@@ -93,9 +132,11 @@ export default function CoHelperTypePopup({ open, handleClose, content, id }) {
       
       if(resp?.valid){
         const details = resp?.data?.[0];
-        console.log(details);
         
         setCoHelperDetail(details);
+        const formattedDate = dayjs(details?.task_date)
+          .tz("Asia/Kolkata") 
+          .format("YYYY-MM-DD");
         
         setFormData((prev)=>({
           ...prev,
@@ -106,7 +147,7 @@ export default function CoHelperTypePopup({ open, handleClose, content, id }) {
           last_job_skills: details?.last_job_fundamentals_or_skills_known,
           average_salary: details?.average_salary,
           last_salary: details?.last_salary,
-          task_date: details?.task_date,
+          task_date: formattedDate,
           task_time: details?.task_time,
           task_location: details?.task_location,
           task_details: details?.task_details,
@@ -122,9 +163,8 @@ export default function CoHelperTypePopup({ open, handleClose, content, id }) {
       setLoading(false);
     }
   }
-
-  console.log(coHelperDetail);
   
+
  
   const fetchUser = async (token) => {
     try{
@@ -158,8 +198,6 @@ export default function CoHelperTypePopup({ open, handleClose, content, id }) {
   }, [token]);
 
   const fetchCoHelpers = async (co_helper_type, service, buyer_member_id) => {
-    console.log(buyer_member_id);
-    
     try {
       setLoading(true);
       const resp = await get_coHelpers_by_type_and_service(
@@ -213,14 +251,14 @@ export default function CoHelperTypePopup({ open, handleClose, content, id }) {
 
   useEffect(() => {
   const requesterId =
-    id?.member_role === 'receiver'
-      ? id?.member_id
+    coHelperDetail?.member_role === 'receiver'
+      ? coHelperDetail?.requester_id
       : currentUser?.member_id;
 
   if (formData?.key_services && requesterId) {
     fetchCoHelpers(content?.title, formData?.key_services, requesterId);
   }
-}, [formData?.key_services, currentUser?.member_id, id?.requester_id, id?.member_role]);
+}, [formData?.key_services, currentUser?.member_id, coHelperDetail?.requester_id, coHelperDetail?.member_role]);
 
 
   useEffect(() => {
@@ -393,7 +431,8 @@ export default function CoHelperTypePopup({ open, handleClose, content, id }) {
         task_details: formData?.task_details,
         task_location: formData?.task_location?.description,
         estimated_hours: formData?.estimated_hr,
-        offerings: formData?.offerings
+        offerings: formData?.offerings,
+        shop_no : shopKeeper?.shop_no
       };
       if(data){
         try{
@@ -519,6 +558,7 @@ export default function CoHelperTypePopup({ open, handleClose, content, id }) {
         requester_id: coHelperDetail?.requester_id,
         co_helper_email: currentUser?.username,
         co_helper_id: currentUser?.member_id,
+        co_helper_name: coHelperDetail?.member_name,
         task_date: formData?.task_date,
         task_time: formData?.task_time,
         estimated_hours: formData?.estimated_hr,
@@ -530,6 +570,8 @@ export default function CoHelperTypePopup({ open, handleClose, content, id }) {
         co_helper_type: content?.title,
         service: coHelperDetail?.service,
         offerings: formData?.offerings,
+        shopKeeperEmail: coHelperDetail?.shop_keeper_email,
+        shopName: coHelperDetail?.business_name,
       }
 
       if(data){
@@ -592,7 +634,6 @@ export default function CoHelperTypePopup({ open, handleClose, content, id }) {
     }
     setOpenDialog(false);
   }
-  console.log(coHelperDetail);
 
   return (
     <>

@@ -1567,3 +1567,14 @@ export const get_co_helper_details_popup = async (id, member_id) => {
     throw e;
   }
 }
+
+export const get_shop_details_with_shop_access_token = async (shop_acccess_token) => {
+  try {
+    if (shop_acccess_token) {
+      const resp = await axios.get(`${link}/sell/shop-details-with-access-token/${shop_acccess_token}`);
+      return resp.data;
+    }
+  } catch (e) {
+    throw e;
+  }
+};
