@@ -290,7 +290,7 @@ function OrderStatus_tab_content({ title }) {
           try {
             // 1. Razorpay Checkout
             const paymentResp = await HandleRazorpayPayment({
-              amount: totalAmount,
+              amount: 1,
               buyerDetails: {
                 buyer_name: buyerData?.full_name,
                 buyer_contact_no: buyerData?.phone_no_1,

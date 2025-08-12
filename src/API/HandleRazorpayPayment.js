@@ -11,7 +11,7 @@ export const HandleRazorpayPayment = async ({ amount, buyerDetails }) => {
       }
 
       const options = {
-        key: 'rzp_test_RNFMykEhmJ4AFh',
+        key: 'rzp_live_bvQlznnZKatfzq',
         amount,
         currency: "INR",
         name: "Ambarsariya Mall",

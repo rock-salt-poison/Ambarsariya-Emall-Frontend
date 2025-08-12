@@ -257,133 +257,148 @@ const EshopForm = () => {
       console.log(selectedCategoryIds);
       console.log(shopUserData);
       
-      
-      const fundAccountResp = await post_createFundAccount({
-        name: shopUserData?.full_name,
-        contact: shopUserData?.phone_no_1,
-        email: shopUserData?.username,
-        upi_id: formData.upi_id,
-        type: 'vendor'
-      })
-      console.log(fundAccountResp);
-      
-      const fundAccountId = fundAccountResp.fundAccountId;
-      const contactId = fundAccountResp.contact_id;
-      console.log("Fund Account created:", fundAccountId);
-
-      setSnackbar({
-        open: true,
-        message: "Contact Created!",
-        severity: "success",
-      });
-      // Prepare the updated post data
-      const updatedPostData = {
-        business_name: formData.business_name,
-        date_of_establishment: formData.date_of_establishment,
-        usp_values: formData.usp_values, // Placeholder link, make sure to replace with actual URL if needed
-        product_samples: formData.product_samples,
-        upi_id: formData.upi_id,
-        cost_sensitivity: formData.cost_sensitivity,
-        daily_walkin: formData.daily_walkin,
-        parking_availability: formData.parking_availability,
-        category: selectedCategoryIds, // Hardcoded category, make sure to replace if needed
-        advt_video: formData.advt_video, // Placeholder, replace as needed
-        key_players: selectedKeyPlayers,
-        razorpay_contact_id : contactId || null,
-        razorpay_fund_account_id: fundAccountId || null,
-      };
-
-      
-
-      // Get the userAcessToken (either from localStorage or wherever it's stored)
-      const userAccessToken = localStorage.getItem("accessToken");
-
-      if (userAccessToken) {
-        try {
-          setLoading(true);
-          // Call the function to update e-shop data
-
-          
-
-          if (eshop?.shop_access_token) {
-            const response = await updateEshopData(
-              updatedPostData,
-              eshop?.shop_access_token
-            );
-
-            if (response.message) {
-              const validityStart = new Date();
-
-              // Format validity_start as 'YYYY-MM-DD'
-              const formattedValidityStart = validityStart
-                .toLocaleString()
-                .split("T")[0];
-
-              // Calculate validity_end as one year after validity_start
-              const validityEnd = new Date(validityStart);
-              validityEnd.setFullYear(validityStart.getFullYear() + 1);
-
-              // Format validity_end as 'YYYY-MM-DD'
-              const formattedValidityEnd = validityEnd
-                .toLocaleString()
-                .split("T")[0];
-
-              const coupons_data = {
-                validity_start: formattedValidityStart,
-                validity_end: formattedValidityEnd,
-                data: coupons,
-              };
-
-              console.log(coupons_data);
-              const discount_coupons = await post_discount_coupons(
-                coupons_data,
-                eshop.shop_no
-              );
-
-              console.log(discount_coupons);
-            }
-
-            setLoading(false);
-
-            setSnackbar({
-              open: true,
-              message: response.message,
-              severity: "success",
-            });
-
-            // Navigate to the shop page after a successful submission
-            setTimeout(() => {
-              navigate(
-                `../support/shop/shop-detail/${eshop.shop_access_token}`
-              );
-            }, 2500);
-          }
-        } catch (error) {
-          setLoading(false);
-          console.error("Error updating e-shop data:", error);
-          if (
-            error.response.data.error === "File size exceeds the 1MB limit."
-          ) {
-            setSnackbar({
-              open: true,
-              message: "File size should not exceed the 1MB limit.",
-              severity: "error",
-            });
-          } else {
-            setSnackbar({
-              open: true,
-              message: error.error,
-              severity: "error",
-            });
-          }
-        }
-      } else {
-        setLoading(false);
+      try{
+        setLoading(true);
+        const fundAccountResp = await post_createFundAccount({
+          name: shopUserData?.full_name,
+          contact: shopUserData?.phone_no_1,
+          email: shopUserData?.username,
+          upi_id: formData.upi_id,
+          type: 'vendor'
+        })
+        console.log(fundAccountResp);
+        
+        const fundAccountId = fundAccountResp?.fund_account_id;
+        const contactId = fundAccountResp?.contact_id;
+        console.log("Fund Account created:", fundAccountId);
+  
         setSnackbar({
           open: true,
-          message: "Shop access token not found.",
+          message: "Contact Created!",
+          severity: "success",
+        });
+        // Prepare the updated post data
+        const updatedPostData = {
+          business_name: formData.business_name,
+          date_of_establishment: formData.date_of_establishment,
+          usp_values: formData.usp_values, // Placeholder link, make sure to replace with actual URL if needed
+          product_samples: formData.product_samples,
+          upi_id: formData.upi_id,
+          cost_sensitivity: formData.cost_sensitivity,
+          daily_walkin: formData.daily_walkin,
+          parking_availability: formData.parking_availability,
+          category: selectedCategoryIds, // Hardcoded category, make sure to replace if needed
+          advt_video: formData.advt_video, // Placeholder, replace as needed
+          key_players: selectedKeyPlayers,
+          razorpay_contact_id : contactId || null,
+          razorpay_fund_account_id: fundAccountId || null,
+        };
+  
+        
+  
+        // Get the userAcessToken (either from localStorage or wherever it's stored)
+        const userAccessToken = localStorage.getItem("accessToken");
+  
+        if (userAccessToken) {
+          try {
+            setLoading(true);
+            // Call the function to update e-shop data
+  
+            
+  
+            if (eshop?.shop_access_token) {
+              const response = await updateEshopData(
+                updatedPostData,
+                eshop?.shop_access_token
+              );
+  
+              if (response.message) {
+                const validityStart = new Date();
+  
+                // Format validity_start as 'YYYY-MM-DD'
+                const formattedValidityStart = validityStart
+                  .toLocaleString()
+                  .split("T")[0];
+  
+                // Calculate validity_end as one year after validity_start
+                const validityEnd = new Date(validityStart);
+                validityEnd.setFullYear(validityStart.getFullYear() + 1);
+  
+                // Format validity_end as 'YYYY-MM-DD'
+                const formattedValidityEnd = validityEnd
+                  .toLocaleString()
+                  .split("T")[0];
+  
+                const coupons_data = {
+                  validity_start: formattedValidityStart,
+                  validity_end: formattedValidityEnd,
+                  data: coupons,
+                };
+  
+                console.log(coupons_data);
+                const discount_coupons = await post_discount_coupons(
+                  coupons_data,
+                  eshop.shop_no
+                );
+  
+                console.log(discount_coupons);
+              }
+  
+              setLoading(false);
+  
+              setSnackbar({
+                open: true,
+                message: response.message,
+                severity: "success",
+              });
+  
+              // Navigate to the shop page after a successful submission
+              setTimeout(() => {
+                navigate(
+                  `../support/shop/shop-detail/${eshop.shop_access_token}`
+                );
+              }, 2500);
+            }
+          } catch (error) {
+            setLoading(false);
+            console.error("Error updating e-shop data:", error);
+            if (
+              error.response.data.error === "File size exceeds the 1MB limit."
+            ) {
+              setSnackbar({
+                open: true,
+                message: "File size should not exceed the 1MB limit.",
+                severity: "error",
+              });
+            } else {
+              setSnackbar({
+                open: true,
+                message: error.error,
+                severity: "error",
+              });
+            }
+            
+          }
+        } else {
+          setLoading(false);
+          setSnackbar({
+            open: true,
+            message: "Shop access token not found.",
+            severity: "error",
+          });
+        }
+      }catch(e){
+        console.log(e);
+        
+        if(e?.response?.data?.error?.includes('Invalid')){
+        setSnackbar({
+          open: true,
+          message: e?.response?.data?.error,
           severity: "error",
         });
+      } 
+      }finally{
+        setLoading(false);
       }
     }
   };
