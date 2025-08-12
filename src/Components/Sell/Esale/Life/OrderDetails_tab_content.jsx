@@ -141,7 +141,7 @@ function OrderDetails_tab_content({ title }) {
   if (status === "Accept" || status === "Deny") {
     try{
       setLoading(true);
-const buyerResponse = await get_buyer_data(selectedOrder?.[0]?.buyer_id);
+    const buyerResponse = await get_buyer_data(selectedOrder?.[0]?.buyer_id);
     const buyerData = buyerResponse?.data?.[0];
     console.log(buyerData);
 
@@ -313,7 +313,7 @@ const buyerResponse = await get_buyer_data(selectedOrder?.[0]?.buyer_id);
             })
             console.log(fundAccountResp);
             
-            const fundAccountId = fundAccountResp.fundAccountId;
+            const fundAccountId = fundAccountResp.fund_account_id;
             console.log("Fund Account created:", fundAccountId);
 
             // 3. Trigger Payout
