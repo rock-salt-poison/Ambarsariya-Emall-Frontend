@@ -247,7 +247,9 @@ function Cart() {
         date_of_issue: new Date(),
         delivery_terms: null,
         additional_instructions: null,
-        coupon_cost : cartData.couponCost
+        coupon_cost : cartData.couponCost,
+        buyer_name: buyerDataFetched?.full_name, 
+        buyer_contact_no: buyerDataFetched?.phone_no_1 
       };
 
       console.log('*******************', data);

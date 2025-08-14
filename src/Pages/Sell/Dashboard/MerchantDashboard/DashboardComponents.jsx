@@ -27,7 +27,7 @@ function DashboardComponents({ data, date }) {
   const [merchantPurchaserOrders, setMerchantPurchaserOrders] = useState([]);
   const [selectedMerchantPO, setSelectedMerchantPO] = useState([]);
   const [selectedPO, setSelectedPO] = useState([]);
-  const [activeTable, setActiveTable] = useState(null); // Default to Purchase Order Table
+  const [activeTable, setActiveTable] = useState('sale'); // Default to Purchase Order Table
 
   const card_data = [
     { id: 1, heading: "Today's Sale Orders", value: "-" },
@@ -138,6 +138,9 @@ const fetchPurchasedOrder = async (buyer_id) => {
     setSelectedMerchantPO(poNumber);
   };
 
+  console.log(selectedPO, selectedMerchantPO, activeTable);
+  
+
   return (
     <>
       <Box className="col">
@@ -159,7 +162,7 @@ const fetchPurchasedOrder = async (buyer_id) => {
     ? handleMerchantSellerSlideChange
     : undefined;
 
-  const renderSwiper = () => (
+  const renderSwiper = (optionalCName) => (
     orders.length > 0 ? (
       <Swiper
         slidesPerView={1}
@@ -168,7 +171,7 @@ const fetchPurchasedOrder = async (buyer_id) => {
         onSlideChange={handleSlideChange}
         navigation={true}
         modules={[Navigation]}
-        className="mySwiper"
+        className={`mySwiper ${activeTable === 'purchase' ? isPurchase ? 'active' : '' : activeTable === 'sale' ? isSale ? 'active' : '' : ''}`}
       >
         {orders.map((order, index) => {
           const poNo = order?.po_no?.split("&")[2] || '-';
@@ -200,7 +203,11 @@ const fetchPurchasedOrder = async (buyer_id) => {
       onClick={() => card.type && setActiveTable(card.type)}
     >
       <Typography className="heading">{card.heading}</Typography>
-      {showSlider ? renderSwiper() : (
+      {showSlider ? renderSwiper(activeTable === "sale" 
+        ? (selectedPO ? "current" : "") 
+        : activeTable === "purchase" 
+        ? (selectedMerchantPO ? "merchant_current" : "") 
+        : "") : (
         <Typography className="number" sx={{ cursor: 'pointer' }}>
           {card.value}
         </Typography>

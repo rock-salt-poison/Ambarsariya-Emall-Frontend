@@ -6,6 +6,7 @@ const admin_link = `${process.env.REACT_APP_EXPRESS_API_LINK}/admin/api`;
 const drive_link = `${process.env.REACT_APP_EXPRESS_API_LINK}/api/drive`;
 const payment_link = `${process.env.REACT_APP_EXPRESS_API_LINK}/api/payment`;
 const photo_link = `${process.env.REACT_APP_EXPRESS_API_LINK}/api/google-photo`;
+const serve_link = `${process.env.REACT_APP_EXPRESS_API_LINK}/api/ambarsariya/serve`;
 const SOCKET_SERVER_URL = process.env.REACT_APP_EXPRESS_API_LINK;
 
 export const initializeWebSocket = (roomId) => {
@@ -1576,5 +1577,32 @@ export const get_shop_details_with_shop_access_token = async (shop_acccess_token
     }
   } catch (e) {
     throw e;
+  }
+};
+
+export const getCustomerRecords = async (start_date, end_date, shop_no) => {
+  try {
+    const response = await axios.get(`${serve_link}/customer-records/${start_date}/${end_date}/${shop_no}`);
+    return response.data;
+  } catch (error) {
+    throw error
+  }
+};
+
+export const getCompletedOrders = async (start_date, end_date, shop_no, buyer_id) => {
+  try {
+    const response = await axios.get(`${serve_link}/completed-orders/${start_date}/${end_date}/${shop_no}/${buyer_id}`);
+    return response.data;
+  } catch (error) {
+    throw error
+  }
+};
+
+export const getPendingOrders = async (start_date, end_date, shop_no, buyer_id) => {
+  try {
+    const response = await axios.get(`${serve_link}/pending-orders/${start_date}/${end_date}/${shop_no}/${buyer_id}`);
+    return response.data;
+  } catch (error) {
+    throw error
   }
 };

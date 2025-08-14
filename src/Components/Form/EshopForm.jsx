@@ -119,11 +119,11 @@ const EshopForm = () => {
         };
 
         setFormData(initialFormData);
-        setLoading(false);
       }
     } catch (e) {
-      setLoading(false);
       console.log("Error while fetching : ", e);
+    }finally{
+      setLoading(false);
     }
   };
 

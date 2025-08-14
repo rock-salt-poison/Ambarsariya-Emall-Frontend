@@ -289,67 +289,67 @@ function OrderStatus_tab_content({ title }) {
           console.log(totalAmount);
           try {
             // 1. Razorpay Checkout
-            const paymentResp = await HandleRazorpayPayment({
-              amount: 1,
-              buyerDetails: {
-                buyer_name: buyerData?.full_name,
-                buyer_contact_no: buyerData?.phone_no_1,
-                buyer_email: buyerData?.username,
-              },
-            });
+            // const paymentResp = await HandleRazorpayPayment({
+            //   amount: 1,
+            //   buyerDetails: {
+            //     buyer_name: buyerData?.full_name,
+            //     buyer_contact_no: buyerData?.phone_no_1,
+            //     buyer_email: buyerData?.username,
+            //   },
+            // });
 
-            console.log("Payment response:", paymentResp);
+            // console.log("Payment response:", paymentResp);
 
-            if (paymentResp?.razorpay_payment_id) {
-              let fundAccountId = sellerData?.razorpay_fund_account_id;
+            // if (paymentResp?.razorpay_payment_id) {
+              // let fundAccountId = sellerData?.razorpay_fund_account_id;
 
               // Create Fund Account if not available
-              if (!fundAccountId) {
-                try {
-                  const fundAccountResp = await post_createFundAccount({
-                    name: sellerData?.poc_name,
-                    contact: sellerData?.phone_no_1,
-                    email: sellerData?.username,
-                    upi_id: sellerData?.upi_id,
-                    type: 'vendor',
-                  });
-                  console.log("Fund Account Response:", fundAccountResp);
+              // if (!fundAccountId) {
+              //   try {
+              //     const fundAccountResp = await post_createFundAccount({
+              //       name: sellerData?.poc_name,
+              //       contact: sellerData?.phone_no_1,
+              //       email: sellerData?.username,
+              //       upi_id: sellerData?.upi_id,
+              //       type: 'vendor',
+              //     });
+              //     console.log("Fund Account Response:", fundAccountResp);
 
-                  fundAccountId = fundAccountResp?.fundAccountId;
-                  console.log("New Fund Account created:", fundAccountId);
-                } catch (error) {
-                  console.error("Error creating Fund Account:", error);
-                  setSnackbar({
-                    open: true,
-                    message: "Failed to create fund account.",
-                    severity: "error",
-                  });
-                  return;
-                }
-              }
+              //     fundAccountId = fundAccountResp?.fund_account_id;
+              //     console.log("New Fund Account created:", fundAccountId);
+              //   } catch (error) {
+              //     console.error("Error creating Fund Account:", error);
+              //     setSnackbar({
+              //       open: true,
+              //       message: "Failed to create fund account.",
+              //       severity: "error",
+              //     });
+              //     return;
+              //   }
+              // }
 
               // Trigger Payout
-              try {
-                const payoutResp = await post_payoutToShopkeeper({
-                  fund_account_id: fundAccountId,
-                  amount: totalAmount,
-                });
+              // try {
+              //   const payoutResp = await post_payoutToShopkeeper({
+              //     fund_account_id: fundAccountId,
+              //     amount: totalAmount,
+              //   });
 
-                console.log("Payout response:", payoutResp.data);
-                setSnackbar({
-                  open: true,
-                  message: "Payout to shopkeeper successful!",
-                  severity: "success",
-                });
-              } catch (error) {
-                console.error("Payout failed:", error);
-                setSnackbar({
-                  open: true,
-                  message: "Payout to shopkeeper failed.",
-                  severity: "error",
-                });
-                return;
-              }
+              //   console.log("Payout response:", payoutResp.data);
+              //   setSnackbar({
+              //     open: true,
+              //     message: "Payout to shopkeeper successful!",
+              //     severity: "success",
+              //   });
+              // } catch (error) {
+              //   console.error("Payout failed:", error);
+              //   setSnackbar({
+              //     open: true,
+              //     message: "Payout to shopkeeper failed.",
+              //     severity: "error",
+              //   });
+              //   return;
+              // }
 
               // Generate Invoice
               try {
@@ -374,14 +374,14 @@ function OrderStatus_tab_content({ title }) {
                   severity: "error",
                 });
               }
-            }
-            else {
-              setSnackbar({
-                open: true,
-                message: "Payment failed or cancelled",
-                severity: "error",
-              });
-            }
+            // }
+            // else {
+            //   setSnackbar({
+            //     open: true,
+            //     message: "Payment failed or cancelled",
+            //     severity: "error",
+            //   });
+            // }
           } catch (error) {
             console.error("Error in payment/payout:", error);
             setSnackbar({

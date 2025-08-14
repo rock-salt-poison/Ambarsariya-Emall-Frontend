@@ -166,11 +166,11 @@ function RetailerCoupon({ selectedCoupon }) {
                           </Typography>
 
                           <Typography className="text2">
-                            min order{" "}
+                            Order upto{" "}
                             {
                               coupon.conditions.find(
                                 (condition) =>
-                                  condition.type === "minimum_order"
+                                  condition.type === "order_upto"
                               )?.value
                             }
                           </Typography>

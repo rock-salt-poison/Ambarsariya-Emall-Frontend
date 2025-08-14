@@ -20,7 +20,7 @@ function RetailerPopupContent({ onClose }) {
 
   // Initialize local state for discounts
   const [discounts, setDiscounts] = useState({
-    retailer_upto: { percentage: '', minimum_order: '' },
+    retailer_upto: { percentage: '', order_upto: '' },
     retailer_flat: { flat: '', minimum_order: '' },
     retailer_freebies: { buy: '', get: '' }
   });
@@ -82,7 +82,7 @@ function RetailerPopupContent({ onClose }) {
       <Box className="checkbox-group">
         <DiscountField
           name1="percentage"
-          name2="minimum_order"
+          name2="order_upto"
           value={discounts.retailer_upto}
           label="Percentage"
           checked={discounts.retailer_upto.checked}
@@ -90,7 +90,7 @@ function RetailerPopupContent({ onClose }) {
           handleCheckboxChange={(e) => handleCheckboxChange(e, 'retailer_upto')}
           percentagePlaceholder="10"
           minOrderPlaceholder="1000"
-          additionalText={<><PercentIcon className="icon_2" /> Off on minimum order of <CurrencyRupeeIcon className="icon_2" /></>}
+          additionalText={<><PercentIcon className="icon_2" /> Off on order upto <CurrencyRupeeIcon className="icon_2" /></>}
         />
         <DiscountField
           name1="flat"

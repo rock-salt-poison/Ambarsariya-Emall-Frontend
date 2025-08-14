@@ -46,7 +46,7 @@ const BookEshopForm = () => {
   const [formData, setFormData] = useState(initialFormData);
   const [errors, setErrors] = useState({});
   const [errorMessages, setErrorMessages] = useState({});
-  const [shopUser, setShopUser] = useState({});
+  const [shopUser, setShopUser] = useState(null);
   const [showUsernameOtp, setShowUsernameOtp] = useState(false);
   const [showPhoneOtp, setShowPhoneOtp] = useState(false);
   const [showMemberOtp, setShowMemberOtp] = useState(false);
@@ -120,10 +120,10 @@ const BookEshopForm = () => {
         merchant: data.is_merchant || false,
         member_detail: data.member_username_or_phone_no || ''
       }));
+    }else{
+      setShopUser(null);
     }
   };
-  
-  console.log(formData);
   
 
   useEffect(() => {
@@ -132,7 +132,7 @@ const BookEshopForm = () => {
         // Fetch the list of domains
         setLoading(true);
         const domainResp = await fetchDomains();
-      setDomains(domainResp.map((data) => data.domain_name)); 
+        setDomains(domainResp.map((data) => data.domain_name)); 
   
       
 
@@ -820,6 +820,12 @@ const handleSubmit = async (e) => {
             <Button type="submit" variant="contained" className="submit_button" disabled={submitBtnDisable}>
               Submit
             </Button>
+
+            {
+              shopUser !== null && <Button variant="contained" className="submit_button" onClick={()=>{navigate('../eshop')}}>
+              Eshop
+            </Button>
+            }
           </Box>
         ) : ("")
       }

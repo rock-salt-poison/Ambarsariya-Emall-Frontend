@@ -49,6 +49,7 @@ function CartTable({ rows,setCartData, setSelectedCoupon }) {
   const { selectedCoupon } = useSelector((state) => state.discounts);
 
   console.log(data);
+  console.log('.............................', selectedCoupon);
   
   // Fetch category names for all products
   useEffect(() => {
@@ -212,6 +213,13 @@ const calculateDiscount = () => {
         (c) => c.type === "minimum_order" || c.type === "last_purchase_above"
       )?.value || 0
     );
+
+    const orderUpto = Number(
+      conditions.find(
+        (c) => c.type === "order_upto" 
+      )?.value || 0
+    );
+
     const percent = Number(
       conditions.find(
         (c) =>
@@ -228,8 +236,10 @@ const calculateDiscount = () => {
   
     switch (coupon_type) {
       case "retailer_upto":
+        return total <= orderUpto ? (((total * percent) / 100)< 30) ? 30 : (total * percent) / 100 : 30;
+
       case "retailer_flat":
-        return total >= minOrder ? (total * percent) / 100 : 0;
+      return total >= minOrder ? (total * percent) / 100 : 0;
   
       case "retailer_freebies":
         return totalQuantity >= buy ? 0 : 0;

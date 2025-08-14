@@ -22277,24 +22277,25 @@ textarea[readonly] {
 
               .radio_icon {
                 position: absolute;
-                top: 11.5%;
-                left: 74%;
-                width: 25px;
+                top: 11%;
+                left: 73.5%;
+                width: 27px;
                 z-index: 2;
                 filter: drop-shadow(0px 0px 1px #000);
-                box-shadow: inset 0px 0px 0px 3px #58524d,
-                  0px 0px 0px 1px #322f2f;
+                box-shadow: inset 0px 0px 0px 3px #161616, 0px 0px 0px 1px #322f2f;
                 border-radius: 50px;
               }
 
               .radio_button {
                 position: absolute;
-                top: 12.6%;
-                left: 76%;
-                width: 15px;
+                top: 14.5%;
+                left: 77.5%;
+                width: 13px;
                 z-index: 3;
                 border-radius: 50px;
-                border: 2px solid #eac77b;
+                box-shadow: 0px 0px 0px 1px #393230;
+                border: 0px solid #eac77b;
+                filter: brightness(0.85);
               }
 
               &::before {
@@ -23969,9 +23970,13 @@ textarea[readonly] {
 
         .mySwiper {
           margin: 0;
-          width: 100%;
+          width: 110px;
           position: relative;
           flex: 1;
+
+          &.active{
+            width: 210px;
+          }
 
           .swiper-slide {
             width: 100% !important;
