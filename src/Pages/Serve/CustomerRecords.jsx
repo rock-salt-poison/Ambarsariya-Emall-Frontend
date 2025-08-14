@@ -238,7 +238,7 @@ const handleSubmit = (event) => {
         )
         .reduce((sum, order) => sum + Number(order.subtotal || 0), 0);
 
-      const subscriptionCost = (formData.subscription_details?.length || 0) * 500; // Example
+      const subscriptionCost = (formData.subscription_details?.length || 0) * 500;
 
       return {
         date,
@@ -246,11 +246,14 @@ const handleSubmit = (event) => {
         pending: pendingCost,
         subscription: subscriptionCost
       };
-    });
+    })
+    // Keep only dates that have a selected completed or pending order
+    .filter(day => day.completed > 0 || day.pending > 0);
 
     setChartData(dataset);
   }
 };
+
 
 const themeProps = {
   popoverBackgroundColor: 'var(--yellow)',
