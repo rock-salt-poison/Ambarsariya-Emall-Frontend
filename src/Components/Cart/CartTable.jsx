@@ -12,6 +12,8 @@ import {
   Table,
   Paper,
   CircularProgress,
+  ThemeProvider,
+  Tooltip,
 } from "@mui/material";
 import tbody_vector from "../../Utils/images/Sell/products/tbody_vector.webp";
 import plus from "../../Utils/images/Sell/cart/plus.svg";
@@ -23,6 +25,8 @@ import Button2 from "../Home/Button2";
 import { convertDriveLink, getCategoryName } from "../../API/fetchExpressAPI";
 import CustomSnackbar from "../CustomSnackbar";
 import { removeCoupon } from "../../store/discountsSlice";
+import EmergencyIcon from "@mui/icons-material/Emergency";
+import createCustomTheme from "../../styles/CustomSelectDropdownTheme";
 
 const columns = [
   { id: "1", label_1: "S.No." },
@@ -33,15 +37,23 @@ const columns = [
   { id: "6", label_1: "Total Price" },
 ];
 
-function CartTable({ rows,setCartData, setSelectedCoupon }) {
+function CartTable({ rows, setCartData, setSelectedCoupon }) {
   const dispatch = useDispatch();
   const { owner } = useParams();
   const [loading, setLoading] = useState(false);
-   const [snackbar, setSnackbar] = useState({
-      open: false,
-      message: "",
-      severity: "success",
-    });
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
+
+  const themeProps = {
+    popoverBackgroundColor: '#f8e3cc',
+    scrollbarThumb: 'var(--brown)',
+    dialogBackdropColor: 'var(--brown)',
+  };
+    
+  const theme = createCustomTheme(themeProps);
   const [data, setData] = useState(
     rows.map((row) => ({ ...row, quantity: 1 })) // Initialize quantity for each product
   );
@@ -49,8 +61,8 @@ function CartTable({ rows,setCartData, setSelectedCoupon }) {
   const { selectedCoupon } = useSelector((state) => state.discounts);
 
   console.log(data);
-  console.log('.............................', selectedCoupon);
-  
+  console.log(".............................", selectedCoupon);
+
   // Fetch category names for all products
   useEffect(() => {
     const fetchCategories = async () => {
@@ -78,24 +90,39 @@ function CartTable({ rows,setCartData, setSelectedCoupon }) {
     if (selectedCoupon) {
       const total = calculateTotal();
       const totalQuantity = data.reduce((sum, item) => sum + item.quantity, 0);
-  
+
       const conditions = selectedCoupon.conditions || [];
-      const minOrder = Number(conditions.find((c) => ["minimum_order", "last_purchase_above"].includes(c.type))?.value || 0);
-      const percent = Number(conditions.find((c) => ["percentage", "percent_off", "flat_percent"].includes(c.type))?.value || 0);
-      const flatDiscount = Number(conditions.find((c) => ["flat", "unlock"].includes(c.type))?.value || 0);
+      const minOrder = Number(
+        conditions.find((c) =>
+          ["minimum_order", "last_purchase_above"].includes(c.type)
+        )?.value || 0
+      );
+      const percent = Number(
+        conditions.find((c) =>
+          ["percentage", "percent_off", "flat_percent"].includes(c.type)
+        )?.value || 0
+      );
+      const flatDiscount = Number(
+        conditions.find((c) => ["flat", "unlock"].includes(c.type))?.value || 0
+      );
       const buy = Number(conditions.find((c) => c.type === "buy")?.value || 0);
       const pay = Number(conditions.find((c) => c.type === "pay")?.value || 0);
       const get = Number(conditions.find((c) => c.type === "get")?.value || 0);
-  
+
       let shouldRemoveCoupon = false;
-  
-      if (selectedCoupon.coupon_type.includes("subscription") || selectedCoupon.coupon_type.includes('loyalty_by_customer')) {
+
+      if (
+        selectedCoupon.coupon_type.includes("subscription") ||
+        selectedCoupon.coupon_type.includes("loyalty_by_customer")
+      ) {
         shouldRemoveCoupon = true;
       } else if (selectedCoupon.coupon_type === "retailer_freebies") {
         if (totalQuantity < buy) {
           setSnackbar({
             open: true,
-            message: `Add ${buy - totalQuantity} more items to use Buy ${buy} Get ${get} coupon.`,
+            message: `Add ${
+              buy - totalQuantity
+            } more items to use Buy ${buy} Get ${get} coupon.`,
             severity: "error",
           });
           shouldRemoveCoupon = true;
@@ -110,7 +137,9 @@ function CartTable({ rows,setCartData, setSelectedCoupon }) {
         if (total < pay) {
           setSnackbar({
             open: true,
-            message: `Add ₹${(pay - total).toFixed(2)} more to use this coupon.`,
+            message: `Add ₹${(pay - total).toFixed(
+              2
+            )} more to use this coupon.`,
             severity: "error",
           });
           shouldRemoveCoupon = true;
@@ -124,37 +153,44 @@ function CartTable({ rows,setCartData, setSelectedCoupon }) {
       } else if (total < minOrder) {
         setSnackbar({
           open: true,
-          message: `Add ₹${(minOrder - total).toFixed(2)} more to use this coupon.`,
+          message: `Add ₹${(minOrder - total).toFixed(
+            2
+          )} more to use this coupon.`,
           severity: "error",
         });
         shouldRemoveCoupon = true;
-      } else if(!selectedCoupon.coupon_type.includes('loyalty_by_customer')){
-        const discountValue = percent > 0 ? (total * percent) / 100 : flatDiscount;
+      } else if (!selectedCoupon.coupon_type.includes("loyalty_by_customer")) {
+        const discountValue =
+          percent > 0 ? (total * percent) / 100 : flatDiscount;
         setSnackbar({
           open: true,
           message: `You saved ₹${discountValue.toFixed(2)}!`,
           severity: "success",
         });
       }
-  
+
       if (shouldRemoveCoupon) {
         dispatch(removeCoupon());
       }
     } else {
       setSnackbar({ open: false, message: "", severity: "success" }); // Reset snackbar when no coupon is selected
     }
-  }, [selectedCoupon, data]); // Dependencies: re-run whenever selectedCoupon or cart data changes  
-  
+  }, [selectedCoupon, data]); // Dependencies: re-run whenever selectedCoupon or cart data changes
 
-  useEffect(()=>{
+  useEffect(() => {
     const subtotal = calculateTotal();
-    const discount = calculateDiscount();
+    const calcdiscount = calculateDiscount();
     const deliveryCharge = 30;
 
+    const discount = selectedCoupon
+      ? calcdiscount < 30
+        ? 30
+        : calcdiscount
+      : 0;
     const total = selectedCoupon
-      ? (subtotal - discount + deliveryCharge)
-      : (subtotal - discount);
-    
+      ? subtotal - discount + deliveryCharge
+      : subtotal - discount;
+
     const couponCost = selectedCoupon ? 30 : null;
 
     setCartData({
@@ -164,49 +200,56 @@ function CartTable({ rows,setCartData, setSelectedCoupon }) {
       couponCost,
       cart: data,
     });
+  }, [data, selectedCoupon]);
 
-  },[data, selectedCoupon])
-  
-
-  useEffect(()=>{
+  useEffect(() => {
     setSelectedCoupon(selectedCoupon);
-  },[selectedCoupon])
-  
+  }, [selectedCoupon]);
+
   const handleIncrement = (index) => {
     const newData = data.map((item, i) =>
       i === index ? { ...item, quantity: item.quantity + 1 } : item
     );
     setData(newData);
   };
-  
+
   const handleDecrement = (index) => {
     const newData = data
-    .map((item, i) =>
-      i === index
-    ? item.quantity > 1
-    ? { ...item, quantity: item.quantity - 1 }
-    : null
-    : item
-  )
-  .filter((item) => item !== null);
-  
-  if (data[index].quantity === 1) {
-    dispatch(removeProduct(data[index].id));
-  }
-  
-  setData(newData);
-};
+      .map((item, i) =>
+        i === index
+          ? item.quantity > 1
+            ? { ...item, quantity: item.quantity - 1 }
+            : null
+          : item
+      )
+      .filter((item) => item !== null);
 
-const calculateTotal = () =>
-  data.reduce((acc, item) => acc + Number((item.matched_price || item.selling_price || item?.product_selling_price)  * item.quantity), 0);
+    if (data[index].quantity === 1) {
+      dispatch(removeProduct(data[index].id));
+    }
 
-const calculateDiscount = () => {
+    setData(newData);
+  };
+
+  const calculateTotal = () =>
+    data.reduce(
+      (acc, item) =>
+        acc +
+        Number(
+          (item.matched_price ||
+            item.selling_price ||
+            item?.product_selling_price) * item.quantity
+        ),
+      0
+    );
+
+  const calculateDiscount = () => {
     if (!selectedCoupon) return 0;
-  
+
     const { coupon_type, conditions } = selectedCoupon;
     const total = calculateTotal();
     const totalQuantity = data.reduce((sum, item) => sum + item.quantity, 0);
-  
+
     // Extract relevant conditions
     const minOrder = Number(
       conditions.find(
@@ -215,9 +258,7 @@ const calculateDiscount = () => {
     );
 
     const orderUpto = Number(
-      conditions.find(
-        (c) => c.type === "order_upto" 
-      )?.value || 0
+      conditions.find((c) => c.type === "order_upto")?.value || 0
     );
 
     const percent = Number(
@@ -233,24 +274,27 @@ const calculateDiscount = () => {
     );
     const buy = Number(conditions.find((c) => c.type === "buy")?.value || 0);
     const pay = Number(conditions.find((c) => c.type === "pay")?.value || 0);
-  
+
     switch (coupon_type) {
       case "retailer_upto":
-        return total <= orderUpto ? (((total * percent) / 100)< 30) ? 30 : (total * percent) / 100 : 30;
+        // return total <= orderUpto ? (((total * percent) / 100)< 30) ? 30 : (total * percent) / 100 : 30;
+        return total <= orderUpto ? (total * percent) / 100 : 0;
 
       case "retailer_flat":
-      return total >= minOrder ? (total * percent) / 100 : 0;
-  
+        return total >= minOrder ? (total * percent) / 100 : 0;
+
       case "retailer_freebies":
         return totalQuantity >= buy ? 0 : 0;
-  
+
       case "loyalty_prepaid":
-        const get = Number(conditions.find((c) => c.type === "get")?.value || 0);
+        const get = Number(
+          conditions.find((c) => c.type === "get")?.value || 0
+        );
         return total >= pay ? get : 0;
 
       case "loyalty_bonus":
-      return ((total * percent) / 100);
-  
+        return (total * percent) / 100;
+
       // case "subscription_daily":
       //   return ((total * percent) / 100);
 
@@ -262,18 +306,16 @@ const calculateDiscount = () => {
 
       // case "subscription_edit":
       //   return ((total * percent) / 100);
-      
+
       default:
         return 0;
     }
   };
-  
-  
-  
 
   // const calculateDiscount = () => calculateTotal() ;
 
   return (
+    <ThemeProvider theme={theme}>
     <Box className="cart_table_wrapper">
       {loading && (
         <Box className="loading">
@@ -281,12 +323,12 @@ const calculateDiscount = () => {
         </Box>
       )}
       <CustomSnackbar
-          open={snackbar.open}
-          handleClose={() => setSnackbar({ ...snackbar, open: false })}
-          message={snackbar.message}
-          disableAutoHide={true}
-          severity={snackbar.severity}
-        />
+        open={snackbar.open}
+        handleClose={() => setSnackbar({ ...snackbar, open: false })}
+        message={snackbar.message}
+        disableAutoHide={true}
+        severity={snackbar.severity}
+      />
       <Paper className="table">
         <Box className="board_pins">
           <Box className="circle"></Box>
@@ -317,7 +359,7 @@ const calculateDiscount = () => {
                         alt="product_image"
                         className="product_image"
                       />
-                      <Box className="product_info">
+                      <Box className="product_info product">
                         <Box
                           component="img"
                           className="vector"
@@ -368,10 +410,20 @@ const calculateDiscount = () => {
                       </Box>
                     </TableCell>
                     <TableCell className="text_3" align="right">
-                      &#8377;{Number(row.matched_price || row.selling_price || row.product_selling_price).toFixed(2)}
+                      &#8377;
+                      {Number(
+                        row.matched_price ||
+                          row.selling_price ||
+                          row.product_selling_price
+                      ).toFixed(2)}
                     </TableCell>
                     <TableCell className="text_3 product_price" align="right">
-                      &#8377;{((row.matched_price || row.selling_price || row.product_selling_price) * row.quantity).toFixed(2)}
+                      &#8377;
+                      {(
+                        (row.matched_price ||
+                          row.selling_price ||
+                          row.product_selling_price) * row.quantity
+                      ).toFixed(2)}
                     </TableCell>
                   </TableRow>
                 ))
@@ -389,43 +441,65 @@ const calculateDiscount = () => {
             </TableBody>
             {data.length > 0 && (
               <TableFooter>
-              <TableRow>
-                <TableCell colSpan={5} align="right">
-                  <Typography className="text_1">Subtotal :</Typography>
-                </TableCell>
-                <TableCell className="text_2">
-                  &#8377;{calculateTotal().toFixed(2)}
-                </TableCell>
-              </TableRow>
-              {selectedCoupon && <TableRow>
-                <TableCell colSpan={5} align="right">
-                  <Typography className="text_1">Coupon Cost :</Typography>
-                </TableCell>
-                <TableCell className="text_2">
-                  &#8377; 30
-                </TableCell>
-              </TableRow>}
-              <TableRow>
-                <TableCell colSpan={5} align="right">
-                  <Typography className="text_1">Discount {selectedCoupon && `(${(selectedCoupon.coupon_type)?.replace(/_/g,' ')})`} :</Typography>
-                </TableCell>
-                <TableCell className="text_2">
-                  -&#8377;{calculateDiscount().toFixed(2)}
-                </TableCell>
-              </TableRow>
-              
-              <TableRow>
-                <TableCell colSpan={5} align="right">
-                  <Typography className="text_1">Total :</Typography>
-                </TableCell>
-                {selectedCoupon ? <TableCell className="text_2">
-                  &#8377;{((calculateTotal() - calculateDiscount()) + 30).toFixed(2)}
-                </TableCell> : <TableCell className="text_2">
-                  &#8377;{(calculateTotal() - calculateDiscount()).toFixed(2)}
-                </TableCell>}
-              </TableRow>
-            </TableFooter>
-            
+                <TableRow>
+                  <TableCell colSpan={5} align="right">
+                    <Typography className="text_1">Subtotal :</Typography>
+                  </TableCell>
+                  <TableCell className="text_2">
+                    &#8377;{calculateTotal().toFixed(2)}
+                  </TableCell>
+                </TableRow>
+                {selectedCoupon && (
+                  <TableRow>
+                    <TableCell colSpan={5} align="right">
+                      <Typography className="text_1">Coupon Cost :</Typography>
+                    </TableCell>
+                    <TableCell className="text_2">&#8377; 30</TableCell>
+                  </TableRow>
+                )}
+                <TableRow>
+                  <TableCell colSpan={5} align="right">
+                    <Typography className="text_1">
+                      Discount{" "}
+                      {selectedCoupon &&
+                        `(${selectedCoupon.coupon_type?.replace(
+                          /_/g,
+                          " "
+                        )})`}{" "}
+                      :
+                    </Typography>
+                  </TableCell>
+                  <TableCell className="text_2">
+                    -&#8377;{calculateDiscount().toFixed(2)}{" "}
+                  </TableCell>
+                </TableRow>
+
+                <TableRow>
+                  <TableCell colSpan={5} align="right">
+                    <Typography className="text_1">Total :</Typography>
+                  </TableCell>
+                  {selectedCoupon ? (
+                    <TableCell className="text_2">
+                      &#8377;
+                      {(
+                        calculateTotal() -
+                        (calculateDiscount() < 30 ? 30 : calculateDiscount()) +
+                        30
+                      ).toFixed(2)}
+                      {selectedCoupon && calculateDiscount() < 30 && (
+                      <Tooltip title="Discount adjusted to match coupon cost." placement="bottom-end" className="tooltip">
+                        <EmergencyIcon />
+                      </Tooltip>
+                    )}
+                    </TableCell>
+                  ) : (
+                    <TableCell className="text_2">
+                      &#8377;
+                      {(calculateTotal() - calculateDiscount()).toFixed(2)}
+                    </TableCell>
+                  )}
+                </TableRow>
+              </TableFooter>
             )}
           </Table>
         </TableContainer>
@@ -434,9 +508,9 @@ const calculateDiscount = () => {
           <Box className="circle"></Box>
         </Box>
       </Paper>
-      
     </Box>
+    </ThemeProvider>
   );
 }
 
-export default CartTable
+export default CartTable;

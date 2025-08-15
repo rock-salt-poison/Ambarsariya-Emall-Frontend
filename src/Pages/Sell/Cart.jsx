@@ -18,10 +18,11 @@ import ServiceType from "../../Components/Cart/ServiceType/ServiceType";
 import Delivery from "../../Components/Cart/ServiceType/Delivery";
 import Visit from "../../Components/Cart/ServiceType/Visit";
 import CoHelper from "../../Components/Cart/CoHelper/CoHelper";
-import { getMemberData, getShopUserData, getUser, post_purchaseOrder } from "../../API/fetchExpressAPI";
+import { get_discount_coupons, getMemberData, getShopUserData, getUser, post_purchaseOrder } from "../../API/fetchExpressAPI";
 import UserBadge from "../../UserBadge";
 import CustomSnackbar from "../../Components/CustomSnackbar";
 import { clearCart } from "../../store/cartSlice";
+import { addCoupon } from "../../store/discountsSlice";
 
 function Cart() {
   const sampleRows = useSelector((state) => state.cart.selectedProducts);
@@ -55,6 +56,36 @@ function Cart() {
       setTimeout(() => navigate("../grab"), 100);
     }
   };
+
+ useEffect(() => {
+    const autoApplyRetailerCoupon = async () => {
+      if (selectedCoupon || sampleRows?.length === 0) return;
+      try {
+        const shopData = await getShopUserData(owner);
+        if (shopData?.length > 0) {
+          const resp = await get_discount_coupons(shopData[0].shop_no);
+          if (resp?.valid) {
+            const retailerCategory = resp.data.find(
+              (category) => category.discount_category === "retailer"
+            );
+            if (retailerCategory?.coupons?.length > 0) {
+              const defaultCoupon = retailerCategory.coupons.find(
+                (c) => c.coupon_type === "retailer_upto"
+              ) || retailerCategory.coupons[0]; // fallback
+              
+              if (defaultCoupon) {
+                dispatch(addCoupon(defaultCoupon));
+              }
+            }
+          }
+        }
+      } catch (err) {
+        console.error("Error auto-applying retailer coupon", err);
+      }
+    };
+
+    autoApplyRetailerCoupon();
+  }, [dispatch, selectedCoupon, sampleRows]);
 
   useEffect(() => {
     const fetchData = async () => {

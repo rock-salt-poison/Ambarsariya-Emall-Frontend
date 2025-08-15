@@ -15,22 +15,24 @@ export default function BarChartComponent({ dataset, label, dataKey, title, seri
       : [
           { dataKey: 'value', color: 'var(--brown-6)', valueFormatter: (v) => `${v}` },
         ],
-    height: 200,
+    // height: 200,
     sx: {
       [`& .${axisClasses.directionY} .${axisClasses.label}`]: {
         transform: 'translateX(-12px)',
       },
     },
-    margin: { top: 10, bottom: 20, right: 10, left: 50 },
+    // margin: { top: 10, bottom: 20, right: 10, left: 50 },
   };
 
   return (
     <Box className="bar_chart_container">
       <Typography variant="h3" className="heading">{title || 'Sale'}</Typography>
       <BarChart
+        height={350}
         dataset={dataset}
         xAxis={[
-          { scaleType: 'band', dataKey, paddingOuter: 0.1, paddingInner: 0.3 },
+          { scaleType: 'band', dataKey, paddingOuter: 0.1, paddingInner: 0.3, categoryGapRatio: 0.4,
+      barGapRatio: 0.1, },
         ]}
         {...chartSetting}
       />

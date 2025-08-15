@@ -288,16 +288,16 @@ const theme = createCustomTheme(themeProps);
               <Box className="sub_container">
                 {chartData.length > 0 ? (
                   <BarChartComponent
-  dataset={chartData}
-  label="Cost (₹)"
-  dataKey="date"
-  title="Orders Cost Summary"
-  series={[
-    { dataKey: 'completed', label: 'Completed', color: '#4caf50', valueFormatter: (v) => `₹${v}` },
-    { dataKey: 'pending', label: 'Pending', color: '#ff9800', valueFormatter: (v) => `₹${v}` },
-    // { dataKey: 'subscription', label: 'Subscription', color: '#2196f3', valueFormatter: (v) => `₹${v}` },
-  ]}
-/>
+                    dataset={chartData}
+                    label="Cost (₹)"
+                    dataKey="date"
+                    title="Orders Cost Summary"
+                    series={[
+                      { dataKey: 'completed', label: 'Completed', color: '#6B4336', valueFormatter: (v) => `₹${v}`, minBarSize: 2 },
+                      { dataKey: 'pending', label: 'Pending', color: '#b67d1c', valueFormatter: (v) => `₹${v}`, minBarSize: 2 },
+                      // { dataKey: 'subscription', label: 'Subscription', color: '#2196f3', valueFormatter: (v) => `₹${v}` },
+                    ]}
+                  />
 
                 ) : (
                   <Box className="show_message">

@@ -10904,11 +10904,11 @@ a {
           color: $black;
           box-shadow: 0px 0px 4px hwb(38 96% 0% / 0.8);
           border-radius: 16px;
-          padding: 20px 0;
+          padding: 20px;
 
           .board_pins {
             @include flex-center(row, space-between);
-            padding: 0 20px;
+            // padding: 0 20px;
 
             .circle {
               width: 14px;
@@ -10919,17 +10919,17 @@ a {
             }
 
             &:last-child {
-              margin-top: -30px;
+              // margin-top: -30px;
             }
           }
 
           .MuiTableContainer-root {
-            margin-top: -30px;
+            // margin-top: -30px;
 
             .MuiTable-root {
               max-width: 100%;
               overflow: auto;
-              border-spacing: 10px 15px;
+              border-spacing: 5px 10px;
               border-collapse: separate;
 
               .MuiTableHead-root {
@@ -10980,6 +10980,13 @@ a {
                     .product_info {
                       position: relative;
                       padding: 12px 25px;
+
+                      &.product{
+                        width: 220px;
+                        .text_1{
+                          white-space: normal;
+                        }
+                      }
                     }
 
                     .vector {
@@ -11113,7 +11120,7 @@ a {
                     border: 0px;
                     position: relative;
                     z-index: 1;
-                    padding: 0px 30px 0px;
+                    padding: 0px 20px 0px;
 
                     .text_1 {
                       @include homepage-buttons(
@@ -11137,6 +11144,11 @@ a {
                       text-align: right;
                       @include hover-scale(1, 0s);
                       text-shadow: 0px 4px 4px #00000073;
+
+                      .tooltip{
+                        font-size: 16px;
+                        vertical-align: text-top;
+                      }
                     }
                   }
                 }

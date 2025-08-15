@@ -17,7 +17,7 @@ import {
   get_discount_coupons,
   getShopUserData,
 } from "../../../API/fetchExpressAPI";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addCoupon } from "../../../store/discountsSlice";
 
 function RetailerCoupon({ selectedCoupon }) {
@@ -27,12 +27,16 @@ function RetailerCoupon({ selectedCoupon }) {
   };
 
   const theme = createCustomTheme(themeProps);
+  const reduxSelectedCoupon = useSelector((state) => state.discounts.selectedCoupon);
   const [loading, setLoading] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(1);
+  const [selectedOption, setSelectedOption] = useState(reduxSelectedCoupon?.coupon_id  || 1);
   const [filteredCoupons, setFilteredCoupons] = useState([]);
   const location = useLocation();
   const { owner } = useParams();
   const dispatch = useDispatch();
+
+  console.log(selectedOption);
+  
 
   // Create a URLSearchParams instance to access query parameters
   const queryParams = new URLSearchParams(location.search);
@@ -88,6 +92,46 @@ function RetailerCoupon({ selectedCoupon }) {
     };
     fetchData();
   }, [token, selectedCouponKey]);
+
+  useEffect(() => {
+  if (filteredCoupons.length === 0) return;
+
+  // Find the default retailer_upto coupon
+  const retailerDefault = filteredCoupons.find(
+    (c) => c.coupon_type === "retailer_upto"
+  );
+
+  if (!reduxSelectedCoupon?.coupon_id) {
+    // No coupon in Redux → set to default retailer
+    if (retailerDefault) {
+      setSelectedOption(retailerDefault.coupon_id);
+      dispatch(addCoupon(retailerDefault));
+    }
+    return;
+  }
+
+  // Check if Redux coupon is still in the list
+  const stillValid = filteredCoupons.some(
+    (c) => c.coupon_id === reduxSelectedCoupon.coupon_id
+  );
+
+  if (!stillValid) {
+    // Redux coupon not applicable → switch to default retailer
+    if (retailerDefault) {
+      setSelectedOption(retailerDefault.coupon_id);
+      dispatch(addCoupon(retailerDefault));
+    }
+    return;
+  }
+
+  // If the local state doesn't match Redux, sync it
+  if (selectedOption !== reduxSelectedCoupon.coupon_id) {
+    setSelectedOption(reduxSelectedCoupon.coupon_id);
+  }
+}, [filteredCoupons, reduxSelectedCoupon, dispatch]);
+
+
+
 
   const handleClick = (e, coupon) => {
     e.preventDefault(); 
