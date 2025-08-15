@@ -1,10 +1,40 @@
-import React from 'react'
-import { Box, ThemeProvider } from '@mui/material'
+import React, { useEffect, useState } from 'react'
+import { Box, CircularProgress, ThemeProvider } from '@mui/material'
 import ScrollableTabsButton from '../../../../Components/ScrollableTabsButton'
 import createCustomTheme from '../../../../styles/CustomSelectDropdownTheme'
 import CouponOffers from './CouponOffers';
+import { get_coupons, getUser } from '../../../../API/fetchExpressAPI';
+import { useSelector } from 'react-redux';
 
 function CouponsPreview() {
+  
+  const token = useSelector((state)=> state.auth.userAccessToken);
+  const [loading, setLoading]= useState(false);
+  const [coupons, setCoupons] = useState([]);
+
+  useEffect(()=>{
+    if(token){
+      getDiscountCoupons(token);
+    }
+  }, [token])
+
+  const getDiscountCoupons = async (token) => {
+    try{
+      setLoading(true);
+      const ShopNo =  ((await getUser(token))?.find(u => u?.shop_no !== null))?.shop_no;
+      if(ShopNo){
+        const discountCoupons = await get_coupons(ShopNo);
+        if(discountCoupons?.valid){
+          setCoupons(discountCoupons?.data);
+          console.log(discountCoupons?.data);
+        }
+      }
+    }catch(e){
+
+    }finally{
+      setLoading(false);
+    }
+  }
 
   const themeProps = {
     popoverBackgroundColor: '#f8e3cc',
@@ -47,6 +77,7 @@ function CouponsPreview() {
 
   return (
     <ThemeProvider theme={theme}>
+      {loading && <Box className="loading"><CircularProgress/></Box> }
       <Box className="coupons_preview">
         <ScrollableTabsButton data={tabsData} scrollbarThumb2='var(--brown)'/>
       </Box>

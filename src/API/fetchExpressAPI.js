@@ -348,6 +348,15 @@ export const get_discount_coupons = async (shop_no) => {
   }
 }
 
+export const get_coupons = async (shop_no) => {
+  try {
+    const response = await axios.get(`${link}/sell/coupons/${shop_no}`);
+    return response.data;
+  } catch (e) {
+    throw e;
+  }
+}
+
 export const get_travel_time = async (data) => {
   try {
     const response = await axios.get(`${admin_link}/travel-time/${data.mode}/${data.travel_type}`);
