@@ -22,7 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { removeProduct } from "../../store/cartSlice";
 import { useParams } from "react-router-dom";
 import Button2 from "../Home/Button2";
-import { convertDriveLink, getCategoryName } from "../../API/fetchExpressAPI";
+import { convertDriveLink, getCategoryName, getLastPurchasedTotal, getShopUserData, getUser } from "../../API/fetchExpressAPI";
 import CustomSnackbar from "../CustomSnackbar";
 import { removeCoupon } from "../../store/discountsSlice";
 import EmergencyIcon from "@mui/icons-material/Emergency";
@@ -59,7 +59,9 @@ function CartTable({ rows, setCartData, setSelectedCoupon }) {
   );
   const [categoryNames, setCategoryNames] = useState({}); // Map of category IDs to names
   const { selectedCoupon } = useSelector((state) => state.discounts);
-
+  const token = useSelector((state) => state.auth.userAccessToken);
+  const[ lastPurchasedValue, setLastPurchasedValue] = useState(null);
+  
   console.log(data);
   console.log(".............................", selectedCoupon);
 
@@ -86,8 +88,39 @@ function CartTable({ rows, setCartData, setSelectedCoupon }) {
     fetchCategories();
   }, [rows]);
 
+  const getBuyerDetails = async (buyerToken) => {
+      try{
+        setLoading(true);
+        const resp = (await getUser(buyerToken))?.find(u => u?.member_id !==null);
+        if(resp){
+          const shopDetails = (await getShopUserData(owner))?.[0];
+          if(shopDetails){
+            const lastPurchasedValueResp = await getLastPurchasedTotal(shopDetails?.shop_no, resp?.member_id);
+            console.log(lastPurchasedValueResp);
+            
+            if(lastPurchasedValueResp?.valid){
+              console.log(lastPurchasedValueResp?.data?.[0]?.total_purchased);
+              
+              setLastPurchasedValue(lastPurchasedValueResp?.data?.[0]?.total_purchased);
+            }
+          }
+        }
+      }catch(e){
+        console.log(e);
+      }finally{
+        setLoading(false);
+      }
+    }
+
+
+    useEffect(()=>{
+      if(token && owner){
+        getBuyerDetails(token);
+      }
+    }, [token, owner]);
+
   useEffect(() => {
-    if (selectedCoupon) {
+    if (selectedCoupon) {      
       const total = calculateTotal();
       const totalQuantity = data.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -95,6 +128,12 @@ function CartTable({ rows, setCartData, setSelectedCoupon }) {
       const minOrder = Number(
         conditions.find((c) =>
           ["minimum_order", "last_purchase_above"].includes(c.type)
+        )?.value || 0
+      );
+
+      const lastPurchaseAbove = Number(
+        conditions.find((c) =>
+          ["last_purchase_above"].includes(c.type)
         )?.value || 0
       );
       const percent = Number(
@@ -133,7 +172,7 @@ function CartTable({ rows, setCartData, setSelectedCoupon }) {
             severity: "success",
           });
         }
-      } else if (selectedCoupon.coupon_type === "loyalty_prepaid") {
+      } else if (lastPurchasedValue !== null && selectedCoupon.coupon_type === "loyalty_prepaid") {
         if (total < pay) {
           setSnackbar({
             open: true,
@@ -150,7 +189,7 @@ function CartTable({ rows, setCartData, setSelectedCoupon }) {
             severity: "success",
           });
         }
-      } else if (total < minOrder) {
+      } else if (total < minOrder && selectedCoupon.coupon_type === "retailer_flat") {
         setSnackbar({
           open: true,
           message: `Add ₹${(minOrder - total).toFixed(
@@ -159,14 +198,26 @@ function CartTable({ rows, setCartData, setSelectedCoupon }) {
           severity: "error",
         });
         shouldRemoveCoupon = true;
-      } else if (!selectedCoupon.coupon_type.includes("loyalty_by_customer")) {
+      } else if (selectedCoupon.coupon_type.includes("loyalty_unlock")) {
+        if(lastPurchasedValue >= lastPurchaseAbove){
+          const discountValue = (total * flatDiscount) / 100 ;
+          setSnackbar({
+            open: true,
+            message: `You saved ₹${discountValue.toFixed(2)}!`,
+            severity: "success",
+          });
+        }else{
+          shouldRemoveCoupon = true;
+        }
+      }else if (selectedCoupon.coupon_type.includes("loyalty_by_customer")) {
         const discountValue =
-          percent > 0 ? (total * percent) / 100 : flatDiscount;
+        percent > 0 ? (total * percent) / 100 : flatDiscount;
         setSnackbar({
           open: true,
           message: `You saved ₹${discountValue.toFixed(2)}!`,
           severity: "success",
         });
+        shouldRemoveCoupon = true;
       }
 
       if (shouldRemoveCoupon) {
@@ -261,12 +312,19 @@ function CartTable({ rows, setCartData, setSelectedCoupon }) {
       conditions.find((c) => c.type === "order_upto")?.value || 0
     );
 
+    const unlock = Number(
+      conditions.find((c) => c.type === "unlock")?.value || 0
+    );
+
+    const last_purchase_above = Number(
+      conditions.find((c) => c.type === "last_purchase_above")?.value || 0
+    );
+
     const percent = Number(
       conditions.find(
         (c) =>
           c.type === "percentage" ||
           c.type === "flat" ||
-          c.type === "unlock" ||
           c.type === "save" ||
           c.type === "percent_off" ||
           c.type === "flat_percent"
@@ -274,11 +332,12 @@ function CartTable({ rows, setCartData, setSelectedCoupon }) {
     );
     const buy = Number(conditions.find((c) => c.type === "buy")?.value || 0);
     const pay = Number(conditions.find((c) => c.type === "pay")?.value || 0);
+    const get = Number(conditions.find((c) => c.type === "get")?.value || 0);
 
     switch (coupon_type) {
       case "retailer_upto":
         // return total <= orderUpto ? (((total * percent) / 100)< 30) ? 30 : (total * percent) / 100 : 30;
-        return total <= orderUpto ? (total * percent) / 100 : 0;
+        return total ? (total * percent) / 100 : 0;
 
       case "retailer_flat":
         return total >= minOrder ? (total * percent) / 100 : 0;
@@ -286,11 +345,11 @@ function CartTable({ rows, setCartData, setSelectedCoupon }) {
       case "retailer_freebies":
         return totalQuantity >= buy ? 0 : 0;
 
+      case "loyalty_unlock":
+        return lastPurchasedValue >= last_purchase_above ? (total * unlock) / 100 : 0;
+
       case "loyalty_prepaid":
-        const get = Number(
-          conditions.find((c) => c.type === "get")?.value || 0
-        );
-        return total >= pay ? get : 0;
+        return lastPurchasedValue ? total >= pay ? get : 0 : 0;
 
       case "loyalty_bonus":
         return (total * percent) / 100;

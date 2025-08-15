@@ -15,7 +15,9 @@ import radio_button from "../../../Utils/images/Sell/cart/special_offers/radio_b
 import { Link, useLocation, useParams } from "react-router-dom";
 import {
   get_discount_coupons,
+  getLastPurchasedTotal,
   getShopUserData,
+  getUser,
 } from "../../../API/fetchExpressAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { addCoupon } from "../../../store/discountsSlice";
@@ -33,7 +35,10 @@ function RetailerCoupon({ selectedCoupon }) {
   const [filteredCoupons, setFilteredCoupons] = useState([]);
   const location = useLocation();
   const { owner } = useParams();
+  const buyerToken = useSelector((state) => state.auth.userAccessToken);
   const dispatch = useDispatch();
+  const[ lastPurchasedValue, setLastPurchasedValue] = useState(null);
+  const[ shopDetails, setShopDetails] = useState(null);
 
   console.log(selectedOption);
   
@@ -68,6 +73,7 @@ function RetailerCoupon({ selectedCoupon }) {
         if (token) {
           const resp = await getShopUserData(token);
           if (resp?.length > 0) {
+            setShopDetails(resp?.[0]);
             const fetch_discounts = await get_discount_coupons(resp[0].shop_no);
             if (fetch_discounts.valid) {
               // Filter the coupons based on the selectedCouponKey
@@ -131,7 +137,36 @@ function RetailerCoupon({ selectedCoupon }) {
 }, [filteredCoupons, reduxSelectedCoupon, dispatch]);
 
 
+  console.log(lastPurchasedValue);
+  
+  useEffect(()=>{
+    if(buyerToken && shopDetails){
+      getBuyerDetails(buyerToken);
+    }
+  }, [buyerToken, shopDetails]);
 
+  const getBuyerDetails = async (buyerToken) => {
+    try{
+      setLoading(true);
+      const resp = (await getUser(buyerToken))?.find(u => u?.member_id !==null);
+      if(resp){
+        console.log(shopDetails?.shop_no, resp?.member_id);
+        
+        const lastPurchasedValueResp = await getLastPurchasedTotal(shopDetails?.shop_no, resp?.member_id);
+        console.log(lastPurchasedValueResp);
+        
+        if(lastPurchasedValueResp?.valid){
+          console.log(lastPurchasedValueResp?.data?.[0]?.total_purchased);
+          
+          setLastPurchasedValue(lastPurchasedValueResp?.data?.[0]?.total_purchased);
+        }
+      }
+    }catch(e){
+      console.log(e);
+    }finally{
+      setLoading(false);
+    }
+  }
 
   const handleClick = (e, coupon) => {
     e.preventDefault(); 
@@ -163,14 +198,17 @@ function RetailerCoupon({ selectedCoupon }) {
                 <React.Fragment key={coupon.coupon_id}>
                   <Link
                     to={getCurrentUrlWithToken()}
-                    onClick={(e) => {
-                      handleClick(e, coupon);
-                    }}
+                    onClick={(e) =>
+                      couponTitle[selectedCouponKey] === 'Loyalty Coupons'
+                        ? lastPurchasedValue && handleClick(e, coupon)
+                        : handleClick(e, coupon)
+                    }
                     className={`coupon_container ${
                       selectedOption === coupon.coupon_id
                         ? "mask_none selected"
                         : ""
-                    }`}
+                    } ${couponTitle[selectedCouponKey] === 'Loyalty Coupons'
+                        ? lastPurchasedValue ? '': 'disable':'' }`}
                   >
                     <Box
                       component="img"

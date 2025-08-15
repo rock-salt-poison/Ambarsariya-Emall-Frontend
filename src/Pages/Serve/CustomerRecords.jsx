@@ -80,6 +80,14 @@ useEffect(() => {
   const fetchData = async () =>{
     if (token) {
       if(formData?.purchase_date){
+        setFormData((prev)=> ({
+          ...prev,
+          customer:'',
+          customer_details:'',
+          completed_orders:'',
+          pending_orders:'',
+          subscription_details:'',
+        }))
         const [startDateAndTime, endDateAndTime] = formData?.purchase_date || [];
 
         // Format into YYYY-MM-DD
@@ -95,10 +103,17 @@ useEffect(() => {
     }
   }
   fetchData();
-}, [formData && formData.purchase_date, token, currentUser]);
+}, [formData.purchase_date, token, currentUser]);
 
 useEffect(()=> {
   if(formData?.customer){
+    setFormData((prev)=>({
+      ...prev,
+      customer_details:'',
+      completed_orders:'',
+      pending_orders:'',
+      subscription_details:'',
+    }))
     const filteredData = records?.find((data)=> data?.buyer_id === formData?.customer);
     setFormData((prev)=>({
       ...prev, 
@@ -107,7 +122,7 @@ useEffect(()=> {
     fetch_completed_orders(startDate, endDate, currentUser?.shop_no, formData?.customer);
     fetch_pending_orders(startDate, endDate, currentUser?.shop_no, formData?.customer);
   }
-}, [formData && formData?.customer, currentUser]);
+}, [formData?.customer, currentUser]);
 
 const fetch_completed_orders = async (startDate, endDate, shop_no, buyer_id) => {
   try{
@@ -217,7 +232,6 @@ const validateForm = () => {
 
 const handleSubmit = (event) => {
   event.preventDefault();
-  if (validateForm()) {
     const allDates = eachDayOfInterval({
       start: new Date(startDate),
       end: new Date(endDate),
@@ -251,7 +265,6 @@ const handleSubmit = (event) => {
     .filter(day => day.completed > 0 || day.pending > 0);
 
     setChartData(dataset);
-  }
 };
 
 

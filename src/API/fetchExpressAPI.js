@@ -1606,3 +1606,12 @@ export const getPendingOrders = async (start_date, end_date, shop_no, buyer_id) 
     throw error
   }
 };
+
+export const getLastPurchasedTotal = async (shop_no, buyer_id) => {
+  try {
+    const response = await axios.get(`${serve_link}/purchased-total/${shop_no}/${buyer_id}`);
+    return response.data;
+  } catch (error) {
+    throw error
+  }
+};

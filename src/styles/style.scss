@@ -22283,6 +22283,11 @@ textarea[readonly] {
               );
               z-index: 0;
 
+              &.disable{
+                filter: contrast(0.5);
+                cursor: not-allowed;
+              }
+
               &.mask_none {
                 mask: none;
               }
