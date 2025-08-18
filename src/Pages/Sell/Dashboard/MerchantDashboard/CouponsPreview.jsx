@@ -10,7 +10,7 @@ function CouponsPreview() {
   
   const token = useSelector((state)=> state.auth.userAccessToken);
   const [loading, setLoading]= useState(false);
-  const [coupons, setCoupons] = useState([]);
+  const [coupons, setCoupons] = useState(null);
 
   useEffect(()=>{
     if(token){
@@ -25,12 +25,20 @@ function CouponsPreview() {
       if(ShopNo){
         const discountCoupons = await get_coupons(ShopNo);
         if(discountCoupons?.valid){
-          setCoupons(discountCoupons?.data);
           console.log(discountCoupons?.data);
+          const retailer_coupons = discountCoupons?.data?.filter(c => c?.discount_category === 'retailer');
+          const loyalty_coupons = discountCoupons?.data?.filter(c => c?.discount_category === 'loyalty');
+          const subscription_coupons = discountCoupons?.data?.filter(c => c?.discount_category === 'subscription');
+          const customizable_coupons = discountCoupons?.data?.filter(c => c?.discount_category === 'customizable');
+          setCoupons({retailer: retailer_coupons,
+            loyalty: loyalty_coupons,
+            subscription: subscription_coupons,
+            customizable: customizable_coupons});
+          
         }
       }
     }catch(e){
-
+      console.log(e);
     }finally{
       setLoading(false);
     }
@@ -69,10 +77,10 @@ function CouponsPreview() {
   }
 
   const tabsData = [
-    { id: 1, name: 'Retailer', content: <CouponOffers data={data['retailer']}/> },
-    { id: 2, name: 'Loyalty', content: <CouponOffers data={data['loyalty']}/> },
-    { id: 3, name: 'Subscription', content: <CouponOffers data={data['subscription']}/> },
-    { id: 4, name: 'Customizable', content: <CouponOffers data={data['customizable']}/> },
+    { id: 1, name: 'Retailer', content: <CouponOffers data={coupons['retailer']}/> },
+    { id: 2, name: 'Loyalty', content: <CouponOffers data={coupons['loyalty']}/> },
+    { id: 3, name: 'Subscription', content: <CouponOffers data={coupons['subscription']}/> },
+    { id: 4, name: 'Customizable', content: <CouponOffers data={coupons['customizable']}/> },
   ]
 
   return (
