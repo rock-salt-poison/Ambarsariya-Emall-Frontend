@@ -292,6 +292,7 @@ const EshopForm = () => {
           key_players: selectedKeyPlayers,
           razorpay_contact_id : contactId || null,
           razorpay_fund_account_id: fundAccountId || null,
+          username: shopUserData?.username
         };
   
         
