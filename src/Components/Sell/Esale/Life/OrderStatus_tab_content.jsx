@@ -280,9 +280,6 @@ function OrderStatus_tab_content({ title }) {
 
         console.log(data);
 
-
-
-
         if (status === 'Accept') {
 
           const totalAmount = selectedOrder?.[0].total_amount || 0;
@@ -636,7 +633,7 @@ function OrderStatus_tab_content({ title }) {
                   })()}
                 </Typography>
               </Box>
-              {selectedOrder?.[0].so_subtotal && (
+              {selectedOrder?.[0]?.purchase_order_status !== 'Hold' ? selectedOrder?.[0].so_subtotal && (
                 <Box className="col">
                   <Typography className="heading">Sale Order Status</Typography>
                   <Select
@@ -654,7 +651,7 @@ function OrderStatus_tab_content({ title }) {
                     <MenuItem value="Hold">Hold</MenuItem>
                   </Select>
                 </Box>
-              )}
+              ): ''}
             </Box>
           </>
         ) : (

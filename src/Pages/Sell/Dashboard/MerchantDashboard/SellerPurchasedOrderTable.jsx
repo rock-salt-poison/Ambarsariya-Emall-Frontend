@@ -95,6 +95,7 @@ function SellerPurchasedOrderTable({ purchasedOrders, selectedPO, cardType }) {
     }
   }, [updatedProducts]);
 
+  console.log('................', updatedProducts);
 
   const handleToggleChange = async (index, newValue) => {
     
@@ -199,6 +200,7 @@ function SellerPurchasedOrderTable({ purchasedOrders, selectedPO, cardType }) {
 
 const handleConfirm = async (saleOrder) => {
   try {
+    setOpenDialog(false);
       setLoading(true);
       const resp = await post_saleOrder(saleOrder);
       setSnackbar({
@@ -207,6 +209,12 @@ const handleConfirm = async (saleOrder) => {
         severity: "success",
       });
       setSoExists(true);
+      setUpdatedProducts((prevProducts) =>
+        prevProducts.map((product) => ({
+          ...product,
+          purchase_order_status: headerToggleState,
+        }))
+      );
     } catch (error) {
       console.error("API error:", error);
       setSnackbar({
@@ -217,7 +225,6 @@ const handleConfirm = async (saleOrder) => {
       setSoExists(false);
     } finally {
       setLoading(false);
-      setOpenDialog(false);
     }
 }
 
@@ -390,7 +397,7 @@ useEffect(()=>{
       return updated;
     });
   };
-
+  
   
   return (
     <>
@@ -426,10 +433,10 @@ useEffect(()=>{
               Final S.O
               <Typography component="span">
                 <ToggleButtonGroup
-                  value={headerToggleState || products?.[0]?.sale_order_status}
+                  value={headerToggleState || products?.[0]?.purchase_order_status}
                   exclusive
                   onChange={handleHeaderToggleChange}
-                  disabled={soExists}
+                  disabled={updatedProducts?.[0]?.purchase_order_status !== 'Hold'}
                 >
                   <ToggleButton value="Deny" className="toggle">
                     Deny
@@ -576,7 +583,7 @@ useEffect(()=>{
           })}
           
 
-          {updatedProducts.length > 0 && !soExists && (
+          {updatedProducts.length > 0 && updatedProducts?.[0]?.purchase_order_status === 'Hold' && (
             <TableRow hover>
               <TableCell colSpan="6">
                 Total (Coupon Cost Included)
