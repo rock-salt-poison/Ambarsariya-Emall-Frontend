@@ -31,7 +31,7 @@ function SellerPurchasedOrderTable({ purchasedOrders, selectedPO, cardType }) {
   const [updatedProducts, setUpdatedProducts] = useState([]);
   const { token } = useParams();
   const [toggleStates, setToggleStates] = useState({});
-  const [headerToggleState, setHeaderToggleState] = useState("Hold");
+  const [headerToggleState, setHeaderToggleState] = useState('Hold');
   const [editedValues, setEditedValues] = useState({});
     const [openDialog, setOpenDialog] = useState(false); // State for dialog
   const [saleOrder, setSaleOrder] = useState(null);
@@ -317,7 +317,7 @@ useEffect(()=>{
     balance_credit: null,
     balance_credit_due_date: null,
     after_due_date_surcharges_per_day: null,
-    status: headerToggleState,
+    status: headerToggleState || 'Hold',
     send_qr_upi_bank_details: true,
     coupon_cost : couponCost,
     buyer_shop_no : null,
@@ -404,7 +404,11 @@ useEffect(()=>{
     
     {updatedProducts?.length > 0 && <Box className="col buyer_details">
         <Typography className="heading">Buyer Id : </Typography>
-        <Link to={`../support/shop/${token}/purchased-order/${encodeURIComponent(products?.[0]?.po_no)}`}><Typography className="text">{(updatedProducts?.[0]?.buyer_name)}</Typography></Link>
+        {updatedProducts?.[0]?.buyer_type !== 'member' ? <Typography className="text">{(updatedProducts?.[0]?.buyer_name)}</Typography> : 
+        // <Link to={`../support/shop/${token}/purchased-order/${encodeURIComponent(products?.[0]?.po_no)}`}>
+        <Link to={`../user/${products?.[0]?.buyer_access_token}`}>
+          <Typography className="text">{(updatedProducts?.[0]?.buyer_name)}</Typography>
+        </Link>}
     </Box>}
    
     <Box className="col">
@@ -433,9 +437,9 @@ useEffect(()=>{
               Final S.O
               <Typography component="span">
                 <ToggleButtonGroup
-                  value={headerToggleState || products?.[0]?.purchase_order_status}
+                  value={headerToggleState || updatedProducts?.[0]?.purchase_order_status}
                   exclusive
-                  onChange={handleHeaderToggleChange}
+                  onChange={(e)=>handleHeaderToggleChange(e, e.target.value)}
                   disabled={updatedProducts?.[0]?.purchase_order_status !== 'Hold'}
                 >
                   <ToggleButton value="Deny" className="toggle">

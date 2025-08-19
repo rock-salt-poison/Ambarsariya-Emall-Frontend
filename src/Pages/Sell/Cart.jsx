@@ -18,7 +18,7 @@ import ServiceType from "../../Components/Cart/ServiceType/ServiceType";
 import Delivery from "../../Components/Cart/ServiceType/Delivery";
 import Visit from "../../Components/Cart/ServiceType/Visit";
 import CoHelper from "../../Components/Cart/CoHelper/CoHelper";
-import { get_discount_coupons, getMemberData, getShopUserData, getUser, post_purchaseOrder } from "../../API/fetchExpressAPI";
+import { get_discount_coupons, get_visitorData, getMemberData, getShopUserData, getUser, post_purchaseOrder } from "../../API/fetchExpressAPI";
 import UserBadge from "../../UserBadge";
 import CustomSnackbar from "../../Components/CustomSnackbar";
 import { clearCart } from "../../store/cartSlice";
@@ -210,7 +210,10 @@ function Cart() {
       }
   
       const get_logged_in_user = await getUser(token);
+      console.log(get_logged_in_user);
+      
       if (get_logged_in_user) {
+        const visitorUser = get_logged_in_user?.find((u)=>u?.visitor_id !== null);
         const memberUser = get_logged_in_user?.find((u)=>u?.member_id !== null);
         const shopUser = get_logged_in_user?.find((u)=>u?.shop_no !== null);
         if (memberUser?.user_type === 'member' || memberUser?.user_type === 'merchant') {
@@ -227,6 +230,14 @@ function Cart() {
         //     setBuyerData(shopData[0]);
         //   }
         // } 
+        if (visitorUser.user_type === 'visitor') {
+          const visitorData = await get_visitorData(visitorUser.user_access_token);
+          
+          if (visitorData.valid) {            
+            buyerDataFetched = visitorData?.data?.[0];
+            setBuyerData(visitorData[0]);
+          }
+        } 
       }
 
       console.log(buyerDataFetched);
@@ -257,7 +268,7 @@ function Cart() {
 
   
       const data = {
-        buyer_id: buyerDataFetched?.member_id,
+        buyer_id: buyerDataFetched?.member_id || buyerDataFetched?.visitor_id,
         buyer_type: buyerDataFetched.user_type,
         seller_id: sellerDataFetched.shop_no,
         buyer_gst_number: buyerDataFetched.gst || null,
@@ -279,8 +290,8 @@ function Cart() {
         delivery_terms: null,
         additional_instructions: null,
         coupon_cost : cartData.couponCost,
-        buyer_name: buyerDataFetched?.full_name, 
-        buyer_contact_no: buyerDataFetched?.phone_no_1 
+        buyer_name: buyerDataFetched?.full_name || buyerDataFetched?.name, 
+        buyer_contact_no: buyerDataFetched?.phone_no_1 || buyerDataFetched?.phone_no 
       };
 
       console.log('*******************', data);

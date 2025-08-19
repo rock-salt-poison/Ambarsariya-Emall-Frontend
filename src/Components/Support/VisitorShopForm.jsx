@@ -87,10 +87,10 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields, setSelected
         // Filter out "Create" and add "Remote Jobs"
         const updatedDomains = domainList
           .map((domain) => domain.domain_name)
-          .filter((name) => name !== "Create");
+          .filter((name) => name !== "Create" && name !== 'Co-helper');
         console.log(updatedDomains)
 
-        updatedDomains.push("Remote Jobs");
+        updatedDomains.push("Remote Jobs", "Co-Helper");
         
         setDomains(updatedDomains);
         console.log(visitorData?.domain_name, visitorData?.custom_domain);
@@ -104,7 +104,7 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields, setSelected
   
         let sectorList = [];
 
-        if(selectedDomain === 'Co-helper'){
+        if(selectedDomain === 'Co-Helper'){
           sectorList = ['Logistics and Supply Chain Management', 'Environmental and Waste Management','Human Resources and Staffing','Research and Development','Engineering and Design Services','Marketing and Sales Support', 'Facility Management', 'Finance and Insurance','Health and Safety Services', 'Industrial Equipment and Machinery','Quality Control and Testing Services', 'Information Technology and Automation'];
           setSectors(sectorList);
         }else if(selectedDomain === 'Remote Jobs'){
@@ -213,7 +213,7 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields, setSelected
     try {
       // Fetch all domains
       const domains = await fetchDomains();
-      const selectedDomain = (value !== 'Co-helper' && value !== 'Remote Jobs') ? domains.find(
+      const selectedDomain = (value !== 'Co-Helper' && value !== 'Remote Jobs') ? domains.find(
         (domain) => domain.domain_name === value
       ) : value;
 
@@ -223,7 +223,7 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields, setSelected
         console.log(selectedDomain);
         
         // If domain is Co-Helper or Remote Jobs, define custom sectors
-        if (selectedDomain === "Co-helper") {
+        if (selectedDomain === "Co-Helper") {
           sectorList = ['Logistics and Supply Chain Management', 'Environmental and Waste Management','Human Resources and Staffing','Research and Development','Engineering and Design Services','Marketing and Sales Support', 'Facility Management', 'Finance and Insurance','Health and Safety Services', 'Industrial Equipment and Machinery','Quality Control and Testing Services', 'Information Technology and Automation'];
         } else if (selectedDomain === "Remote Jobs") {
           sectorList = ['Freelance Writing or Editing', 'Virtual Assistance', 'Graphic Design', 'Social Media Management', 'Online Tutoring or Teaching', 'E-commerce Management', 'Web Development or Programming', 'Data Entry or Analysis', 'Digital Marketing', 'Customer Support'];
@@ -326,10 +326,10 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields, setSelected
     if (validate()) {
       try {
         setLoading(true);
-        const selectedDomain = (await fetchDomains()).find(
+        const selectedDomain = (formData?.domain !== 'Co-Helper' || formData?.domain !== 'Remote Jobs') && (await fetchDomains()).find(
           (domain) => domain.domain_name === formData.domain
         );
-        const selectedSector = (await fetchSectors()).find(
+        const selectedSector = (formData?.domain !== 'Co-Helper' || formData?.domain !== 'Remote Jobs') &&  (await fetchSectors()).find(
           (sector) => sector.sector_name === formData.sector
         );
 
@@ -348,7 +348,9 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields, setSelected
           sending_from: getCurrentUserId(),
           file: formData.file,
           access_token: token,
-          user_type: visitorData.user_type 
+          user_type: visitorData.user_type, 
+          custom_domain : formData?.domain === 'Co-Helper' || formData?.domain === 'Remote Jobs' ? formData?.domain : null, 
+          custom_sector : formData?.domain === 'Co-Helper' || formData?.domain === 'Remote Jobs' ? formData?.sector : null 
         });
 
         console.log(resp);
