@@ -292,7 +292,9 @@ console.log('----------', selectedProducts);
     if(loggedInUserToken){
       try{
         const users= (await getUser(loggedInUserToken));
-        const matchedUser = users.find(user => ['member', 'shop', 'merchant'].includes(user.user_type));
+        console.log(users);
+        
+        const matchedUser = users.find(user => ['member', 'shop', 'merchant', 'visitor'].includes(user.user_type));
         console.log(matchedUser);
         
 
