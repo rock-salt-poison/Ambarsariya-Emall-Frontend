@@ -404,7 +404,7 @@ useEffect(()=>{
     
     {updatedProducts?.length > 0 && <Box className="col buyer_details">
         <Typography className="heading">Buyer Id : </Typography>
-        <Link to={`../support/shop/${token}/purchased-order/${encodeURIComponent(products?.[0]?.po_no)}`}><Typography className="text">{(products?.[0]?.po_no)?.split('&')?.[0]}</Typography></Link>
+        <Link to={`../support/shop/${token}/purchased-order/${encodeURIComponent(products?.[0]?.po_no)}`}><Typography className="text">{(updatedProducts?.[0]?.buyer_name)}</Typography></Link>
     </Box>}
    
     <Box className="col">
