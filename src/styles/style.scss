@@ -5535,6 +5535,23 @@ a {
                 }
               }
 
+
+              h3 {
+                @include homepage-buttons(
+                  "Bobby-Jones-Soft",
+                  18px,
+                  $brown,
+                  "none"
+                );
+                @include hover-scale(1, 0s);
+                text-align: center;
+
+                span {
+                  color: $black;
+                  margin-left: 5px;
+                }
+              }
+
               .form_container {
                 width: 100%;
 
@@ -5570,6 +5587,7 @@ a {
                   width: 100%;
                   @include flex-center(column, center);
                   place-items: normal;
+                  gap: 10px;
 
                   &.sendMessagaeForm {
                     @include flex-center(row, flex-start);

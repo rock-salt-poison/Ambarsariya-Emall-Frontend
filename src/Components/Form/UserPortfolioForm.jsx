@@ -328,7 +328,7 @@ const UserPortfolioForm = () => {
                 message: `Redirecting for Google access`,
                 severity: "info",
               });
-              get_requestGoogleAccess(formData?.username);
+              get_requestGoogleAccess(formData?.username, `${process.env.REACT_APP_FRONTEND_LINK}/sell/user`);
               return;
             }
             setSnackbar({

@@ -216,14 +216,14 @@ const VisitorFormBox = ({ visitorData, shopData, currentUser }) => {
 ) : !notificationOpen && selectedNotification === null && (
   <Box className="content">
     <Typography variant="h2">
-      E-Ambarsariya:
-      <Link onClick={handleHeadingClick}>
+      We are here to solve your query with care and clarity !
+      {/* <Link onClick={handleHeadingClick}>
         <Typography variant="span">
           {shopData ? `${shopData.domain_name} - ${shopData.sector_name}` : formSubmitted && visitorData?.domain_name && visitorData?.sector_name
             ? `${visitorData.domain_name} - ${visitorData.sector_name}`
             : `${value.domain} - ${value.sector}`}
         </Typography>
-      </Link>
+      </Link> */}
     </Typography>
     <Box className="form_container">
       <VisitorShopForm

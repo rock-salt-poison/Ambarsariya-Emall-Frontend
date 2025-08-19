@@ -75,70 +75,92 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields, setSelected
       };
     }, []); 
 
+    console.log(visitorData);
+    
+
   // Fetch domains once and set initial form field data
   useEffect(() => {
     const fetchInitialData = async () => {
       setLoading(true);
       try {
         const domainList = await fetchDomains();
-        setDomains(domainList.map((domain) => domain.domain_name));
+        // Filter out "Create" and add "Remote Jobs"
+        const updatedDomains = domainList
+          .map((domain) => domain.domain_name)
+          .filter((name) => name !== "Create");
+        console.log(updatedDomains)
+
+        updatedDomains.push("Remote Jobs");
+        
+        setDomains(updatedDomains);
+        console.log(visitorData?.domain_name, visitorData?.custom_domain);
   
-        const selectedDomain = domainList.find(
+        const selectedDomain = visitorData?.domain_name ? domainList.find(
           (d) => d.domain_name === visitorData?.domain_name
-        );
+        ) : visitorData?.custom_domain;
+
+        console.log(selectedDomain);
+        
   
         let sectorList = [];
-        if (selectedDomain) {
-          sectorList = (await fetchDomainSectors(selectedDomain.domain_id)).map(
+
+        if(selectedDomain === 'Co-helper'){
+          sectorList = ['Logistics and Supply Chain Management', 'Environmental and Waste Management','Human Resources and Staffing','Research and Development','Engineering and Design Services','Marketing and Sales Support', 'Facility Management', 'Finance and Insurance','Health and Safety Services', 'Industrial Equipment and Machinery','Quality Control and Testing Services', 'Information Technology and Automation'];
+          setSectors(sectorList);
+        }else if(selectedDomain === 'Remote Jobs'){
+          sectorList = ['Freelance Writing or Editing', 'Virtual Assistance', 'Graphic Design', 'Social Media Management', 'Online Tutoring or Teaching', 'E-commerce Management', 'Web Development or Programming', 'Data Entry or Analysis', 'Digital Marketing', 'Customer Support']
+          setSectors(sectorList);
+        }else if (visitorData?.domain_name) {
+          sectorList = (await fetchDomainSectors(selectedDomain?.domain_id)).map(
             (s) => s.sector_name
           );
           setSectors(sectorList);
-        }
+        } 
   
         const isFilled =
           visitorData?.domain_name && visitorData?.sector_name && visitorData?.purpose;
   
         setFormData({
           name: visitorData?.full_name || visitorData?.name || "",
-          domain: visitorData?.domain_name || "",
-          sector: visitorData?.sector_name || "",
+          domain: visitorData?.domain_name || visitorData?.custom_domain || "",
+          sector: visitorData?.sector_name || visitorData?.custom_sector || "",
           purpose: visitorData?.purpose || "",
           message: visitorData?.message || "",
           file: visitorData?.file_attached || '',
         });
   
         const formFields = [
-          {
-            label: visitorData ? `${visitorData?.user_type}:` : "Visitor",
-            name: "name",
-            type: "text",
-            value: visitorData?.full_name || visitorData?.name || "",
-            readOnly: visitorData ? true :false,
-          },
+          // {
+          //   label: visitorData ? `${visitorData?.user_type}:` : "Visitor",
+          //   name: "name",
+          //   type: "text",
+          //   value: visitorData?.full_name || visitorData?.name || "",
+          //   readOnly: visitorData ? true :false,
+          // },
           ...(showFields || !isFilled
             ? [
+                {
+                  label: "Purpose for:",
+                  name: "purpose",
+                  type: "select",
+                  placeholder: "Select Purpose",
+                  options: ["Sell", "Buy", "Subscriptions", "MoU", "Samples", "Knowledge", "Apply as Co-helper", "Remote Jobs"],
+                  required: true,
+                },
                 {
                   label: "Domain:",
                   name: "domain",
                   type: "select",
-                  placeholder: "Choose domain",
-                  options: domainList.map((d) => d.domain_name),
+                  placeholder: "Select domain",
+                  options: updatedDomains,
                   required: true,
                 },
                 {
                   label: "Sector:",
                   name: "sector",
                   type: "select",
-                  placeholder: "Choose sector",
+                  placeholder: "Select sector",
                   options: sectorList,
-                  required: true,
-                },
-                {
-                  label: "Purpose for:",
-                  name: "purpose",
-                  type: "select",
-                  placeholder: "Sell / Buy",
-                  options: ["Sell", "Buy"],
                   required: true,
                 },
               ]
@@ -159,6 +181,8 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields, setSelected
           : onSubmitSuccess("domain", "sector", true);
   
       } catch (error) {
+        console.log(error);
+        
         setSnackbar({
           open: true,
           message: error?.response?.data?.message || "Error fetching data",
@@ -183,49 +207,66 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields, setSelected
 
   // Handle change in form fields
   const handleChange = async (e) => {
-    const { name, value } = e.target;
+  const { name, value } = e.target;
 
-    if (name === "domain") {
-      try {
-        // Fetch sectors for the selected domain
-        const selectedDomain = (await fetchDomains()).find(
-          (domain) => domain.domain_name === value
-        );
-        if (selectedDomain) {
-          const sectorList = (
+  if (name === "domain") {
+    try {
+      // Fetch all domains
+      const domains = await fetchDomains();
+      const selectedDomain = (value !== 'Co-helper' && value !== 'Remote Jobs') ? domains.find(
+        (domain) => domain.domain_name === value
+      ) : value;
+
+      if (selectedDomain) {
+        let sectorList = [];
+
+        console.log(selectedDomain);
+        
+        // If domain is Co-Helper or Remote Jobs, define custom sectors
+        if (selectedDomain === "Co-helper") {
+          sectorList = ['Logistics and Supply Chain Management', 'Environmental and Waste Management','Human Resources and Staffing','Research and Development','Engineering and Design Services','Marketing and Sales Support', 'Facility Management', 'Finance and Insurance','Health and Safety Services', 'Industrial Equipment and Machinery','Quality Control and Testing Services', 'Information Technology and Automation'];
+        } else if (selectedDomain === "Remote Jobs") {
+          sectorList = ['Freelance Writing or Editing', 'Virtual Assistance', 'Graphic Design', 'Social Media Management', 'Online Tutoring or Teaching', 'E-commerce Management', 'Web Development or Programming', 'Data Entry or Analysis', 'Digital Marketing', 'Customer Support'];
+        } else {
+          // Otherwise fetch from API
+          sectorList = (
             await fetchDomainSectors(selectedDomain.domain_id)
           ).map((data) => data.sector_name);
-          setSectors(sectorList);
-
-          // Update formFieldData for the sector field
-          setFormFieldData((prevFields) =>
-            prevFields.map((field) =>
-              field.name === "sector"
-                ? { ...field, options: sectorList }
-                : field
-            )
-          );
         }
-      } catch (error) {
-        console.error("Error fetching sectors:", error);
+
+        // Update local state
+        setSectors(sectorList);
+
+        // Update form field options dynamically
+        setFormFieldData((prevFields) =>
+          prevFields.map((field) =>
+            field.name === "sector"
+              ? { ...field, options: sectorList }
+              : field
+          )
+        );
       }
+    } catch (error) {
+      console.error("Error fetching sectors:", error);
     }
+  }
 
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+  setFormData((prevData) => ({
+    ...prevData,
+    [name]: value,
+  }));
 
-    setErrors((prevErrors) => ({
-      ...prevErrors,
-      [name]: false,
-    }));
+  setErrors((prevErrors) => ({
+    ...prevErrors,
+    [name]: false,
+  }));
 
-    setErrorMessages((prevMessages) => ({
-      ...prevMessages,
-      [name]: "",
-    }));
-  };
+  setErrorMessages((prevMessages) => ({
+    ...prevMessages,
+    [name]: "",
+  }));
+};
+
 
   // Handle file change
   const handleFileChange = (event) => {
@@ -351,6 +392,7 @@ const VisitorShopForm = ({ visitorData, onSubmitSuccess, showFields, setSelected
           <CircularProgress />
         </Box>
       )}
+      <Typography variant="h3">Hi <Typography variant="span">{visitorData?.full_name || visitorData?.name || formData?.name} ! </Typography> Please select purpose in specific Domain & Sector</Typography>
       <Box className="form-group">
         {formFieldData.map(
           ({
