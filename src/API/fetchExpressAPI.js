@@ -1424,6 +1424,28 @@ export const post_createFundAccount = async (data) => {
   }
 }
 
+export const get_paymentDetails = async (payment_id) => {
+  try {
+    if (payment_id) {
+      const resp = await axios.get(`${payment_link}/payment-details/${payment_id}`);
+      return resp.data;
+    }
+  } catch (e) {
+    throw e;
+  }
+};
+
+export const get_payoutDetails = async (payout_id) => {
+  try {
+    if (payout_id) {
+      const resp = await axios.get(`${payment_link}/payout-details/${payout_id}`);
+      return resp.data;
+    }
+  } catch (e) {
+    throw e;
+  }
+};
+
 export const post_payoutToShopkeeper = async (data) => {
   try {
     if (data) {      

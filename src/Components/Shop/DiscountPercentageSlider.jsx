@@ -116,9 +116,9 @@ function DiscountPercentageSlider({ setOpenPopup, data }) {
 
         return (
           <>
-            <Typography className="percent">{pay}</Typography>
+            <Typography className="percent" sx={{textTransform: 'lowercase', fontSize:'80px !important', marginRight: '5px'}}>Pay</Typography>
             <Box className="discount_details">
-              <Typography className="text_1">Pay</Typography>
+              <Typography className="text_1">{pay}</Typography>
               <Typography className="text_2">get {get}</Typography>
             </Box>
           </>

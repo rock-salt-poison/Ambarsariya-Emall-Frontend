@@ -11,7 +11,7 @@ export const HandleRazorpayPayment = async ({ amount, buyerDetails }) => {
       }
 
       const options = {
-        key: 'rzp_live_bvQlznnZKatfzq',
+        key: process.env.REACT_APP_RAZORPAY_API,
         amount,
         currency: "INR",
         name: "Ambarsariya Mall",

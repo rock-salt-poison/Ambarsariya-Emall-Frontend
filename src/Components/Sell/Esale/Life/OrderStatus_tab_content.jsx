@@ -11,6 +11,7 @@ import {
 import {
   get_allPurchaseOrderDetails,
   get_buyer_data,
+  get_paymentDetails,
   get_purchased_products_details,
   get_purchaseOrderDetails,
   get_purchaseOrders,
@@ -44,6 +45,28 @@ function OrderStatus_tab_content({ title }) {
   });
 
   const [invoiceNo, setInvoiceNo] = useState('');
+  const [subTotal, setSubTotal] = useState(0);
+
+  useEffect(() => {
+    if (saleOrderStatus === "Deny") return "0.00";
+
+    const filteredProducts = selectedOrder.length>0 && selectedOrder?.filter(
+      product => product.status === "Accept"
+    ) || [];
+    console.log(filteredProducts);
+
+
+    const productTotal = filteredProducts
+      .map(product =>
+        (Number(product.unit_price || 0) * Number(product.quantity_ordered || 0)))
+      .reduce((acc, curr) => acc + curr, 0);
+
+    const calcSubTotal = productTotal > 0
+      ? productTotal 
+      : 0;
+
+    setSubTotal(calcSubTotal.toFixed(2));
+  }, [selectedOrder]);
 
   const fetchPurchasedOrder = async (buyer_id) => {
     try {
@@ -150,7 +173,7 @@ function OrderStatus_tab_content({ title }) {
         const purchasedProducts = (
           await Promise.all(
             selectedOrder?.map(async (order) => {
-              if (order.originalStatus === 'Deny') return [];
+              if (order.status === 'Deny' || order.status === 'Hold') return [];
 
               const purchasedProductsData = await get_purchased_products_details(
                 order?.product_id,
@@ -206,79 +229,10 @@ function OrderStatus_tab_content({ title }) {
           return acc;
         }, 0);
 
-        const data = {
-          po_no: selectedOrder?.[0]?.po_no,
-          so_no: selectedOrder?.[0]?.so_no,
-          seller_id: selectedOrder?.[0]?.seller_id,
-          seller_name: sellerData?.poc_name,
-          domain_id: sellerData?.domain_id,
-          domain_name: sellerData?.domain_name,
-          sector_id: sellerData?.sector_id,
-          sector_name: sellerData?.sector_name,
-          shop_name: sellerData?.business_name,
-          shop_location: JSON.stringify({
-            latitude: sellerData?.latitude,
-            longitude: sellerData?.longitude,
-          }),
-          shop_address: sellerData?.address,
-          shop_city: sellerData?.address.includes("Amritsar") ? "Amritsar" : "Asr",
-          shop_contact: JSON.stringify([
-            sellerData?.phone_no_1,
-            sellerData?.phone_no_2,
-          ]),
-          shop_email: sellerData?.username,
-          products: JSON.stringify(purchasedProducts),
-          subtotal,
-          discount_applied: selectedOrder?.[0]?.discount_applied,
-          discount_amount: selectedOrder?.[0]?.total_discount_amount,
-          tax_applied: selectedOrder?.[0]?.taxes,
-          total_amount: selectedOrder?.[0]?.total_amount,
-          order_status: status,
-          payment_status:
-            status === "Accept" ? "Paid" : status === "Hold" ? "Hold" : "B.O",
-          hold: null,
-          paid: null,
-          b_o: null,
-          transaction_no: null,
-          payment_mode: selectedOrder?.[0]?.payment_method,
-          business_order: null,
-          location_of_store: null,
-          seller_gst: sellerData?.gst,
-          seller_msme: sellerData?.msme,
-          seller_pan: sellerData?.pan_no,
-          seller_cin: sellerData?.cin_no,
-          gcst_paid: null,
-          gsct_paid: null,
-          payment_gateway_integrations_razor_pay_fees: null,
-          date_and_time: new Date(),
-          buyer_payment_location: JSON.stringify({
-            latitude: buyerData?.latitude,
-            longitude: buyerData?.longitude,
-          }),
-          return_refund_deny_policy: null,
-          buyer_name: buyerData?.full_name,
-          buyer_id: selectedOrder?.[0]?.buyer_id,
-          buyer_address: buyerData?.address,
-          buyer_location: JSON.stringify({
-            latitude: buyerData?.latitude,
-            longitude: buyerData?.longitude,
-          }),
-          buyer_contact_no: buyerData?.phone_no_1,
-          buyer_email: buyerData?.username,
-          payment_type: selectedOrder?.[0]?.payment_method,
-          payment_details: null,
-          crm_no: null,
-          share_invoice_services: null,
-          co_helper: null,
-          prepaid_postpaid: null,
-          delivery_order: null,
-          download_pdf: null,
-          qr_code: null,
-          buyer_special_note: null,
-          emall_special_note: null,
-        };
+        let total_amount = 0;
+        let razorpay_payout_id;
 
-        console.log(data);
+        const grandTotal = (subTotal - parseFloat(selectedOrder?.[0]?.total_discount_amount) + (Number(selectedOrder?.[0]?.coupon_cost || 0) ))?.toFixed(2);
 
         if (status === 'Accept') {
 
@@ -286,70 +240,163 @@ function OrderStatus_tab_content({ title }) {
           console.log(totalAmount);
           try {
             // 1. Razorpay Checkout
-            // const paymentResp = await HandleRazorpayPayment({
-            //   amount: 1,
-            //   buyerDetails: {
-            //     buyer_name: buyerData?.full_name,
-            //     buyer_contact_no: buyerData?.phone_no_1,
-            //     buyer_email: buyerData?.username,
-            //   },
-            // });
+            const paymentResp = await HandleRazorpayPayment({
+              amount: grandTotal,
+              buyerDetails: {
+                buyer_name: buyerData?.full_name,
+                buyer_contact_no: buyerData?.phone_no_1,
+                buyer_email: buyerData?.username,
+              },
+            });
 
-            // console.log("Payment response:", paymentResp);
+            console.log("Payment response:", paymentResp);
 
-            // if (paymentResp?.razorpay_payment_id) {
-              // let fundAccountId = sellerData?.razorpay_fund_account_id;
+            if (paymentResp?.razorpay_payment_id) {
+              let fundAccountId = sellerData?.razorpay_fund_account_id;
 
               // Create Fund Account if not available
-              // if (!fundAccountId) {
-              //   try {
-              //     const fundAccountResp = await post_createFundAccount({
-              //       name: sellerData?.poc_name,
-              //       contact: sellerData?.phone_no_1,
-              //       email: sellerData?.username,
-              //       upi_id: sellerData?.upi_id,
-              //       type: 'vendor',
-              //     });
-              //     console.log("Fund Account Response:", fundAccountResp);
+              if (!fundAccountId) {
+                try {
+                  const fundAccountResp = await post_createFundAccount({
+                    name: sellerData?.poc_name,
+                    contact: sellerData?.phone_no_1,
+                    email: sellerData?.username,
+                    upi_id: sellerData?.upi_id,
+                    type: 'vendor',
+                  });
+                  console.log("Fund Account Response:", fundAccountResp);
 
-              //     fundAccountId = fundAccountResp?.fund_account_id;
-              //     console.log("New Fund Account created:", fundAccountId);
-              //   } catch (error) {
-              //     console.error("Error creating Fund Account:", error);
-              //     setSnackbar({
-              //       open: true,
-              //       message: "Failed to create fund account.",
-              //       severity: "error",
-              //     });
-              //     return;
-              //   }
-              // }
+                  fundAccountId = fundAccountResp?.fund_account_id;
+                  console.log("New Fund Account created:", fundAccountId);
+                } catch (error) {
+                  console.error("Error creating Fund Account:", error);
+                  setSnackbar({
+                    open: true,
+                    message: "Failed to create fund account.",
+                    severity: "error",
+                  });
+                  return;
+                }
+              }
 
-              // Trigger Payout
-              // try {
-              //   const payoutResp = await post_payoutToShopkeeper({
-              //     fund_account_id: fundAccountId,
-              //     amount: totalAmount,
-              //   });
+          //     // Trigger Payout
+              try {
 
-              //   console.log("Payout response:", payoutResp.data);
-              //   setSnackbar({
-              //     open: true,
-              //     message: "Payout to shopkeeper successful!",
-              //     severity: "success",
-              //   });
-              // } catch (error) {
-              //   console.error("Payout failed:", error);
-              //   setSnackbar({
-              //     open: true,
-              //     message: "Payout to shopkeeper failed.",
-              //     severity: "error",
-              //   });
-              //   return;
-              // }
+                const paymentDetails = await get_paymentDetails(paymentResp?.razorpay_payment_id);
+                console.log(paymentDetails);
+                total_amount = paymentDetails.amount;
+
+                let payout = (paymentDetails.amount - paymentDetails.fee - paymentDetails.tax);
+
+                // 3. Adjust for coupon subsidy if applicable
+                if (
+                  parseFloat(selectedOrder?.[0]?.total_discount_amount || 0) > 0 &&
+                  parseFloat(selectedOrder?.[0]?.coupon_cost || 0) > 0
+                ) {
+                  payout -= 30;
+                }
+                const payoutResp = await post_payoutToShopkeeper({
+                  fund_account_id: fundAccountId,
+                  amount: Math.round(payout * 100),
+                });
+
+                console.log("Payout response:", payoutResp);
+                razorpay_payout_id = payoutResp?.id;
+                setSnackbar({
+                  open: true,
+                  message: "Payout to shopkeeper successful!",
+                  severity: "success",
+                });
+              } catch (error) {
+                console.error("Payout failed:", error);
+                setSnackbar({
+                  open: true,
+                  message: "Payout to shopkeeper failed.",
+                  severity: "error",
+                });
+                return;
+              }
 
               // Generate Invoice
               try {
+
+                const data = {
+                    po_no: selectedOrder?.[0]?.po_no,
+                    so_no: selectedOrder?.[0]?.so_no,
+                    seller_id: selectedOrder?.[0]?.seller_id,
+                    seller_name: sellerData?.poc_name,
+                    domain_id: sellerData?.domain_id,
+                    domain_name: sellerData?.domain_name,
+                    sector_id: sellerData?.sector_id,
+                    sector_name: sellerData?.sector_name,
+                    shop_name: sellerData?.business_name,
+                    shop_location: JSON.stringify({
+                      latitude: sellerData?.latitude,
+                      longitude: sellerData?.longitude,
+                    }),
+                    shop_address: sellerData?.address,
+                    shop_city: sellerData?.address.includes("Amritsar") ? "Amritsar" : "Asr",
+                    shop_contact: JSON.stringify([
+                      sellerData?.phone_no_1,
+                      sellerData?.phone_no_2,
+                    ]),
+                    shop_email: sellerData?.username,
+                    products: JSON.stringify(purchasedProducts),
+                    subtotal: subTotal,
+                    discount_applied: selectedOrder?.[0]?.discount_applied,
+                    discount_amount: selectedOrder?.[0]?.total_discount_amount,
+                    tax_applied: selectedOrder?.[0]?.taxes,
+                    total_amount: total_amount,
+                    order_status: status,
+                    payment_status:
+                      status === "Accept" ? "Paid" : status === "Hold" ? "Hold" : "B.O",
+                    hold: null,
+                    paid: null,
+                    b_o: null,
+                    transaction_no: null,
+                    payment_mode: selectedOrder?.[0]?.payment_method,
+                    business_order: null,
+                    location_of_store: null,
+                    seller_gst: sellerData?.gst,
+                    seller_msme: sellerData?.msme,
+                    seller_pan: sellerData?.pan_no,
+                    seller_cin: sellerData?.cin_no,
+                    gcst_paid: null,
+                    gsct_paid: null,
+                    payment_gateway_integrations_razor_pay_fees: null,
+                    date_and_time: new Date(),
+                    buyer_payment_location: JSON.stringify({
+                      latitude: buyerData?.latitude,
+                      longitude: buyerData?.longitude,
+                    }),
+                    return_refund_deny_policy: null,
+                    buyer_name: buyerData?.full_name,
+                    buyer_id: selectedOrder?.[0]?.buyer_id,
+                    buyer_address: buyerData?.address,
+                    buyer_location: JSON.stringify({
+                      latitude: buyerData?.latitude,
+                      longitude: buyerData?.longitude,
+                    }),
+                    buyer_contact_no: buyerData?.phone_no_1,
+                    buyer_email: buyerData?.username,
+                    payment_type: selectedOrder?.[0]?.payment_method,
+                    payment_details: null,
+                    crm_no: null,
+                    share_invoice_services: null,
+                    co_helper: null,
+                    prepaid_postpaid: null,
+                    delivery_order: null,
+                    download_pdf: null,
+                    qr_code: null,
+                    buyer_special_note: null,
+                    emall_special_note: null,
+                    razorpay_order_id: paymentResp?.razorpay_order_id, 
+                    razorpay_payment_id: paymentResp?.razorpay_payment_id, 
+                    razorpay_signature: paymentResp?.razorpay_signature,
+                    razorpay_payout_id: razorpay_payout_id
+                  };
+
+                  console.log(data);
                 const invoiceResp = await post_invoiceOrder(data);
                 if (invoiceResp.message) {
                   console.log("Invoice message:", invoiceResp.message);
@@ -371,15 +418,16 @@ function OrderStatus_tab_content({ title }) {
                   severity: "error",
                 });
               }
-            // }
-            // else {
-            //   setSnackbar({
-            //     open: true,
-            //     message: "Payment failed or cancelled",
-            //     severity: "error",
-            //   });
-            // }
-          } catch (error) {
+            }
+            else {
+              setSnackbar({
+                open: true,
+                message: "Payment failed or cancelled",
+                severity: "error",
+              });
+            }
+          // }
+         } catch (error) {
             console.error("Error in payment/payout:", error);
             setSnackbar({
               open: true,
@@ -573,8 +621,7 @@ function OrderStatus_tab_content({ title }) {
                 <Typography className="heading">subtotal</Typography>
                 <Typography className="text">
                   &#8377;{" "}
-                  {selectedOrder?.[0].so_subtotal ||
-                    selectedOrder?.[0].po_subtotal}
+                  {subTotal}
                 </Typography>
               </Box>
 
@@ -609,28 +656,7 @@ function OrderStatus_tab_content({ title }) {
                 <Typography className="heading">Grand Total</Typography>
                 <Typography className="text total shadow">
                   &#8377;{" "}
-                  {(() => {
-                    if (saleOrderStatus === "Deny") return "0.00";
-
-                    const filteredProducts = selectedOrder?.filter(
-                      product => product.status === "Accept" || product.status === "Hold"
-                    ) || [];
-                    console.log(filteredProducts);
-
-
-                    const productTotal = filteredProducts
-                      .map(product =>
-                        (Number(product.unit_price || 0) * Number(product.quantity_ordered || 0)))
-                      .reduce((acc, curr) => acc + curr, 0);
-
-                    const couponCost = Number(selectedOrder?.[0]?.coupon_cost || 0);
-
-                    const grandTotal = productTotal > 0
-                      ? productTotal - parseFloat(selectedOrder?.[0]?.total_discount_amount) + (couponCost > 0 ? couponCost : 0)
-                      : 0;
-
-                    return grandTotal.toFixed(2);
-                  })()}
+                  {(subTotal - parseFloat(selectedOrder?.[0]?.total_discount_amount) + (Number(selectedOrder?.[0]?.coupon_cost || 0) ))?.toFixed(2)}
                 </Typography>
               </Box>
               {selectedOrder?.[0]?.purchase_order_status !== 'Hold' ? selectedOrder?.[0].so_subtotal && (

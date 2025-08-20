@@ -166,11 +166,12 @@ function CartTable({ rows, setCartData, setSelectedCoupon }) {
           });
           shouldRemoveCoupon = true;
         } else {
-          setSnackbar({
-            open: true,
-            message: `You qualify for the offer: Buy ${buy}, Get ${get}.`,
-            severity: "success",
-          });
+          shouldRemoveCoupon = true;
+          // setSnackbar({
+          //   open: true,
+          //   message: `You qualify for the offer: Buy ${buy}, Get ${get}.`,
+          //   severity: "success",
+          // });
         }
       } else if (lastPurchasedValue !== null && selectedCoupon.coupon_type === "loyalty_prepaid") {
         if (total < pay) {

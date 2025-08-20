@@ -21,7 +21,7 @@ import createCustomTheme from "../../styles/CustomSelectDropdownTheme";
 import FitbitIcon from "@mui/icons-material/Fitbit";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import html2pdf from "html2pdf.js";
-import { get_invoiceOrder } from "../../API/fetchExpressAPI";
+import { get_invoiceOrder, get_paymentDetails, get_payoutDetails } from "../../API/fetchExpressAPI";
 
 function InvoicePopup({ open, onClose, serviceType, invoiceNo }) {
   const [audio] = useState(new Audio(hornSound));
@@ -58,6 +58,7 @@ function InvoicePopup({ open, onClose, serviceType, invoiceNo }) {
 
     * {
       font-family: 'PT Serif', serif !important;
+      word-break: normal;
     }
 
     body {
@@ -100,6 +101,7 @@ function InvoicePopup({ open, onClose, serviceType, invoiceNo }) {
     .header {
       background-color: #F8F4EC;
       padding-bottom: 20px;
+      border: 1px solid #706556
     }
 
     .row {
@@ -164,6 +166,11 @@ function InvoicePopup({ open, onClose, serviceType, invoiceNo }) {
       text-align: center;
     }
 
+    .category{
+    text-align: center;
+    align-self:center;
+    }
+
     .shop_info {
       display: flex;
       justify-content: center;
@@ -209,14 +216,16 @@ function InvoicePopup({ open, onClose, serviceType, invoiceNo }) {
     }
 
     table{
-      margin-top: 30px;
+      // margin-top: 30px;
     }
 
-    table svg{
-                  width: 16px;
-                  height: auto;
-                  vertical-align: top;
-                }
+    .content .content-body .details .row table svg{
+      width: 16px;
+      height: auto;
+      position: relative;
+    vertical-align: top;
+    top:1px;
+    }
 
     .details table tr td,
     .details table tr th {
@@ -302,13 +311,20 @@ function InvoicePopup({ open, onClose, serviceType, invoiceNo }) {
     }  
     .col-3 .col-group .text {
       text-align: left;
+      word-break: normal;
+    }
+
+    .col-3 .col-group .text svg{
+      font-size: 12px;
+      width: 12px !important;
+      height: auto !important;
     }
 
     .col-3 .col-group .vertical {
       flex-direction: column;
     }
 
-    button{
+    .content-body #download_pdf{
       display: none;
     }
                 
@@ -327,7 +343,18 @@ function InvoicePopup({ open, onClose, serviceType, invoiceNo }) {
         const resp = await get_invoiceOrder(invoice_no);
         if (resp?.valid) {
           console.log(resp?.data?.[0]);
-          setInvoice(resp?.data?.[0]);
+          const invoiceData = resp?.data?.[0];
+          const paymentInfo = await get_paymentDetails(invoiceData?.razorpay_payment_id);
+
+          const payoutInfo = await get_payoutDetails(invoiceData?.razorpay_payout_id);
+          
+          setInvoice({
+            ...invoiceData,
+            invoice_created_at: invoiceData?.created_at,
+            ...paymentInfo,
+            payout_created_at : payoutInfo?.created_at, 
+            reference_id : payoutInfo?.reference_id
+          });
         }
       } catch (e) {
         console.error(e);
@@ -342,6 +369,9 @@ function InvoicePopup({ open, onClose, serviceType, invoiceNo }) {
       fetchInvoiceDetails(invoiceNo);
     }
   }, [invoiceNo]);
+
+  console.log(invoice);
+  
 
 
   return (
@@ -380,6 +410,9 @@ function InvoicePopup({ open, onClose, serviceType, invoiceNo }) {
                     <Box className="title_container">
                       <Typography variant="h2" className="title">
                         Invoice
+                      </Typography>
+                      <Typography variant="span" className="category">
+                        {(invoice?.buyer_type === 'member' || invoice?.buyer_type === 'visitor') ? 'B2C' : 'B2B'}
                       </Typography>
                     </Box>
                   </Box>
@@ -513,7 +546,9 @@ function InvoicePopup({ open, onClose, serviceType, invoiceNo }) {
                     <Box className="body">
                       <Box className="col-group">
                         <Typography className="text">
-                          {invoice?.created_at?.split("T")?.[0]}
+                          {new Date(invoice?.invoice_created_at)?.toLocaleString("en-IN", {
+                            timeZone: "Asia/Kolkata",
+                          })}
                         </Typography>
                       </Box>
                     </Box>
@@ -545,7 +580,7 @@ function InvoicePopup({ open, onClose, serviceType, invoiceNo }) {
                           Email ID:{" "}
                         </Typography>
                         <Typography className="text">
-                          {invoice?.buyer_name}
+                          {invoice?.buyer_email}
                         </Typography>
                       </Box>
 
@@ -682,7 +717,8 @@ function InvoicePopup({ open, onClose, serviceType, invoiceNo }) {
                         <TableCell className="text">
                           Product Name / Category / Brand / Variation
                         </TableCell>
-                        <TableCell className="text">Unit price</TableCell>
+                        <TableCell className="text">Unit</TableCell>
+                        <TableCell className="text">Price</TableCell>
                         <TableCell className="text">Quantity</TableCell>
                         <TableCell className="text">Amount</TableCell>
                       </TableRow>
@@ -699,7 +735,11 @@ function InvoicePopup({ open, onClose, serviceType, invoiceNo }) {
                               {product?.variation}
                             </TableCell>
                             <TableCell className="text">
-                              {product?.unit_price}/-
+                               /-
+                            </TableCell>
+
+                            <TableCell className="text">
+                              {product?.unit_price}
                             </TableCell>
                             <TableCell className="text">
                               {product?.quantity}
@@ -712,7 +752,7 @@ function InvoicePopup({ open, onClose, serviceType, invoiceNo }) {
                         );
                       })}
                       <TableRow className="bgColor">
-                        <TableCell colSpan={3} className="text right">
+                        <TableCell colSpan={4} className="text right">
                           Subtotal
                         </TableCell>
                         <TableCell className="text">
@@ -722,7 +762,7 @@ function InvoicePopup({ open, onClose, serviceType, invoiceNo }) {
 
                       {invoice?.tax_applied &&
                         <TableRow className="bgColor">
-                          <TableCell colSpan={3} className="text right">
+                          <TableCell colSpan={4} className="text right">
                             Tax Rate (%)
                           </TableCell>
                           <TableCell className="text">
@@ -730,26 +770,105 @@ function InvoicePopup({ open, onClose, serviceType, invoiceNo }) {
                           </TableCell>
                         </TableRow>
                       }
-
-                      {invoice?.discount_applied && <TableRow className="bgColor">
-                        <TableCell colSpan={3} className="text right">
-                          Discount Coupon Applied
-                        </TableCell>
-                        <TableCell className="text">
-                          {invoice?.discount_applied?.conditions?.[1]?.value}% = -<CurrencyRupeeIcon /> {invoice?.discount_amount}
-                        </TableCell>
-                      </TableRow>}
-
                       {invoice?.discount_amount > 0 && <TableRow className="bgColor">
-                        <TableCell colSpan={3} className="text right">
+                        <TableCell colSpan={4} className="text right">
                           Coupon Charges
                         </TableCell>
                         <TableCell className="text">30</TableCell>
                       </TableRow>}
 
+
+                      {invoice?.discount_applied && <TableRow className="bgColor">
+                        <TableCell colSpan={4} className="text right">
+                          Discount Coupon Applied : {invoice?.discount_applied?.conditions?.[1]?.value}%
+                        </TableCell>
+                        <TableCell className="text">
+                           -<CurrencyRupeeIcon /> {invoice?.discount_amount}
+                        </TableCell>
+                      </TableRow>}
+
+                      
+                      
+
+                      {serviceType === "Hold" && (
+                        <TableRow className="bgColor">
+                          <TableCell colSpan={4} className="text right">
+                            Paid Amount
+                          </TableCell>
+                          <TableCell className="text">
+                            <CurrencyRupeeIcon /> 1000
+                          </TableCell>
+                        </TableRow>
+                      )}
+
+                      {serviceType === "Hold" && (
+                        <TableRow className="bgColor">
+                          <TableCell colSpan={4} className="text right">
+                            Balance Amount
+                          </TableCell>
+                          <TableCell className="text">
+                            <CurrencyRupeeIcon /> 4036.5
+                          </TableCell>
+                        </TableRow>
+                      )}
+
+                      {/* <TableRow className="bgColor"> */}
+                        
+                        {/* <TableCell>
+                          <Box className="col-group vertical">
+                          <Typography className="text">
+                          Home Delivery Charges
+                          </Typography>
+                          <Typography className="text">N.A</Typography>
+                          </Box>
+                          </TableCell> */}
+                        
+                      {/* </TableRow> */}
+
                       <TableRow className="bgColor">
-                        <TableCell colSpan={3} className="text right">
-                          Total
+                        <TableCell className="text right" colSpan={4}>Co-Helper</TableCell>
+                        <TableCell className="text">N.A</TableCell>
+                      </TableRow>
+
+                      <TableRow className="bgColor">
+                        <TableCell className="text right" colSpan={4}>Logistics and Transportation</TableCell>
+                        <TableCell className="text">N.A</TableCell>
+                      </TableRow>
+
+
+                      <TableRow className="bgColor">
+                        <TableCell className="text right" colSpan={4}>Credit Balance</TableCell>
+                        <TableCell className="text">N.A</TableCell>
+                      </TableRow>
+
+                      <TableRow className="bgColor">
+                        <TableCell className="text right" colSpan={4}>Subscription Type</TableCell>
+                        <TableCell className="text">N.A</TableCell>
+                      </TableRow>
+
+                      <TableRow className="bgColor">
+                        <TableCell className="text right" colSpan={4}>CGST: 0%</TableCell>
+                        <TableCell className="text">0%</TableCell>
+                      </TableRow>
+
+                      <TableRow className="bgColor">
+                        <TableCell className="text right" colSpan={4}>SGST : 0%</TableCell>
+                        <TableCell className="text">0%</TableCell>
+                      </TableRow>
+
+                      <TableRow className="bgColor">
+                        <TableCell className="text right" colSpan={4}>Platform fee</TableCell>
+                        <TableCell className="text">{invoice?.fee}</TableCell>
+                      </TableRow>
+
+                      <TableRow className="bgColor">
+                        <TableCell className="text right" colSpan={4}>Other Charges</TableCell>
+                        <TableCell className="text">{invoice?.tax}</TableCell>
+                      </TableRow>
+
+                      <TableRow className="bgColor">
+                        <TableCell colSpan={4} className="text right">
+                          Grand Total
                         </TableCell>
                         <TableCell className="text">
                           <Typography className="text">
@@ -762,76 +881,11 @@ function InvoicePopup({ open, onClose, serviceType, invoiceNo }) {
                           </Typography>
                         </TableCell>
                       </TableRow>
-
-                      {serviceType === "Hold" && (
-                        <TableRow className="bgColor">
-                          <TableCell colSpan={3} className="text right">
-                            Paid Amount
-                          </TableCell>
-                          <TableCell className="text">
-                            <CurrencyRupeeIcon /> 1000
-                          </TableCell>
-                        </TableRow>
-                      )}
-
-                      {serviceType === "Hold" && (
-                        <TableRow className="bgColor">
-                          <TableCell colSpan={3} className="text right">
-                            Balance Amount
-                          </TableCell>
-                          <TableCell className="text">
-                            <CurrencyRupeeIcon /> 4036.5
-                          </TableCell>
-                        </TableRow>
-                      )}
-
-                      <TableRow className="bgColor">
-                        <TableCell colSpan={2}>
-                          <Box className="col-group vertical">
-                            <Typography className="text">Co-Helper</Typography>
-                            <Typography className="text">N.A</Typography>
-                          </Box>
-                        </TableCell>
-                        <TableCell>
-                          <Box className="col-group vertical">
-                            <Typography className="text">
-                              Credit Balance
-                            </Typography>
-                            <Typography className="text">N.A</Typography>
-                          </Box>
-                        </TableCell>
-                        {/* <TableCell>
-                          <Box className="col-group vertical">
-                          <Typography className="text">
-                          Home Delivery Charges
-                          </Typography>
-                          <Typography className="text">N.A</Typography>
-                          </Box>
-                          </TableCell> */}
-                        <TableCell>
-                          <Box className="col-group vertical">
-                            <Typography className="text">
-                              Subscription Type
-                            </Typography>
-                            <Typography className="text">N.A</Typography>
-                          </Box>
-                        </TableCell>{" "}
-                      </TableRow>
-
-                      <TableRow className="bgColor">
-                        <TableCell className="text">CGST : 0%</TableCell>
-
-                        <TableCell className="text">Cost : -</TableCell>
-
-                        <TableCell className="text">SGST : 0%</TableCell>
-
-                        <TableCell className="text">Cost : -</TableCell>
-                      </TableRow>
                     </TableBody>
                   </Table>
                 </Box>
               </Box>
-              <Box className="page-break"></Box>
+              {/* <Box className="page-break"></Box> */}
 
               <Box className="details">
                 <Box className="row">
@@ -844,31 +898,41 @@ function InvoicePopup({ open, onClose, serviceType, invoiceNo }) {
                   </Box>
                   <Box className="col-7">
                     <Box className="body">
+
                       <Box className="col-group">
-                        <Typography className="text bold">
-                          Payment Due Date:
+                        <Typography className="text bold">Payment Id:</Typography>
+                        <Typography className="text">
+                          {invoice?.razorpay_payment_id}
                         </Typography>
-                        <Typography className="text">29 May 2025</Typography>
                       </Box>
 
                       <Box className="col-group">
                         <Typography className="text bold">
+                          Payment Date/Time:
+                        </Typography>
+                        <Typography className="text">{new Date(invoice?.updated_at)?.toLocaleString("en-IN", {
+                            timeZone: "Asia/Kolkata",
+                          })}</Typography>
+                      </Box>
+
+                      {/* <Box className="col-group">
+                        <Typography className="text bold">
                           Credit Balance:
                         </Typography>
                         <Typography className="text">200</Typography>
-                      </Box>
+                      </Box> */}
 
                       <Box className="col-group">
                         <Typography className="text bold">
                           Subscription type:
                         </Typography>
-                        <Typography className="text">-</Typography>
+                        <Typography className="text">N.A</Typography>
                       </Box>
 
                       <Box className="col-group">
                         <Typography className="text bold">MoU:</Typography>
                         <Typography className="text">
-                          Expiry Date: 21 Dec 2025
+                          N.A
                         </Typography>
                       </Box>
 
@@ -877,7 +941,7 @@ function InvoicePopup({ open, onClose, serviceType, invoiceNo }) {
                           Seller's Bank Name:
                         </Typography>
                         <Typography className="text">
-                          Whelton Financial Services
+                          Canara Bank
                         </Typography>
                       </Box>
 
@@ -886,7 +950,7 @@ function InvoicePopup({ open, onClose, serviceType, invoiceNo }) {
                           Account Name:
                         </Typography>
                         <Typography className="text">
-                          Lairssa Charter
+                          LUXMI CHALOTRA
                         </Typography>
                       </Box>
 
@@ -894,15 +958,15 @@ function InvoicePopup({ open, onClose, serviceType, invoiceNo }) {
                         <Typography className="text bold">
                           Account No.:
                         </Typography>
-                        <Typography className="text">9876587987</Typography>
+                        <Typography className="text">110017334723</Typography>
                       </Box>
 
-                      <Box className="col-group">
+                      {/* <Box className="col-group">
                         <Typography className="text bold">UPI:</Typography>
                         <Typography className="text">
                           8928282992@payts
                         </Typography>
-                      </Box>
+                      </Box> */}
                     </Box>
                   </Box>
                 </Box>
@@ -923,15 +987,26 @@ function InvoicePopup({ open, onClose, serviceType, invoiceNo }) {
                         <Typography className="text bold">
                           Payment Date/Time:
                         </Typography>
-                        <Typography className="text">29 May 2025</Typography>
+                        <Typography className="text">{new Date(invoice?.updated_at)?.toLocaleString("en-IN", {
+                            timeZone: "Asia/Kolkata",
+                          })}</Typography>
                       </Box>
 
                       <Box className="col-group">
                         <Typography className="text bold">
-                          Reference No.:
+                          Payment Id:
                         </Typography>
                         <Typography className="text">
-                          1-2024/10/5uj74
+                          {invoice?.razorpay_payment_id}
+                        </Typography>
+                      </Box>
+
+                      <Box className="col-group">
+                        <Typography className="text bold">
+                          Reference Id:
+                        </Typography>
+                        <Typography className="text">
+                          {invoice?.reference_id}
                         </Typography>
                       </Box>
 
@@ -942,12 +1017,12 @@ function InvoicePopup({ open, onClose, serviceType, invoiceNo }) {
                         <Typography className="text">UPI Transfer</Typography>
                       </Box>
 
-                      <Box className="col-group">
+                      {/* <Box className="col-group">
                         <Typography className="text bold">PoS:</Typography>
                         <Typography className="text">QR Code</Typography>
-                      </Box>
+                      </Box> */}
 
-                      <Box className="col-group">
+                      {/* <Box className="col-group">
                         <Typography className="text bold">
                           Buyer's Bank Name:
                         </Typography>
@@ -970,12 +1045,12 @@ function InvoicePopup({ open, onClose, serviceType, invoiceNo }) {
                           Account No.:
                         </Typography>
                         <Typography className="text">9876587987</Typography>
-                      </Box>
+                      </Box> */}
 
                       <Box className="col-group">
-                        <Typography className="text bold">UPI:</Typography>
+                        <Typography className="text bold">Buyer's UPI:</Typography>
                         <Typography className="text">
-                          8928282992@payts
+                          {invoice?.vpa}
                         </Typography>
                       </Box>
                     </Box>
@@ -987,6 +1062,7 @@ function InvoicePopup({ open, onClose, serviceType, invoiceNo }) {
                 variant="contained"
                 color="primary"
                 onClick={handleDownloadPDF}
+                id='download_pdf'
               >
                 Download Invoice as PDF
               </Button>

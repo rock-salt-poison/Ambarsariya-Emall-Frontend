@@ -26064,13 +26064,14 @@ textarea[readonly] {
             @include hover-scale(1, 0s);
             text-align: center;
             line-height: 20px;
-            word-break: break-all;
+            word-break: normal;
           }
 
           .header {
             background-color: $invoice_bg;
             padding-bottom: 20px;
             height: max-content;
+            border: 1px solid $invoice_border;
 
             .row {
               @include flex-center(row, space-between);
@@ -26184,6 +26185,8 @@ textarea[readonly] {
                   width: 16px;
                   height: auto;
                   vertical-align: top;
+                  position: relative;
+                  top: 3px;
                 }
 
                 tr {
