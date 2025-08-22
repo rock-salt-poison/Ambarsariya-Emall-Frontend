@@ -1563,6 +1563,18 @@ export const get_coHelper = async (member_id, co_helper_type) => {
   }
 };
 
+export const get_requestedCoHelper = async (id) => {
+  if(id){
+    try {
+      console.log(id);
+      const response = await axios.get(`${link}/sell/selected-co-helper/${id}`);
+      return response.data;
+    } catch (error) {
+      throw error
+    }
+  }
+};
+
 export const get_coHelpers_by_type_and_service = async (co_helper_type, key_service, member_id) => {
   if(key_service && co_helper_type && member_id){
     try {

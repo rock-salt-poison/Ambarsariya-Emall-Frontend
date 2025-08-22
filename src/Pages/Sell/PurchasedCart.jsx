@@ -43,7 +43,7 @@ function PurchasedCart() {
         const verifyUser = async () => {
           const user = (await getUser(token))?.find((u)=> u?.shop_no !== null );
           
-            if(user.user_access_token && (user.user_type === 'shop' || user.user_type === 'merchant')){
+            if(user?.user_access_token && (user?.user_type === 'shop' || user?.user_type === 'merchant')){
               fetchMemberData(po_no)
             }
         }

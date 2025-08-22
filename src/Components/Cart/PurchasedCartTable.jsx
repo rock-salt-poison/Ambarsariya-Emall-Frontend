@@ -33,8 +33,7 @@ const columns = [
   { id: "6", label_1: "Total Price" },
 ];
 
-function PurchasedCartTable({ rows }) {
-  const dispatch = useDispatch();
+function PurchasedCartTable() {
   const { po_no } = useParams();
   const [loading, setLoading] = useState(false);
    const [snackbar, setSnackbar] = useState({
@@ -43,7 +42,6 @@ function PurchasedCartTable({ rows }) {
       severity: "success",
     });
   const [data, setData] = useState([]);
-  const { selectedCoupon } = useSelector((state) => state.discounts);
 
 
   // Fetch category names for all products
@@ -58,6 +56,7 @@ function PurchasedCartTable({ rows }) {
       setLoading(true);
       const resp = await get_purchasedOrder(po_no);
       if(resp.valid){
+        console.log(resp?.data);
         setData(resp?.data);
       }
     }catch(e){

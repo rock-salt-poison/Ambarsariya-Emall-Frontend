@@ -38,6 +38,7 @@ import ConfirmationDialog from "../../ConfirmationDialog";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc"
 import timezone from "dayjs/plugin/timezone.js"
+import { addCohelper } from "../../../store/selectedCoHelperSlice";
 
 export default function CoHelperTypePopup({ open, handleClose, content, id }) {
   const themeProps = {
@@ -154,8 +155,6 @@ export default function CoHelperTypePopup({ open, handleClose, content, id }) {
           estimated_hr: details?.estimated_hours,
           offerings: details?.offerings,
         }));
-
-        
       }
     }catch(e){
       console.log(e);
@@ -464,11 +463,15 @@ export default function CoHelperTypePopup({ open, handleClose, content, id }) {
               if (hasCalendarScope && hasEventsScope) {
                 const resp = await post_coHelperNotification(data);
                 if(resp){
+                  console.log(resp);
+                  
                   setSnackbar({
                     open: true,
                     message: resp?.message,
                     severity: "success",
                   });
+
+                  dispatch(addCohelper({ id: resp?.id }));
       
                   setTimeout(()=>{
                     handleClose();
@@ -581,6 +584,7 @@ export default function CoHelperTypePopup({ open, handleClose, content, id }) {
           const calendarResp = await post_scheduleGoogleCalendarAppointment(data);
           console.log(calendarResp);
           if(calendarResp?.success){
+
             setSnackbar({
             open: true,
             message: calendarResp?.message,

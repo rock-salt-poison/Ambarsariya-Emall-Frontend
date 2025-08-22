@@ -35,9 +35,10 @@ function SellerPurchasedOrderTable({ purchasedOrders, selectedPO, cardType }) {
   const [updatedProducts, setUpdatedProducts] = useState([]);
   const { token } = useParams();
   const [toggleStates, setToggleStates] = useState({});
-  const [headerToggleState, setHeaderToggleState] = useState('Hold');
+  const [headerToggleState, setHeaderToggleState] = useState("Hold");
+  const [serviceToggle, setServiceToggle] = useState("Hold");
   const [editedValues, setEditedValues] = useState({});
-    const [openDialog, setOpenDialog] = useState(false); // State for dialog
+  const [openDialog, setOpenDialog] = useState(false); // State for dialog
   const [saleOrder, setSaleOrder] = useState(null);
   const [appliedCoupon, setAppliedCoupon] = useState(null);
   const [snackbar, setSnackbar] = useState({
@@ -47,33 +48,40 @@ function SellerPurchasedOrderTable({ purchasedOrders, selectedPO, cardType }) {
   });
 
   const [soExists, setSoExists] = useState(false);
-  const [total, setTotal] = useState(0.00);
-  const [subTotal, setSubTotal] = useState(0.00);
-  const[ lastPurchasedValue, setLastPurchasedValue] = useState(null);
+  const [total, setTotal] = useState(0.0);
+  const [subTotal, setSubTotal] = useState(0.0);
+  const [lastPurchasedValue, setLastPurchasedValue] = useState(null);
   const [defaultCoupon, setDefaultCoupon] = useState(null);
 
   const getBuyerDetails = async (buyerId, sellerId) => {
-    try{
+    try {
       setLoading(true);
-          const lastPurchasedValueResp = await getLastPurchasedTotal(sellerId, buyerId);
-          // console.log(lastPurchasedValueResp);
-          
-          if(lastPurchasedValueResp?.valid){
-            // console.log(lastPurchasedValueResp?.data?.[0]?.total_purchased);
-            
-            setLastPurchasedValue(lastPurchasedValueResp?.data?.[0]?.total_purchased);
-          }
-    }catch(e){
+      const lastPurchasedValueResp = await getLastPurchasedTotal(
+        sellerId,
+        buyerId
+      );
+      // console.log(lastPurchasedValueResp);
+
+      if (lastPurchasedValueResp?.valid) {
+        // console.log(lastPurchasedValueResp?.data?.[0]?.total_purchased);
+
+        setLastPurchasedValue(
+          lastPurchasedValueResp?.data?.[0]?.total_purchased
+        );
+      }
+    } catch (e) {
       console.log(e);
-    }finally{
+    } finally {
       setLoading(false);
     }
-  }
+  };
 
-
-  useEffect(()=>{
-    if(updatedProducts){
-      getBuyerDetails(updatedProducts?.[0]?.buyer_id, updatedProducts?.[0]?.seller_id);
+  useEffect(() => {
+    if (updatedProducts) {
+      getBuyerDetails(
+        updatedProducts?.[0]?.buyer_id,
+        updatedProducts?.[0]?.seller_id
+      );
     }
   }, [updatedProducts]);
 
@@ -82,20 +90,25 @@ function SellerPurchasedOrderTable({ purchasedOrders, selectedPO, cardType }) {
       setLoading(true);
       if (po_no) {
         const resp = await get_purchaseOrders(po_no);
-        console.log(resp)
+        console.log(resp);
         if (resp.valid) {
-
-          const updatedData = resp.data?.map((product)=> {
-            const selected_variant = product?.selected_variant?.split('_') || [];
+          const updatedData = resp.data?.map((product) => {
+            const selected_variant =
+              product?.selected_variant?.split("_") || [];
             // console.log(selected_variant);
-            
-            return {...product, product_name: `${selected_variant?.[8] || 'N/A'} - ${selected_variant?.[10] || 'N/A'}`,status: product.status || "Hold" }
-          })
+
+            return {
+              ...product,
+              product_name: `${selected_variant?.[8] || "N/A"} - ${
+                selected_variant?.[10] || "N/A"
+              }`,
+              status: product.status || "Hold",
+            };
+          });
 
           setProducts(resp.data);
           setUpdatedProducts(updatedData);
         }
-        
       }
     } catch (e) {
       console.log(e);
@@ -106,13 +119,12 @@ function SellerPurchasedOrderTable({ purchasedOrders, selectedPO, cardType }) {
     }
   };
 
-
   useEffect(() => {
     if (purchasedOrders.length > 0 && selectedPO) {
       fetch_products(selectedPO);
     } else {
-      setProducts([]); 
-      setUpdatedProducts([]); 
+      setProducts([]);
+      setUpdatedProducts([]);
     }
   }, [purchasedOrders, selectedPO]);
 
@@ -128,9 +140,7 @@ function SellerPurchasedOrderTable({ purchasedOrders, selectedPO, cardType }) {
     }
   }, [updatedProducts]);
 
-
   const handleToggleChange = async (index, newValue) => {
-    
     if (newValue !== null) {
       setToggleStates((prevState) => ({ ...prevState, [index]: newValue }));
 
@@ -163,99 +173,117 @@ function SellerPurchasedOrderTable({ purchasedOrders, selectedPO, cardType }) {
           status: newValue || product.status,
         }))
       );
+
+      setServiceToggle(newValue);
     }
   };
-  
+
+  const handleServiceToggleChange = (event, newValue) => {
+    if (newValue !== null) {
+      setServiceToggle(newValue);
+
+      setUpdatedProducts((prevProducts) => {
+        const updatedProducts = [...prevProducts];
+        updatedProducts[0] = {
+          ...updatedProducts[0],
+          co_helper_status: newValue, // store separate status for service
+        };
+        return updatedProducts;
+      });
+    }
+  };
 
   const calculateUpdatedStock = (originalProducts, modifiedProducts) => {
-  const stockUpdates = [];
+    const stockUpdates = [];
 
-  modifiedProducts.forEach((updated) => {
-    const original = originalProducts.find(
-      (orig) => orig.product_id === updated.product_id
-    );
+    modifiedProducts.forEach((updated) => {
+      const original = originalProducts.find(
+        (orig) => orig.product_id === updated.product_id
+      );
 
-    const originalQty = parseFloat(original?.quantity_ordered || 0);
-    const updatedQty = parseFloat(updated?.quantity_ordered || 0);
-    const originalVariant = original?.selected_variant;
-    const updatedVariant = updated?.selected_variant;
+      const originalQty = parseFloat(original?.quantity_ordered || 0);
+      const updatedQty = parseFloat(updated?.quantity_ordered || 0);
+      const originalVariant = original?.selected_variant;
+      const updatedVariant = updated?.selected_variant;
 
-    if (updated.status === "Accept") {
-      if (!isNaN(originalQty) && !isNaN(updatedQty)) {
-        if (originalVariant !== updatedVariant) {
-          // Variant changed: reverse original, apply updated
-          if (originalVariant) {
-            stockUpdates.push({
-              item_id: originalVariant,
-              quantity_change: -originalQty,
-              product_id: original.product_id
-            });
-          }
-          if (updatedVariant) {
-            stockUpdates.push({
-              item_id: updatedVariant,
-              quantity_change: updatedQty,
-              product_id: updated.product_id
-            });
-          }
-        } else {
-          // Same variant: adjust by quantity diff
-          const quantityChange = updatedQty - originalQty;
-          if (quantityChange !== 0) {
-            stockUpdates.push({
-              item_id: updatedVariant,
-              quantity_change: quantityChange,
-              product_id: updated.product_id
-            });
-          }
-        }
-      }
-    }
-
-    if (updated.status === "Deny") {
-      if (!isNaN(originalQty) && originalVariant) {
-        stockUpdates.push({
-          item_id: originalVariant,
-          quantity_change: -originalQty,
-          product_id: original.product_id
-        });
-      }
-    }
-  });
-
-  return stockUpdates;
-};
-
-
-
-const handleConfirm = async (saleOrder) => {
-  try {
-    setOpenDialog(false);
-      setLoading(true);
-
-      if(updatedProducts?.[0]?.discount_applied !== appliedCoupon){
-            try {
-              const data = {
-                discount_applied: appliedCoupon,
-                discount_amount: calculateDiscount(),
-                seller_id: updatedProducts?.[0]?.seller_id
-              }
-              await put_purchaseOrderDiscount(data, updatedProducts?.[0]?.discount_applied, updatedProducts?.[0]?.po_access_token);
-              console.log("Discount updated successfully");
-              setSnackbar({
-                open: true,
-                message: "Discount Updated Successfully.",
-                severity: "success",
+      if (updated.status === "Accept") {
+        if (!isNaN(originalQty) && !isNaN(updatedQty)) {
+          if (originalVariant !== updatedVariant) {
+            // Variant changed: reverse original, apply updated
+            if (originalVariant) {
+              stockUpdates.push({
+                item_id: originalVariant,
+                quantity_change: -originalQty,
+                product_id: original.product_id,
               });
-            } catch (err) {
-              console.error("Error updating discount", err);
-              setSnackbar({
-                open: true,
-                message: "Failed to update discount before submitting order.",
-                severity: "error",
+            }
+            if (updatedVariant) {
+              stockUpdates.push({
+                item_id: updatedVariant,
+                quantity_change: updatedQty,
+                product_id: updated.product_id,
+              });
+            }
+          } else {
+            // Same variant: adjust by quantity diff
+            const quantityChange = updatedQty - originalQty;
+            if (quantityChange !== 0) {
+              stockUpdates.push({
+                item_id: updatedVariant,
+                quantity_change: quantityChange,
+                product_id: updated.product_id,
               });
             }
           }
+        }
+      }
+
+      if (updated.status === "Deny") {
+        if (!isNaN(originalQty) && originalVariant) {
+          stockUpdates.push({
+            item_id: originalVariant,
+            quantity_change: -originalQty,
+            product_id: original.product_id,
+          });
+        }
+      }
+    });
+
+    return stockUpdates;
+  };
+
+  const handleConfirm = async (saleOrder) => {
+    try {
+      setOpenDialog(false);
+      setLoading(true);
+
+      if (updatedProducts?.[0]?.discount_applied !== appliedCoupon) {
+        try {
+          const data = {
+            discount_applied: appliedCoupon,
+            discount_amount: calculateDiscount(),
+            seller_id: updatedProducts?.[0]?.seller_id,
+          };
+          await put_purchaseOrderDiscount(
+            data,
+            updatedProducts?.[0]?.discount_applied,
+            updatedProducts?.[0]?.po_access_token
+          );
+          console.log("Discount updated successfully");
+          setSnackbar({
+            open: true,
+            message: "Discount Updated Successfully.",
+            severity: "success",
+          });
+        } catch (err) {
+          console.error("Error updating discount", err);
+          setSnackbar({
+            open: true,
+            message: "Failed to update discount before submitting order.",
+            severity: "error",
+          });
+        }
+      }
       const resp = await post_saleOrder(saleOrder);
       setSnackbar({
         open: true,
@@ -280,24 +308,32 @@ const handleConfirm = async (saleOrder) => {
     } finally {
       setLoading(false);
     }
-}
+  };
 
-const calculate_total = () => {
-  const total = updatedProducts?.reduce((acc, curr) => {
-    const quantity = parseFloat(curr.quantity_ordered) || 0;
-    const price = parseFloat(curr.unit_price) || 0;
-    return acc + (quantity * price);
-  }, 0);
-  const discount_amount = calculateDiscount()?.toFixed(2) || 0;
-  
-  const couponCost = parseFloat(updatedProducts?.[0]?.coupon_cost) || 0;
+  const calculate_total = () => {
+    const total = updatedProducts?.reduce((acc, curr) => {
+      const quantity = parseFloat(curr.quantity_ordered) || 0;
+      const price = parseFloat(curr.unit_price) || 0;
+      return acc + quantity * price;
+    }, 0);
+    const discount_amount = calculateDiscount()?.toFixed(2) || 0;
 
-  const platformFee = (total-discount_amount+couponCost) * 0.02;
+    const couponCost = parseFloat(updatedProducts?.[0]?.coupon_cost) || 0;
 
-  const platformTax = platformFee * 0.18;
-  setSubTotal((total - discount_amount + couponCost ).toFixed(2))
-  setTotal((total - discount_amount + couponCost + platformFee + platformTax).toFixed(2));
-}
+    const platformFee = (total - discount_amount + couponCost) * 0.02;
+
+    const platformTax = platformFee * 0.18;
+    setSubTotal((total - discount_amount + couponCost).toFixed(2));
+    setTotal(
+      (
+        total -
+        discount_amount +
+        couponCost +
+        platformFee +
+        platformTax
+      ).toFixed(2)
+    );
+  };
 
   const getSelectedCoupon = () => {
     // try applied coupon first
@@ -307,9 +343,12 @@ const calculate_total = () => {
     if (appliedCoupon) {
       const discount = runDiscountCalculation(appliedCoupon);
       console.log(discount);
-      
-      if (discount > 0) {return appliedCoupon}
-      else {return defaultCoupon};
+
+      if (discount > 0) {
+        return appliedCoupon;
+      } else {
+        return defaultCoupon;
+      }
     }
 
     // fallback to default
@@ -317,65 +356,78 @@ const calculate_total = () => {
   };
 
   const runDiscountCalculation = (coupon) => {
-  if (!coupon) return 0;
+    if (!coupon) return 0;
 
-  const { coupon_type, conditions } = coupon;
-  const total = updatedProducts?.reduce((acc, curr) => {
-    const quantity = parseFloat(curr.quantity_ordered) || 0;
-    const price = parseFloat(curr.unit_price) || 0;
-    return acc + (quantity * price);
-  }, 0);
+    const { coupon_type, conditions } = coupon;
+    const total = updatedProducts?.reduce((acc, curr) => {
+      const quantity = parseFloat(curr.quantity_ordered) || 0;
+      const price = parseFloat(curr.unit_price) || 0;
+      return acc + quantity * price;
+    }, 0);
 
-  const minOrder = Number(
-    conditions.find(
-      (c) => c.type === "minimum_order" || c.type === "last_purchase_above"
-    )?.value || 0
-  );
-  const orderUpto = Number(
-    conditions.find((c) => c.type === "order_upto")?.value || 0
-  );
-  const unlock = Number(
-    conditions.find((c) => c.type === "unlock")?.value || 0
-  );
-  const last_purchase_above = Number(
-    conditions.find((c) => c.type === "last_purchase_above")?.value || 0
-  );
-  const percent = Number(
-    conditions.find(
-      (c) =>
-        c.type === "percentage" ||
-        c.type === "flat" ||
-        c.type === "save" ||
-        c.type === "percent_off" ||
-        c.type === "flat_percent"
-    )?.value || 0
-  );
-  const pay = Number(conditions.find((c) => c.type === "pay")?.value || 0);
-  const get = Number(conditions.find((c) => c.type === "get")?.value || 0);
+    const minOrder = Number(
+      conditions.find(
+        (c) => c.type === "minimum_order" || c.type === "last_purchase_above"
+      )?.value || 0
+    );
+    const orderUpto = Number(
+      conditions.find((c) => c.type === "order_upto")?.value || 0
+    );
+    const unlock = Number(
+      conditions.find((c) => c.type === "unlock")?.value || 0
+    );
+    const last_purchase_above = Number(
+      conditions.find((c) => c.type === "last_purchase_above")?.value || 0
+    );
+    const percent = Number(
+      conditions.find(
+        (c) =>
+          c.type === "percentage" ||
+          c.type === "flat" ||
+          c.type === "save" ||
+          c.type === "percent_off" ||
+          c.type === "flat_percent"
+      )?.value || 0
+    );
+    const pay = Number(conditions.find((c) => c.type === "pay")?.value || 0);
+    const get = Number(conditions.find((c) => c.type === "get")?.value || 0);
 
-  switch (coupon_type) {
-    case "retailer_upto":
-      return total ? ((total * percent) / 100) > 30 ? (total * percent) / 100 : 30 : 0;
+    switch (coupon_type) {
+      case "retailer_upto":
+        return total
+          ? (total * percent) / 100 > 30
+            ? (total * percent) / 100
+            : 30
+          : 0;
 
-    case "retailer_flat":
-      return total >= minOrder ? ((total * percent) / 100) > 30 ? (total * percent) / 100 : 30 : 0;
+      case "retailer_flat":
+        return total >= minOrder
+          ? (total * percent) / 100 > 30
+            ? (total * percent) / 100
+            : 30
+          : 0;
 
-    case "loyalty_unlock":
-      return lastPurchasedValue >= last_purchase_above
-        ? ((total * unlock) / 100) > 30 ? (total * unlock) / 100 : 30
-        : 0;
+      case "loyalty_unlock":
+        return lastPurchasedValue >= last_purchase_above
+          ? (total * unlock) / 100 > 30
+            ? (total * unlock) / 100
+            : 30
+          : 0;
 
-    case "loyalty_prepaid":
-      return lastPurchasedValue ? (total >= pay ? get : 0) : 0;
+      case "loyalty_prepaid":
+        return lastPurchasedValue ? (total >= pay ? get : 0) : 0;
 
-    case "loyalty_bonus":
-      return lastPurchasedValue ? ((total * percent) / 100) > 30 ?  (total * percent) / 100 : 30 : 0;
+      case "loyalty_bonus":
+        return lastPurchasedValue
+          ? (total * percent) / 100 > 30
+            ? (total * percent) / 100
+            : 30
+          : 0;
 
-    default:
-      return 0;
-  }
-};
-
+      default:
+        return 0;
+    }
+  };
 
   // const calculateDiscount = () => {
   //   const selectedCoupon = updatedProducts?.[0]?.discount_applied || defaultCoupon;
@@ -458,150 +510,151 @@ const calculate_total = () => {
     const selectedCoupon = getSelectedCoupon();
     console.log(selectedCoupon);
     setAppliedCoupon(selectedCoupon);
-    
+
     return runDiscountCalculation(selectedCoupon);
   };
 
+  useEffect(() => {
+    calculateDiscount();
+  }, [updatedProducts, editedValues]);
 
-  useEffect(()=>{
-    calculateDiscount()
-  }, [updatedProducts, editedValues])
+  // console.log(
+  //   "................",
+  //   updatedProducts?.[0]?.discount_applied,
+  //   appliedCoupon,
+  //   {
+  //     discount_applied: appliedCoupon,
+  //     seller_id: updatedProducts?.[0]?.seller_id,
+  //   }
+  // );
 
-  console.log('................', updatedProducts?.[0]?.discount_applied, appliedCoupon, {discount_applied: appliedCoupon, seller_id: updatedProducts?.[0]?.seller_id});
+  console.log(updatedProducts);
 
-   useEffect(() => {
-  const autoApplyRetailerCoupon = async () => {
-    try {
+  useEffect(() => {
+    const autoApplyRetailerCoupon = async () => {
+      try {
         const shopData = await getShopUserData(token);
         if (shopData?.length > 0) {
           const resp = await get_discount_coupons(shopData[0].shop_no);
 
           // console.log('*******************************', resp);
-          
+
           if (resp?.valid) {
             // console.log(resp?.data);
             const retailerCategory = resp.data.find(
-                          (category) => category.discount_category === "retailer"
-                        );
-                        if (retailerCategory?.coupons?.length > 0) {
-                          const default_coupon = retailerCategory.coupons.find(
-                            (c) => c.coupon_type === "retailer_upto"
-                          ) || retailerCategory.coupons[0]; // fallback
-                          
-                          if (default_coupon) {
-                            setDefaultCoupon(default_coupon || null);
-                          }
-                        }
-            
-           
+              (category) => category.discount_category === "retailer"
+            );
+            if (retailerCategory?.coupons?.length > 0) {
+              const default_coupon =
+                retailerCategory.coupons.find(
+                  (c) => c.coupon_type === "retailer_upto"
+                ) || retailerCategory.coupons[0]; // fallback
+
+              if (default_coupon) {
+                setDefaultCoupon(default_coupon || null);
+              }
+            }
           }
         }
-    } catch (err) {
-      console.error("Error auto-applying retailer coupon", err);
-    }
-  };
-  autoApplyRetailerCoupon();
-}, [token]);
+      } catch (err) {
+        console.error("Error auto-applying retailer coupon", err);
+      }
+    };
+    autoApplyRetailerCoupon();
+  }, [token]);
 
-
-
-
-  useEffect(()=>{
+  useEffect(() => {
     calculate_total();
-  }, [updatedProducts, selectedPO])
+  }, [updatedProducts, selectedPO]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-   
-    const acceptedProducts = updatedProducts.filter(p => p.status === "Accept");
 
-  if (acceptedProducts.length === 0) {
-    setSnackbar({
-      open: true,
-      message: "No products accepted to generate sale order.",
-      severity: "warning",
-    });
-    return;
-  }
+    const acceptedProducts = updatedProducts.filter(
+      (p) => p.status === "Accept"
+    );
 
-  const product_data = updatedProducts[0]; // assuming all share same PO meta
-  const stockUpdates = calculateUpdatedStock(products, updatedProducts); 
-  // console.log(product_data);
-  
+    if (acceptedProducts.length === 0) {
+      setSnackbar({
+        open: true,
+        message: "No products accepted to generate sale order.",
+        severity: "warning",
+      });
+      return;
+    }
 
-  const soProducts = updatedProducts.map((p) => ({
-    product_id: p.product_id,
-    product_name: p.product_name,
-    quantity: Number(p.quantity_ordered),
-    unit_price: Number(p.unit_price),
-    total_price: Number(parseInt(p.unit_price) * p.quantity_ordered),
-    line_total_no_of_items: Number(p.quantity_ordered),
-    accept_or_deny: p.status,
-    selected_variant: p.selected_variant
-  }));
+    const product_data = updatedProducts[0]; // assuming all share same PO meta
+    const stockUpdates = calculateUpdatedStock(products, updatedProducts);
+    // console.log(product_data);
 
-  // 🔹 Only calculate subtotal from accepted products
-  const acceptedSubtotal = acceptedProducts.reduce((acc, curr) => {
-    const quantity = parseFloat(curr.quantity_ordered) || 0;
-    const price = parseFloat(curr.unit_price) || 0;
-    const discount_amount = parseFloat(curr.discount_amount) || 0;
-    return (acc + quantity * price);
-  }, 0);
+    const soProducts = updatedProducts.map((p) => ({
+      product_id: p.product_id,
+      product_name: p.product_name,
+      quantity: Number(p.quantity_ordered),
+      unit_price: Number(p.unit_price),
+      total_price: Number(parseInt(p.unit_price) * p.quantity_ordered),
+      line_total_no_of_items: Number(p.quantity_ordered),
+      accept_or_deny: p.status,
+      selected_variant: p.selected_variant,
+    }));
 
-  const couponCost = parseFloat(product_data.coupon_cost) || 0;
-  const subtotal = (acceptedSubtotal + couponCost).toFixed(2);
+    // 🔹 Only calculate subtotal from accepted products
+    const acceptedSubtotal = acceptedProducts.reduce((acc, curr) => {
+      const quantity = parseFloat(curr.quantity_ordered) || 0;
+      const price = parseFloat(curr.unit_price) || 0;
+      const discount_amount = parseFloat(curr.discount_amount) || 0;
+      return acc + quantity * price;
+    }, 0);
 
-  const saleOrderData = {
-    po_no: product_data.po_no,
-    buyer_id: product_data.buyer_id,
-    seller_id: product_data.seller_id,
-    buyer_type: product_data.buyer_type,
-    order_date: new Date(),
-    products: soProducts,
-    quantity: product_data.quantity_ordered,
-    unit_price: product_data.unit_price,
-    line_total_no_of_items: product_data.quantity_ordered,
-    subtotal: acceptedSubtotal, 
-    taxes: product_data.taxes || null,
-    stockUpdates,
-    discounts:
-      calculateDiscount() === "0.00"
-        ? null
-        : calculateDiscount(),
-    shipping_method: product_data.shipping_method,
-    shipping_charges: null,
-    expected_delivery_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-    co_helper: null,
-    subscription_type: product_data.special_offers,
-    payment_terms: null,
-    total_payment_with_all_services: null,
-    payment_method: product_data.payment_method,
-    payment_due_date: new Date(Date.now() + 24 * 60 * 60 * 1000),
-    prepaid: product_data.pre_post_paid,
-    postpaid: product_data.pre_post_paid,
-    balance_credit: null,
-    balance_credit_due_date: null,
-    after_due_date_surcharges_per_day: null,
-    status: headerToggleState || 'Hold',
-    send_qr_upi_bank_details: true,
-    coupon_cost : couponCost,
-    buyer_shop_no : null,
-    buyer_merchant_id: null,
-    seller_member_id: null,
-    seller_merchant_id: null,
-    payment_status: null,
-    buyer_name: null,
-    buyer_phone_no: null,
-    sector: null,
-    category : null
-  };
+    const couponCost = parseFloat(product_data.coupon_cost) || 0;
+    const subtotal = (acceptedSubtotal + couponCost).toFixed(2);
 
-  // console.log(saleOrderData);
-  
-  setSaleOrder(saleOrderData);
-  setOpenDialog(true);
+    const saleOrderData = {
+      po_no: product_data.po_no,
+      buyer_id: product_data.buyer_id,
+      seller_id: product_data.seller_id,
+      buyer_type: product_data.buyer_type,
+      order_date: new Date(),
+      products: soProducts,
+      quantity: product_data.quantity_ordered,
+      unit_price: product_data.unit_price,
+      line_total_no_of_items: product_data.quantity_ordered,
+      subtotal: acceptedSubtotal,
+      taxes: product_data.taxes || null,
+      stockUpdates,
+      discounts: calculateDiscount() === "0.00" ? null : calculateDiscount(),
+      shipping_method: product_data.shipping_method,
+      shipping_charges: null,
+      expected_delivery_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      co_helper: updatedProducts?.[0]?.co_helper,
+      subscription_type: product_data.special_offers,
+      payment_terms: null,
+      total_payment_with_all_services: null,
+      payment_method: product_data.payment_method,
+      payment_due_date: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      prepaid: product_data.pre_post_paid,
+      postpaid: product_data.pre_post_paid,
+      balance_credit: null,
+      balance_credit_due_date: null,
+      after_due_date_surcharges_per_day: null,
+      status: headerToggleState || "Hold",
+      send_qr_upi_bank_details: true,
+      coupon_cost: couponCost,
+      buyer_shop_no: null,
+      buyer_merchant_id: null,
+      seller_member_id: null,
+      seller_merchant_id: null,
+      payment_status: null,
+      buyer_name: null,
+      buyer_phone_no: null,
+      sector: null,
+      category: null,
+    };
 
-    
+    // console.log(saleOrderData);
+
+    setSaleOrder(saleOrderData);
+    setOpenDialog(true);
   };
 
   const handleInputChange = (index, field, value) => {
@@ -617,7 +670,8 @@ const calculate_total = () => {
           ...updatedProducts[index],
           [field]: value,
         };
-        updatedProduct.total_price = updatedProduct.unit_price * updatedProduct.quantity;
+        updatedProduct.total_price =
+          updatedProduct.unit_price * updatedProduct.quantity;
         updatedProducts[index] = updatedProduct;
         return updatedProducts;
       });
@@ -626,19 +680,17 @@ const calculate_total = () => {
     });
   };
 
-
   const handleItemChange = (index, selectedItemId, row) => {
-    
     const selectedItem = row.items?.find(
       (item) => item.item_id === selectedItemId
     );
     if (!selectedItem) return;
 
     const variations = selectedItem.item_id.split("_");
-    
+
     const newVariantLabel = `${variations.at(8)} - ${variations.at(10)}`;
     // console.log(newVariantLabel);
-    
+
     setEditedValues((prevState) => ({
       ...prevState,
       [index]: {
@@ -662,246 +714,474 @@ const calculate_total = () => {
       return updated;
     });
   };
-  
-  
+
   return (
     <>
-    
-    {updatedProducts?.length > 0 && <Box className="col buyer_details">
-        <Typography className="heading">Buyer Id : </Typography>
-        {updatedProducts?.[0]?.buyer_type !== 'member' ? <Typography className="text">{(updatedProducts?.[0]?.buyer_name)}</Typography> : 
-        // <Link to={`../support/shop/${token}/purchased-order/${encodeURIComponent(products?.[0]?.po_no)}`}>
-        <Link to={`../user/${products?.[0]?.buyer_access_token}`}>
-          <Typography className="text">{(updatedProducts?.[0]?.buyer_name)}</Typography>
-        </Link>}
-    </Box>}
-   
-    <Box className="col">
-      {loading && (
-        <Box className="loading">
-          <CircularProgress />
+      {updatedProducts?.length > 0 && (
+        <Box className="col buyer_details">
+          <Typography className="heading">Buyer Id : </Typography>
+          {updatedProducts?.[0]?.buyer_type !== "member" ? (
+            <Typography className="text">
+              {updatedProducts?.[0]?.buyer_name}
+            </Typography>
+          ) : (
+            // <Link to={`../support/shop/${token}/purchased-order/${encodeURIComponent(products?.[0]?.po_no)}`}>
+            <Link to={`../user/${products?.[0]?.buyer_access_token}`}>
+              <Typography className="text">
+                {updatedProducts?.[0]?.buyer_name}
+              </Typography>
+            </Link>
+          )}
         </Box>
       )}
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>S.No.</TableCell>
-            <TableCell>Product Name</TableCell>
-            <TableCell>Quantity</TableCell>
-            <TableCell>
-              Quantity
-              <Typography component="span">(in stock)</Typography>
-            </TableCell>
-            <TableCell>Unit Price</TableCell>
-            <TableCell>Total Price</TableCell>
-            {/* <TableCell>
+
+      <Box className="col">
+        {loading && (
+          <Box className="loading">
+            <CircularProgress />
+          </Box>
+        )}
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>S.No.</TableCell>
+              <TableCell>Product Name</TableCell>
+              <TableCell>Quantity</TableCell>
+              <TableCell>
+                Quantity
+                <Typography component="span">(in stock)</Typography>
+              </TableCell>
+              <TableCell>Unit Price</TableCell>
+              <TableCell>Total Price</TableCell>
+              {/* <TableCell>
               Price
               <Typography component="span">(After discount)</Typography>
             </TableCell> */}
-            <TableCell>
-              Final S.O
-              <Typography component="span">
-                <ToggleButtonGroup
-                  value={updatedProducts?.[0]?.purchase_order_status || headerToggleState}
-                  exclusive
-                  onChange={(e)=>handleHeaderToggleChange(e, e.target.value)}
-                  disabled={updatedProducts?.[0]?.purchase_order_status !== 'Hold'}
-                >
-                  <ToggleButton value="Deny" className="toggle">
-                    Deny
-                  </ToggleButton>
-                  <ToggleButton value="Hold" className="toggle">
-                    Hold
-                  </ToggleButton>
-                  <ToggleButton value="Accept" className="toggle">
-                    Accept
-                  </ToggleButton>
-                </ToggleButtonGroup>
-              </Typography>
-            </TableCell>
-            {/* <TableCell>Total Price</TableCell>
+              <TableCell>
+                Final S.O
+                <Typography component="span">
+                  <ToggleButtonGroup
+                    value={
+                      updatedProducts?.[0]?.purchase_order_status ||
+                      headerToggleState
+                    }
+                    exclusive
+                    onChange={(e) =>
+                      handleHeaderToggleChange(e, e.target.value)
+                    }
+                    disabled={
+                      updatedProducts?.[0]?.purchase_order_status !== "Hold"
+                    }
+                  >
+                    <ToggleButton value="Deny" className="toggle">
+                      Deny
+                    </ToggleButton>
+                    <ToggleButton value="Hold" className="toggle">
+                      Hold
+                    </ToggleButton>
+                    <ToggleButton value="Accept" className="toggle">
+                      Accept
+                    </ToggleButton>
+                  </ToggleButtonGroup>
+                </Typography>
+              </TableCell>
+              {/* <TableCell>Total Price</TableCell>
                                 <TableCell>List of services applied</TableCell>
                                 <TableCell>Final S.O.</TableCell>
                                 <TableCell>Payment status</TableCell>
                                 <TableCell>Final status</TableCell> */}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {updatedProducts.map((row, index) => {
-          //  console.log(row?.items
-          //     ?.find((i) => i?.item_id === row?.selected_variant)
-          //     ?.item_id?.split("_"));
-           
-            const isHold = toggleStates[index] === "Hold";
-            const purchasedVariant = row?.items
-              ?.find((i) => i?.item_id === row?.selected_variant)
-              ?.item_id?.split("_");
-            // console.log( purchasedVariant)
-            // console.log(row)
-            // fetch_product_variants(row.seller_id, row.variant_group);
-            return (
-              <TableRow key={row.product_id} hover>
-                <TableCell>{index + 1}</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {updatedProducts.map((row, index) => {
+              //  console.log(row?.items
+              //     ?.find((i) => i?.item_id === row?.selected_variant)
+              //     ?.item_id?.split("_"));
 
-                {/* Product Name Column - Dropdown if on Hold */}
-                <TableCell>
-                  {isHold ? (
-                    <Select
-                      value={
-                        editedValues[index]?.selected_variant ||
-                        row.selected_variant
-                      }
-                      onChange={(e) =>
-                        handleItemChange(index, e.target.value, row)
-                      }
-                      fullWidth
-                      className="input_field select"
-                    >
-                      {row.items?.map((i) => {
-                        if (!i?.item_id || typeof i.item_id !== "string") return null;
+              const isHold = toggleStates[index] === "Hold";
+              const purchasedVariant = row?.items
+                ?.find((i) => i?.item_id === row?.selected_variant)
+                ?.item_id?.split("_");
+              // console.log( purchasedVariant)
+              // console.log(row)
+              // fetch_product_variants(row.seller_id, row.variant_group);
+              return (
+                <TableRow key={row.product_id} hover>
+                  <TableCell>{index + 1}</TableCell>
 
-  const v = i?.item_id?.split("_");
-  const label = `${v?.at(8) || "N/A"} - ${v?.at(10) || "N/A"}`;
-                        return (
-                          <MenuItem key={i.item_id} value={i.item_id}>
-                            {label}
-                          </MenuItem>
-                        );
-                      })}
-                    </Select>
-                  ) : (
-                    `${purchasedVariant?.at(8)} - ${purchasedVariant?.at(10)}`
-                  )}
-                </TableCell>
+                  {/* Product Name Column - Dropdown if on Hold */}
+                  <TableCell>
+                    {isHold ? (
+                      <Select
+                        value={
+                          editedValues[index]?.selected_variant ||
+                          row.selected_variant
+                        }
+                        onChange={(e) =>
+                          handleItemChange(index, e.target.value, row)
+                        }
+                        fullWidth
+                        className="input_field select"
+                      >
+                        {row.items?.map((i) => {
+                          if (!i?.item_id || typeof i.item_id !== "string")
+                            return null;
 
-                {/* Quantity Column - Input if on Hold */}
-                <TableCell width="45px">
-                  {isHold ? (
-                    <TextField
-                      type="number"
-                      value={
-                        editedValues[index]?.quantity_ordered ||
-                        row.quantity_ordered
-                      }
-                      onChange={(e) =>
-                        handleInputChange(
+                          const v = i?.item_id?.split("_");
+                          const label = `${v?.at(8) || "N/A"} - ${
+                            v?.at(10) || "N/A"
+                          }`;
+                          return (
+                            <MenuItem key={i.item_id} value={i.item_id}>
+                              {label}
+                            </MenuItem>
+                          );
+                        })}
+                      </Select>
+                    ) : (
+                      `${purchasedVariant?.at(8)} - ${purchasedVariant?.at(10)}`
+                    )}
+                  </TableCell>
+
+                  {/* Quantity Column - Input if on Hold */}
+                  <TableCell width="45px">
+                    {isHold ? (
+                      <TextField
+                        type="number"
+                        value={
+                          editedValues[index]?.quantity_ordered ||
+                          row.quantity_ordered
+                        }
+                        onChange={(e) =>
+                          handleInputChange(
                             index,
                             "quantity_ordered",
                             e.target.value
                           )
-                      }
-                      inputProps={{ min: 1 }}
-                    />
-                  ) : (
-                    row.quantity_ordered
-                  )}
-                </TableCell>
+                        }
+                        inputProps={{ min: 1 }}
+                      />
+                    ) : (
+                      row.quantity_ordered
+                    )}
+                  </TableCell>
 
-                <TableCell>{row.items?.find((i)=>i.item_id===row.selected_variant)?.item_quantity}</TableCell>
-                <TableCell width="140px">
-                  {isHold ? (
-                    <TextField
-                      type="number"
-                      value={editedValues[index]?.unit_price || row.unit_price}
-                      onChange={(e) =>
-                         handleInputChange(index, "unit_price", e.target.value)
-                      }
-                      inputProps={{ min: 1 }}
-                      InputProps={{
-                        min: 1,
-                        startAdornment: (
-                          <InputAdornment
-                            position="start"
-                            className="adornmentText"
-                          >
-                            ₹
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                  ) : (
-                    `₹ ${row.unit_price}`
-                  )}{" "}
-                </TableCell>
-                <TableCell>₹ {row.unit_price * row.quantity_ordered}</TableCell>
-                {/* <TableCell>₹ {((row.unit_price * row.quantity_ordered) - row.discount_amount)?.toFixed(2)}</TableCell> */}
-
-                {/* Toggle Button Group */}
-                <TableCell>
-                  <ToggleButtonGroup
-                    value={toggleStates[index] ?? row.status ?? "Hold"}
-                    exclusive
-                    onChange={(event, newValue) =>
-                      handleToggleChange(index, newValue)
+                  <TableCell>
+                    {
+                      row.items?.find((i) => i.item_id === row.selected_variant)
+                        ?.item_quantity
                     }
-                    disabled={soExists}
+                  </TableCell>
+                  <TableCell width="140px">
+                    {isHold ? (
+                      <TextField
+                        type="number"
+                        value={
+                          editedValues[index]?.unit_price || row.unit_price
+                        }
+                        onChange={(e) =>
+                          handleInputChange(index, "unit_price", e.target.value)
+                        }
+                        inputProps={{ min: 1 }}
+                        InputProps={{
+                          min: 1,
+                          startAdornment: (
+                            <InputAdornment
+                              position="start"
+                              className="adornmentText"
+                            >
+                              ₹
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                    ) : (
+                      `₹ ${row.unit_price}`
+                    )}{" "}
+                  </TableCell>
+                  <TableCell>
+                    ₹ {row.unit_price * row.quantity_ordered}
+                  </TableCell>
+                  {/* <TableCell>₹ {((row.unit_price * row.quantity_ordered) - row.discount_amount)?.toFixed(2)}</TableCell> */}
+
+                  {/* Toggle Button Group */}
+                  <TableCell>
+                    <ToggleButtonGroup
+                      value={toggleStates[index] ?? row.status ?? "Hold"}
+                      exclusive
+                      onChange={(event, newValue) =>
+                        handleToggleChange(index, newValue)
+                      }
+                      disabled={soExists}
+                    >
+                      <ToggleButton
+                        value="Deny"
+                        className="toggle"
+                        selected={
+                          (toggleStates[index] ?? row.status) === "Deny"
+                        }
+                      >
+                        Deny
+                      </ToggleButton>
+                      <ToggleButton
+                        value="Hold"
+                        className="toggle"
+                        selected={
+                          (toggleStates[index] ?? row.status) === "Hold"
+                        }
+                      >
+                        Hold
+                      </ToggleButton>
+                      <ToggleButton
+                        value="Accept"
+                        className="toggle"
+                        selected={
+                          (toggleStates[index] ?? row.status) === "Accept"
+                        }
+                      >
+                        Accept
+                      </ToggleButton>
+                    </ToggleButtonGroup>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+
+            {updatedProducts.length > 0 && (
+              <>
+                <TableRow hover>
+                  <TableCell colSpan="5">
+                    Subtotal (Coupon Cost - Discount + Platform Fees Included)
+                  </TableCell>
+                  <TableCell>₹ {total}</TableCell>
+                  <TableCell
+                    rowSpan={3}
+                    sx={
+                      updatedProducts?.[0]?.co_helper === null && {
+                        borderBottomLeftRadius: "10px",
+                        borderBottomRightRadius: "10px",
+                      }
+                    }
                   >
-                    <ToggleButton value="Deny" className="toggle" selected={(toggleStates[index] ?? row.status) === "Deny"}>
-                      Deny
-                    </ToggleButton>
-                    <ToggleButton value="Hold" className="toggle" selected={(toggleStates[index] ?? row.status) === "Hold"}>
-                      Hold
-                    </ToggleButton>
-                    <ToggleButton value="Accept" className="toggle" selected={(toggleStates[index] ?? row.status) === "Accept"}>
-                      Accept
-                    </ToggleButton>
-                  </ToggleButtonGroup>
-                </TableCell>
+                    {updatedProducts.length > 0 &&
+                      updatedProducts?.[0]?.co_helper === null &&
+                      updatedProducts?.[0]?.purchase_order_status ===
+                        "Hold" && (
+                        <Button
+                          className="btn-submit"
+                          onClick={(e) => handleSubmit(e)}
+                        >
+                          Submit
+                        </Button>
+                      )}
+                  </TableCell>
+                </TableRow>
+                <TableRow hover>
+                  <TableCell colSpan="5">GST (18%)</TableCell>
+                  <TableCell>₹ {(subTotal * 0.18)?.toFixed(2)}</TableCell>
+                </TableRow>
+                <TableRow hover>
+                  <TableCell colSpan="5">Total</TableCell>
+                  <TableCell>
+                    ₹{" "}
+                    {(parseFloat(total) + parseFloat(subTotal * 0.18))?.toFixed(
+                      2
+                    )}
+                  </TableCell>
+                </TableRow>
+                {updatedProducts?.[0]?.co_helper !== null && (
+                  <>
+                    <TableRow hover>
+                      <TableCell
+                        colSpan="7"
+                        sx={{
+                          backgroundColor: "#f9e0b399 !important",
+                          color: "#6B4336 !important",
+                        }}
+                      >
+                        Services
+                      </TableCell>
+                    </TableRow>
+
+                    <TableRow hover>
+                      <TableCell
+                        sx={{
+                          backgroundColor: "#f9e0b399 !important",
+                          color: "#6B4336 !important",
+                        }}
+                      >
+                        S.No
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          backgroundColor: "#f9e0b399 !important",
+                          color: "#6B4336 !important",
+                        }}
+                      >
+                        Services
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          backgroundColor: "#f9e0b399 !important",
+                          color: "#6B4336 !important",
+                        }}
+                      >
+                        Estimated Hrs
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          backgroundColor: "#f9e0b399 !important",
+                          color: "#6B4336 !important",
+                        }}
+                      >
+                        Offering Cost Per Hour
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          backgroundColor: "#f9e0b399 !important",
+                          color: "#6B4336 !important",
+                        }}
+                      >
+                        GST
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          backgroundColor: "#f9e0b399 !important",
+                          color: "#6B4336 !important",
+                        }}
+                      >
+                        Total Price
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          backgroundColor: "#f9e0b399 !important",
+                          color: "#6B4336 !important",
+                        }}
+                      ></TableCell>
+                    </TableRow>
+
+                    <TableRow hover>
+                      <TableCell>1</TableCell>
+                      <TableCell>
+                        {updatedProducts?.[0]?.co_helper_type}
+                      </TableCell>
+                      <TableCell>
+                        {updatedProducts?.[0]?.co_helper_estimated_hours}
+                      </TableCell>
+                      <TableCell>
+                        {updatedProducts?.[0]?.co_helper_offerings}
+                      </TableCell>
+                      <TableCell>
+                        {parseFloat(
+                          updatedProducts?.[0]?.co_helper_offerings *
+                            updatedProducts?.[0]?.co_helper_estimated_hours *
+                            0.18
+                        )?.toFixed(2)}
+                      </TableCell>
+                      <TableCell>
+                        {parseFloat(
+                          updatedProducts?.[0]?.co_helper_offerings *
+                            updatedProducts?.[0]?.co_helper_estimated_hours
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <ToggleButtonGroup
+                          value={serviceToggle}
+                          exclusive
+                          onChange={handleServiceToggleChange}
+                          disabled={soExists}
+                        >
+                          <ToggleButton
+                            value="Deny"
+                            className="toggle"
+                            selected={serviceToggle === "Deny"}
+                          >
+                            Deny
+                          </ToggleButton>
+                          <ToggleButton
+                            value="Hold"
+                            className="toggle"
+                            selected={serviceToggle === "Hold"}
+                          >
+                            Hold
+                          </ToggleButton>
+                          <ToggleButton
+                            value="Accept"
+                            className="toggle"
+                            selected={serviceToggle === "Accept"}
+                          >
+                            Accept
+                          </ToggleButton>
+                        </ToggleButtonGroup>
+                      </TableCell>
+                    </TableRow>
+                    <TableRow hover>
+                      <TableCell colSpan="5">
+                        Grand Total (including GST)
+                      </TableCell>
+                      <TableCell>
+                        ₹{" "}
+                        {(
+                          parseFloat(total) +
+                          parseFloat(subTotal * 0.18) +
+                          parseFloat(
+                            updatedProducts?.[0]?.co_helper_offerings *
+                              updatedProducts?.[0]?.co_helper_estimated_hours
+                          ) +
+                          parseFloat(
+                            updatedProducts?.[0]?.co_helper_offerings *
+                              updatedProducts?.[0]?.co_helper_estimated_hours *
+                              0.18
+                          )
+                        )?.toFixed(2)}
+                      </TableCell>
+                      <TableCell
+                        rowSpan={4}
+                        sx={{
+                          borderBottomLeftRadius: "10px",
+                          borderBottomRightRadius: "10px",
+                        }}
+                      >
+                        {updatedProducts.length > 0 &&
+                          updatedProducts?.[0]?.purchase_order_status ===
+                            "Hold" && (
+                            <Button
+                              className="btn-submit"
+                              onClick={(e) => handleSubmit(e)}
+                            >
+                              Submit
+                            </Button>
+                          )}
+                      </TableCell>
+                    </TableRow>
+                  </>
+                )}
+              </>
+            )}
+
+            {updatedProducts.length <= 0 && (
+              <TableRow hover>
+                <TableCell colSpan="8">No purchase order exist</TableCell>
               </TableRow>
-            );
-          })}
-          
-            {updatedProducts.length > 0 && <><TableRow hover>
-              <TableCell colSpan="5">
-                Subtotal (Coupon Cost - Discount + Platform Fees Included)
-              </TableCell>
-              <TableCell>₹ {total}</TableCell>
-              <TableCell rowSpan={3} sx={{borderBottomLeftRadius: '10px',borderBottomRightRadius: '10px'}}>
-                {updatedProducts.length > 0 && updatedProducts?.[0]?.purchase_order_status === 'Hold' && (<Button className="btn-submit" onClick={(e) => handleSubmit(e)}>
-                  Submit
-                </Button>)}
-              </TableCell>
-            </TableRow>
-
-            <TableRow hover>
-              <TableCell colSpan="5">
-                GST (18.5%)
-              </TableCell>
-              <TableCell>₹ {(subTotal*0.18)?.toFixed(2)}</TableCell>
-              
-            </TableRow>
-
-            <TableRow hover>
-              <TableCell colSpan="5">
-                Total
-              </TableCell>
-              <TableCell>₹ {(parseFloat(total) + parseFloat(subTotal*0.18))?.toFixed(2)}</TableCell>
-              
-            </TableRow> </>}
-
-          {updatedProducts.length <= 0 && (
-            <TableRow hover>
-              <TableCell colSpan="8">No purchase order exist</TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-      <CustomSnackbar
-        open={snackbar.open}
-        handleClose={() => setSnackbar({ ...snackbar, open: false })}
-        message={snackbar.message}
-        severity={snackbar.severity}
-      />
-      <ConfirmationDialog
-        open={openDialog}
-        onClose={() => setOpenDialog(false)}
-        onConfirm={(e)=>handleConfirm(saleOrder)}
-        title="Confirm Sale Order"
-        message={`Are you sure you want to ${headerToggleState} this order?`}
-        optionalCname="logoutDialog"
-      />
-    </Box>
-     </>
+            )}
+          </TableBody>
+        </Table>
+        <CustomSnackbar
+          open={snackbar.open}
+          handleClose={() => setSnackbar({ ...snackbar, open: false })}
+          message={snackbar.message}
+          severity={snackbar.severity}
+        />
+        <ConfirmationDialog
+          open={openDialog}
+          onClose={() => setOpenDialog(false)}
+          onConfirm={(e) => handleConfirm(saleOrder)}
+          title="Confirm Sale Order"
+          message={`Are you sure you want to ${headerToggleState} this order?`}
+          optionalCname="logoutDialog"
+        />
+      </Box>
+    </>
   );
 }
 

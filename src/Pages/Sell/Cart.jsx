@@ -22,10 +22,13 @@ import { get_discount_coupons, get_visitorData, getMemberData, getShopUserData, 
 import UserBadge from "../../UserBadge";
 import CustomSnackbar from "../../Components/CustomSnackbar";
 import { clearCart } from "../../store/cartSlice";
-import { addCoupon } from "../../store/discountsSlice";
+import { addCoupon, resetCoupons } from "../../store/discountsSlice";
+import { clearCoHelper } from "../../store/CoHelperSlice";
+import { resetCohelper } from "../../store/selectedCoHelperSlice";
 
 function Cart() {
   const sampleRows = useSelector((state) => state.cart.selectedProducts);
+  const selectedCohelper = useSelector((state) => state.selectedCohelper.selectedCohelper);
   const [openPopup, setOpenPopup] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -49,6 +52,8 @@ function Cart() {
     setOpenPopup(false);
   };
 
+  console.log(selectedCohelper);
+  
   const handleClick = (e, item) => {
     if (item.openPopup) {
       setOpenPopup((prev) => (prev === item.id ? null : item.id));
@@ -281,7 +286,7 @@ function Cart() {
         special_offers: submittedData,
         discount_applied: selectedCoupon,
         taxes: null,
-        co_helper: null,
+        co_helper: selectedCohelper || null,
         discount_amount: cartData.discount || 0,
         pre_post_paid: null,
         extra_charges: null,
@@ -309,6 +314,8 @@ function Cart() {
           });
 
           dispatch(clearCart());
+          dispatch(resetCohelper());
+          dispatch(resetCoupons());
   
           setTimeout(() => {
             navigate(`../${resp.po_access_token}/order`);

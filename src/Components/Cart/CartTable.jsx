@@ -22,7 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { removeProduct } from "../../store/cartSlice";
 import { useParams } from "react-router-dom";
 import Button2 from "../Home/Button2";
-import { convertDriveLink, getCategoryName, getLastPurchasedTotal, getShopUserData, getUser } from "../../API/fetchExpressAPI";
+import { convertDriveLink, get_requestedCoHelper, getCategoryName, getLastPurchasedTotal, getShopUserData, getUser } from "../../API/fetchExpressAPI";
 import CustomSnackbar from "../CustomSnackbar";
 import { removeCoupon } from "../../store/discountsSlice";
 import EmergencyIcon from "@mui/icons-material/Emergency";
@@ -59,7 +59,9 @@ function CartTable({ rows, setCartData, setSelectedCoupon }) {
   );
   const [categoryNames, setCategoryNames] = useState({}); // Map of category IDs to names
   const { selectedCoupon } = useSelector((state) => state.discounts);
+  const { selectedCohelper } = useSelector((state) => state.selectedCohelper);
   const token = useSelector((state) => state.auth.userAccessToken);
+  const [coHelper, setCoHelper] = useState(null);
   const[ lastPurchasedValue, setLastPurchasedValue] = useState(null);
   
   console.log(data);
@@ -87,6 +89,27 @@ function CartTable({ rows, setCartData, setSelectedCoupon }) {
 
     fetchCategories();
   }, [rows]);
+
+  const fetch_selectedCohelperDetails = async (id) => {
+    try{
+      setLoading(true);
+      const resp = await get_requestedCoHelper(id);
+      console.log(resp);
+      if(resp?.valid){
+        setCoHelper(resp?.data?.[0]);
+      }
+    }catch(e){
+      console.log(e);
+    }finally{
+      setLoading(false);
+    }
+  }
+
+  useEffect(()=>{
+    if(selectedCohelper?.id){
+      fetch_selectedCohelperDetails(selectedCohelper?.id);
+    }
+  }, [selectedCohelper]);
 
   const getBuyerDetails = async (buyerToken) => {
       try{
@@ -265,9 +288,21 @@ function CartTable({ rows, setCartData, setSelectedCoupon }) {
   }, [selectedCoupon]);
 
   const handleIncrement = (index) => {
-    const newData = data.map((item, i) =>
-      i === index ? { ...item, quantity: item.quantity + 1 } : item
-    );
+    const newData = data.map((item, i) => {
+      if (i === index) {
+        // Only increment if less than matched_quantity
+        if (item.quantity < item.matched_quantity) {
+          return { ...item, quantity: item.quantity + 1 };
+        }else{
+          setSnackbar({
+            open: true,
+            message: `You've reached the maximum available quantity.`,
+            severity: "error",
+          }); 
+        }
+      }
+      return item;
+    });
     setData(newData);
   };
 
@@ -587,6 +622,18 @@ function CartTable({ rows, setCartData, setSelectedCoupon }) {
                     </TableCell>
                 </TableRow>
 
+                {coHelper !== null && <TableRow>
+                  <TableCell colSpan={5} align="right">
+                    <Typography className="text_1">
+                      Co-helper ({coHelper?.co_helper_type})
+                    </Typography>
+                  </TableCell>
+                    <TableCell className="text_2">
+                      &#8377;
+                      {coHelper?.offerings}
+                    </TableCell>
+                </TableRow>}
+
                 {/* <TableRow>
                   <TableCell colSpan={5} align="right">
                     <Typography className="text_1">
@@ -609,7 +656,7 @@ function CartTable({ rows, setCartData, setSelectedCoupon }) {
                       {(
                         calculateTotal() -
                         (calculateDiscount() < 30 ? 30 : calculateDiscount()) +
-                        30 +calcPlatformFees() 
+                        30 + calcPlatformFees()
                       ).toFixed(2)}
                       
                     </TableCell>

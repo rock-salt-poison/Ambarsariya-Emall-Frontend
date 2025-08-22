@@ -115,7 +115,8 @@ function OrderStatus_tab_content({ title }) {
     const discount = parseFloat(calculateDiscount().toFixed(2));
     const couponCost = parseFloat(selectedOrder?.[0]?.coupon_cost || 0);
 
-    const baseAmount = subTotal - discount + couponCost;
+    const coHelperCharges = (selectedOrder?.[0]?.co_helper_offerings * selectedOrder?.[0]?.co_helper_estimated_hours) || 0;
+    const baseAmount = subTotal - discount + couponCost + coHelperCharges;
 
     const fee = parseFloat((baseAmount * 0.02).toFixed(2));
     const tax = parseFloat((fee * 0.18).toFixed(2));
@@ -857,6 +858,28 @@ const calculateDiscount = () => {
                 </Box>
               )}
 
+              {
+                subTotal > 0 && selectedOrder?.[0]?.co_helper !== null && (
+                  <Box className="col">
+                  <Typography className="heading">Co-helper Type</Typography>
+                  <Typography className="text">
+                    {selectedOrder?.[0]?.co_helper_type}
+                  </Typography>
+                </Box>
+                )
+              }
+
+              {
+                subTotal > 0 && selectedOrder?.[0]?.co_helper !== null && (
+                  <Box className="col">
+                  <Typography className="heading">Co-helper Charges</Typography>
+                  <Typography className="text">
+                    &#8377; {selectedOrder?.[0]?.co_helper_offerings * selectedOrder?.[0]?.co_helper_estimated_hours}
+                  </Typography>
+                </Box>
+                )
+              }
+
               <Box className="col">
                 <Typography className="heading">GST</Typography>
                 <Typography className="text">
@@ -874,17 +897,6 @@ const calculateDiscount = () => {
                 </Box>
                 )
               }
-
-              {/* {
-                subTotal > 0 && (
-                  <Box className="col">
-                  <Typography className="heading">Tax</Typography>
-                  <Typography className="text">
-                    &#8377; {platformTax}
-                  </Typography>
-                </Box>
-                )
-              } */}
 
               <Box className="col">
                 <Typography className="heading">Grand Total</Typography>

@@ -2,7 +2,6 @@ import { configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage
 import { combineReducers } from 'redux';
-
 import cartReducer from './cartSlice';
 import authReducer from './authSlice';
 import editedEshopFieldsReducer from './editedEshopFieldsSlice';
@@ -11,11 +10,12 @@ import otpReducer from './otpSlice';
 import discountsReducer from './discountsSlice';
 import mouReducer from './mouSelectedProductsSlice';
 import coHelperReducer from './CoHelperSlice';
+import selectedCohelperReducer from './selectedCoHelperSlice';
 
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['cart', 'discounts', 'coupon', 'mou', 'co_helper'], // Add only reducers you want to persist
+  whitelist: ['cart', 'discounts', 'coupon', 'mou', 'co_helper', 'selectedCohelper'], // Add only reducers you want to persist
 };
 
 const rootReducer = combineReducers({
@@ -27,6 +27,7 @@ const rootReducer = combineReducers({
   discounts: discountsReducer,
   mou: mouReducer,
   co_helper: coHelperReducer,
+  selectedCohelper: selectedCohelperReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

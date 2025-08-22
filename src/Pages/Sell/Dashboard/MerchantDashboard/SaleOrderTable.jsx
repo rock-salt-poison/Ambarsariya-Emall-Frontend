@@ -42,11 +42,6 @@ function SaleOrderTable({ seller_id }) {
     }
   };
 
-
-
-
-
-
   useEffect(() => {
     if (seller_id) {
       fetch_products(seller_id);
