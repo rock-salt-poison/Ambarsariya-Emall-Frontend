@@ -242,6 +242,11 @@ const handleConfirm = async (saleOrder) => {
               }
               await put_purchaseOrderDiscount(data, updatedProducts?.[0]?.discount_applied, updatedProducts?.[0]?.po_access_token);
               console.log("Discount updated successfully");
+              setSnackbar({
+                open: true,
+                message: "Discount Updated Successfully.",
+                severity: "success",
+              });
             } catch (err) {
               console.error("Error updating discount", err);
               setSnackbar({
