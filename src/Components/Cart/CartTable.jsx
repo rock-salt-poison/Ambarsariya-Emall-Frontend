@@ -232,6 +232,7 @@ function CartTable({ rows, setCartData, setSelectedCoupon }) {
   useEffect(() => {
     const subtotal = calculateTotal();
     const calcdiscount = calculateDiscount();
+    const platformFee = calcPlatformFees();
     const deliveryCharge = 30;
 
     const discount = selectedCoupon
@@ -239,9 +240,14 @@ function CartTable({ rows, setCartData, setSelectedCoupon }) {
         ? 30
         : calcdiscount
       : 0;
+
+    // const discount = selectedCoupon
+    //   ? calcdiscount
+    //   : 0;
+
     const total = selectedCoupon
-      ? subtotal - discount + deliveryCharge
-      : subtotal - discount;
+      ? subtotal - discount + deliveryCharge + platformFee 
+      : subtotal - discount + platformFee ;
 
     const couponCost = selectedCoupon ? 30 : null;
 
@@ -373,6 +379,32 @@ function CartTable({ rows, setCartData, setSelectedCoupon }) {
   };
 
   // const calculateDiscount = () => calculateTotal() ;
+
+ const calcPlatformFees = () => {
+  let fees;
+  
+  if (selectedCoupon) {
+    fees = parseFloat(
+      ((calculateTotal() - (calculateDiscount() < 30 ? 30 : calculateDiscount()) + 30) * 0.02).toFixed(2)
+    );
+  } else {
+    fees = parseFloat(
+      ((calculateTotal() - calculateDiscount()) * 0.02).toFixed(2)
+    );
+  }
+
+  const tax = parseFloat((fees * 0.185).toFixed(2));
+
+  return parseFloat((fees + tax).toFixed(2));
+};
+
+
+  // const calcPlatformTax = () => {
+  //   const platformfees = calcPlatformFees();
+  //   const tax = ((platformfees * 18)/100)?.toFixed(2);
+  //   return Number(tax);
+  // } 
+  
 
   return (
     <ThemeProvider theme={theme}>
@@ -512,7 +544,11 @@ function CartTable({ rows, setCartData, setSelectedCoupon }) {
                 {selectedCoupon && (
                   <TableRow>
                     <TableCell colSpan={5} align="right">
-                      <Typography className="text_1">Coupon Cost :</Typography>
+                      <Typography className="text_1">{selectedCoupon && calculateDiscount() < 30 && (
+                      <Tooltip title="Discount coupon cost." placement="bottom-end" className="tooltip">
+                        <EmergencyIcon />
+                      </Tooltip>
+                    )}Coupon Cost :</Typography>
                     </TableCell>
                     <TableCell className="text_2">&#8377; 30</TableCell>
                   </TableRow>
@@ -520,7 +556,11 @@ function CartTable({ rows, setCartData, setSelectedCoupon }) {
                 <TableRow>
                   <TableCell colSpan={5} align="right">
                     <Typography className="text_1">
-                      Discount{" "}
+                      {selectedCoupon && calculateDiscount() < 30 && (
+                      <Tooltip title="Discount adjusted to match coupon cost." placement="bottom-end" className="tooltip">
+                        <EmergencyIcon />
+                      </Tooltip>
+                    )} Discount{" "}
                       {selectedCoupon &&
                         `(${selectedCoupon.coupon_type?.replace(
                           /_/g,
@@ -534,9 +574,34 @@ function CartTable({ rows, setCartData, setSelectedCoupon }) {
                   </TableCell>
                 </TableRow>
 
+
                 <TableRow>
                   <TableCell colSpan={5} align="right">
-                    <Typography className="text_1">Total :</Typography>
+                    <Typography className="text_1">
+                      Platform Fees :{" "}
+                    </Typography>
+                  </TableCell>
+                    <TableCell className="text_2">
+                      &#8377;
+                      {calcPlatformFees()}
+                    </TableCell>
+                </TableRow>
+
+                {/* <TableRow>
+                  <TableCell colSpan={5} align="right">
+                    <Typography className="text_1">
+                      Tax :{" "}
+                    </Typography>
+                  </TableCell>
+                    <TableCell className="text_2">
+                      &#8377;
+                      {calcPlatformTax()}
+                    </TableCell>
+                </TableRow> */}
+
+                <TableRow>
+                  <TableCell colSpan={5} align="right">
+                    <Typography className="text_1">Total (Excluding GST):</Typography>
                   </TableCell>
                   {selectedCoupon ? (
                     <TableCell className="text_2">
@@ -544,14 +609,21 @@ function CartTable({ rows, setCartData, setSelectedCoupon }) {
                       {(
                         calculateTotal() -
                         (calculateDiscount() < 30 ? 30 : calculateDiscount()) +
-                        30
+                        30 +calcPlatformFees() 
                       ).toFixed(2)}
-                      {selectedCoupon && calculateDiscount() < 30 && (
-                      <Tooltip title="Discount adjusted to match coupon cost." placement="bottom-end" className="tooltip">
-                        <EmergencyIcon />
-                      </Tooltip>
-                    )}
+                      
                     </TableCell>
+
+                    // <TableCell className="text_2">
+                    //   &#8377;
+                    //   {(
+                    //     calculateTotal() -
+                    //     calculateDiscount() +
+                    //     30 +
+                    //     calcPlatformFees() + 
+                    //     calcPlatformTax()
+                    //   )?.toFixed(2)}
+                    // </TableCell>
                   ) : (
                     <TableCell className="text_2">
                       &#8377;

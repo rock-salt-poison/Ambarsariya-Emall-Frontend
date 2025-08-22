@@ -11153,6 +11153,12 @@ a {
                       @include hover-scale(1, 0s);
                       line-height: 20px;
                       text-shadow: 0px 4px 4px #00000073;
+                      
+                      .tooltip{
+                        font-size: 16px;
+                        vertical-align: super;
+                        filter: drop-shadow(0px 4px 4px #00000073);
+                      }
                     }
 
                     &.text_2 {
@@ -11165,10 +11171,11 @@ a {
                       text-align: right;
                       @include hover-scale(1, 0s);
                       text-shadow: 0px 4px 4px #00000073;
-
+                      
                       .tooltip{
                         font-size: 16px;
                         vertical-align: text-top;
+                        filter: drop-shadow(0px 4px 4px #00000073);
                       }
                     }
                   }

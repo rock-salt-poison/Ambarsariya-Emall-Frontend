@@ -847,24 +847,24 @@ function InvoicePopup({ open, onClose, serviceType, invoiceNo }) {
                       </TableRow>
 
                       <TableRow className="bgColor">
-                        <TableCell className="text right" colSpan={4}>CGST: 0%</TableCell>
-                        <TableCell className="text">0%</TableCell>
+                        <TableCell className="text right" colSpan={4}>CGST: 9%</TableCell>
+                        <TableCell className="text">{invoice?.gcst_paid}</TableCell>
                       </TableRow>
 
                       <TableRow className="bgColor">
-                        <TableCell className="text right" colSpan={4}>SGST : 0%</TableCell>
-                        <TableCell className="text">0%</TableCell>
+                        <TableCell className="text right" colSpan={4}>SGST : 9%</TableCell>
+                        <TableCell className="text">{invoice?.gsct_paid}</TableCell>
                       </TableRow>
 
                       <TableRow className="bgColor">
                         <TableCell className="text right" colSpan={4}>Platform fee</TableCell>
-                        <TableCell className="text">{invoice?.fee}</TableCell>
+                        <TableCell className="text">{invoice?.fee + invoice?.tax}</TableCell>
                       </TableRow>
 
-                      <TableRow className="bgColor">
+                      {/* <TableRow className="bgColor">
                         <TableCell className="text right" colSpan={4}>Other Charges</TableCell>
                         <TableCell className="text">{invoice?.tax}</TableCell>
-                      </TableRow>
+                      </TableRow> */}
 
                       <TableRow className="bgColor">
                         <TableCell colSpan={4} className="text right">
@@ -874,8 +874,8 @@ function InvoicePopup({ open, onClose, serviceType, invoiceNo }) {
                           <Typography className="text">
                             <CurrencyRupeeIcon /> {
   invoice?.discount_amount
-    ? (parseFloat(invoice?.subtotal || 0) - parseFloat(invoice?.discount_amount || 0) + 30).toFixed(2)
-    : parseFloat(invoice?.subtotal || 0).toFixed(2)
+    ? (parseFloat(invoice?.subtotal || 0) - parseFloat(invoice?.discount_amount || 0) + 30 + invoice?.fee + invoice?.tax + invoice.gcst_paid + invoice?.gsct_paid).toFixed(2)
+    : parseFloat(invoice?.subtotal + invoice?.fee + invoice?.tax + invoice.gcst_paid + invoice?.gsct_paid || 0).toFixed(2)
 }
 
                           </Typography>

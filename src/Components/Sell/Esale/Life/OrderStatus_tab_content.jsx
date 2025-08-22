@@ -11,15 +11,18 @@ import {
 import {
   get_allPurchaseOrderDetails,
   get_buyer_data,
+  get_discount_coupons,
   get_paymentDetails,
   get_purchased_products_details,
   get_purchaseOrderDetails,
   get_purchaseOrders,
   get_seller_data,
+  getLastPurchasedTotal,
   getUser,
   post_createFundAccount,
   post_invoiceOrder,
   post_payoutToShopkeeper,
+  put_purchaseOrderDiscount,
 } from "../../../../API/fetchExpressAPI";
 import { useSelector } from "react-redux";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
@@ -38,6 +41,16 @@ function OrderStatus_tab_content({ title }) {
   const [saleOrderStatus, setSaleOrderStatus] = useState("");
   const [openDialog, setOpenDialog] = useState({ open: false, status: "" }); // State for dialog
   const [openInvoice, setOpenInvoice] = useState(false);
+  const [platformFee, setPlatformFee] = useState(0.00);
+  const [platformTax, setPlatformTax] = useState(0.00);
+  const [grandTotal, setGrandTotal] = useState(0.00);
+  const[ lastPurchasedValue, setLastPurchasedValue] = useState(null);
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const [defaultCoupon, setDefaultCoupon] = useState(null);
+  const [updated, setUpdated] = useState(false);
+  const [GST, setGST] = useState(0.00);
+  
+
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -47,13 +60,15 @@ function OrderStatus_tab_content({ title }) {
   const [invoiceNo, setInvoiceNo] = useState('');
   const [subTotal, setSubTotal] = useState(0);
 
+  // console.log(purchasedOrders);
+  
   useEffect(() => {
     if (saleOrderStatus === "Deny") return "0.00";
 
     const filteredProducts = selectedOrder.length>0 && selectedOrder?.filter(
       product => product.status === "Accept"
     ) || [];
-    console.log(filteredProducts);
+    // console.log(filteredProducts);
 
 
     const productTotal = filteredProducts
@@ -68,13 +83,188 @@ function OrderStatus_tab_content({ title }) {
     setSubTotal(calcSubTotal.toFixed(2));
   }, [selectedOrder]);
 
+    
+  
+  const getBuyerDetails = async (buyerId, sellerId) => {
+    try{
+      setLoading(true);
+          const lastPurchasedValueResp = await getLastPurchasedTotal(sellerId, buyerId);
+          // console.log(lastPurchasedValueResp);
+          
+          if(lastPurchasedValueResp?.valid){
+            // console.log(lastPurchasedValueResp?.data?.[0]?.total_purchased);
+            
+            setLastPurchasedValue(lastPurchasedValueResp?.data?.[0]?.total_purchased);
+          }
+    }catch(e){
+      console.log(e);
+    }finally{
+      setLoading(false);
+    }
+  }
+
+
+  useEffect(()=>{
+    if(selectedOrder){
+      getBuyerDetails(selectedOrder?.[0]?.buyer_id, selectedOrder?.[0]?.seller_id);
+    }
+  }, [selectedOrder]);
+
+  useEffect(() => {
+  if (subTotal > 0 && selectedOrder?.length > 0) {
+    const discount = parseFloat(calculateDiscount().toFixed(2));
+    const couponCost = parseFloat(selectedOrder?.[0]?.coupon_cost || 0);
+
+    const baseAmount = subTotal - discount + couponCost;
+
+    const fee = parseFloat((baseAmount * 0.02).toFixed(2));
+    const tax = parseFloat((fee * 0.18).toFixed(2));
+    const gst = parseFloat((baseAmount * 0.18).toFixed(2));
+
+    const result = parseFloat((baseAmount + fee + tax + gst).toFixed(2));
+
+    setPlatformFee(fee + tax);
+    setPlatformTax(tax);
+    setGST(gst);
+    console.log(gst/2);
+    
+    setGrandTotal(result);
+  } else {
+    setGrandTotal(0.00);
+  }
+}, [subTotal, selectedOrder]);
+
+
+  const getSelectedCoupon = () => {
+    // try applied coupon first
+    const appliedCoupon = selectedOrder?.[0]?.discount_applied;
+
+    // test discount with applied coupon
+    if (appliedCoupon) {
+      const discount = runDiscountCalculation(appliedCoupon);
+      // console.log(discount);
+      
+      if (discount > 0) {return appliedCoupon}
+      else {return defaultCoupon};
+    }
+
+    // fallback to default
+    return defaultCoupon;
+  };
+
+  const runDiscountCalculation = (coupon) => {
+  if (!coupon) return 0;
+
+  const { coupon_type, conditions } = coupon;
+  const total = subTotal;
+
+  const minOrder = Number(
+    conditions.find(
+      (c) => c.type === "minimum_order" || c.type === "last_purchase_above"
+    )?.value || 0
+  );
+  const orderUpto = Number(
+    conditions.find((c) => c.type === "order_upto")?.value || 0
+  );
+  const unlock = Number(
+    conditions.find((c) => c.type === "unlock")?.value || 0
+  );
+  const last_purchase_above = Number(
+    conditions.find((c) => c.type === "last_purchase_above")?.value || 0
+  );
+  const percent = Number(
+    conditions.find(
+      (c) =>
+        c.type === "percentage" ||
+        c.type === "flat" ||
+        c.type === "save" ||
+        c.type === "percent_off" ||
+        c.type === "flat_percent"
+    )?.value || 0
+  );
+  const pay = Number(conditions.find((c) => c.type === "pay")?.value || 0);
+  const get = Number(conditions.find((c) => c.type === "get")?.value || 0);
+
+  switch (coupon_type) {
+    case "retailer_upto":
+      return total ? ((total * percent) / 100) > 30 ? (total * percent) / 100 : 30 : 0;
+
+    case "retailer_flat":
+      return total >= minOrder ? ((total * percent) / 100) > 30 ? (total * percent) / 100 : 30 : 0;
+
+    case "loyalty_unlock":
+      return lastPurchasedValue >= last_purchase_above
+        ? ((total * unlock) / 100) > 30 ? (total * unlock) / 100 : 30
+        : 0;
+
+    case "loyalty_prepaid":
+      return lastPurchasedValue ? (total >= pay ? get : 0) : 0;
+
+    case "loyalty_bonus":
+      return lastPurchasedValue ? ((total * percent) / 100) > 30 ?  (total * percent) / 100 : 30 : 0;
+
+    default:
+      return 0;
+  }
+};
+
+const calculateDiscount = () => {
+    const selectedCoupon = getSelectedCoupon();
+    // console.log(selectedCoupon);
+    // setAppliedCoupon(selectedCoupon);
+    
+    return runDiscountCalculation(selectedCoupon);
+  };
+
+
+  useEffect(()=>{
+    calculateDiscount()
+  }, [selectedOrder])
+
+  console.log('................', selectedOrder?.[0]?.discount_applied, getSelectedCoupon());
+
+   useEffect(() => {
+    if(selectedOrder?.[0]?.seller_id){
+      const autoApplyRetailerCoupon = async () => {
+        try {
+              const resp = await get_discount_coupons(selectedOrder?.[0]?.seller_id);
+  
+              // console.log('*******************************', resp);
+              
+              if (resp?.valid) {
+                // console.log(resp?.data);
+                const retailerCategory = resp.data.find(
+                              (category) => category.discount_category === "retailer"
+                            );
+                            if (retailerCategory?.coupons?.length > 0) {
+                              const default_coupon = retailerCategory.coupons.find(
+                                (c) => c.coupon_type === "retailer_upto"
+                              ) || retailerCategory.coupons[0]; // fallback
+                              
+                              if (default_coupon) {
+                                console.log(default_coupon);
+                                
+                                setDefaultCoupon(default_coupon || null);
+                              }
+                            }
+                
+              
+              }
+        } catch (err) {
+          console.error("Error auto-applying retailer coupon", err);
+        }
+      };
+      autoApplyRetailerCoupon();
+    }
+  }, [selectedOrder]);
+
   const fetchPurchasedOrder = async (buyer_id) => {
     try {
       setLoading(true);
       const resp = await get_allPurchaseOrderDetails(buyer_id);
       if (resp.valid) {
         const filteredOrders = resp.data.filter(order => order.sale_order_status === null);
-        console.log(filteredOrders);
+        // console.log(filteredOrders);
 
         setPurchasedOrders(filteredOrders);
       }
@@ -159,6 +349,29 @@ function OrderStatus_tab_content({ title }) {
     setSaleOrderStatus(status);
     setOpenDialog({ open: false, status });
 
+    if(selectedOrder?.[0]?.discount_applied !== getSelectedCoupon()){
+                try {
+                  const data = {
+                    discount_applied: getSelectedCoupon(),
+                    discount_amount: calculateDiscount(),
+                    seller_id: selectedOrder?.[0]?.seller_id
+                  }
+                  await put_purchaseOrderDiscount(data, selectedOrder?.[0]?.discount_applied, selectedOrder?.[0]?.po_access_token);
+                  setSnackbar({
+                    open: true,
+                    message: "Discount Updated Successfully.",
+                    severity: "success",
+                  });
+                } catch (err) {
+                  console.error("Error updating discount", err);
+                  setSnackbar({
+                    open: true,
+                    message: "Failed to update discount before submitting order.",
+                    severity: "error",
+                  });
+                }
+              }
+
     if (status === "Accept" || status === "Deny") {
       try {
         setLoading(true);
@@ -232,7 +445,7 @@ function OrderStatus_tab_content({ title }) {
         let total_amount = 0;
         let razorpay_payout_id;
 
-        const grandTotal = (subTotal - parseFloat(selectedOrder?.[0]?.total_discount_amount) + (Number(selectedOrder?.[0]?.coupon_cost || 0) ))?.toFixed(2);
+        // const grandTotal = (subTotal - parseFloat(selectedOrder?.[0]?.total_discount_amount) + (Number(selectedOrder?.[0]?.coupon_cost || 0) ))?.toFixed(2);
 
         if (status === 'Accept') {
 
@@ -344,7 +557,7 @@ function OrderStatus_tab_content({ title }) {
                     products: JSON.stringify(purchasedProducts),
                     subtotal: subTotal,
                     discount_applied: selectedOrder?.[0]?.discount_applied,
-                    discount_amount: selectedOrder?.[0]?.total_discount_amount,
+                    discount_amount: calculateDiscount()?.toFixed(2),
                     tax_applied: selectedOrder?.[0]?.taxes,
                     total_amount: total_amount,
                     order_status: status,
@@ -361,8 +574,8 @@ function OrderStatus_tab_content({ title }) {
                     seller_msme: sellerData?.msme,
                     seller_pan: sellerData?.pan_no,
                     seller_cin: sellerData?.cin_no,
-                    gcst_paid: null,
-                    gsct_paid: null,
+                    gcst_paid: GST/2 || null,
+                    gsct_paid: GST/2 || null,
                     payment_gateway_integrations_razor_pay_fees: null,
                     date_and_time: new Date(),
                     buyer_payment_location: JSON.stringify({
@@ -449,8 +662,6 @@ function OrderStatus_tab_content({ title }) {
     }
   };
 
-
-  console.log('--------------selectedOrder', selectedOrder);
 
 
   return (
@@ -591,6 +802,7 @@ function OrderStatus_tab_content({ title }) {
                                 : o
                             );
                             setSelectedOrder(updatedOrders);
+                            setUpdated(true)
                           }}
                           displayEmpty
                           className="input_field"
@@ -625,25 +837,18 @@ function OrderStatus_tab_content({ title }) {
                 </Typography>
               </Box>
 
-              <Box className="col">
-                <Typography className="heading">GST</Typography>
-                <Typography className="text">
-                  {selectedOrder?.[0].buyer_gst_number || "-"}
-                </Typography>
-              </Box>
-
               {selectedOrder?.[0].discount_amount &&
                 selectedOrder?.[0].discount_amount !== 0.0 &&
                 selectedOrder?.[0].discount_amount !== "" && (
                   <Box className="col">
                     <Typography className="heading">Discount</Typography>
                     <Typography className="text">
-                      - &#8377; {selectedOrder?.[0].total_discount_amount}
+                      - &#8377; {calculateDiscount()?.toFixed(2)}
                     </Typography>
                   </Box>
                 )}
 
-              {selectedOrder?.[0].coupon_cost && (
+              {subTotal >0 && selectedOrder?.[0].coupon_cost && (
                 <Box className="col">
                   <Typography className="heading">Coupon Cost</Typography>
                   <Typography className="text">
@@ -653,10 +858,40 @@ function OrderStatus_tab_content({ title }) {
               )}
 
               <Box className="col">
+                <Typography className="heading">GST</Typography>
+                <Typography className="text">
+                  &#8377; {GST || "-"}
+                </Typography>
+              </Box>
+
+              {
+                subTotal > 0 && (
+                  <Box className="col">
+                  <Typography className="heading">Platform Fee</Typography>
+                  <Typography className="text">
+                    &#8377; {platformFee}
+                  </Typography>
+                </Box>
+                )
+              }
+
+              {/* {
+                subTotal > 0 && (
+                  <Box className="col">
+                  <Typography className="heading">Tax</Typography>
+                  <Typography className="text">
+                    &#8377; {platformTax}
+                  </Typography>
+                </Box>
+                )
+              } */}
+
+              <Box className="col">
                 <Typography className="heading">Grand Total</Typography>
                 <Typography className="text total shadow">
                   &#8377;{" "}
-                  {(subTotal - parseFloat(selectedOrder?.[0]?.total_discount_amount) + (Number(selectedOrder?.[0]?.coupon_cost || 0) ))?.toFixed(2)}
+                  {/* {(subTotal - parseFloat(selectedOrder?.[0]?.total_discount_amount) + (Number(selectedOrder?.[0]?.coupon_cost || 0) ))?.toFixed(2)} */}
+                  {grandTotal}
                 </Typography>
               </Box>
               {selectedOrder?.[0]?.purchase_order_status !== 'Hold' ? selectedOrder?.[0].so_subtotal && (

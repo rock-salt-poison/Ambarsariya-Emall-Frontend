@@ -787,6 +787,17 @@ export const post_purchaseOrder = async (data) => {
   }
 }
 
+export const put_purchaseOrderDiscount = async (data, previous_discount, po_access_token) => {
+  try {
+    if (data) {
+      const response = await axios.put(`${link}/purchase_order_discount/${po_access_token}`, { data, previous_discount });
+      return response.data;
+    }
+  } catch (e) {
+    throw e;
+  }
+}
+
 export const post_saleOrder = async (data) => {
   try {
     if (data) {

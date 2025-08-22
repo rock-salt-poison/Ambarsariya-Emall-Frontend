@@ -77,10 +77,10 @@ function CouponsPreview() {
   }
 
   const tabsData = [
-    { id: 1, name: 'Retailer', content: <CouponOffers data={coupons['retailer']}/> },
-    { id: 2, name: 'Loyalty', content: <CouponOffers data={coupons['loyalty']}/> },
-    { id: 3, name: 'Subscription', content: <CouponOffers data={coupons['subscription']}/> },
-    { id: 4, name: 'Customizable', content: <CouponOffers data={coupons['customizable']}/> },
+    { id: 1, name: 'Retailer', content: <CouponOffers data={coupons?.['retailer']}/> },
+    { id: 2, name: 'Loyalty', content: <CouponOffers data={coupons?.['loyalty']}/> },
+    { id: 3, name: 'Subscription', content: <CouponOffers data={coupons?.['subscription']}/> },
+    { id: 4, name: 'Customizable', content: <CouponOffers data={coupons?.['customizable']}/> },
   ]
 
   return (
