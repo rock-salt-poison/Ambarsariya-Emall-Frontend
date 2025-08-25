@@ -42,63 +42,112 @@ function CurrencyAndTimeComponent({ data, optionalCName }) {
     setLoading(false);
   }, [data]);
 
-  useEffect(() => {
-    if (!data || data.length === 0) return;
+ // 1️⃣ Fetch initial times with staggered requests to avoid 429
+useEffect(() => {
+  if (!data || data.length === 0) return;
 
-    setLoading(true);
-    let requests = [];
+  setLoading(true);
 
-    const fetchTime = async (item, delay) => {
-      await new Promise((resolve) => setTimeout(resolve, delay));
-
+  data.forEach((item, index) => {
+    setTimeout(async () => {
       try {
-        const response = await axios.get(`https://api.timezonedb.com/v2.1/get-time-zone`, {
-          params: { key: timezone_db_api_key, format: "json", by: "zone", zone: item.capital_timezone },
-        });
+        const response = await axios.get(
+          `https://api.timezonedb.com/v2.1/get-time-zone`,
+          {
+            params: {
+              key: timezone_db_api_key,
+              format: "json",
+              by: "zone",
+              zone: item.capital_timezone,
+            },
+          }
+        );
 
-        const { gmtOffset } = response.data; // Get UTC offset in seconds
-        const currentUTC = response.data.formatted; // Adjust local time
+        const { gmtOffset, formatted } = response.data;
 
         setTimeInfo((prev) => ({
           ...prev,
           [item.country_capital]: {
             offset: gmtOffset,
-            time: new Date(currentUTC),
+            time: new Date(formatted),
           },
         }));
-      } catch (error) {
-        console.error("Error fetching time:", error);
+      } catch (err) {
+        // console.error(`Error fetching time for ${item.country_capital}:`, err);
       }
-    };
+    }, index * 3000); // 3s gap between requests
+  });
 
-    data.forEach((item, index) => {
-      requests.push(fetchTime(item, index * 3000));
+  // Only stop loading after all timeouts finish
+  setTimeout(() => setLoading(false), data.length * 3000);
+}, [data]);
+
+// 2️⃣ Local clock updater (tick every second)
+useEffect(() => {
+  const interval = setInterval(() => {
+    setTimeInfo((prev) => {
+      const updated = {};
+      for (const capital in prev) {
+        updated[capital] = {
+          ...prev[capital],
+          time: prev[capital]?.time
+            ? new Date(prev[capital].time.getTime() + 1000)
+            : null,
+        };
+      }
+      return updated;
     });
+  }, 1000);
 
-    Promise.all(requests).finally(() => setLoading(false));
+  return () => clearInterval(interval);
+}, []); // run once, don’t depend on timeInfo
 
-  }, [data]);
+// 3️⃣ Retry fetching missing countries only ONCE after initial fetch
+useEffect(() => {
+  if (!data || data.length === 0) return;
 
-  // Update time every second
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTimeInfo((prev) => {
-        const updatedTime = {};
-        Object.entries(prev).forEach(([capital, info]) => {
-          if (info?.time) {
-            updatedTime[capital] = {
-              ...info,
-              time: new Date(info.time.getTime() + 1000),
-            };
-          }
-        });
-        return updatedTime;
-      });
-    }, 1000); // Update every second
+  const retryMissing = () => {
+    const missing = data.filter(
+      (item) => !timeInfo[item.country_capital]?.time
+    );
+    missing.forEach((item, index) => {
+      setTimeout(async () => {
+        try {
+          const response = await axios.get(
+            `https://api.timezonedb.com/v2.1/get-time-zone`,
+            {
+              params: {
+                key: timezone_db_api_key,
+                format: "json",
+                by: "zone",
+                zone: item.capital_timezone,
+              },
+            }
+          );
 
-    return () => clearInterval(interval);
-  }, [timeInfo]);
- 
+          const { gmtOffset, formatted } = response.data;
+
+          setTimeInfo((prev) => ({
+            ...prev,
+            [item.country_capital]: {
+              offset: gmtOffset,
+              time: new Date(formatted),
+            },
+          }));
+        } catch (err) {
+          // console.error(`Retry error for ${item.country_capital}:`, err);
+        }
+      }, index * 3000); // stagger retries
+    });
+  };
+
+  // Run retry after a delay to ensure initial fetches finished
+  const retryTimeout = setTimeout(retryMissing, data.length * 3500);
+
+  return () => clearTimeout(retryTimeout);
+}, [data]); // depends ONLY on `data`
+
+
 
   return (
     <Box className={`${optionalCName && optionalCName} currency-wrapper`}>

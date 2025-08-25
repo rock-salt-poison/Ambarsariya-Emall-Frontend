@@ -84,7 +84,9 @@ const UserPortfolioForm = () => {
         name: user[0].full_name,
         phoneNumber: user[0].phone_no_1,
         gender: user[0].gender,
-        dob: new Date(user[0].dob).toLocaleDateString("en-CA"),
+        dob: new Date(user[0].dob).toLocaleString("en-IN", {
+          timeZone: "Asia/Kolkata",
+        }) || null,
         address: user[0].address,
         username: user[0].username,
         latitude: user[0].latitude,

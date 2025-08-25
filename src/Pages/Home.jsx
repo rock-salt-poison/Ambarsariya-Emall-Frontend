@@ -131,8 +131,8 @@ export default function Home() {
     }, [token]);
 
     const buttonsData = [
-        { id: 1, text: "Time Table", cName: 'timeTable', imgSrc: timeTableButtonImg, alt: "time-table", handleClickFunction: (e) => handleClick(e, 'TimeTable') },
-        { id: 2, text: "AQI", cName: 'aqi', imgSrc: AQIButtonImg, alt: "air-quality-index", handleClickFunction: (e) => handleClick(e, 'AQI') },
+        { id: 1, text: "Time", cName: 'timeTable', imgSrc: timeTableButtonImg, alt: "time-table", handleClickFunction: (e) => handleClick(e, 'TimeTable') },
+        { id: 2, text: "Aqi", cName: 'aqi', imgSrc: AQIButtonImg, alt: "air-quality-index", handleClickFunction: (e) => handleClick(e, 'AQI') },
         { id: 3, text: "Sell", cName: 'sell', imgSrc: _3SbgImg, alt: "sell", handleClickFunction: (e) => handleClick(e, 'Sell') },
         { id: 4, text: "Serve", cName: 'serve', imgSrc: _3SbgImg, alt: 'serve', handleClickFunction: (e) => handleClick(e, 'Serve') },
         { id: 5, text: "Socialize", cName: 'socialize', imgSrc: _3SbgImg, alt: 'socialize', handleClickFunction: (e) => handleClick(e, 'Socialize') }

@@ -280,16 +280,17 @@ a {
 .bg {
   @include background-center-no-repeat($hall-gate-bg);
   background-attachment: local;
-  overflow-y: auto;
+  // overflow-y: auto;
   background-size: cover;
   position: relative;
   border-radius: 15px;
   min-height: 100vh;
+  // overflow-y: hidden;
   display: flex;
 
   &::after {
     content: "";
-    position: fixed;
+    position: absolute;
     top: 0px;
     bottom: 0px;
     left: 0px;
@@ -313,7 +314,7 @@ a {
     margin: 0 auto;
     flex-direction: column;
     justify-content: flex-start;
-    min-height: 100vh;
+    // min-height: 90vh;
 
     @media (max-width: 1226px) {
       width: 51%;
@@ -445,7 +446,7 @@ a {
       }
 
       p {
-        @include homepage-buttons;
+        @include homepage-buttons("EFCO", 30px, $yellow, "yellow-shadow");
       }
     }
 
@@ -465,14 +466,14 @@ a {
       }
 
       p {
-        @include homepage-buttons("Gladiola", 30px, $yellow, "yellow-shadow");
+        @include homepage-buttons("EFCO", 30px, $yellow, "yellow-shadow");
         @include hover-scale(1.12, 0.2s);
       }
     }
 
     .reduceSize {
       p {
-        @include homepage-buttons("Gladiola", 26px, $yellow, "yellow-shadow");
+        @include homepage-buttons("EFCO", 26px, $yellow, "yellow-shadow");
         @include hover-scale(1, 0s);
       }
     }
@@ -705,6 +706,7 @@ a {
         @include full-absolute(0, 0, 0, 0);
         z-index: -1;
         transform: skew(41deg, 359deg) rotateX(68deg);
+        filter: brightness(0.1);
       }
 
       p {
@@ -804,29 +806,35 @@ a {
     background-position-x: 51%;
 
     .row {
-      gap: 15px;
+      gap: 0px;
       justify-content: center;
+      // min-height: 90vh;
+      overflow-y: hidden;
 
       .img_container {
         position: relative;
         margin-top: -40px;
+        flex: 1;
         .hall_gate {
           display: block;
           width: 100%;
           position: relative;
           z-index: -1;
+          height: 57vh;
         }
         .body_content {
-          @include full-absolute(84px, 10px, 20px, 20px);
+          @include full-absolute(116px, 10px, 0px, 20px);
+          gap: 23px;
         }
       }
 
       .logoParent {
-        height: 183px;
+        height: 30%;
         .logo {
+          align-self: end;
           img {
             width: 88%;
-            top: 33px;
+            top: 0px;
             left: 10px;
           }
         }
@@ -834,7 +842,8 @@ a {
 
       .timeTable {
         width: auto;
-        left: -5px;
+        left: 0px;
+        padding: 4px 10px;
         height: max-content;
 
         img {
@@ -867,7 +876,7 @@ a {
 
       .clockParent {
         height: 60px;
-        left: 10px;
+        left: 0px;
         top: 0px;
 
         .clockImg {
@@ -906,7 +915,7 @@ a {
       .noticeBoardParent {
         width: max-content;
         height: 68px;
-        left: 0px;
+        left: -5px;
         z-index: 2;
 
         .noticeBoardImg {
@@ -973,14 +982,16 @@ a {
 
       .row2 {
         // bottom: 13%;
-        margin-top: -10px;
+        margin-top: auto;
         grid-template-columns: 1fr;
-
+        position: relative;
+        bottom: -30px;
         .container {
           order: 1;
-          margin-top: -90px;
+          margin-top: -84px;
           left: 0px;
-          top: 21px;
+          top: 0px;
+          gap: 0px;
         }
 
         .radioMusicParent {
@@ -988,18 +999,26 @@ a {
         }
 
         .sell {
-          right: 30px;
+          right: 20px;
+          padding: 0 0 0 40px;
           transform: rotateY(46deg) skewX(19deg);
+          height: max-content !important;
         }
-
+        
         .serve {
-          right: 0px;
+          right: 15px;
+          padding: 0 0 0 40px;
           top: 0px;
+          margin-top: -4px !important;
+          height: max-content !important;
         }
-
+        
         .socialize {
-          left: 40px;
-          top: -10px;
+          left: 0px;
+          top: 0px;
+          padding: 0 0 0 40px;
+          margin-top: -10px !important;
+          height: max-content !important;
 
           p {
             top: 7px;
@@ -1023,10 +1042,16 @@ a {
         }
       }
 
-      .logoutBtn {
+      .led_board_container{
+        margin-top: auto !important;
+        position: relative;
+        bottom: 20px;
+      }
+
+      .logoutBtn, .loginBtn {
         width: 80px;
-        top: 17px;
-        right: 10px;
+        top: 30px;
+        right: 10px !important;
 
         .badge_icon {
           @include full-absolute(15px, 31px, 20px, 18px);
@@ -2382,6 +2407,7 @@ a {
 
             .col-2 {
               overflow-x: auto;
+              margin-bottom: 20px;
 
               &::-webkit-scrollbar-thumb {
                 background: $brown-4;
@@ -2390,7 +2416,7 @@ a {
               .table_container {
                 width: 100%;
                 overflow-x: auto;
-                margin-bottom: 20px;
+                // margin-bottom: 20px;
 
                 &::-webkit-scrollbar {
                   height: 5px;
@@ -3575,7 +3601,9 @@ a {
           .content-body {
             .col-2 {
               flex-direction: column;
-              gap: 10px;
+              gap: 30px;
+              flex: 1;
+              justify-content: center;
             }
           }
         }
@@ -4507,6 +4535,57 @@ a {
           }
         }
       }
+    }
+  }
+  @media (max-width: 560px){
+    background-position: 48% center;
+    .row_wrapper{
+      padding: 30px 15px;
+    .header{
+      grid-template-columns: 1fr;
+
+      .back-button-wrapper{
+        order: 1;
+      }
+
+      .title_container{
+        order: 2;
+
+        .text {
+          font-size: 1.8em !important;
+        }
+        .person_on_call {
+          width: 44px;
+        }
+      }
+    }
+
+    .content {
+      .row {
+        gap: 0 6em;
+
+        .btn {
+
+          &:last-child{
+            right: 0px !important;
+          }
+          a {
+            width: 130px;
+            height: 130px;
+
+            img {
+              width: 130px;
+            }
+
+            .text_container {
+              .text {
+                font-size: 1.8em;
+              }
+            }
+          }
+        }
+      }
+    }
     }
   }
 }
@@ -6778,7 +6857,7 @@ a {
         }
 
         .d-lg-none {
-          display: flex !important;
+          display: none !important;
         }
 
         .d-sm-none {
@@ -10097,11 +10176,11 @@ a {
           color: $black;
           box-shadow: 0px 0px 4px $light-yellow;
           border-radius: 16px;
-          padding: 20px 0;
+          padding: 20px;
 
           .board_pins {
             @include flex-center(row, space-between);
-            padding: 0 20px;
+            // padding: 0 20px;
 
             .circle {
               width: 14px;
@@ -10112,12 +10191,13 @@ a {
             }
 
             &:last-child {
-              margin-top: -30px;
+              // margin-top: -30px;
             }
           }
 
           .MuiTableContainer-root {
-            margin-top: -30px;
+            // margin-top: -10px;
+            margin-bottom: 10px;
 
             &::-webkit-scrollbar {
               height: 4px;
@@ -10126,7 +10206,7 @@ a {
             .MuiTable-root {
               max-width: 100%;
               overflow-x: auto;
-              border-spacing: 40px 15px;
+              border-spacing: 5px 10px;
               border-collapse: separate;
 
               .MuiTableHead-root {
@@ -10453,6 +10533,12 @@ a {
         // flex-direction: column;
         gap: 15px;
 
+        &:last-child{
+          .sub_col{
+            display: none;
+          }
+        }
+
         .sub_col {
           &:first-child {
             display: none;
@@ -10481,7 +10567,7 @@ a {
           .MuiPaper-root {
             .MuiTableContainer-root {
               .MuiTable-root {
-                border-spacing: 15px;
+                border-spacing: 0 5px;
 
                 .MuiTableHead-root {
                   .MuiTableRow-root {
@@ -10518,6 +10604,7 @@ a {
         }
 
         .product_data {
+          margin: 0 auto;
           .row_1 {
             gap: 20px;
             padding: 0 15px;
@@ -10797,6 +10884,25 @@ a {
     &.brand_catalog {
       @include background-center-no-repeat($brandCatalogBgImg);
       background-size: cover;
+    }
+  }
+
+  @media screen and (max-width: 768px) and (orientation: landscape) {
+    .row{
+      .col{
+        div{
+          &.heading{
+            .container{
+              padding: 6px 10px;
+              border: 5px;
+              border-radius: 10px;
+              h2{
+                font-size: 22px;
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
@@ -25419,6 +25525,10 @@ textarea[readonly] {
         .cards {
           max-width: 100%;
           grid-template-columns: 100%;
+        }
+
+        .board{
+          max-width: 90%;
         }
       }
     }

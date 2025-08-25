@@ -26,7 +26,7 @@ function App() {
   
   return (
     <>
-    <OrientationWarning />
+    {/* <OrientationWarning /> */}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/notice" element={<Notice />} />
