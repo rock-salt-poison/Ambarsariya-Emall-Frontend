@@ -53,28 +53,37 @@ function SubscriptionPopupContent({ onClose }) {
   };
 
   const handleDateRangeChange = (value, field) => {
-    const serializedRange = value ? value.map((date) => date.toLocaleDateString()) : null;
-    setDiscounts((prevState) => ({
-      ...prevState,
-      [field]: {
-        ...prevState[field],
-        dateRange: serializedRange,
-      },
-    }));
-  };
-  
+  const serializedRange = value
+    ? value.map((date) =>
+        new Date(
+          date.toLocaleString("en-US", { timeZone: "Asia/Kolkata" })
+        ).toISOString()
+      )
+    : null;
+
+  setDiscounts((prevState) => ({
+    ...prevState,
+    [field]: {
+      ...prevState[field],
+      dateRange: serializedRange,
+    },
+  }));
+};
+
+
+
 
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log(discounts);
     dispatch(addCoupon({ type: 'subscription', coupon: { id: Date.now(), discounts } }));
     setSnackbar({
-        open: true,
-        message: "Form Submitted successfully.",
-        severity: "success",
+      open: true,
+      message: "Form Submitted successfully.",
+      severity: "success",
     });
-    setTimeout(()=>{
-      if(onClose){
+    setTimeout(() => {
+      if (onClose) {
         onClose();
       }
     }, 1500)
@@ -90,49 +99,59 @@ function SubscriptionPopupContent({ onClose }) {
       onSubmit={handleSubmit}
     >
       <Box className="checkbox-group">
-      <DiscountField
-        name1="percent_off"
-        label="Daily"
-        checked={discounts.subscription_daily.checked}
-        value={discounts.subscription_daily}
-        handleOnChange={(e) => handleOnChange(e, 'subscription_daily')}
-        handleCheckboxChange={(e) => handleCheckboxChange(e, 'subscription_daily')}
-        percentagePlaceholder="10"
-        additionalText={<><PercentIcon /> Off</>}
-        field2={false}
-      />
-      <DiscountField
-        name1="percent_off"
-        label="Weekly"
-        checked={discounts.subscription_weekly.checked}
-        value={discounts.subscription_weekly}
-        handleOnChange={(e) => handleOnChange(e, 'subscription_weekly')}
-        handleCheckboxChange={(e) => handleCheckboxChange(e, 'subscription_weekly')}
-        percentagePlaceholder="10"
-        additionalText={<><PercentIcon /> Off</>}
-        field2={false}
-      />
-      <DiscountField
-        name1="percent_off"
-        label="Monthly"
-        checked={discounts.subscription_monthly.checked}
-        value={discounts.subscription_monthly}
-        handleOnChange={(e) => handleOnChange(e, 'subscription_monthly')}
-        handleCheckboxChange={(e) => handleCheckboxChange(e, 'subscription_monthly')}
-        percentagePlaceholder="10"
-        additionalText={<><PercentIcon /> Off</>}
-        field2={false}
-      />
+        <DiscountField
+          name1="percent_off"
+          label="Daily"
+          checked={discounts.subscription_daily.checked}
+          value={discounts.subscription_daily}
+          handleOnChange={(e) => handleOnChange(e, 'subscription_daily')}
+          handleCheckboxChange={(e) => handleCheckboxChange(e, 'subscription_daily')}
+          percentagePlaceholder="10"
+          additionalText={<><PercentIcon /> Off</>}
+          field2={false}
+        />
+        <DiscountField
+          name1="percent_off"
+          label="Weekly"
+          checked={discounts.subscription_weekly.checked}
+          value={discounts.subscription_weekly}
+          handleOnChange={(e) => handleOnChange(e, 'subscription_weekly')}
+          handleCheckboxChange={(e) => handleCheckboxChange(e, 'subscription_weekly')}
+          percentagePlaceholder="10"
+          additionalText={<><PercentIcon /> Off</>}
+          field2={false}
+        />
+        <DiscountField
+          name1="percent_off"
+          label="Monthly"
+          checked={discounts.subscription_monthly.checked}
+          value={discounts.subscription_monthly}
+          handleOnChange={(e) => handleOnChange(e, 'subscription_monthly')}
+          handleCheckboxChange={(e) => handleCheckboxChange(e, 'subscription_monthly')}
+          percentagePlaceholder="10"
+          additionalText={<><PercentIcon /> Off</>}
+          field2={false}
+        />
         <DiscountField
           name1="percent_off"
           label={
             <>
-              <DateRangePicker value={
-          discounts.subscription_edit.dateRange
-            ? discounts.subscription_edit.dateRange.map((date) => new Date(date))
-            : null
-        }
-        onChange={(value) => handleDateRangeChange(value, 'subscription_edit')}/>
+              <DateRangePicker
+  value={
+    discounts.subscription_edit.dateRange
+      ? discounts.subscription_edit.dateRange.map(
+          (date) =>
+            new Date(
+              new Date(date).toLocaleString("en-US", { timeZone: "Asia/Kolkata" })
+            )
+        )
+      : null
+  }
+  showOneCalendar
+  ranges={[]}
+  onChange={(value) => handleDateRangeChange(value, "subscription_edit")}
+/>
+
             </>
           }
           value={discounts.subscription_edit}
@@ -156,11 +175,11 @@ function SubscriptionPopupContent({ onClose }) {
       </Box>
 
       <CustomSnackbar
-          open={snackbar.open}
-          handleClose={() => setSnackbar({ ...snackbar, open: false })}
-          message={snackbar.message}
-          severity={snackbar.severity}
-        />
+        open={snackbar.open}
+        handleClose={() => setSnackbar({ ...snackbar, open: false })}
+        message={snackbar.message}
+        severity={snackbar.severity}
+      />
     </Box>
   );
 }

@@ -56,8 +56,8 @@ export default function Cards() {
       {loading && <Box className="loading"><CircularProgress/></Box> }
       <Box className="cards_container">
         <Swiper
-          slidesPerView={3}
-          spaceBetween={10}
+          // slidesPerView={3}
+          // spaceBetween={10}
           loop={true}
           autoplay={{
             delay: 0,
@@ -70,6 +70,20 @@ export default function Cards() {
           navigation={true}
           modules={[Autoplay, Pagination, Navigation]}
           className="mySwiper"
+          breakpoints={{
+          560: {
+            slidesPerView: 1,
+            spaceBetween: 10,
+          },
+          768: {
+            slidesPerView: 2,
+            spaceBetween: 10,
+          },
+          1024: {
+            slidesPerView: 3,
+            spaceBetween: 10,
+          },
+        }}
         >
           {cardData.map((card, index) => (
             <SwiperSlide key={index} className="card">

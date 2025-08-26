@@ -192,6 +192,8 @@ function GeneralLedgerForm({
                     <DateRangePicker
                       shouldDisableDate={afterToday()}
                       format="MM/dd/yyyy hh:mm aa"
+                      showOneCalendar
+                      ranges={[]}
                       showMeridian
                       onChange={(value) =>
                         onChange({ target: { name: field.name, value } })
