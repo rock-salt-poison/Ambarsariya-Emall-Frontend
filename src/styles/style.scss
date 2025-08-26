@@ -10250,6 +10250,10 @@ a {
             }
           }
 
+          .cards_container{
+            display: none;
+          }
+
           .MuiTableContainer-root {
             // margin-top: -10px;
             margin-bottom: 10px;
@@ -10578,45 +10582,6 @@ a {
             padding: 0 40px;
           }
         }
-      }
-    }
-
-    @media (max-width: 768px) {
-      padding: 20px;
-
-      .col {
-        // flex-direction: column;
-        gap: 15px;
-
-        &:last-child{
-          .sub_col{
-            display: none;
-          }
-        }
-
-        .sub_col {
-          &:first-child {
-            display: none;
-          }
-
-          .heading {
-            font-size: 38px;
-            line-height: 36px;
-            text-align: left;
-          }
-
-          &:last-child {
-            // display: none;
-          }
-        }
-
-        .MuiAutocomplete-root {
-          width: 100%;
-
-          .MuiInputBase-input {
-            font-size: 16px;
-          }
-        }
 
         .products_table_wrapper {
           .MuiPaper-root {
@@ -10657,9 +10622,144 @@ a {
             }
           }
         }
+      }
+    }
+
+    @media (max-width: 768px) {
+      padding: 20px;
+
+      .col {
+        // flex-direction: column;
+        gap: 15px;
+
+        &:last-child{
+          .sub_col{
+            display: none;
+          }
+        }
+
+        .sub_col {
+          &:first-child {
+            display: none;
+          }
+
+          .heading {
+            font-size: 38px;
+            line-height: 36px;
+            text-align: left;
+          }
+
+          &:last-child {
+            // display: none;
+          }
+        }
+
+        .MuiAutocomplete-root {
+          width: 100%;
+
+          .MuiInputBase-input {
+            font-size: 16px;
+          }
+        }
+
+        .MuiTableContainer-root{
+          display: none;
+        }
+
+        .products_table_wrapper{
+          min-width: 100%;
+          .MuiPaper-root{
+            .cards_container{
+              @include flex-center(column,flex-start);
+              gap: 15px;
+              padding: 10px 0px;
+
+              .card{
+                @include flex-center(row, flex-start);
+                place-items: normal;
+                gap: 5px;
+                align-self: stretch;
+
+                .MuiCheckbox-root {
+                  padding: 0px;
+
+                  svg {
+                    fill: $yellow;
+                    width: 1.2em;
+                    height: 1.2em;
+                  }
+                }
+
+                .card-body{
+                  @include flex-center(row, center);
+                  gap: 10px;
+                  place-items: normal;
+                  flex: 1;
+
+                  .sample{
+                    @include flex-center(row, flex-start);
+                    width: 30%;
+                    .product_image{
+                      width: 100%;
+                      height: 100%;
+                      object-fit: cover;
+                      background-size: cover;
+                      background-position: center;
+                      border: 2px solid $yellow;
+                      box-shadow: 0px 4px 4px #00000073;
+                    }
+                  }
+
+                  .details{
+                    flex: 1;
+                    .details_wrapper{
+                      position: relative;
+                      z-index: 0;
+                      padding: 20px 30px;
+
+                      .vector {
+                        @include full-absolute(0px, 0px, 0px, 0px);
+                        z-index: -1;
+                        width: 100%;
+                        height: 100%;
+                      }
+
+                      .text_1 {
+                        @include homepage-buttons(
+                          "Gladiola",
+                          30px,
+                          $dark-yellow2,
+                          "none"
+                        );
+                        @include hover-scale(1, 0s);
+                        text-shadow: 1px 1px 4px #b67d1c4d;
+                        text-align: center;
+                        -webkit-text-stroke: 0.2px $dark-yellow2;
+                        line-height: 28px;
+                      }
+
+                      .text_2 {
+                        @include homepage-buttons(
+                          "Bobby-Jones-Soft",
+                          18px,
+                          $black,
+                          "none"
+                        );
+                        @include hover-scale(1, 0s);
+                        text-align: center;
+                      }
+                    }
+                  }
+                }
+                
+              }
+            }
+          }
+        }
 
         .product_data {
           margin: 0 auto;
+          max-width: 100%;
           .row_1 {
             gap: 20px;
             padding: 0 15px;
@@ -10682,6 +10782,34 @@ a {
         .product_data {
           .row_1 {
             padding: 0px;
+
+            .product_details{
+              .points{
+                a{
+                  h2{
+                    white-space: normal;
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        .products_table_wrapper{
+          .MuiPaper-root{
+            .cards_container{
+              .card{
+                .card-body{
+                  flex-direction: column;
+                  .sample{
+                    width: 100%;
+                    height: 120px;
+
+                    
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -27613,7 +27741,7 @@ textarea[readonly] {
 
   @media (max-width: 600px){
     .MuiDialog-container > .MuiPaper-root{
-      max-width: 100%;
+      max-width: 90%;
       height: 85%;
     }
 

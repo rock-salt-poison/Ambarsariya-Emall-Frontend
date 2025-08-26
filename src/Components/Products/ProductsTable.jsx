@@ -24,6 +24,11 @@ const columns = [
   { id: "sample", label_1: "Sample" },
 ];
 
+const cardColumn = [
+  { id: "sample", label_1: "Sample" },
+  { id: "details", label_1: "Details" },
+];
+
 export default function CustomPaginationTable({rows}) {
 
   
@@ -288,6 +293,66 @@ console.log('----------', selectedProducts);
     );
   };
 
+const renderCardContent = (column, row) => {
+  const selectedProduct = selectedProducts.find(p => p.product_no === row.product_no);
+
+  if (column.id === "sample") {
+    return (
+      <Box
+        sx={{backgroundImage: `url(${convertDriveLink(row.product_images[0])})`}}
+        // src={convertDriveLink(row.product_images[0])}
+        alt="product_image"
+        className="product_image"
+        onClick={(e) =>
+          handleClick(
+            e,
+            row.product_id,
+            selectedProduct?.selectedVariant
+              ? selectedProduct?.selectedVariant
+              : row?.matched_item_id
+          )
+        }
+      />
+    );
+  }
+
+  if (column.id === "details") {
+    const priceToShow = selectedProduct
+      ? selectedProduct.matched_price
+        ? selectedProduct.matched_price
+        : selectedProduct?.selling_price
+        ? selectedProduct?.selling_price
+        : selectedProduct?.product_selling_price
+      : row?.matched_price
+      ? row?.matched_price
+      : row.selling_price
+      ? row.selling_price
+      : row.product_selling_price;
+
+    const variationToShow = selectedProduct?.selectedVariant
+      ? ((selectedProduct.selectedVariant)?.split("_")?.at(-3))?.replace(/-/g, " ")
+      : row.variation_1;
+
+    return (
+      <Box className="details_wrapper">
+        <Box
+          component="img"
+          src={tbody_vector}
+          className="vector"
+          alt="vector"
+        />
+        <Typography className="text_1">{row.product_name}</Typography>
+        <Typography className="text_2">{row.brand}, {variationToShow}</Typography>
+        <Typography className="text_2">₹ {priceToShow} {row.unit || ""}</Typography>
+      </Box>
+    );
+  }
+
+  return null;
+};
+
+
+
   const handleBuyClick = async (loggedInUserToken) => {
     if(loggedInUserToken){
       try{
@@ -399,6 +464,49 @@ console.log('----------', selectedProducts);
             </TableBody>
           </Table>
         </TableContainer>
+
+          <Box className="cards_container">
+            {paginatedData.length > 0 ? (
+                paginatedData.map((row) => {
+                  const isItemSelected = isSelected(row.product_no);
+                  return (
+                    <Box
+                      hover
+                      role="checkbox"
+                      aria-checked={isItemSelected}
+                      tabIndex={-1}
+                      key={row.product_no}
+                      selected={isItemSelected}
+                      className="card"
+                    >
+                      <Box padding="checkbox">
+                        <Checkbox
+                          color="primary"
+                          checked={isItemSelected}
+                          onChange={(event) => handleCheckboxClick(event, row)}
+                        />
+                      </Box>
+                      <Box className="card-body">
+                        {cardColumn.map((column) => (
+                          <Box key={column.id} className={column?.id}>
+                            {renderCardContent(column, row)}
+                          </Box>
+                        ))}
+                      </Box>
+                    </Box>
+                  );
+                })
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={columns.length + 1}>
+                    <Typography className="text">
+                      No Products Available
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              )}
+          </Box>
+        
         <Box className="board_pins">
           <Box className="circle"></Box>
           <Box className="circle"></Box>
