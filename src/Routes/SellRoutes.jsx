@@ -48,6 +48,7 @@ import MoURulesAndRegulations from '../Pages/Sell/MoURulesAndRegulations';
 import Supplier from '../Pages/Sell/Dashboard/MerchantDashboard/Supplier';
 import SupplierPurchases from '../Pages/Sell/Dashboard/MerchantDashboard/SupplierPurchases';
 import SupplierMonitoringDashboard from '../Pages/Sell/Dashboard/MerchantDashboard/SupplierMonitoringDashboard';
+import AreaSearchPage from '../Pages/Sell/AreaSearchPage';
 
 function SellRoutes() {
   const ConditionalRoute = () => {
@@ -67,6 +68,7 @@ function SellRoutes() {
       <Route path="grow" element={<GrowConversationPage />} />
       <Route path="grab" element={<GrabConversationPage />} />
       <Route path="support" element={<Support />} />
+      <Route path="support/search-area" element={<AreaSearchPage />} />
       <Route path="support/shop" element={<SingleShopPage />} />
       <Route path="support/shops-near" element={<MerchantDetailsPage />} />
       <Route path="coupon-offering" element={<CouponOfferingPage />} />

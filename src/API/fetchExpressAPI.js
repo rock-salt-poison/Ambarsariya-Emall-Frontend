@@ -558,6 +558,15 @@ export const get_nearby_shops = async (token) => {
   }
 }
 
+export const get_near_by_areas = async (searched_value) => {
+  try {
+    const response = await axios.get(`${link}/sell/near-by-areas/${searched_value}`);
+    return response.data;
+  } catch (e) {
+    throw e;
+  }
+}
+
 export const post_open_file = async (email) => {
   try {
     if (email) {

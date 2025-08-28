@@ -12,16 +12,16 @@ import {
 
 function ConfirmationDialog({ open, onClose, onConfirm, title, message, optionalCname, confirmBtnText = 'Confirm', closeBtnText = 'Close' }) {
   const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("sm")); // Fullscreen on small screens
+  // const fullScreen = useMediaQuery(theme.breakpoints.down("sm")); // Fullscreen on small screens
 
   return (
     <Dialog
       open={open}
       onClose={onClose}
       aria-labelledby="confirm-dialog"
-      fullScreen={fullScreen}
-      fullWidth
-      maxWidth="sm" 
+      // fullScreen={fullScreen}
+      // fullWidth
+      // maxWidth="sm" 
       className={optionalCname}
     >
       <DialogTitle id="confirm-dialog">{title}</DialogTitle>

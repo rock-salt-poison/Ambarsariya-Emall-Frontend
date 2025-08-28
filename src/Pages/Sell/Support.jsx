@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, CircularProgress, ThemeProvider, Tooltip } from '@mui/material';
+import { Box, Button, CircularProgress, ThemeProvider, Tooltip, Typography } from '@mui/material';
 import Cards from '../../Components/Support/Cards';
 import UserForm from '../../Components/Support/UserForm';
 import Button2 from '../../Components/Home/Button2';
@@ -11,6 +11,8 @@ import { useSelector } from 'react-redux';
 import { get_visitorData, getMemberData, getShopUserData, getUser } from '../../API/fetchExpressAPI';
 import CustomSnackbar from '../../Components/CustomSnackbar';
 import UserBadge from '../../UserBadge';
+import SearchIcon from '@mui/icons-material/Search';
+import { useNavigate } from 'react-router-dom';
 
 function Support(props) {
   const [file, setFile] = useState(null); // State to hold the uploaded file
@@ -21,6 +23,7 @@ function Support(props) {
   const [memberData, setMemberData] = useState(null);
   const [userLoggedIn , setUserLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+  const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
   
@@ -195,11 +198,17 @@ function Support(props) {
         <Box className="row">
           <Box className="col">
             <Cards />
-            {/* <UserBadge
-                handleBadgeBgClick="../"
-                handleLogin="../login"
-                handleLogoutClick="../../"
-              /> */}
+            <Button className='backButton' onClick={(e)=>{navigate('./search-area')}}> 
+              <SearchIcon /> 
+              <Typography>
+                Search Near by Area
+              </Typography>
+            </Button>
+            <UserBadge
+              handleBadgeBgClick="../"
+              handleLogin="../login"
+              handleLogoutClick="../../"
+            />
           </Box>
           <Box className="col second_wrapper">
             <Box className='col-1'>
@@ -237,11 +246,6 @@ function Support(props) {
                     visitorData={visitorData ? visitorData : shopData ? shopData : memberData ? memberData : null} 
                     shopData ={shopData}
                     currentUser={currentUser} />
-                    <UserBadge
-                      handleBadgeBgClick="../"
-                      handleLogin="../login"
-                      handleLogoutClick="../../"
-                    />
                 </Box>
               </>
             )}
