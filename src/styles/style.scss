@@ -11602,6 +11602,53 @@ a {
         width: 85%;
         white-space: nowrap;
 
+        .product_image {
+          width: 75px;
+          height: 65px;
+          object-fit: cover;
+          border: 2px solid $yellow;
+          box-shadow: 0px 4px 4px #00000073;
+        }
+
+        .vector {
+          @include full-absolute(0px, 0px, 0px, 0px);
+          z-index: 0;
+          width: 100%;
+          height: 100%;
+        }
+
+        .quantity {
+          background-color: $yellow;
+          box-shadow: 0px 4px 4px #00000073;
+          height: max-content;
+          border-radius: 50px;
+          padding: 6px 25px;
+          @include flex-center(row, center);
+          gap: 20px;
+
+          .text_3 {
+            @include homepage-buttons(
+              "Bobby-Jones-Soft",
+              22px,
+              $dark-yellow2,
+              "none"
+            );
+            @include hover-scale(1, 0s);
+            text-shadow: none;
+          }
+
+          .operator {
+            @include homepage-buttons("EFCO", 24px, $black, "none");
+            @include hover-scale(1, 0s);
+            text-shadow: none;
+            color: $black;
+            background-color: transparent;
+            line-height: 33px;
+            padding: 0px;
+            min-width: max-content !important;
+          }
+        }
+
         .MuiPaper-root.table {
           max-width: 100%;
           // background-color: #9b643db3;
@@ -11615,6 +11662,7 @@ a {
           box-shadow: 0px 0px 4px hwb(38 96% 0% / 0.8);
           border-radius: 16px;
           padding: 20px;
+          
 
           .board_pins {
             @include flex-center(row, space-between);
@@ -11652,7 +11700,7 @@ a {
 
                     .vector {
                       @include full-absolute(0px, 0px, 0px, 0px);
-                      z-index: -1;
+                      z-index: 0;
                       width: 100%;
                       height: 100%;
                     }
@@ -11669,6 +11717,7 @@ a {
                       text-align: center;
                       -webkit-text-stroke: 0.2px $dark-yellow2;
                       line-height: 28px;
+                      position: relative;
                     }
                   }
                 }
@@ -11699,12 +11748,7 @@ a {
                       }
                     }
 
-                    .vector {
-                      @include full-absolute(0px, 0px, 0px, 0px);
-                      z-index: -1;
-                      width: 100%;
-                      height: 100%;
-                    }
+                    
 
                     .text_1 {
                       @include homepage-buttons(
@@ -11718,6 +11762,7 @@ a {
                       text-align: center;
                       -webkit-text-stroke: 0.2px $dark-yellow2;
                       line-height: 20px;
+                      position: relative;
                     }
 
                     .text_2 {
@@ -11748,45 +11793,9 @@ a {
                       text-shadow: 0px 4px 4px #00000073;
                     }
 
-                    .quantity {
-                      background-color: $yellow;
-                      box-shadow: 0px 4px 4px #00000073;
-                      height: max-content;
-                      border-radius: 50px;
-                      padding: 6px 25px;
-                      @include flex-center(row, center);
-                      gap: 20px;
+                    
 
-                      .text_3 {
-                        @include homepage-buttons(
-                          "Bobby-Jones-Soft",
-                          22px,
-                          $dark-yellow2,
-                          "none"
-                        );
-                        @include hover-scale(1, 0s);
-                        text-shadow: none;
-                      }
-
-                      .operator {
-                        @include homepage-buttons("EFCO", 24px, $black, "none");
-                        @include hover-scale(1, 0s);
-                        text-shadow: none;
-                        color: $black;
-                        background-color: transparent;
-                        line-height: 33px;
-                        padding: 0px;
-                        min-width: max-content !important;
-                      }
-                    }
-
-                    .product_image {
-                      width: 75px;
-                      height: 65px;
-                      object-fit: cover;
-                      border: 2px solid $yellow;
-                      box-shadow: 0px 4px 4px #00000073;
-                    }
+                    
 
                     &.empty_cart {
                       // @include flex-center(column, center);
@@ -11842,6 +11851,7 @@ a {
                       @include hover-scale(1, 0s);
                       line-height: 20px;
                       text-shadow: 0px 4px 4px #00000073;
+                      position: relative;
                       
                       .tooltip{
                         font-size: 16px;
@@ -11856,10 +11866,11 @@ a {
                         22px,
                         $yellow,
                         "none"
-                      );
-                      text-align: right;
-                      @include hover-scale(1, 0s);
-                      text-shadow: 0px 4px 4px #00000073;
+                        );
+                        text-align: right;
+                        @include hover-scale(1, 0s);
+                        text-shadow: 0px 4px 4px #00000073;
+                        position: relative;
                       
                       .tooltip{
                         font-size: 16px;
@@ -11871,6 +11882,10 @@ a {
                 }
               }
             }
+          }
+
+          .card_container{
+            display: none;
           }
         }
       }
@@ -11884,7 +11899,7 @@ a {
         .offers {
           gap: 20px;
           @include flex-center(row, center);
-          flex-wrap: wrap;
+          // flex-wrap: wrap;
 
           .offers_container {
             @include flex-center(row, center);
@@ -11983,12 +11998,152 @@ a {
       padding: 20px;
 
       .col {
+        &:last-child{
+          flex-direction: column;
+          .offers {
+            gap: 15px;
+            order: 1;
+          .offers_container {
+            .badge_frame {
+              width: 100px !important;
+            }
+            h3{
+              font-size: 17px !important;
+            }
+            }
+          }
+
+          .type_of_service{
+            order: 0;
+          }
+        }
+
         .sub_col {
           display: none;
         }
 
         .cart_table_wrapper {
           width: 100%;
+
+          .MuiTableContainer-root{
+            display:none;
+          }
+
+          .card_container{
+            display: flex !important;
+            @include flex-center(column, flex-start);
+            gap: 20px;
+
+            .card{
+              @include flex-center(row, flex-start);
+              gap: 10px;
+              align-self: stretch;
+              place-items: self-start;
+
+              .col{
+                width: max-content;
+
+                .product_image{
+                  position: relative;
+                  top: 15px;
+                }
+
+                &:last-child{
+                  width: 100%;
+                  padding: 22px 35px 33px;
+                  justify-content: center;
+                }
+
+                .text_1 {
+                  @include homepage-buttons(
+                    "Bobby-Jones-Soft",
+                    20px,
+                    $brown-4,
+                    "none"
+                  );
+                  @include hover-scale(1, 0s);
+                  text-shadow: 1px 1px 4px #b67d1c4d;
+                  -webkit-text-stroke: 0.2px $dark-yellow2;
+                  line-height: 20px;
+                  
+                  &.subtitle{
+                    color: $dark-yellow2;
+                    font-size: 15px;
+                  }
+                }
+
+
+                .sub-col{
+                  position: relative;
+
+                  .text_1{
+                    white-space: normal;
+                  }
+
+                  &:last-child{
+                    @include flex-center(row, space-between);
+                    gap: 5px;
+                    flex-wrap: wrap;
+                    flex: 1;
+                    align-self: stretch;
+                  }
+
+                  .quantity{
+                    padding: 0px 10px;
+                    gap: 6px;
+                    background-color: rgba($brown-4, 0.27);
+
+                    .text_3{
+                      color: $brown-4;
+                    }
+                  }
+                  
+                }
+              }
+            }
+
+            .total{
+              @include flex-center(column, flex-start);
+              gap: 10px;
+              align-self: stretch;
+              place-items: normal;
+
+              .col-1{
+                @include flex-center(row, space-between);
+                gap: 10px;
+
+                .text_1 {
+                  @include homepage-buttons(
+                    "Gladiola",
+                    22px,
+                    $light-yellow,
+                    "none"
+                  );
+                  @include hover-scale(1, 0s);
+                  line-height: 20px;
+                  text-shadow: 0px 4px 4px #00000073;
+                  position: relative;
+
+                  svg{
+                    font-size: .9rem;
+                  }
+                }
+
+                .text_2 {
+                  @include homepage-buttons(
+                    "Bobby-Jones-Soft",
+                    18px,
+                    $yellow,
+                    "none"
+                  );
+                  @include hover-scale(1, 0s);
+                  line-height: 20px;
+                  text-shadow: 0px 4px 4px #00000073;
+                  position: relative;
+                }
+              }
+            }
+          }
         }
 
         &:first-child {
@@ -12035,6 +12190,20 @@ a {
 
           .badge {
             display: none;
+          }
+        }
+      }
+    }
+
+    @media (max-width: 560px){
+      .col{
+        &:last-child{
+          .offers {
+            gap: 15px;
+            width: 100%;
+            overflow-x: auto;
+            justify-content: flex-start;
+            padding-bottom: 16px;
           }
         }
       }

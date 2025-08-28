@@ -20,22 +20,22 @@ function AreaSearchPage(props) {
     navigate(`../support/shops-near?q=${id}`);
   }
 
-  useEffect(()=>{
-    const fetchData  = async () => {
-      try{
-        setLoading(false);
+  // useEffect(()=>{
+  //   const fetchData  = async () => {
+  //     try{
+  //       setLoading(false);
 
-        const resp = await get_support_page_famous_areas();
-        // console.log(resp);
-        setCardData(resp);
-      }catch(e){
+  //       const resp = await get_support_page_famous_areas();
+  //       // console.log(resp);
+  //       setCardData(resp);
+  //     }catch(e){
 
-      }finally{
-        setLoading(false);
-      }
-    }
-    fetchData();
-  }, [])
+  //     }finally{
+  //       setLoading(false);
+  //     }
+  //   }
+  //   fetchData();
+  // }, [])
   
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -87,8 +87,7 @@ function AreaSearchPage(props) {
     if (debouncedSearch.trim() !== "") {
       fetch_near_by_area(debouncedSearch);
     } else {
-      // Reset to default areas if input is empty
-      get_support_page_famous_areas().then((resp) => setCardData(resp));
+      setCardData([]);
     }
   }, [debouncedSearch]);
 

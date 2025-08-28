@@ -22,7 +22,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { removeProduct } from "../../store/cartSlice";
 import { useParams } from "react-router-dom";
 import Button2 from "../Home/Button2";
-import { convertDriveLink, get_requestedCoHelper, getCategoryName, getLastPurchasedTotal, getShopUserData, getUser } from "../../API/fetchExpressAPI";
+import {
+  convertDriveLink,
+  get_requestedCoHelper,
+  getCategoryName,
+  getLastPurchasedTotal,
+  getShopUserData,
+  getUser,
+} from "../../API/fetchExpressAPI";
 import CustomSnackbar from "../CustomSnackbar";
 import { removeCoupon } from "../../store/discountsSlice";
 import EmergencyIcon from "@mui/icons-material/Emergency";
@@ -48,11 +55,11 @@ function CartTable({ rows, setCartData, setSelectedCoupon }) {
   });
 
   const themeProps = {
-    popoverBackgroundColor: '#f8e3cc',
-    scrollbarThumb: 'var(--brown)',
-    dialogBackdropColor: 'var(--brown)',
+    popoverBackgroundColor: "#f8e3cc",
+    scrollbarThumb: "var(--brown)",
+    dialogBackdropColor: "var(--brown)",
   };
-    
+
   const theme = createCustomTheme(themeProps);
   const [data, setData] = useState(
     rows.map((row) => ({ ...row, quantity: 1 })) // Initialize quantity for each product
@@ -62,8 +69,8 @@ function CartTable({ rows, setCartData, setSelectedCoupon }) {
   const { selectedCohelper } = useSelector((state) => state.selectedCohelper);
   const token = useSelector((state) => state.auth.userAccessToken);
   const [coHelper, setCoHelper] = useState(null);
-  const[ lastPurchasedValue, setLastPurchasedValue] = useState(null);
-  
+  const [lastPurchasedValue, setLastPurchasedValue] = useState(null);
+
   console.log(data);
   console.log(".............................", selectedCoupon);
 
@@ -91,59 +98,65 @@ function CartTable({ rows, setCartData, setSelectedCoupon }) {
   }, [rows]);
 
   const fetch_selectedCohelperDetails = async (id) => {
-    try{
+    try {
       setLoading(true);
       const resp = await get_requestedCoHelper(id);
       console.log(resp);
-      if(resp?.valid){
+      if (resp?.valid) {
         setCoHelper(resp?.data?.[0]);
       }
-    }catch(e){
+    } catch (e) {
       console.log(e);
-    }finally{
+    } finally {
       setLoading(false);
     }
-  }
+  };
 
-  useEffect(()=>{
-    if(selectedCohelper?.id){
+  useEffect(() => {
+    if (selectedCohelper?.id) {
       fetch_selectedCohelperDetails(selectedCohelper?.id);
     }
   }, [selectedCohelper]);
 
   const getBuyerDetails = async (buyerToken) => {
-      try{
-        setLoading(true);
-        const resp = (await getUser(buyerToken))?.find(u => u?.member_id !==null);
-        if(resp){
-          const shopDetails = (await getShopUserData(owner))?.[0];
-          if(shopDetails){
-            const lastPurchasedValueResp = await getLastPurchasedTotal(shopDetails?.shop_no, resp?.member_id);
-            console.log(lastPurchasedValueResp);
-            
-            if(lastPurchasedValueResp?.valid){
-              console.log(lastPurchasedValueResp?.data?.[0]?.total_purchased);
-              
-              setLastPurchasedValue(lastPurchasedValueResp?.data?.[0]?.total_purchased);
-            }
+    try {
+      setLoading(true);
+      const resp = (await getUser(buyerToken))?.find(
+        (u) => u?.member_id !== null
+      );
+      if (resp) {
+        const shopDetails = (await getShopUserData(owner))?.[0];
+        if (shopDetails) {
+          const lastPurchasedValueResp = await getLastPurchasedTotal(
+            shopDetails?.shop_no,
+            resp?.member_id
+          );
+          console.log(lastPurchasedValueResp);
+
+          if (lastPurchasedValueResp?.valid) {
+            console.log(lastPurchasedValueResp?.data?.[0]?.total_purchased);
+
+            setLastPurchasedValue(
+              lastPurchasedValueResp?.data?.[0]?.total_purchased
+            );
           }
         }
-      }catch(e){
-        console.log(e);
-      }finally{
-        setLoading(false);
       }
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setLoading(false);
     }
-
-
-    useEffect(()=>{
-      if(token && owner){
-        getBuyerDetails(token);
-      }
-    }, [token, owner]);
+  };
 
   useEffect(() => {
-    if (selectedCoupon) {      
+    if (token && owner) {
+      getBuyerDetails(token);
+    }
+  }, [token, owner]);
+
+  useEffect(() => {
+    if (selectedCoupon) {
       const total = calculateTotal();
       const totalQuantity = data.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -155,9 +168,8 @@ function CartTable({ rows, setCartData, setSelectedCoupon }) {
       );
 
       const lastPurchaseAbove = Number(
-        conditions.find((c) =>
-          ["last_purchase_above"].includes(c.type)
-        )?.value || 0
+        conditions.find((c) => ["last_purchase_above"].includes(c.type))
+          ?.value || 0
       );
       const percent = Number(
         conditions.find((c) =>
@@ -196,7 +208,10 @@ function CartTable({ rows, setCartData, setSelectedCoupon }) {
           //   severity: "success",
           // });
         }
-      } else if (lastPurchasedValue !== null && selectedCoupon.coupon_type === "loyalty_prepaid") {
+      } else if (
+        lastPurchasedValue !== null &&
+        selectedCoupon.coupon_type === "loyalty_prepaid"
+      ) {
         if (total < pay) {
           setSnackbar({
             open: true,
@@ -213,7 +228,10 @@ function CartTable({ rows, setCartData, setSelectedCoupon }) {
             severity: "success",
           });
         }
-      } else if (total < minOrder && selectedCoupon.coupon_type === "retailer_flat") {
+      } else if (
+        total < minOrder &&
+        selectedCoupon.coupon_type === "retailer_flat"
+      ) {
         setSnackbar({
           open: true,
           message: `Add ₹${(minOrder - total).toFixed(
@@ -223,19 +241,19 @@ function CartTable({ rows, setCartData, setSelectedCoupon }) {
         });
         shouldRemoveCoupon = true;
       } else if (selectedCoupon.coupon_type.includes("loyalty_unlock")) {
-        if(lastPurchasedValue >= lastPurchaseAbove){
-          const discountValue = (total * flatDiscount) / 100 ;
+        if (lastPurchasedValue >= lastPurchaseAbove) {
+          const discountValue = (total * flatDiscount) / 100;
           setSnackbar({
             open: true,
             message: `You saved ₹${discountValue.toFixed(2)}!`,
             severity: "success",
           });
-        }else{
+        } else {
           shouldRemoveCoupon = true;
         }
-      }else if (selectedCoupon.coupon_type.includes("loyalty_by_customer")) {
+      } else if (selectedCoupon.coupon_type.includes("loyalty_by_customer")) {
         const discountValue =
-        percent > 0 ? (total * percent) / 100 : flatDiscount;
+          percent > 0 ? (total * percent) / 100 : flatDiscount;
         setSnackbar({
           open: true,
           message: `You saved ₹${discountValue.toFixed(2)}!`,
@@ -269,8 +287,8 @@ function CartTable({ rows, setCartData, setSelectedCoupon }) {
     //   : 0;
 
     const total = selectedCoupon
-      ? subtotal - discount + deliveryCharge + platformFee 
-      : subtotal - discount + platformFee ;
+      ? subtotal - discount + deliveryCharge + platformFee
+      : subtotal - discount + platformFee;
 
     const couponCost = selectedCoupon ? 30 : null;
 
@@ -293,12 +311,12 @@ function CartTable({ rows, setCartData, setSelectedCoupon }) {
         // Only increment if less than matched_quantity
         if (item.quantity < item.matched_quantity) {
           return { ...item, quantity: item.quantity + 1 };
-        }else{
+        } else {
           setSnackbar({
             open: true,
             message: `You've reached the maximum available quantity.`,
             severity: "error",
-          }); 
+          });
         }
       }
       return item;
@@ -388,10 +406,12 @@ function CartTable({ rows, setCartData, setSelectedCoupon }) {
         return totalQuantity >= buy ? 0 : 0;
 
       case "loyalty_unlock":
-        return lastPurchasedValue >= last_purchase_above ? (total * unlock) / 100 : 0;
+        return lastPurchasedValue >= last_purchase_above
+          ? (total * unlock) / 100
+          : 0;
 
       case "loyalty_prepaid":
-        return lastPurchasedValue ? total >= pay ? get : 0 : 0;
+        return lastPurchasedValue ? (total >= pay ? get : 0) : 0;
 
       case "loyalty_bonus":
         return (total * percent) / 100;
@@ -415,87 +435,92 @@ function CartTable({ rows, setCartData, setSelectedCoupon }) {
 
   // const calculateDiscount = () => calculateTotal() ;
 
- const calcPlatformFees = () => {
-  let fees;
-  
-  if (selectedCoupon) {
-    fees = parseFloat(
-      ((calculateTotal() - (calculateDiscount() < 30 ? 30 : calculateDiscount()) + 30) * 0.02).toFixed(2)
-    );
-  } else {
-    fees = parseFloat(
-      ((calculateTotal() - calculateDiscount()) * 0.02).toFixed(2)
-    );
-  }
+  const calcPlatformFees = () => {
+    let fees;
 
-  const tax = parseFloat((fees * 0.185).toFixed(2));
+    if (selectedCoupon) {
+      fees = parseFloat(
+        (
+          (calculateTotal() -
+            (calculateDiscount() < 30 ? 30 : calculateDiscount()) +
+            30) *
+          0.02
+        ).toFixed(2)
+      );
+    } else {
+      fees = parseFloat(
+        ((calculateTotal() - calculateDiscount()) * 0.02).toFixed(2)
+      );
+    }
 
-  return parseFloat((fees + tax).toFixed(2));
-};
+    const tax = parseFloat((fees * 0.185).toFixed(2));
 
+    return parseFloat((fees + tax).toFixed(2));
+  };
 
   // const calcPlatformTax = () => {
   //   const platformfees = calcPlatformFees();
   //   const tax = ((platformfees * 18)/100)?.toFixed(2);
   //   return Number(tax);
-  // } 
-  
+  // }
 
   return (
     <ThemeProvider theme={theme}>
-    <Box className="cart_table_wrapper">
-      {loading && (
-        <Box className="loading">
-          <CircularProgress />
-        </Box>
-      )}
-      <CustomSnackbar
-        open={snackbar.open}
-        handleClose={() => setSnackbar({ ...snackbar, open: false })}
-        message={snackbar.message}
-        disableAutoHide={true}
-        severity={snackbar.severity}
-      />
-      <Paper className="table">
-        <Box className="board_pins">
-          <Box className="circle"></Box>
-          <Box className="circle"></Box>
-        </Box>
-        <TableContainer>
-          <Table>
-            <TableHead>
-              <TableRow>
-                {columns.map((column) => (
-                  <TableCell key={column.id}>
-                    <Typography className="text_1">{column.label_1}</Typography>
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {data.length > 0 ? (
-                data.map((row, index) => (
-                  <TableRow key={row.product_no}>
-                    <TableCell className="text_3" align="center">
-                      {index + 1}
+      <Box className="cart_table_wrapper">
+        {loading && (
+          <Box className="loading">
+            <CircularProgress />
+          </Box>
+        )}
+        <CustomSnackbar
+          open={snackbar.open}
+          handleClose={() => setSnackbar({ ...snackbar, open: false })}
+          message={snackbar.message}
+          disableAutoHide={true}
+          severity={snackbar.severity}
+        />
+        <Paper className="table">
+          <Box className="board_pins">
+            <Box className="circle"></Box>
+            <Box className="circle"></Box>
+          </Box>
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  {columns.map((column) => (
+                    <TableCell key={column.id}>
+                      <Typography className="text_1">
+                        {column.label_1}
+                      </Typography>
                     </TableCell>
-                    <TableCell className="product_cell">
-                      <Box
-                        component="img"
-                        src={convertDriveLink(row.product_images[0])}
-                        alt="product_image"
-                        className="product_image"
-                      />
-                      <Box className="product_info product">
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {data.length > 0 ? (
+                  data.map((row, index) => (
+                    <TableRow key={row.product_no}>
+                      <TableCell className="text_3" align="center">
+                        {index + 1}
+                      </TableCell>
+                      <TableCell className="product_cell">
                         <Box
                           component="img"
-                          className="vector"
-                          src={tbody_vector}
+                          src={convertDriveLink(row.product_images[0])}
+                          alt="product_image"
+                          className="product_image"
                         />
-                        <Typography className="text_1">
-                          {row.product_name}
-                        </Typography>
-                        {/* <Typography className="text_2">
+                        <Box className="product_info product">
+                          <Box
+                            component="img"
+                            className="vector"
+                            src={tbody_vector}
+                          />
+                          <Typography className="text_1">
+                            {row.product_name}
+                          </Typography>
+                          {/* <Typography className="text_2">
                           {[
                             row.variation_1,
                             row.variation_2,
@@ -505,136 +530,151 @@ function CartTable({ rows, setCartData, setSelectedCoupon }) {
                             .filter((variation) => variation && variation.trim() !== "")
                             .join(", ")}
                         </Typography> */}
-                      </Box>
-                    </TableCell>
-                    <TableCell>
-                      <Box className="quantity">
-                        <Button
-                          onClick={() => handleDecrement(index)}
-                          className="operator"
-                        >
-                          <Box component="img" src={minus} alt="minus" />
-                        </Button>
-                        <Typography className="text_3">
-                          {row.quantity}
-                        </Typography>
-                        <Button
-                          onClick={() => handleIncrement(index)}
-                          className="operator"
-                        >
-                          <Box component="img" src={plus} alt="plus" />
-                        </Button>
-                      </Box>
-                    </TableCell>
-                    <TableCell>
-                      <Box className="product_info">
-                        <Box
-                          component="img"
-                          className="vector"
-                          src={tbody_vector}
-                        />
-                        <Typography className="text_1">{row.brand}</Typography>
-                      </Box>
-                    </TableCell>
-                    <TableCell className="text_3" align="right">
-                      &#8377;
-                      {Number(
-                        row.matched_price ||
-                          row.selling_price ||
-                          row.product_selling_price
-                      ).toFixed(2)}
-                    </TableCell>
-                    <TableCell className="text_3 product_price" align="right">
-                      &#8377;
-                      {(
-                        (row.matched_price ||
-                          row.selling_price ||
-                          row.product_selling_price) * row.quantity
-                      ).toFixed(2)}
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan="6" className="empty_cart">
-                    <Typography className="label">0 items added</Typography>
-                    <Button2
-                      text="Add Products"
-                      redirectTo={`../shop/${owner}/products`}
-                    />
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-            {data.length > 0 && (
-              <TableFooter>
-                <TableRow>
-                  <TableCell colSpan={5} align="right">
-                    <Typography className="text_1">Subtotal :</Typography>
-                  </TableCell>
-                  <TableCell className="text_2">
-                    &#8377;{calculateTotal().toFixed(2)}
-                  </TableCell>
-                </TableRow>
-                {selectedCoupon && (
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Box className="quantity">
+                          <Button
+                            onClick={() => handleDecrement(index)}
+                            className="operator"
+                          >
+                            <Box component="img" src={minus} alt="minus" />
+                          </Button>
+                          <Typography className="text_3">
+                            {row.quantity}
+                          </Typography>
+                          <Button
+                            onClick={() => handleIncrement(index)}
+                            className="operator"
+                          >
+                            <Box component="img" src={plus} alt="plus" />
+                          </Button>
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Box className="product_info">
+                          <Box
+                            component="img"
+                            className="vector"
+                            src={tbody_vector}
+                          />
+                          <Typography className="text_1">
+                            {row.brand}
+                          </Typography>
+                        </Box>
+                      </TableCell>
+                      <TableCell className="text_3" align="right">
+                        &#8377;
+                        {Number(
+                          row.matched_price ||
+                            row.selling_price ||
+                            row.product_selling_price
+                        ).toFixed(2)}
+                      </TableCell>
+                      <TableCell className="text_3 product_price" align="right">
+                        &#8377;
+                        {(
+                          (row.matched_price ||
+                            row.selling_price ||
+                            row.product_selling_price) * row.quantity
+                        ).toFixed(2)}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
                   <TableRow>
-                    <TableCell colSpan={5} align="right">
-                      <Typography className="text_1">{selectedCoupon && calculateDiscount() < 30 && (
-                      <Tooltip title="Discount coupon cost." placement="bottom-end" className="tooltip">
-                        <EmergencyIcon />
-                      </Tooltip>
-                    )}Coupon Cost :</Typography>
+                    <TableCell colSpan="6" className="empty_cart">
+                      <Typography className="label">0 items added</Typography>
+                      <Button2
+                        text="Add Products"
+                        redirectTo={`../shop/${owner}/products`}
+                      />
                     </TableCell>
-                    <TableCell className="text_2">&#8377; 30</TableCell>
                   </TableRow>
                 )}
-                <TableRow>
-                  <TableCell colSpan={5} align="right">
-                    <Typography className="text_1">
-                      {selectedCoupon && calculateDiscount() < 30 && (
-                      <Tooltip title="Discount adjusted to match coupon cost." placement="bottom-end" className="tooltip">
-                        <EmergencyIcon />
-                      </Tooltip>
-                    )} Discount{" "}
-                      {selectedCoupon &&
-                        `(${selectedCoupon.coupon_type?.replace(
-                          /_/g,
-                          " "
-                        )})`}{" "}
-                      :
-                    </Typography>
-                  </TableCell>
-                  <TableCell className="text_2">
-                    -&#8377;{calculateDiscount().toFixed(2)}{" "}
-                  </TableCell>
-                </TableRow>
+              </TableBody>
+              {data.length > 0 && (
+                <TableFooter>
+                  <TableRow>
+                    <TableCell colSpan={5} align="right">
+                      <Typography className="text_1">Subtotal :</Typography>
+                    </TableCell>
+                    <TableCell className="text_2">
+                      &#8377;{calculateTotal().toFixed(2)}
+                    </TableCell>
+                  </TableRow>
+                  {selectedCoupon && (
+                    <TableRow>
+                      <TableCell colSpan={5} align="right">
+                        <Typography className="text_1">
+                          {selectedCoupon && calculateDiscount() < 30 && (
+                            <Tooltip
+                              title="Discount coupon cost."
+                              placement="bottom-end"
+                              className="tooltip"
+                            >
+                              <EmergencyIcon />
+                            </Tooltip>
+                          )}
+                          Coupon Cost :
+                        </Typography>
+                      </TableCell>
+                      <TableCell className="text_2">&#8377; 30</TableCell>
+                    </TableRow>
+                  )}
+                  <TableRow>
+                    <TableCell colSpan={5} align="right">
+                      <Typography className="text_1">
+                        {selectedCoupon && calculateDiscount() < 30 && (
+                          <Tooltip
+                            title="Discount adjusted to match coupon cost."
+                            placement="bottom-end"
+                            className="tooltip"
+                          >
+                            <EmergencyIcon />
+                          </Tooltip>
+                        )}{" "}
+                        Discount{" "}
+                        {selectedCoupon &&
+                          `(${selectedCoupon.coupon_type?.replace(
+                            /_/g,
+                            " "
+                          )})`}{" "}
+                        :
+                      </Typography>
+                    </TableCell>
+                    <TableCell className="text_2">
+                      -&#8377;{calculateDiscount().toFixed(2)}{" "}
+                    </TableCell>
+                  </TableRow>
 
-
-                <TableRow>
-                  <TableCell colSpan={5} align="right">
-                    <Typography className="text_1">
-                      Platform Fees :{" "}
-                    </Typography>
-                  </TableCell>
+                  <TableRow>
+                    <TableCell colSpan={5} align="right">
+                      <Typography className="text_1">
+                        Platform Fees :{" "}
+                      </Typography>
+                    </TableCell>
                     <TableCell className="text_2">
                       &#8377;
                       {calcPlatformFees()}
                     </TableCell>
-                </TableRow>
+                  </TableRow>
 
-                {coHelper !== null && <TableRow>
-                  <TableCell colSpan={5} align="right">
-                    <Typography className="text_1">
-                      Co-helper ({coHelper?.co_helper_type})
-                    </Typography>
-                  </TableCell>
-                    <TableCell className="text_2">
-                      &#8377;
-                      {coHelper?.offerings}
-                    </TableCell>
-                </TableRow>}
+                  {coHelper !== null && (
+                    <TableRow>
+                      <TableCell colSpan={5} align="right">
+                        <Typography className="text_1">
+                          Co-helper ({coHelper?.co_helper_type})
+                        </Typography>
+                      </TableCell>
+                      <TableCell className="text_2">
+                        &#8377;
+                        {coHelper?.offerings}
+                      </TableCell>
+                    </TableRow>
+                  )}
 
-                {/* <TableRow>
+                  {/* <TableRow>
                   <TableCell colSpan={5} align="right">
                     <Typography className="text_1">
                       Tax :{" "}
@@ -646,48 +686,208 @@ function CartTable({ rows, setCartData, setSelectedCoupon }) {
                     </TableCell>
                 </TableRow> */}
 
-                <TableRow>
-                  <TableCell colSpan={5} align="right">
-                    <Typography className="text_1">Total (Excluding GST):</Typography>
-                  </TableCell>
+                  <TableRow>
+                    <TableCell colSpan={5} align="right">
+                      <Typography className="text_1">
+                        Total (Excluding GST):
+                      </Typography>
+                    </TableCell>
+                    {selectedCoupon ? (
+                      <TableCell className="text_2">
+                        &#8377;
+                        {(
+                          calculateTotal() -
+                          (calculateDiscount() < 30
+                            ? 30
+                            : calculateDiscount()) +
+                          30 +
+                          calcPlatformFees()
+                        ).toFixed(2)}
+                      </TableCell>
+                    ) : (
+                      // <TableCell className="text_2">
+                      //   &#8377;
+                      //   {(
+                      //     calculateTotal() -
+                      //     calculateDiscount() +
+                      //     30 +
+                      //     calcPlatformFees() +
+                      //     calcPlatformTax()
+                      //   )?.toFixed(2)}
+                      // </TableCell>
+                      <TableCell className="text_2">
+                        &#8377;
+                        {(calculateTotal() - calculateDiscount()).toFixed(2)}
+                      </TableCell>
+                    )}
+                  </TableRow>
+                </TableFooter>
+              )}
+            </Table>
+          </TableContainer>
+
+          <Box className="card_container">
+            {data.length > 0
+              ? data.map((row, index) => (
+                  <Box className="card">
+                    <Box className="col">
+                      <Box
+                        component="img"
+                        src={convertDriveLink(row.product_images[0])}
+                        alt="product_image"
+                        className="product_image"
+                      />
+                    </Box>
+                    <Box className="col">
+                      <Box
+                        component="img"
+                        className="vector"
+                        src={tbody_vector}
+                      />
+                      <Box className="container">
+                      <Box className="sub-col">
+                        <Typography className="text_1">
+                          {row.product_name}
+                        </Typography>
+                        <Typography className="text_1 subtitle">
+                          Brand: {row.brand}
+                        </Typography>
+                      </Box>
+                      <Box className="sub-col">
+                        <Typography className="text_1">
+                          &#8377;
+                          {(
+                            (row.matched_price ||
+                              row.selling_price ||
+                              row.product_selling_price) * row.quantity
+                          ).toFixed(2)}
+                        </Typography>
+                        <Box className="quantity">
+                          <Button
+                            onClick={() => handleDecrement(index)}
+                            className="operator"
+                          >
+                            <Box component="img" src={minus} alt="minus" />
+                          </Button>
+                          <Typography className="text_3">
+                            {row.quantity}
+                          </Typography>
+                          <Button
+                            onClick={() => handleIncrement(index)}
+                            className="operator"
+                          >
+                            <Box component="img" src={plus} alt="plus" />
+                          </Button>
+                        </Box>
+                      </Box>
+                      </Box>
+                    </Box>
+                  </Box>
+                ))
+              : ""}
+            {data?.length > 0 && (
+              <Box className="total">
+                <Box className="col-1">
+                  <Typography className="text_1">Subtotal :</Typography>
+                  <Typography className="text_2">
+                    &#8377;{calculateTotal().toFixed(2)}
+                  </Typography>
+                </Box>
+
+                {selectedCoupon && (
+                  <Box className="col-1">
+                    <Typography className="text_1">
+                      {selectedCoupon && calculateDiscount() < 30 && (
+                        <Tooltip
+                          title="Discount coupon cost."
+                          placement="bottom-end"
+                          className="tooltip"
+                        >
+                          <EmergencyIcon />
+                        </Tooltip>
+                      )}
+                      Coupon Cost :
+                    </Typography>
+                    <Typography className="text_2">&#8377; 30</Typography>
+                  </Box>
+                )}
+
+                <Box className="col-1">
+                  <Typography className="text_1">
+                    {selectedCoupon && calculateDiscount() < 30 && (
+                      <Tooltip
+                        title="Discount adjusted to match coupon cost."
+                        placement="bottom-end"
+                        className="tooltip"
+                      >
+                        <EmergencyIcon />
+                      </Tooltip>
+                    )}{" "}
+                    Discount{" "}
+                    {selectedCoupon &&
+                      `(${selectedCoupon.coupon_type?.replace(
+                        /_/g,
+                        " "
+                      )})`}{" "}
+                    :
+                  </Typography>
+
+                  <Typography className="text_2">
+                    -&#8377;{calculateDiscount().toFixed(2)}{" "}
+                  </Typography>
+                </Box>
+
+                <Box className="col-1">
+                  <Typography className="text_1">Platform Fees : </Typography>
+                  <Typography className="text_2">
+                    &#8377;
+                    {calcPlatformFees()}
+                  </Typography>
+                </Box>
+
+                {coHelper !== null && (
+                  <Box className="col-1">
+                    <Typography className="text_1">
+                      Co-helper ({coHelper?.co_helper_type})
+                    </Typography>
+                    <Typography className="text_2">
+                      &#8377;
+                      {coHelper?.offerings}
+                    </Typography>
+                  </Box>
+                )}
+
+                <Box className="col-1">
+                  <Typography className="text_1">
+                    Total (Excluding GST):
+                  </Typography>
+
                   {selectedCoupon ? (
-                    <TableCell className="text_2">
+                    <Typography className="text_2">
                       &#8377;
                       {(
                         calculateTotal() -
                         (calculateDiscount() < 30 ? 30 : calculateDiscount()) +
-                        30 + calcPlatformFees()
+                        30 +
+                        calcPlatformFees()
                       ).toFixed(2)}
-                      
-                    </TableCell>
-
-                    // <TableCell className="text_2">
-                    //   &#8377;
-                    //   {(
-                    //     calculateTotal() -
-                    //     calculateDiscount() +
-                    //     30 +
-                    //     calcPlatformFees() + 
-                    //     calcPlatformTax()
-                    //   )?.toFixed(2)}
-                    // </TableCell>
+                    </Typography>
                   ) : (
-                    <TableCell className="text_2">
+                    <Typography className="text_2">
                       &#8377;
                       {(calculateTotal() - calculateDiscount()).toFixed(2)}
-                    </TableCell>
+                    </Typography>
                   )}
-                </TableRow>
-              </TableFooter>
+                </Box>
+              </Box>
             )}
-          </Table>
-        </TableContainer>
-        <Box className="board_pins">
-          <Box className="circle"></Box>
-          <Box className="circle"></Box>
-        </Box>
-      </Paper>
-    </Box>
+          </Box>
+          <Box className="board_pins">
+            <Box className="circle"></Box>
+            <Box className="circle"></Box>
+          </Box>
+        </Paper>
+      </Box>
     </ThemeProvider>
   );
 }
