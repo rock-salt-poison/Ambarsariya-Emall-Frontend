@@ -117,7 +117,7 @@ function AreaSearchPage(props) {
                 />
               </Box>
               <UserBadge
-                handleBadgeBgClick="../"
+                handleBadgeBgClick="../support"
                 handleLogin="../login"
                 handleLogoutClick="../../"
               />
