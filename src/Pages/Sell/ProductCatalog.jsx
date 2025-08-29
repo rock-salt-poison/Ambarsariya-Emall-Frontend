@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 import { convertDriveLink, get_product, getShopUserData } from "../../API/fetchExpressAPI";
 import UserBadge from "../../UserBadge";
 import Iframe from "react-iframe";
+import axios from "axios";
 
 function ProductCatalog() {
   const { product_id, token } = useParams();
@@ -50,6 +51,25 @@ function ProductCatalog() {
       }
     }
   };
+
+  const fetchFileType = async (fileId) => {
+    if(fileId){
+
+      console.log(fileId);
+      
+      const type = await axios.get(`${process.env.REACT_APP_EXPRESS_API_LINK}/api/drive/image/${fileId}`);
+      console.log(type);
+    }
+  }
+
+  useEffect(()=> {
+    if(data){
+      const fileId = data?.product_catalog?.split('image/')?.[1];
+      console.log(data?.product_catalog?.split('file/d/'));
+      
+      fetchFileType('17hJcncYiON1U7JgEcL3dfejJ0OvxTzFN');
+    }
+  }, [data]);
 
   return (
     <Box className="product_details_wrapper info_2 product_catalog">

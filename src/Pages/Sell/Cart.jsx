@@ -146,7 +146,7 @@ function Cart() {
       imgSrc: pickup,
       service: "Pickup",
       popupContent: <ServiceType />,
-      cName: "service_type_popup",
+      cName: "service_type_popup service",
     },
     {
       id: 1,

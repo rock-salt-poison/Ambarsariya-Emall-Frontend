@@ -7093,9 +7093,16 @@ a {
           .sub_col_1 {
             .shop_details {
               justify-content: center;
+              width: 100%;
+              padding: 25px;
 
               .category {
                 width: 100%;
+
+                .shop_name{
+                  font-size: 36px;
+                  word-break: break-word;
+                }
               }
             }
 
@@ -7105,6 +7112,7 @@ a {
 
               h3 {
                 margin: 0 auto;
+                width: 100%;
               }
             }
 
@@ -10398,7 +10406,7 @@ a {
             order: 0;
 
             .shop_name_container {
-              @include full-absolute(5px, 51px, 81%, 55px);
+              @include full-absolute(5px, 51px, 81%, 46px);
             }
 
             img.shop {
@@ -10406,7 +10414,8 @@ a {
             }
 
             .shop_name {
-              font-size: 1.1em;
+              font-size: 0.95em;
+              word-break: break-all; 
             }
 
             .domain_container {
@@ -10423,6 +10432,8 @@ a {
               .sector {
                 font-size: 14px;
                 max-width: 100px;
+                word-break: break-word;
+                padding: 2px 3px 0;
               }
             }
 
@@ -11300,11 +11311,11 @@ a {
         border: 8px solid #b67d1cc4;
         box-shadow: 0px 1px 5px 1px #6b43369e;
       }
+      .MuiFormGroup-root {
+        justify-content: center;
+      }
 
       .variation {
-        .MuiFormGroup-root {
-          justify-content: center;
-        }
 
         svg {
           fill: $black;
@@ -11470,19 +11481,118 @@ a {
     }
   }
 
-  @media screen and (max-width: 768px) and (orientation: landscape) {
+  @media screen and (max-width: 768px) {
     .row{
+      padding: 25px;
       .col{
         div{
           &.heading{
+            @include flex-center(row, space-between);
             .container{
               padding: 6px 10px;
               border: 5px;
               border-radius: 10px;
+              margin-right: auto;
               h2{
                 font-size: 22px;
               }
             }
+          }
+        }
+      }
+    }
+    &.info_2{
+      .row{
+        padding: 25px;
+        gap: 35px;
+
+        .col{
+
+          .image_frame{
+            width: 100%;
+            border: 15px solid transparent;
+            border-image: repeating-linear-gradient(-45deg, #6B4336, #6B4336 3px, transparent 3px, transparent 10px) 15;
+          }
+
+          .heading{
+            font-size: 38px;
+            line-height: 38px;
+          }
+        }
+      }
+    }
+  }
+
+  @media screen and (max-width: 560px) {
+    .row{
+      padding: 25px;
+      .col{
+        div{
+          &.heading{
+            @include flex-center(column, space-between);
+            .container{
+              margin: 0 auto;
+              order: 1;
+              h2{
+                font-size: 22px;
+              }
+            }
+
+            .loginBtn, .logoutBtn{
+              margin-left: auto;
+            }
+          }
+        }
+
+         &.plane_col{
+            order: 2;
+
+            .image_container_2{
+              .plane{
+               width: 100%;
+               left: auto;
+              }
+            }
+          }
+
+          &.cart_button{
+            order: 1;
+
+            .backButton{
+              position: relative;
+            }
+          }
+
+          &.ticket_container{
+            order: 0;
+            position: relative;
+
+            .image_container_3{
+              .ticket{
+                width: 100%;
+              }
+            }
+          }
+
+        .text{
+          font-size: 24px;
+          line-height: 24px;
+        }
+
+        .image_container{
+          width: 100%;
+        }
+      }
+    }
+    &.info_2{
+      .row{
+        padding: 25px;
+        gap: 35px;
+
+        .col{
+          .heading{
+            font-size: 38px;
+            line-height: 38px;
           }
         }
       }
@@ -12089,12 +12199,20 @@ a {
                   }
 
                   .quantity{
-                    padding: 0px 10px;
-                    gap: 6px;
+                    padding: 0px 7px;
+                    gap: 4px;
                     background-color: rgba($brown-4, 0.27);
 
                     .text_3{
                       color: $brown-4;
+                      font-size: 17px;
+                      line-height: 20px;
+                    }
+
+                    button{
+                      img{
+                        width: 80%;
+                      }
                     }
                   }
                   
@@ -19355,6 +19473,7 @@ body .MuiBackdrop-root {
     margin: 0px;
     height: 80%;
     width: 440px;
+    max-width: 90%;
     top: 28px;
     overflow: visible;
 
@@ -23029,6 +23148,34 @@ textarea[readonly] {
         }
       }
     }
+
+    @media (max-width: 992px){
+      .MuiPaper-root{
+        width: 90%;
+      }
+      
+      .card_board_component{
+        padding: 20px;
+      }
+    }
+
+    @media (max-width: 560px){
+      .MuiPaper-root{
+        width: 90%;
+      }
+      
+      .card_board_component{
+        padding: 15px;
+
+        .content{
+          .content_body{
+            .body_container{
+              padding: 0px;
+            }
+          }
+        }
+      }
+    }
   }
 
   &.prepaid_postpaid_offer_popup {
@@ -23257,6 +23404,12 @@ textarea[readonly] {
         }
       }
     }
+
+    @media (max-width: 990px){
+      .MuiPaper-root{
+        width: 90%;
+      }
+    }
   }
 
   &.service_type_popup {
@@ -23287,6 +23440,7 @@ textarea[readonly] {
           .content_body {
             align-self: stretch;
             flex: 1;
+            width: 100%;
             @include flex-center(column, space-between);
             // gap: 15px;
 
@@ -23309,7 +23463,7 @@ textarea[readonly] {
               &:first-child {
                 height: 100%;
                 .delivery_container {
-                  width: 70% !important;
+                  width: 90% !important;
                 }
               }
 
@@ -23560,6 +23714,7 @@ textarea[readonly] {
                   padding: 8px 15px;
                   border-radius: 10px;
                   text-shadow: 0px 2px 4px #00000067;
+                  text-align: center;
                 }
 
                 .service_types {
@@ -23613,6 +23768,32 @@ textarea[readonly] {
           }
         }
       }
+
+      @media (max-width: 990px){
+        .MuiPaper-root{
+          width: 90%;
+        }
+
+        .card_board_component{
+          padding: 20px 15px;
+
+          .content{
+            .content_body{
+              .col{
+                &:first-child{
+                  .pickup_container{
+                    width: 100%;
+                  }
+                }
+                &:last-child{
+                  position: relative;
+                  bottom: 0px;
+                }
+              }
+            }
+          }
+        }
+      }
     }
 
     &.delivery {
@@ -23646,8 +23827,8 @@ textarea[readonly] {
                     &.visit {
                       align-self: start;
                       position: relative;
-                      right: 80px;
-                      bottom: 50px;
+                      // right: 80px;
+                      // bottom: 50px;
                     }
                   }
                 }
@@ -23675,7 +23856,7 @@ textarea[readonly] {
                   .form_container {
                     background-color: hsla(15, 33%, 32%, 0.7);
                     border: 0px;
-                    border-radius: 0px;
+                    border-radius: 10px;
 
                     .container::-webkit-scrollbar-thumb {
                       background: #f9deb1b3 !important;
@@ -23706,7 +23887,7 @@ textarea[readonly] {
 
       @media (max-width: 990px) {
         .MuiPaper-root {
-          width: 85%;
+          width: 90%;
           height: 90vh;
 
           .card_board_component {
@@ -23717,11 +23898,18 @@ textarea[readonly] {
               .content_body {
                 flex-direction: column;
                 flex-wrap: nowrap;
+                gap: 15px;
 
                 .col {
                   overflow: visible;
                   &:first-child {
                     order: 1;
+                    width: 100%;
+
+                    .delivery_container{
+                      width: 100% !important;
+                      height: max-content;
+                    }
                   }
                   &:last-child {
                     order: 0;
@@ -23745,6 +23933,37 @@ textarea[readonly] {
               }
             }
           }
+        }
+      }
+    }
+
+    &.service{
+      .MuiPaper-root{
+        min-height: 70vh;
+        .card_board_component{
+          .content{
+            .content_body{
+              .col{
+                &:first-child{
+                  height: max-content;
+                }
+
+                &:nth-child(2){
+                  flex: 1;
+                  justify-content: center;
+                }
+
+                &:last-child{
+                  position: relative;
+                }
+              }
+            }
+          }
+        }
+      }
+      @media (max-width: 990px){
+        .MuiPaper-root{
+          width: 90%;
         }
       }
     }
@@ -23840,6 +24059,18 @@ textarea[readonly] {
         }
       }
     }
+
+    @media (max-width: 992px){
+      .MuiPaper-root{
+        width: 90%;
+    }
+  }
+  @media (max-width: 560px){
+      .card_board_component{
+        padding: 15px;
+      }
+  }
+
   }
 
   &.mou {

@@ -14,9 +14,9 @@ const services = [
     {id: 1, type:'Delivery', icon:delivery, popupContent: <Delivery />,
         cName: "service_type_popup delivery",},
     {id: 2, type:'Home Visit', icon:home_visit, popupContent: <Visit />,
-        cName: "service_type_popup"},
+        cName: "service_type_popup delivery visit"},
     {id: 3, type:'Pickup', icon:pickup, popupContent: <ServiceType />,
-        cName: "service_type_popup delivery visit",},
+        cName: "service_type_popup service",},
 ]
 
 function TypeOfServices({data}) {
