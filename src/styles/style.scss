@@ -6579,6 +6579,7 @@ a {
                 @include hover-scale(1, 0s);
                 text-align: center;
                 line-height: 30px;
+                word-break: break-all;
 
                 &:hover {
                   transform: skew(12deg, 1deg);
@@ -6733,6 +6734,7 @@ a {
 
             .shop_details {
               flex-direction: column;
+              border-right: 0px;
             }
 
             .product_details {
@@ -13479,6 +13481,7 @@ a {
 
     @media (max-width: 560px) {
       .row {
+        padding: 10px;
         .col {
           // flex-direction: column;
 
@@ -13510,8 +13513,18 @@ a {
               width: 100%;
 
               .card {
+                padding: 20px 30px;
                 .card_body {
                   // justify-content: center;
+                  padding: 0px;
+                  gap: 15px;
+                }
+              }
+
+              .life{
+                padding: 10px 20px;
+                .img{
+                  width: 65px;
                 }
               }
             }
@@ -21261,6 +21274,11 @@ body .MuiBackdrop-root {
 
     @media (max-width: 560px) {
       .col {
+        &:last-child{
+          width: 100%;
+          gap: 10px;
+        }
+
         .icon_link {
           .icon {
             height: 35px;
@@ -23222,6 +23240,40 @@ textarea[readonly] {
         }
       }
     }
+
+    @media (max-width: 768px){
+      .MuiPaper-root{
+        width: 90%;
+
+        .card_board_component{
+          padding: 15px;
+          .content{
+            .content_body{
+              .body_container{
+                .row{
+                  grid-template-columns: 1fr;
+                  gap: 15px;
+                  .col{
+                    width: max-content;
+                    max-width: 100%;
+                    justify-self: center;
+
+                    .board_img, .img{
+                      max-width: 100%;
+                      margin: 0px;
+                    }
+
+                    .board_img{
+                      width: 140px;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 
   &.purchase_coupon_offer_popup {
@@ -23408,6 +23460,39 @@ textarea[readonly] {
     @media (max-width: 990px){
       .MuiPaper-root{
         width: 90%;
+      }
+    }
+  }
+
+
+  &.services{
+
+    @media (max-width: 768px){
+      .MuiPaper-root{
+        width: 90%;
+  
+        .card_board_component{
+          padding: 15px;
+
+          .content{
+            width: 100%;
+            .content_body{
+              width: 100%;
+              .col{
+                width: 100%;
+                &:first-child{
+                  height: max-content !important;
+                }
+
+                &:nth-child(2){
+                  
+                }
+              }
+            }
+          }
+
+
+        }
       }
     }
   }
@@ -27602,12 +27687,12 @@ textarea[readonly] {
       }
 
       .cards_container {
-        max-width: 70%;
+        max-width: 100%;
         align-self: center;
         margin: 0 auto;
         display: grid;
         gap: 10px;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        grid-template-columns: repeat(3, minmax(280px, 1fr));
 
         .card {
           // border-right: 2px solid $yellow;
@@ -27681,6 +27766,111 @@ textarea[readonly] {
                 }
               }
             }
+          }
+        }
+      }
+    }
+
+    @media (max-width: 992px){
+      padding: 20px;
+
+      .col{
+        &:nth-child(2){
+        flex-wrap: wrap;
+        justify-content: center;
+
+          .container{
+            order:0;
+          }
+
+          .search_main_container{
+            order: 1;
+            width: 45%;
+          }
+        }
+
+        &:last-child{
+
+          .cards_container{
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          }
+        }
+      }
+    }
+
+    @media (max-width: 768px){
+      padding: 20px;
+
+      .col{
+        &:nth-child(2){
+       
+
+          .search_main_container{
+            order: 1;
+            width: 80%;
+          }
+        }
+
+        &:last-child{
+
+          .cards_container{
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          }
+        }
+      }
+    }
+
+    @media (max-width: 560px){
+      padding: 15px;
+
+      .col{
+
+        .icon_container{
+          .icon{
+            height: 45px;
+          }
+          .indicator{
+            height: 30px;
+          }
+        }
+        .container{
+          .title_container{
+                .title{
+                  font-size: 20px;
+                }
+              }
+        }
+
+        &:first-child{
+          flex-wrap: wrap;
+
+          .icon_container{
+            order: 0;
+
+            &:last-child{
+              margin-right: 20px;
+            }
+          }
+
+          .container{
+            order: 1;
+            width: 70%;
+            margin: 0 auto;
+            left: 10px;
+          }
+        }
+
+        &:nth-child(2){
+          .search_main_container{
+            order: 1;
+            width: 100%;
+          }
+        }
+
+        &:last-child{
+
+          .cards_container{
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
           }
         }
       }

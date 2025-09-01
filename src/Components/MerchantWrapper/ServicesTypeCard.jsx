@@ -39,7 +39,7 @@ function ServicesTypeCard({ token }) {
       type: "Service Type",
       imgSrc: shop_detail_service_type_img,
       popupContent: <ServiceTypes />,
-      cName: "service_type_popup",
+      cName: "service_type_popup services",
     },
   ];
 
