@@ -24754,7 +24754,7 @@ textarea[readonly] {
         }
       }
 
-      @media (max-width: 990px) and (orientation: landscape) {
+      @media (max-width: 990px) {
         width: 70%;
         .card_board_component {
           padding: 20px;
@@ -24787,7 +24787,36 @@ textarea[readonly] {
           }
         }
       }
+
+      @media (max-width: 560px) {
+        width: 95%;
+        .card_board_component {
+          .content {
+            .content_body {
+
+              .swastik {
+                width: 75px;
+              }
+
+              .card {
+                .img_container {
+                  height: 60px;
+
+                  .icon {
+                    max-width: 80px;
+                    max-height: 60px;
+                  }
+                }
+                .btn {
+                  padding: 2px 8px;
+                }
+              }
+            }
+          }
+        }
+      }
     }
+    
   }
 
   &.prepaid,
