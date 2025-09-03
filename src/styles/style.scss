@@ -25154,10 +25154,10 @@ textarea[readonly] {
         }
       }
 
-      &:nth-child(4){
-        .card_container{
-          display: none;
-        }
+      .card_container{
+        display: none;
+      }
+      &:nth-child(3){
       }
 
       &.eshop {
@@ -25811,314 +25811,315 @@ textarea[readonly] {
           }
         }
 
-        &:nth-child(4){
-          table{
-            display: none;
+        .MuiTable-root{
+          display: none;
+        }
+
+        .card_container{
+          display: flex !important;
+          @include flex-center(column, flex-start);
+          gap: 0px;
+          width: 100%;
+
+          .btn-submit {
+            background-color: #f9e0b399;
+            @include homepage-buttons(
+              "Bobby-Jones-Soft",
+              14px,
+              $brown-4,
+              none
+            );
+            @include hover-scale(1, 0s);
+            padding: 2px 12px;
           }
 
-          .card_container{
-            display: flex !important;
-            @include flex-center(column, flex-start);
-            gap: 0px;
-            width: 100%;
-            display: flex !important;
+          .MuiInputAdornment-root {
+              .MuiTypography-root {
+                color: $light-yellow;
+                font-size: 18px;
+              }
+            }
 
-            .btn-submit {
-              background-color: #f9e0b399;
+            input,
+            .MuiSelect-select {
+              padding: 0px;
+              text-align: left;
               @include homepage-buttons(
                 "Bobby-Jones-Soft",
-                14px,
-                $brown-4,
+                18px,
+                $light-yellow,
                 none
               );
               @include hover-scale(1, 0s);
-              padding: 2px 12px;
             }
 
-            .MuiInputAdornment-root {
-                .MuiTypography-root {
-                  color: $light-yellow;
-                  font-size: 18px;
-                }
+            .input_field.select {
+              width: 100%;
+            }
+
+            .MuiSelect-select {
+              text-align: left;
+              width: 85%;
+              text-overflow: ellipsis;
+            }
+
+            svg {
+              fill: $light-yellow;
+            }
+
+            .MuiOutlinedInput-notchedOutline {
+              border: 0px;
+            }
+            
+            .MuiSelect-outlined.Mui-disabled{
+              -webkit-text-fill-color: #fffbf4d6 !important;
+            }
+
+          .toggle {
+              border: 1px solid $yellow;
+              line-height: normal;
+              @include homepage-buttons(
+                "Bobby-Jones-Soft",
+                16px,
+                $light-yellow,
+                none
+              );
+              @include hover-scale(1, 0s);
+              padding: 6px 10px;
+
+              &:first-child{
+                border-top-left-radius: 25px;
+                border-bottom-left-radius: 25px;
               }
 
-              input,
-              .MuiSelect-select {
-                padding: 0px;
-                text-align: left;
-                @include homepage-buttons(
-                  "Bobby-Jones-Soft",
-                  18px,
-                  $light-yellow,
-                  none
-                );
-                @include hover-scale(1, 0s);
+              &:last-child{
+                border-top-right-radius: 25px;
+                border-bottom-right-radius: 25px;
               }
 
-              .input_field.select {
-                width: 100%;
+              &.Mui-selected {
+                background-color: #0000005b;
               }
 
-              .MuiSelect-select {
-                text-align: left;
-                width: 85%;
-                text-overflow: ellipsis;
-              }
-
-              svg {
-                fill: $light-yellow;
-              }
-
-              .MuiOutlinedInput-notchedOutline {
-                border: 0px;
-              }
-              
-              .MuiSelect-outlined.Mui-disabled{
+              &.Mui-disabled {
+                // background: #6d44377a;
+                color: #fffbf4d6 !important;
                 -webkit-text-fill-color: #fffbf4d6 !important;
-              }
-
-            .toggle {
-                border: 1px solid $yellow;
-                line-height: normal;
-                @include homepage-buttons(
-                  "Bobby-Jones-Soft",
-                  16px,
-                  $light-yellow,
-                  none
-                );
-                @include hover-scale(1, 0s);
-                padding: 6px 10px;
-
-                &:first-child{
-                  border-top-left-radius: 25px;
-                  border-bottom-left-radius: 25px;
-                }
-
-                &:last-child{
-                  border-top-right-radius: 25px;
-                  border-bottom-right-radius: 25px;
-                }
-
-                &.Mui-selected {
-                  background-color: #0000005b;
-                }
-
-                &.Mui-disabled {
-                  // background: #6d44377a;
-                  color: #fffbf4d6 !important;
-                  -webkit-text-fill-color: #fffbf4d6 !important;
-                  cursor: not-allowed;
-                  pointer-events: visible;
-                }
-              }
-
-            .card_header{
-              @include flex-center(row, space-between);
-              gap: 10px;
-              background-color: #f9e0b399;
-              border-top-left-radius: 10px;
-              border-top-right-radius: 10px;
-              padding: 10px 15px;
-              align-self: stretch;
-
-              .text_1{
-                @include homepage-buttons(
-                  "Bobby-Jones-Soft",
-                  18px,
-                  $brown-4,
-                  none
-                );
-                @include hover-scale(1, 0s);              
-              }
-
-              .MuiInputBase-root{
-                min-width: 30%;
-                max-width: 40%;
-                background: rgba($brown-4, 0.75);
-                padding-left: 10px;
+                cursor: not-allowed;
+                pointer-events: visible;
               }
             }
-            
-            .card_body{
-              background-color: #6d4437b3;
+
+          .card_header{
+            @include flex-center(row, space-between);
+            gap: 10px;
+            background-color: #f9e0b399;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            padding: 10px 15px;
+            align-self: stretch;
+
+            .text_1{
+              @include homepage-buttons(
+                "Bobby-Jones-Soft",
+                18px,
+                $brown-4,
+                none
+              );
+              @include hover-scale(1, 0s);              
             }
-            
-            .card_footer{
-              background-color: rgba(#6d4437, .85);
+
+            .MuiInputBase-root{
+              min-width: 30%;
+              max-width: 40%;
+              background: rgba($brown-4, 0.75);
+              padding-left: 10px;
+            }
+          }
+          
+          .card_body{
+            background-color: #6d4437b3;
+            align-self: stretch;
+          }
+          
+          .card_footer{
+            background-color: rgba(#6d4437, .85);
+            align-self: stretch;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+              .card{
+                width: 100%;
+                .container{
+                  width: 100%;
+                }
+              }
+          }
+
+          .MuiDivider-root{
+            width: 92%;
+            margin: 0 auto;
+            border-color: rgba($yellow, 0.7);
+            &:last-child{
+              display: none;
+            }
+          }
+          .card{
+            @include flex-center(row, flex-start);
+            gap: 10px;
+            align-self: stretch;
+            place-items: self-start;
+            // margin-bottom: 2px;
+
+            &:last-child{
+              margin-bottom: 0px;
               border-bottom-left-radius: 10px;
               border-bottom-right-radius: 10px;
-                .card{
-                  width: 100%;
-                  .container{
-                    width: 100%;
-                  }
-                }
             }
 
-            .MuiDivider-root{
-              width: 92%;
-              margin: 0 auto;
-              border-color: rgba($yellow, 0.7);
-              &:last-child{
-                display: none;
-              }
+            .container{
+              flex-direction: column;
+              width: 100%;
+              gap: 7px;
             }
-            .card{
-              @include flex-center(row, flex-start);
-              gap: 10px;
-              align-self: stretch;
-              place-items: self-start;
-              // margin-bottom: 2px;
 
-              &:last-child{
-                margin-bottom: 0px;
-                border-bottom-left-radius: 10px;
-                border-bottom-right-radius: 10px;
-              }
+            .col{
+              width: max-content;
+              position: relative;
 
-              .container{
-                flex-direction: column;
+              .vector {
+                @include full-absolute(0px, 0px, 0px, 0px);
+                z-index: 0;
                 width: 100%;
-                gap: 7px;
+                height: 100%;
               }
 
-              .col{
-                width: max-content;
+              .product_image{
                 position: relative;
+                top: 15px;
+              }
 
-                .vector {
-                  @include full-absolute(0px, 0px, 0px, 0px);
-                  z-index: 0;
-                  width: 100%;
-                  height: 100%;
+              &:last-child{
+                width: 100%;
+                padding: 15px;
+                justify-content: center;
+              }
+
+              .text_1 {
+                @include homepage-buttons(
+                  "Bobby-Jones-Soft",
+                  20px,
+                  $light-yellow,
+                  "none"
+                );
+                @include hover-scale(1, 0s);
+                text-shadow: 1px 1px 4px #b67d1c4d;
+                -webkit-text-stroke: 0.2px $dark-yellow2;
+                line-height: 20px;
+                
+                &.subtitle{
+                  color: $yellow;
+                  font-size: 15px;
+                }
+              }
+
+
+              .sub-col{
+                position: relative;
+                width: 100%;
+                order: unset;
+
+                .heading{
+                  background-color: $yellow;
+                  color: $brown-4;
+                  font-size: 16px;
+                  border-radius: 5px;
+                  padding: 2px 5px;
+                  width: max-content;
                 }
 
-                .product_image{
-                  position: relative;
-                  top: 15px;
+                &.qty{
+                  @include flex-center(row, space-between);
+                  gap: 10px;
+                  width: 100%;
+                }
+
+                .text_1{
+                  white-space: normal;
                 }
 
                 &:last-child{
-                  width: 100%;
-                  padding: 15px;
-                  justify-content: center;
+                  @include flex-center(row, space-between);
+                  gap: 5px;
+                  flex-wrap: wrap;
+                  flex: 1;
+                  align-self: stretch;
                 }
 
-                .text_1 {
-                  @include homepage-buttons(
-                    "Bobby-Jones-Soft",
-                    20px,
-                    $light-yellow,
-                    "none"
-                  );
-                  @include hover-scale(1, 0s);
-                  text-shadow: 1px 1px 4px #b67d1c4d;
-                  -webkit-text-stroke: 0.2px $dark-yellow2;
-                  line-height: 20px;
-                  
-                  &.subtitle{
-                    color: $yellow;
-                    font-size: 15px;
-                  }
-                }
+                .quantity{
+                  padding: 0px 7px;
+                  gap: 4px;
+                  background-color: rgba($brown-4, 0.27);
 
-
-                .sub-col{
-                  position: relative;
-                  width: 100%;
-                  order: unset;
-
-                  .heading{
-                    background-color: $yellow;
+                  .text_3{
                     color: $brown-4;
-                    font-size: 16px;
-                    border-radius: 5px;
-                    padding: 2px 5px;
-                    width: max-content;
+                    font-size: 17px;
+                    line-height: 20px;
                   }
 
-                  &.qty{
-                    @include flex-center(row, space-between);
-                    gap: 10px;
-                    width: 100%;
-                  }
-
-                  .text_1{
-                    white-space: normal;
-                  }
-
-                  &:last-child{
-                    @include flex-center(row, space-between);
-                    gap: 5px;
-                    flex-wrap: wrap;
-                    flex: 1;
-                    align-self: stretch;
-                  }
-
-                  .quantity{
-                    padding: 0px 7px;
-                    gap: 4px;
-                    background-color: rgba($brown-4, 0.27);
-
-                    .text_3{
-                      color: $brown-4;
-                      font-size: 17px;
-                      line-height: 20px;
-                    }
-
-                    button{
-                      img{
-                        width: 80%;
-                      }
+                  button{
+                    img{
+                      width: 80%;
                     }
                   }
-                  
                 }
-              }
-            }
-
-            .total{
-              @include flex-center(column, flex-start);
-              gap: 10px;
-              align-self: stretch;
-              place-items: normal;
-
-              .col-1{
-                @include flex-center(row, space-between);
-                gap: 10px;
-
-                .text_1 {
-                  @include homepage-buttons(
-                    "Gladiola",
-                    22px,
-                    $light-yellow,
-                    "none"
-                  );
-                  @include hover-scale(1, 0s);
-                  line-height: 20px;
-                  text-shadow: 0px 4px 4px #00000073;
-                  position: relative;
-
-                  svg{
-                    font-size: .9rem;
-                  }
-                }
-
-                .text_2 {
-                  @include homepage-buttons(
-                    "Bobby-Jones-Soft",
-                    18px,
-                    $yellow,
-                    "none"
-                  );
-                  @include hover-scale(1, 0s);
-                  line-height: 20px;
-                  text-shadow: 0px 4px 4px #00000073;
-                  position: relative;
-                }
+                
               }
             }
           }
+
+          .total{
+            @include flex-center(column, flex-start);
+            gap: 10px;
+            align-self: stretch;
+            place-items: normal;
+
+            .col-1{
+              @include flex-center(row, space-between);
+              gap: 10px;
+
+              .text_1 {
+                @include homepage-buttons(
+                  "Gladiola",
+                  22px,
+                  $light-yellow,
+                  "none"
+                );
+                @include hover-scale(1, 0s);
+                line-height: 20px;
+                text-shadow: 0px 4px 4px #00000073;
+                position: relative;
+
+                svg{
+                  font-size: .9rem;
+                }
+              }
+
+              .text_2 {
+                @include homepage-buttons(
+                  "Bobby-Jones-Soft",
+                  18px,
+                  $yellow,
+                  "none"
+                );
+                @include hover-scale(1, 0s);
+                line-height: 20px;
+                text-shadow: 0px 4px 4px #00000073;
+                position: relative;
+              }
+            }
+          }
+        }
+        &:nth-child(3){
           }
       }
     }

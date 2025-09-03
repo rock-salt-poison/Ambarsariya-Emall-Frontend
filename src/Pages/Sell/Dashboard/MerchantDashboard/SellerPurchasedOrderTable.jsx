@@ -1170,7 +1170,7 @@ function SellerPurchasedOrderTable({ purchasedOrders, selectedPO, cardType }) {
         </Table>
 
         <Box className="card_container">
-          {updatedProducts.length > 0 && (
+          {updatedProducts.length > 0 ? (
             <Box className="card_header">
               <Typography className="text_1">
                 {updatedProducts.length > 0 && updatedProducts?.length} Products
@@ -1193,7 +1193,12 @@ function SellerPurchasedOrderTable({ purchasedOrders, selectedPO, cardType }) {
                 ))}
               </Select>
             </Box>
-          )}
+          ): <Box className="card_header">
+              <Typography className="text_1">
+                0 Products
+              </Typography>
+
+            </Box>}
           <Box className="card_body">
             {updatedProducts.length > 0
               ? updatedProducts.map((row, index) => (
@@ -1294,7 +1299,7 @@ function SellerPurchasedOrderTable({ purchasedOrders, selectedPO, cardType }) {
                   </React.Fragment>
                 ))
               : ""}
-            {updatedProducts?.[0]?.co_helper !== null && (
+            {updatedProducts.length > 0 && updatedProducts?.[0]?.co_helper !== null && (
               <Box className="card">
                 <Box className="col">
                   <Box className="container">
