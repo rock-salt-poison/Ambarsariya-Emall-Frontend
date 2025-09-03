@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Box,
   CircularProgress,
@@ -28,6 +28,7 @@ function DashboardComponents({ data, date }) {
   const [selectedMerchantPO, setSelectedMerchantPO] = useState([]);
   const [selectedPO, setSelectedPO] = useState([]);
   const [activeTable, setActiveTable] = useState('sale'); // Default to Purchase Order Table
+  const cardRefs = useRef({});
 
   const card_data = [
     { id: 1, heading: "Today's Sale Orders", value: "-" },
@@ -41,6 +42,18 @@ function DashboardComponents({ data, date }) {
     { id: 8, heading: "S.O. Number", value: "-", slider: true, link : true ,type: "sale" },
   ];
 
+  useEffect(() => {
+    if (activeTable && cardRefs.current[activeTable]) {
+      setTimeout(()=>{
+        cardRefs.current[activeTable].scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "center",
+        });
+      }, 1000)
+    }
+  }, [activeTable]);
+
   const fetch_po_no = async (shop_no, date) => {
     try {
       setLoading(true);
@@ -50,6 +63,8 @@ function DashboardComponents({ data, date }) {
       
         if (resp.valid) {
           setPurchasedOrders(resp.data);
+        }else{
+          setPurchasedOrders([]);
         }
       }
     } catch (e) {
@@ -97,6 +112,8 @@ const fetchPurchasedOrder = async (buyer_id) => {
         console.log(resp.data);
         
         setMerchantPurchaserOrders(resp.data);
+      }else{
+        setMerchantPurchaserOrders([]);
       }
     } catch (e) {
       console.log(e);
@@ -119,12 +136,16 @@ const fetchPurchasedOrder = async (buyer_id) => {
   useEffect(() => {
     if (purchasedOrders.length > 0) {
       setSelectedPO(purchasedOrders?.[0]?.po_no);
+    }else{
+      setSelectedPO([])
     }
   }, [purchasedOrders]);
 
   useEffect(() => {
     if (merchantPurchaserOrders.length > 0) {
       setSelectedMerchantPO(merchantPurchaserOrders?.[0]?.po_no);
+    }else{
+      setSelectedMerchantPO([]);
     }
   }, [merchantPurchaserOrders]);
 
@@ -143,7 +164,7 @@ const fetchPurchasedOrder = async (buyer_id) => {
 
   return (
     <>
-      <Box className="col">
+      <Box className="col" sx={{padding: '8px 0'}}>
         {loading && (
           <Box className="loading">
             <CircularProgress />
@@ -201,6 +222,9 @@ const fetchPurchasedOrder = async (buyer_id) => {
       key={card.id}
       className={`card ${activeTable === card.type ? "active" : ""}`}
       onClick={() => card.type && setActiveTable(card.type)}
+      ref={(el) => {
+        if (card.type) cardRefs.current[card.type] = el;
+      }}
     >
       <Typography className="heading">{card.heading}</Typography>
       {showSlider ? renderSwiper(activeTable === "sale" 

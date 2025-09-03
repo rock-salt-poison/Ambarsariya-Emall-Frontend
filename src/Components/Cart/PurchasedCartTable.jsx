@@ -12,6 +12,7 @@ import {
   Table,
   Paper,
   CircularProgress,
+  Tooltip,
 } from "@mui/material";
 import tbody_vector from "../../Utils/images/Sell/products/tbody_vector.webp";
 import plus from "../../Utils/images/Sell/cart/plus.svg";
@@ -23,6 +24,7 @@ import Button2 from "../Home/Button2";
 import { convertDriveLink, get_purchasedOrder, getCategoryName } from "../../API/fetchExpressAPI";
 import CustomSnackbar from "../CustomSnackbar";
 import { removeCoupon } from "../../store/discountsSlice";
+import EmergencyIcon from "@mui/icons-material/Emergency";
 
 const columns = [
   { id: "1", label_1: "S.No." },
@@ -65,6 +67,8 @@ function PurchasedCartTable() {
       setLoading(false);
     }
   }
+
+  console.log(data);
 
   // const calculateDiscount = () => calculateTotal() ;
 
@@ -194,6 +198,125 @@ function PurchasedCartTable() {
             )}
           </Table>
         </TableContainer>
+        <Box className="card_container">
+                    {data.length > 0
+                      ? data.map((row, index) => (
+                          <Box className="card">
+                            <Box className="col">
+                              <Box
+                                component="img"
+                                src={convertDriveLink(row.product_images[0])}
+                                alt="product_image"
+                                className="product_image"
+                              />
+                            </Box>
+                            <Box className="col">
+                              <Box
+                                component="img"
+                                className="vector"
+                                src={tbody_vector}
+                              />
+                              <Box className="container">
+                              <Box className="sub-col">
+                                <Typography className="text_1">
+                                  {row.product_name}
+                                </Typography>
+                                <Typography className="text_1 subtitle">
+                                  Brand: {row.brand}
+                                </Typography>
+                              </Box>
+                              <Box className="sub-col">
+                                <Typography className="text_1">
+                                  &#8377;
+                                  {Number(row.total_price).toFixed(2)}
+                                </Typography>
+                                <Box className="quantity">
+                                  <Button
+                                    className="operator"
+                                  >
+                                    <Box component="img" src={minus} alt="minus" />
+                                  </Button>
+                                  <Typography className="text_3">
+                                    {row.quantity}
+                                  </Typography>
+                                  <Button
+                                    className="operator"
+                                  >
+                                    <Box component="img" src={plus} alt="plus" />
+                                  </Button>
+                                </Box>
+                              </Box>
+                              </Box>
+                            </Box>
+                          </Box>
+                        ))
+                      : ""}
+                    {data?.length > 0 && (
+                      <Box className="total">
+                        <Box className="col-1">
+                          <Typography className="text_1">Subtotal :</Typography>
+                          <Typography className="text_2">
+                            &#8377;{data?.[0]?.subtotal}
+                          </Typography>
+                        </Box>
+        
+                        {data?.[0]?.discount_applied && (
+                          <Box className="col-1">
+                            <Typography className="text_1">
+                                <Tooltip
+                                  title="Discount coupon cost."
+                                  placement="bottom-end"
+                                  className="tooltip"
+                                >
+                                  <EmergencyIcon />
+                                </Tooltip>
+                              Coupon Cost :
+                            </Typography>
+                            <Typography className="text_2">&#8377; 30</Typography>
+                          </Box>
+                        )}
+        
+                        <Box className="col-1">
+                          <Typography className="text_1">Discount {data?.[0]?.discount_applied && `(${(data?.[0]?.discount_applied?.coupon_type)?.replace(/_/g,' ')})`} :</Typography>
+        
+                          <Typography className="text_2">
+                            -&#8377;{data?.[0]?.total_discount_amount}
+                          </Typography>
+                        </Box>
+        
+                        {/* <Box className="col-1">
+                          <Typography className="text_1">Platform Fees : </Typography>
+                          <Typography className="text_2">
+                            &#8377;
+                            {calcPlatformFees()}
+                          </Typography>
+                        </Box> */}
+        
+                        {/* {coHelper !== null && (
+                          <Box className="col-1">
+                            <Typography className="text_1">
+                              Co-helper ({coHelper?.co_helper_type})
+                            </Typography>
+                            <Typography className="text_2">
+                              &#8377;
+                              {coHelper?.offerings}
+                            </Typography>
+                          </Box>
+                        )} */}
+        
+                        <Box className="col-1">
+                          <Typography className="text_1">
+                            Total (Excluding GST):
+                          </Typography>
+        
+                         <Typography className="text_2">
+                              &#8377;
+                              {data?.[0]?.total_amount}
+                            </Typography>
+                        </Box>
+                      </Box>
+                    )}
+                  </Box>
         <Box className="board_pins">
           <Box className="circle"></Box>
           <Box className="circle"></Box>

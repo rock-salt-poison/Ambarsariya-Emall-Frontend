@@ -22882,6 +22882,55 @@ textarea[readonly] {
     box-shadow: none;
   }
 
+  &.crop_image{
+    .MuiPaper-root{
+      max-width: 100%;
+      width: 50%;
+      background-color: rgba($dark-yellow2, .85);
+      border-radius: 10px;
+
+      .heading{
+        @include homepage-buttons(
+          "Bobby-Jones-Soft",
+          20px,
+          $light-yellow,
+          "none"
+        );
+        @include hover-scale(1, 0s);
+        line-height: normal;
+      }
+
+      .MuiDialogContent-root{
+        padding: 0 15px;
+      }
+
+      .submit_button_container{
+        @include flex-center(row, center);
+        gap: 15px;
+      }
+      .submit_button {
+        background: $light-yellow;
+        @include homepage-buttons(
+          "Bobby-Jones-Soft",
+          18px,
+          $dark-yellow2,
+          "none"
+        );
+        @include hover-scale(1, 0s);
+        // margin: 0 auto 5px;
+        padding: 2px 15px;
+        border-radius: 8px;
+        transition: background-color 0.3s ease;
+      }
+    }
+
+    @media (max-width: 768px){
+      .MuiPaper-root{
+        width: 90%;
+      }
+    }
+  }
+
   &.special_offer_popup {
     .card_board_component {
       @include background-center-no-repeat($specialOfferBgImg);
@@ -25361,6 +25410,19 @@ textarea[readonly] {
           border-radius: 10px;
           align-self: stretch;
 
+          &.active{
+            background: rgba($yellow, .5);
+            box-shadow: 0px 0px 5px 0px rgba($brown-4, .65);
+
+            .heading{
+              color: $brown-4 !important;
+            }
+
+            .number{
+              color: $brown-4 !important;
+            }
+          }
+
           &.w-6 {
             width: 6em !important;
           }
@@ -27223,13 +27285,16 @@ textarea[readonly] {
         @include flex-center(row, space-between);
         gap: 10px;
 
-        @include homepage-buttons(
-          "Bobby-Jones-Soft",
-          20px,
-          $light-yellow,
-          "none"
-        );
-        @include hover-scale(1, 0s);
+        h6{
+          @include homepage-buttons(
+            "Bobby-Jones-Soft",
+            20px,
+            $light-yellow,
+            "none"
+          );
+          @include hover-scale(1, 0s);
+        }
+
       }
 
       .form-control {

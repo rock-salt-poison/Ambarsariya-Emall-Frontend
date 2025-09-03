@@ -23,6 +23,7 @@ import {
 } from "../../store/authSlice";
 import { setUsernameOtp } from "../../store/otpSlice";
 import ConfirmationDialog from "../ConfirmationDialog";
+import ImageCropperDialog from "./ImageCropperDialog";
 
 const UserPortfolioForm = () => {
   const initialFormData = {
@@ -72,6 +73,10 @@ const UserPortfolioForm = () => {
   
   const [isUsernameOtpSent, setIsUsernameOtpSent] = useState(false);
   const [isPhoneOtpSent, setIsPhoneOtpSent] = useState(false);
+
+  const [srcImg, setSrcImg] = useState(null);
+  const [fieldBeingEdited, setFieldBeingEdited] = useState(null);
+  const [openCropper, setOpenCropper] = useState(false);
 
   const fetchMemberData = async (memberToken) => {
     setLoading(true);
@@ -133,18 +138,54 @@ const UserPortfolioForm = () => {
     setErrorMessages((prevMessages) => ({ ...prevMessages, [name]: "" }));
   };
 
+  // const handleFileChange = (e) => {
+  //   const file = e.target.files[0];
+  //   const fieldName = e.target.name;
+
+  //   if (file) {
+  //     setFormData((prev) => ({ ...prev, [fieldName]: file }));
+  //     if (fieldName === "displayPicture") {
+  //       setSelectedDisplayFileName(file.name);
+  //     } else if (fieldName === "backgroundPicture") {
+  //       setSelectedBackgroundFileName(file.name);
+  //     }
+  //   }
+  // };
+
+
+    // handle file upload → open cropper
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     const fieldName = e.target.name;
 
     if (file) {
-      setFormData((prev) => ({ ...prev, [fieldName]: file }));
-      if (fieldName === "displayPicture") {
-        setSelectedDisplayFileName(file.name);
-      } else if (fieldName === "backgroundPicture") {
-        setSelectedBackgroundFileName(file.name);
-      }
+      const reader = new FileReader();
+      reader.addEventListener("load", () => {
+        setSrcImg(reader.result);
+        setFieldBeingEdited(fieldName);
+        setOpenCropper(true);
+      });
+      reader.readAsDataURL(file);
     }
+  };
+
+  // handle cropped image save
+  const handleSaveCroppedImage = (file) => {
+    setFormData((prev) => ({
+      ...prev,
+      [fieldBeingEdited]: file,
+    }));
+
+    if (fieldBeingEdited === "displayPicture") {
+      setSelectedDisplayFileName(file.name);
+    } else if (fieldBeingEdited === "backgroundPicture") {
+      setSelectedBackgroundFileName(file.name);
+    }
+
+    // close dialog
+    setOpenCropper(false);
+    setSrcImg(null);
+    setFieldBeingEdited(null);
   };
 
   const validateOtp = () => {
@@ -666,6 +707,14 @@ const UserPortfolioForm = () => {
           Submit
         </Button>}
       </Box>
+
+      <ImageCropperDialog
+        open={openCropper}
+        srcImg={srcImg}
+        aspect={fieldBeingEdited === "backgroundPicture" ? 16 / 9 : 1}
+        onClose={() => setOpenCropper(false)}
+        onSave={handleSaveCroppedImage}
+      />
 
       <ConfirmationDialog
         open={openDialog}
