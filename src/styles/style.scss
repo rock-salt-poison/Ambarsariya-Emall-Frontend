@@ -25157,6 +25157,15 @@ textarea[readonly] {
       .card_container{
         display: none;
       }
+
+      .table_container{
+        width: 100%;
+        overflow-x: auto;
+
+        &::-webkit-scrollbar{
+          height: 4px;
+        }
+      }
       &:nth-child(3){
       }
 
@@ -25170,6 +25179,7 @@ textarea[readonly] {
         padding: 10px 15px;
         border-radius: 10px;
         width: max-content;
+        max-width: 100%;
 
         .heading,
         .text {
@@ -25811,7 +25821,7 @@ textarea[readonly] {
           }
         }
 
-        .MuiTable-root{
+        .table_container{
           display: none;
         }
 

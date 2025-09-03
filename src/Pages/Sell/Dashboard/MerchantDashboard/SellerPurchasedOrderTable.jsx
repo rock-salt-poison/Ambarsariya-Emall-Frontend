@@ -743,6 +743,7 @@ function SellerPurchasedOrderTable({ purchasedOrders, selectedPO, cardType }) {
             <CircularProgress />
           </Box>
         )}
+        <Box className="table_container">
         <Table>
           <TableHead>
             <TableRow>
@@ -1168,7 +1169,7 @@ function SellerPurchasedOrderTable({ purchasedOrders, selectedPO, cardType }) {
             )}
           </TableBody>
         </Table>
-
+        </Box>
         <Box className="card_container">
           {updatedProducts.length > 0 ? (
             <Box className="card_header">

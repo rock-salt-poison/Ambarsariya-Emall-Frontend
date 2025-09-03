@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   CircularProgress,
+  Divider,
   InputAdornment,
   MenuItem,
   Select,
@@ -397,6 +398,8 @@ useEffect(()=>{
           <CircularProgress />
         </Box>
       )}
+
+      <Box className="table_container">
       <Table>
         <TableHead>
           <TableRow>
@@ -445,9 +448,9 @@ useEffect(()=>{
           {updatedProducts.map((row, index) => {
            
             const isHold = toggleStates[index] === "Hold";
-            const purchasedVariant = row.items
-              ?.find((i) => i?.item_id?.match(row.selected_variant))
-              ?.item_id?.split("_");
+            const purchasedVariant = row?.items
+                ?.find((i) => i?.item_id === row?.selected_variant)
+                ?.item_id?.split("_");
             // fetch_product_variants(row.seller_id, row.variant_group);
             return (
               <TableRow key={row.product_id} hover>
@@ -455,7 +458,7 @@ useEffect(()=>{
 
                 {/* Product Name Column - Dropdown if on Hold */}
                 <TableCell>
-                  {isHold ? (
+                  {/* {isHold ? (
                     <Select
                       value={
                         editedValues[index]?.selected_variant ||
@@ -479,12 +482,13 @@ useEffect(()=>{
                     </Select>
                   ) : (
                     `${purchasedVariant?.at(8)} - ${purchasedVariant?.at(10)}`
-                  )}
+                  )} */}
+                  {purchasedVariant?.at(8)} - {purchasedVariant?.at(10)}
                 </TableCell>
 
                 {/* Quantity Column - Input if on Hold */}
                 <TableCell width="45px">
-                  {isHold ? (
+                  {/* {isHold ? (
                     <TextField
                       type="number"
                       value={
@@ -502,12 +506,14 @@ useEffect(()=>{
                     />
                   ) : (
                     row.quantity_ordered
-                  )}
+                  )} */}
+
+                  {row.quantity_ordered}
                 </TableCell>
 
                 <TableCell>{row.items?.find((i)=>i.item_id===row.selected_variant)?.item_quantity}</TableCell>
                 <TableCell width="100px">
-                  {isHold ? (
+                  {/* {isHold ? (
                     <TextField
                       type="number"
                       value={editedValues[index]?.unit_price || row.unit_price}
@@ -529,7 +535,9 @@ useEffect(()=>{
                     />
                   ) : (
                     `₹ ${row.unit_price}`
-                  )}{" "}
+                  )} */}
+                  
+                  ₹{ row.unit_price}
                 </TableCell>
                 <TableCell>₹ {row.unit_price * row.quantity_ordered}</TableCell>
                 <TableCell>₹ {((row.unit_price * row.quantity_ordered) - row.discount_amount)?.toFixed(2)}</TableCell>
@@ -542,7 +550,7 @@ useEffect(()=>{
                     onChange={(event, newValue) =>
                       handleToggleChange(index, newValue)
                     }
-                    disabled={soExists}
+                    disabled={true}
                   >
                     <ToggleButton value="Deny" className="toggle" selected={(toggleStates[index] ?? row.status) === "Deny"}>
                       Deny
@@ -581,6 +589,336 @@ useEffect(()=>{
           )}
         </TableBody>
       </Table>
+
+      </Box>
+       <Box className="card_container">
+                {updatedProducts.length > 0 ? (
+                  <Box className="card_header">
+                    <Typography className="text_1">
+                      {updatedProducts.length > 0 && updatedProducts?.length} Products
+                    </Typography>
+      
+                    <Select
+                      value={
+                        updatedProducts?.[0]?.purchase_order_status ||
+                        headerToggleState
+                      }
+                      onChange={(e) => handleHeaderToggleChange(e, e.target.value)}
+                      fullWidth
+                      className="input_field select"
+                      disabled={
+                        true
+                      }
+                    >
+                      {["Deny", "Hold", "Accept"]?.map((option, index) => (
+                        <MenuItem key={index} value={option}>{option}</MenuItem>
+                      ))}
+                    </Select>
+                  </Box>
+                ): <Box className="card_header">
+                    <Typography className="text_1">
+                      0 Products
+                    </Typography>
+      
+                  </Box>}
+                <Box className="card_body">
+                  {updatedProducts.length > 0
+                    ? updatedProducts.map((row, index) => (
+                        <React.Fragment key={index}>
+                          <Box className="card">
+        <Box className="col">
+          <Box className="container">
+            {/* Product name / variant */}
+            <Box className="sub-col">
+              {toggleStates[index] === "Hold" ? (
+                <Select
+                  value={editedValues[index]?.selected_variant || row.selected_variant}
+                  onChange={(e) => handleItemChange(index, e.target.value, row)}
+                  fullWidth
+                  className="input_field select"
+                  disabled={true}
+                >
+                  {row.items?.map((i) => {
+                    const v = i.item_id?.split("_");
+                    return (
+                      <MenuItem key={i.item_id} value={i.item_id}>
+                        {`${v?.at(8) || "N/A"} - ${v?.at(10) || "N/A"}`}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              ) : (
+                <Typography className="text_1">{row.product_name}</Typography>
+              )}
+            </Box>
+      
+            {/* Quantity */}
+            <Box className="sub-col">
+              
+                <Typography className="text_1">
+                  <Typography className="text_1 subtitle" variant="span">Quantity: </Typography> {row.quantity_ordered}
+                </Typography>
+
+              <Typography className="text_1">
+                <Typography className="text_1 subtitle" variant="span">In Stock: </Typography>{row.items?.find((i) => i.item_id === row.selected_variant)?.item_quantity}
+              </Typography>
+            </Box>
+      
+            {/* Unit Price */}
+            <Box className="sub-col">
+              <Typography className="text_1">₹ {row.unit_price}</Typography>
+            </Box>
+      
+            {/* Total Price */}
+            <Box className="sub-col">
+              <Typography className="text_1">
+                <Typography className="text_1 subtitle" variant="span">Total: </Typography> ₹ {row.unit_price * row.quantity_ordered}
+              </Typography>
+            </Box>
+      
+            {/* Final SO Toggle */}
+            <Box className="sub-col">
+              <ToggleButtonGroup
+                value={toggleStates[index] ?? row.status ?? "Hold"}
+                exclusive
+                onChange={(event, newValue) => handleToggleChange(index, newValue)}
+                disabled={true}
+              >
+                <ToggleButton value="Deny" className="toggle">Deny</ToggleButton>
+                <ToggleButton value="Hold" className="toggle">Hold</ToggleButton>
+                <ToggleButton value="Accept" className="toggle">Accept</ToggleButton>
+              </ToggleButtonGroup>
+            </Box>
+          </Box>
+        </Box>
+      </Box>
+                          <Divider />
+                        </React.Fragment>
+                      ))
+                    : ""}
+                  {updatedProducts.length > 0 && updatedProducts?.[0]?.co_helper !== null && (
+                    <Box className="card">
+                      <Box className="col">
+                        <Box className="container">
+                          <Box className="sub-col">
+                            <Typography className="text_1 heading">
+                              Service
+                            </Typography>
+                          </Box>
+                          <Box className="sub-col">
+                            <Typography className="text_1">
+                              {updatedProducts?.[0]?.co_helper_type}
+                            </Typography>
+                          </Box>
+                          <Box className="sub-col">
+                            <Typography className="text_1">
+                              <Typography className="text_1 subtitle" variant="span">Estimated hrs : </Typography>  {updatedProducts?.[0]?.co_helper_estimated_hours}
+                            </Typography>
+                          </Box>
+                          <Box className="sub-col">
+                            <Typography className="text_1">
+                              <Typography className="text_1 subtitle" variant="span">Offering cost per hour : </Typography>{updatedProducts?.[0]?.co_helper_offerings}
+                            </Typography>
+                          </Box>
+                          <Box className="sub-col">
+                            <Typography className="text_1">
+                              <Typography className="text_1 subtitle" variant="span">GST </Typography>{parseFloat(
+                                updatedProducts?.[0]?.co_helper_offerings *
+                                  updatedProducts?.[0]?.co_helper_estimated_hours *
+                                  0.18
+                              )?.toFixed(2)}
+                            </Typography>
+                          </Box>
+                          <Box className="sub-col">
+                            <Typography className="text_1">
+                              <Typography className="text_1 subtitle" variant="span">Price : </Typography>{parseFloat(
+                                updatedProducts?.[0]?.co_helper_offerings *
+                                  updatedProducts?.[0]?.co_helper_estimated_hours
+                              )}
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </Box>
+                    </Box>
+                  )}
+                  {/* {updatedProducts?.length > 0 && (
+                            <Box className="total">
+                              <Box className="col-1">
+                                <Typography className="text_1">Subtotal :</Typography>
+                                <Typography className="text_2">
+                                  &#8377;{calculateTotal().toFixed(2)}
+                                </Typography>
+                              </Box>
+              
+                              {updatedProducts && (
+                                <Box className="col-1">
+                                  <Typography className="text_1">
+                                    {updatedProducts && calculateDiscount() < 30 && (
+                                      <Tooltip
+                                        title="Discount coupon cost."
+                                        placement="bottom-end"
+                                        className="tooltip"
+                                      >
+                                        <EmergencyIcon />
+                                      </Tooltip>
+                                    )}
+                                    Coupon Cost :
+                                  </Typography>
+                                  <Typography className="text_2">&#8377; 30</Typography>
+                                </Box>
+                              )}
+              
+                              <Box className="col-1">
+                                <Typography className="text_1">
+                                  {selectedCoupon && calculateDiscount() < 30 && (
+                                    <Tooltip
+                                      title="Discount adjusted to match coupon cost."
+                                      placement="bottom-end"
+                                      className="tooltip"
+                                    >
+                                      <EmergencyIcon />
+                                    </Tooltip>
+                                  )}{" "}
+                                  Discount{" "}
+                                  {selectedCoupon &&
+                                    `(${selectedCoupon.coupon_type?.replace(
+                                      /_/g,
+                                      " "
+                                    )})`}{" "}
+                                  :
+                                </Typography>
+              
+                                <Typography className="text_2">
+                                  -&#8377;{calculateDiscount().toFixed(2)}{" "}
+                                </Typography>
+                              </Box>
+              
+                              <Box className="col-1">
+                                <Typography className="text_1">Platform Fees : </Typography>
+                                <Typography className="text_2">
+                                  &#8377;
+                                  {calcPlatformFees()}
+                                </Typography>
+                              </Box>
+              
+                              {coHelper !== null && (
+                                <Box className="col-1">
+                                  <Typography className="text_1">
+                                    Co-helper ({coHelper?.co_helper_type})
+                                  </Typography>
+                                  <Typography className="text_2">
+                                    &#8377;
+                                    {coHelper?.offerings}
+                                  </Typography>
+                                </Box>
+                              )}
+              
+                              <Box className="col-1">
+                                <Typography className="text_1">
+                                  Total (Excluding GST):
+                                </Typography>
+              
+                                {selectedCoupon ? (
+                                  <Typography className="text_2">
+                                    &#8377;
+                                    {(
+                                      calculateTotal() -
+                                      (calculateDiscount() < 30 ? 30 : calculateDiscount()) +
+                                      30 +
+                                      calcPlatformFees()
+                                    ).toFixed(2)}
+                                  </Typography>
+                                ) : (
+                                  <Typography className="text_2">
+                                    &#8377;
+                                    {(calculateTotal() - calculateDiscount()).toFixed(2)}
+                                  </Typography>
+                                )}
+                              </Box>
+                            </Box>
+                          )} */}
+                </Box>
+      
+                {updatedProducts.length > 0 ? (
+                  <Box className="card_footer">
+                    <Box className="card">
+                      <Box className="col">
+                        <Box className="container">
+                          <Box className="sub-col">
+                            <Typography className="text_1">Product Subtotal:</Typography>
+                            <Typography className="text_1">₹ {total}</Typography>
+                          </Box>
+                        </Box>
+                      </Box>
+                    </Box>
+                    {/* <Divider />
+                    <Box className="card">
+                      <Box className="col">
+                        <Box className="container">
+                          <Box className="sub-col">
+                            <Typography className="text_1">GST (18%):</Typography>
+                            <Typography className="text_1">
+                              ₹ {(1 * 0.18)?.toFixed(2)}
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </Box>
+                    </Box> */}
+                    <Divider />
+                    <Box className="card">
+                      <Box className="col">
+                        <Box className="container">
+                          <Box className="sub-col">
+                            <Typography className="text_1">Service Subtotal:</Typography>
+                            <Typography className="text_1">
+                              ₹ {(parseFloat(
+                                  updatedProducts?.[0]?.co_helper_offerings *
+                                    updatedProducts?.[0]?.co_helper_estimated_hours
+                                ) +
+                                parseFloat(
+                                  updatedProducts?.[0]?.co_helper_offerings *
+                                    updatedProducts?.[0]?.co_helper_estimated_hours *
+                                    0.18
+                                ))?.toFixed(2)}
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </Box>
+                    </Box>
+                    <Divider />
+      
+                    <Box className="card">
+                      <Box className="col">
+                        <Box className="container">
+                          <Box className="sub-col">
+                            <Typography className="text_1">Total:</Typography>
+                            <Typography className="text_1">
+                              ₹{" "}
+                              {(
+                                parseFloat(total) +
+                                // parseFloat(1 * 0.18) +
+                                parseFloat(
+                                  updatedProducts?.[0]?.co_helper_offerings *
+                                    updatedProducts?.[0]?.co_helper_estimated_hours
+                                ) +
+                                parseFloat(
+                                  updatedProducts?.[0]?.co_helper_offerings *
+                                    updatedProducts?.[0]?.co_helper_estimated_hours *
+                                    0.18
+                                )
+                              )?.toFixed(2)}
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </Box>
+                    </Box>
+                    
+                    
+                  </Box>
+                ) : (
+                  ""
+                )}
+              </Box>
       <CustomSnackbar
         open={snackbar.open}
         handleClose={() => setSnackbar({ ...snackbar, open: false })}
