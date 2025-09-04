@@ -12113,6 +12113,7 @@ a {
       padding: 20px;
 
       .col {
+        display: flex !important;
         &:last-child{
           flex-direction: column;
           .offers {
@@ -12154,8 +12155,9 @@ a {
               gap: 10px;
               align-self: stretch;
               place-items: self-start;
-
+              
               .col{
+                display: flex !important;
                 width: max-content;
 
                 .product_image{
