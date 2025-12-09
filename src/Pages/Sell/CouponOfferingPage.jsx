@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Box, ThemeProvider, Typography } from "@mui/material";
+import { Box, CircularProgress, ThemeProvider, Typography } from "@mui/material";
 import Button2 from "../../Components/Home/Button2";
 import Board from "../../Components/CouponOffering/Board";
 import boardImg from "../../Utils/images/Sell/coupon_offering_page/board.svg";
 import Offers from "../../Components/CouponOffering/Offers";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import createCustomTheme from "../../styles/CustomSelectDropdownTheme";
 import RetailerPopupContent from "../../Components/CouponOffering/RetailerPopupContent";
 import LoyaltyPopupContent from "../../Components/CouponOffering/LoyaltyPopupContent";
@@ -14,6 +14,8 @@ import RsTenPerDayContent from "../../Components/CouponOffering/RsTenPerDayConte
 import { useDispatch, useSelector } from "react-redux";
 import UserBadge from "../../UserBadge";
 import { addCoupon } from "../../store/couponsSlice";
+import { getUser, post_discount_coupons } from "../../API/fetchExpressAPI";
+import CustomSnackbar from "../../Components/CustomSnackbar";
 
 const OFFER_TYPES = [
   {
@@ -59,7 +61,13 @@ function CouponOfferingPage(props) {
   const [rsPerDay, setRsPerDay] = useState(0);
   const dispatch = useDispatch();
   const coupons = useSelector((state) => state.coupon);
-
+  const [loading, setLoading] = useState(false);
+  const [eshop, setEshop]=useState("");
+const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
   const retailerCoupon = useSelector((state) => state.coupon.retailer);
   const loyaltyCoupon = useSelector((state) => state.coupon.loyalty);
   const subscriptionCoupon = useSelector((state) => state.coupon.subscription);
@@ -80,6 +88,7 @@ function CouponOfferingPage(props) {
   };
 
   const theme = createCustomTheme(themeProps);
+  const {token} = useParams();
 
   // const handleClick = (e, type) => {
   //   const offerBox = e.target.closest('.offer_box');
@@ -147,7 +156,29 @@ function CouponOfferingPage(props) {
   //   }
   // };
 
-  const handleClick = (e, type) => {
+  useEffect(() => {
+      const fetchData = async () => {
+        if (token) {
+          try {
+            setLoading(true);
+            let users = await getUser(token);
+            let shop = users.find((u) => u.shop_no !== null);
+            console.log(shop);
+  
+            if (shop?.shop_access_token) {
+              setEshop(shop);
+            }
+          } catch (e) {
+            console.log(e);
+          } finally {
+            setLoading(false);
+          }
+        }
+      };
+      fetchData();
+    }, [token]);
+
+  const handleClick = async (e, type) => {
     const offerBox = e.target.closest(".offer_box");
     const rs_per_day = e.target && e.target.classList.contains("rs_per_day");
     const makeAWish = e.target.closest(".make_a_wish");
@@ -163,10 +194,61 @@ function CouponOfferingPage(props) {
     } else if (offerBox) {
       offerBox.classList.add("reduceSize3");
 
-      setTimeout(() => {
+      setTimeout(async () => {
         offerBox.classList.remove("reduceSize3");
         if (makeAWish) {
-          setTimeout(() => navigate("../book-eshop"), 600);
+          if(token){
+              const validityStart = new Date();
+  
+                // Format validity_start as 'YYYY-MM-DD'
+                const formattedValidityStart = validityStart
+                  .toLocaleString()
+                  .split("T")[0];
+  
+                // Calculate validity_end as one year after validity_start
+                const validityEnd = new Date(validityStart);
+                validityEnd.setFullYear(validityStart.getFullYear() + 1);
+  
+                // Format validity_end as 'YYYY-MM-DD'
+                const formattedValidityEnd = validityEnd
+                  .toLocaleString()
+                  .split("T")[0];
+  
+                const coupons_data = {
+                  validity_start: formattedValidityStart,
+                  validity_end: formattedValidityEnd,
+                  data: coupons,
+                };
+  
+                console.log(coupons_data);
+
+                try{
+                  setLoading(true);
+                  const discount_coupons = await post_discount_coupons(
+                    coupons_data,
+                    eshop.shop_no
+                  );
+    
+                  console.log(discount_coupons);
+                  setSnackbar({
+                    open: true,
+                    message: discount_coupons.message,
+                    severity: "success",
+                  });
+                  setTimeout(()=>{navigate(-1)}, 300);
+                }
+                catch(e){
+                  setSnackbar({
+                    open: true,
+                    message: e.message,
+                    severity: "error",
+                  });
+                }finally{
+                  setLoading(false);
+                }
+          }else{
+            setTimeout(() => navigate("../book-eshop"), 600);
+          }
         }
       }, 300);
 
@@ -213,6 +295,8 @@ function CouponOfferingPage(props) {
       if (rs_per_day && rsPerDay < 10) {
         setRsPerDay(10);
       }
+      
+      
     }
 
     console.log("Updated Heights:", updatedHeights);
@@ -245,6 +329,7 @@ function CouponOfferingPage(props) {
 
   return (
     <ThemeProvider theme={theme}>
+      {loading && <Box className="loading"><CircularProgress /></Box> }
       <Box className="coupon_offering_wrapper">
         <Box className="row">
           <Box className="col">
@@ -314,6 +399,12 @@ function CouponOfferingPage(props) {
           </Box>
         </Box>
       </Box>
+      <CustomSnackbar
+              open={snackbar.open}
+              handleClose={() => setSnackbar({ ...snackbar, open: false })}
+              message={snackbar.message}
+              severity={snackbar.severity}
+            />
     </ThemeProvider>
   );
 }
