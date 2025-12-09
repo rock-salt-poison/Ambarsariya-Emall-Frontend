@@ -9,6 +9,7 @@ import 'swiper/css/pagination';
 
 // Import required modules
 import { Autoplay, EffectCube, Pagination } from 'swiper/modules';
+import dayjs from 'dayjs';
 
 function DiscountPercentageSlider({ setOpenPopup, data }) {
 
@@ -218,36 +219,39 @@ function DiscountPercentageSlider({ setOpenPopup, data }) {
 
       case 'sale_for_stock_clearance': {
         const price = findCondition('price') ;
-        const dateRange = findCondition('sale_for_stock_clearance_date_range');
+        const dateRange = JSON.parse(findCondition('sale_for_stock_clearance_date_range'));
         const sku_no = findCondition('sku_no');
+        const displayValue = `${dayjs(dateRange[0]).format('YYYY-MM-DD')} to ${dayjs(dateRange[1]).format('YYYY-MM-DD')}`;
 
         return (
           <>
             <Box className="discount_details">
-              <Typography className="text_3">sale for stock clearance</Typography>
-              <Typography className="text_3">{price}</Typography>
-              <Typography className="text_3">Valid : {dateRange}</Typography>
-              <Typography className="text_3">{sku_no}</Typography>
+              <Typography className="text_1">sale for stock clearance</Typography>
+              <Typography className="text_3">price : <Typography className="text_2" variant="span">{price}</Typography> </Typography>
+              <Typography className="text_3">valid : <Typography className="text_1" variant='span'>{displayValue}</Typography></Typography>
+              <Typography className="text_3">sku no. : <Typography className="text_1" variant='span'>{sku_no}</Typography></Typography>
             </Box>
           </>
         );
       }
 
       case 'hot_sale': {
-        const product_type = findCondition('product_type');
-        const discounted_price = findCondition('price') ;
-        const dateRange = findCondition('hot_sale_date_range');
+        const product_type = JSON.parse(findCondition('product_type')).join(', ');
+        const discounted_price = findCondition('discounted_price') ;
+        const dateRange = JSON.parse(findCondition('hot_sale_date_range'));
         const sale_price = findCondition('sale_price');
         const show_price = findCondition('show_price');
+        const displayValue = `${dayjs(dateRange[0]).format('YYYY-MM-DD')} to ${dayjs(dateRange[1]).format('YYYY-MM-DD')}`;
 
         return (
           <>
             <Box className="discount_details">
-              <Typography className="text_3">{product_type}</Typography>
-              <Typography className="text_3">{show_price}</Typography>
-              <Typography className="text_3">{sale_price}</Typography>
-              <Typography className="text_3">{discounted_price}</Typography>
-              <Typography className="text_3">Valid : {dateRange}</Typography>
+              <Typography className="text_3">type : <Typography className="text_1" variant='span'>{product_type}</Typography></Typography>
+              <Typography className="text_3">price : <Typography className="text_1" variant='span'>{show_price}</Typography> </Typography>
+              <Typography className="text_3">sale price : <Typography className="text_1" variant='span'>{sale_price}</Typography></Typography>
+              <Typography className="text_3">discounted price : <Typography className="text_1" variant='span'>{discounted_price}</Typography></Typography>
+              <Typography className="text_3">valid : <Typography className="text_1" variant='span'>{displayValue}</Typography>
+                </Typography>
             </Box>
           </>
         );
@@ -255,15 +259,16 @@ function DiscountPercentageSlider({ setOpenPopup, data }) {
 
       case 'festivals_sale': {
         const festivalName = findCondition('festival_name') || 'Festival';
-        const dateRange = (findCondition('festivals_sale_date_range'));
+        const dateRange = JSON.parse(findCondition('festivals_sale_date_range'));
         const offer = findCondition('offer');
+        const displayValue = `${dayjs(dateRange[0]).format('YYYY-MM-DD')} to ${dayjs(dateRange[1]).format('YYYY-MM-DD')}`;
 
         return (
           <>
             <Box className="discount_details">
-              <Typography className="text_1">{festivalName}</Typography>
-              <Typography className="text_3">Valid : {dateRange}</Typography>
-              <Typography className="text_3">{offer}</Typography>
+              <Typography className="text_1">{festivalName} Sale</Typography>
+              <Typography className="text_3">offer : <Typography className="text_2" variant='span'>{offer}</Typography> </Typography>
+              <Typography className="text_3">valid : <Typography className="text_1" variant='span'>{displayValue}</Typography></Typography>
             </Box>
           </>
         );

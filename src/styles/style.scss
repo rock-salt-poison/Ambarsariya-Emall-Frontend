@@ -6621,6 +6621,10 @@ a {
                   color: $yellow;
                   font-size: 18px;
                 }
+
+                span.text_1, span.text_2{
+                  font-size: 22px;
+                }
               }
             }
 
@@ -26519,54 +26523,61 @@ textarea[readonly] {
         min-width: 175px;
       }
 
-      .field_container {
-        flex: 1;
-
-        .MuiInputBase-input {
-          padding: 0px;
-
-          &.Mui-disabled {
-            -webkit-text-fill-color: #000;
-          }
-        }
-
-        .input_field {
-          width: 100%;
-          border-radius: 8px;
-        }
-
-        .MuiSelect-select,
-        .MuiInputBase-input {
-          padding: 3px 10px 3px 0px;
-          border: 0px;
-          @include homepage-buttons("Bobby-Jones-Soft", 17px, $black, "none");
-          @include hover-scale(1, 0s);
-        }
-
-        .MuiOutlinedInput-notchedOutline {
-          border: 0px;
-        }
-
-        .MuiInputBase-root.MuiOutlinedInput-root {
-          border-radius: 8px;
-          color: $black !important;
-          background: #90a4bd !important;
-          padding: 0px 0px 0px 10px;
-        }
-
-        .updated-field {
-          background-color: $blue !important;
-          color: $light-yellow !important;
-
-          .MuiInputBase-root.MuiOutlinedInput-root {
+      .form-group{
+        .field_container {
+          
+  
+          .updated-field {
             background-color: $blue !important;
-          }
-
-          .MuiInputBase-input {
             color: $light-yellow !important;
+  
+            .MuiInputBase-root.MuiOutlinedInput-root {
+              background-color: $blue !important;
+            }
+  
+            .MuiInputBase-input {
+              color: $light-yellow !important;
+            }
           }
         }
       }
+.field_container {
+          flex: 1;
+  
+          .MuiInputBase-input {
+            padding: 0px;
+  
+            &.Mui-disabled {
+              -webkit-text-fill-color: #000;
+            }
+          }
+  
+          .input_field {
+            width: 100%;
+            border-radius: 8px;
+          }
+  
+          .MuiSelect-select,
+          .MuiInputBase-input {
+            padding: 3px 10px 3px 0px;
+            border: 0px;
+            @include homepage-buttons("Bobby-Jones-Soft", 17px, $black, "none");
+            @include hover-scale(1, 0s);
+          }
+  
+          .MuiOutlinedInput-notchedOutline {
+            border: 0px;
+          }
+  
+          .MuiInputBase-root.MuiOutlinedInput-root {
+            border-radius: 8px;
+            color: $black !important;
+            background: #90a4bd !important;
+            padding: 0px 0px 0px 10px;
+          }
+  
+         
+        }
 
       .form-control {
         @include flex-center(column, flex-start);

@@ -12,7 +12,7 @@ import {
     Typography,
     FormHelperText,
 } from '@mui/material';
-import { DateRangePicker } from 'rsuite';
+import DateRangePicker from 'rsuite/esm/DateRangePicker';
 import { useDispatch, useSelector } from 'react-redux';
 import { addCoupon } from '../../store/couponsSlice';
 import createCustomTheme from '../../styles/CustomSelectDropdownTheme';
@@ -20,6 +20,17 @@ import CustomSnackbar from '../CustomSnackbar';
 
 function CheckboxGroup({ label, name, fields, values = {}, onChange, errors }) {
     console.log('CheckboxGroup values:', values); // Debug values
+    const parseValue = (value) => {
+        if (!value) return []; // null or undefined
+        if (Array.isArray(value)) return value; // already parsed
+        try {
+            const parsed = JSON.parse(value);
+            return Array.isArray(parsed) ? parsed : [];
+        } catch (e) {
+            return []; // fallback for invalid JSON
+        }
+    };
+
 
     return (
         <Box className="checkbox-group">
@@ -51,7 +62,7 @@ function CheckboxGroup({ label, name, fields, values = {}, onChange, errors }) {
                                                 key={index}
                                                 name={fieldName}
                                                 multiple
-                                                value={values[field.name] || []} // Use default or provided value
+                                                value={parseValue(values[field.name]) || []} // Use default or provided value
                                                 onChange={(event) =>
                                                     onChange({ target: { name: fieldName, value: event.target.value } })
                                                 }
@@ -76,10 +87,12 @@ function CheckboxGroup({ label, name, fields, values = {}, onChange, errors }) {
                                                 key={index}
                                                 name={fieldName}
                                                 value={
-                                                    values[field.name]
-                                                        ? values[field.name].map((date) => new Date(date))
-                                                        : []
+                                                    parseValue(values[field.name]).map((date) =>
+                                                        new Date(new Date(date).toLocaleString("en-US", { timeZone: "Asia/Kolkata" }))
+                                                    )
                                                 }
+                                                showOneCalendar
+                                                ranges={[]}
                                                 onChange={(range) =>
                                                     onChange({
                                                         target: { name: fieldName, value: range },
@@ -115,7 +128,7 @@ function CheckboxGroup({ label, name, fields, values = {}, onChange, errors }) {
 }
 
 
-function CustomizablePopupContent({onClose}) {
+function CustomizablePopupContent({ onClose }) {
     const [formData, setFormData] = useState({
         sale_for_stock_clearance: { checked: false, sku_no: '', price: '', sale_for_stock_clearance_date_range: [] },
         festivals_sale: { checked: false, festival_name: '', offer: '', festivals_sale_date_range: [] },
@@ -132,11 +145,11 @@ function CustomizablePopupContent({onClose}) {
 
     const [errors, setErrors] = useState({});
     const dispatch = useDispatch();
-    const customizableCoupon = useSelector((state) => state.coupon.customizable); 
+    const customizableCoupon = useSelector((state) => state.coupon.customizable);
     const [snackbar, setSnackbar] = useState({
-      open: false,
-      message: "",
-      severity: "success",
+        open: false,
+        message: "",
+        severity: "success",
     });
 
     const handleInputChange = (event) => {
@@ -170,47 +183,52 @@ function CustomizablePopupContent({onClose}) {
     //     setErrors(newErrors);
     //     return Object.keys(newErrors).length === 0;
     // };
-    
+
 
     const handleSubmit = (event) => {
         event.preventDefault();
-    
+
         // Format the date ranges and prepare the data
         const formattedDiscounts = { ...formData };
-    
+
         Object.keys(formattedDiscounts).forEach((category) => {
             const data = formattedDiscounts[category];
             if (data.checked) {
                 Object.keys(data).forEach((key) => {
+                    const value = data[key];
                     if (key.includes('date_range') && Array.isArray(data[key])) {
                         // Convert Date objects to strings
-                        formattedDiscounts[category][key] = data[key].map((date) =>
+                        formattedDiscounts[category][key] = JSON.stringify(data[key].map((date) =>
                             date instanceof Date ? date.toISOString() : date
-                        );
+                        ));
+                    }
+
+                    if (Array.isArray(value) && !key.includes('date_range')) {
+                        formattedDiscounts[category][key] = JSON.stringify(value);
                     }
                 });
             }
         });
-    
-            dispatch(
-                addCoupon({
-                    type: 'customizable',
-                    coupon: { id: Date.now(), discounts: formattedDiscounts },
-                })
-            );
 
-            setSnackbar({
-                open: true,
-                message: "Form Submitted successfully.",
-                severity: "success",
-            });
-            setTimeout(()=>{
-            if(onClose){
+        dispatch(
+            addCoupon({
+                type: 'customizable',
+                coupon: { id: Date.now(), discounts: formattedDiscounts },
+            })
+        );
+
+        setSnackbar({
+            open: true,
+            message: "Form Submitted successfully.",
+            severity: "success",
+        });
+        setTimeout(() => {
+            if (onClose) {
                 onClose();
             }
-            }, 1500)
+        }, 1500)
     };
-    
+
 
     const saleOptions = [
         {
@@ -219,7 +237,7 @@ function CustomizablePopupContent({onClose}) {
             fields: [
                 { name: 'sku_no', placeholder: 'Enter SKU No.', type: 'text', required: true },
                 { name: 'price', placeholder: 'Enter Price', type: 'text', required: true },
-                { name: 'date_range', type: 'date-range' },
+                { name: 'sale_for_stock_clearance_date_range', type: 'date-range' },
             ],
         },
         {
@@ -261,7 +279,7 @@ function CustomizablePopupContent({onClose}) {
         }
     }, [customizableCoupon]);
 
-    
+
     const theme = createCustomTheme({
         popoverBackgroundColor: 'var(--lightYellow)',
         dialogBackdropColor: 'var(--brown-4)',

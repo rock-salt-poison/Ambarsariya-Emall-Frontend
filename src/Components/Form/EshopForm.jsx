@@ -88,7 +88,7 @@ const EshopForm = () => {
           ?.map((shop_no) =>
             resp.filter((othershops) => othershops.shop_no === shop_no)
           )
-          .map((key_players) => key_players[0].business_name);
+          .map((key_players) => key_players[0]?.business_name);
 
         // const selected_similar_options = shopUsersData.similar_options
         //   ?.map((shop_no) =>
@@ -520,7 +520,7 @@ const EshopForm = () => {
           "url",
           "",
           "Add gmeet link",
-          edit && true
+          // edit && true
         )}
         <Box className="form-group2">
           {/* {renderFormField(
