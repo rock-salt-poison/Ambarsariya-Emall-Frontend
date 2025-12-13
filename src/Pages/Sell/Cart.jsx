@@ -235,7 +235,7 @@ function Cart() {
         //     setBuyerData(shopData[0]);
         //   }
         // } 
-        if (visitorUser.user_type === 'visitor') {
+        if (visitorUser?.user_type === 'visitor') {
           const visitorData = await get_visitorData(visitorUser.user_access_token);
           
           if (visitorData.valid) {            
