@@ -12,6 +12,7 @@ import CityJunctions from "../Pages/Socialize/CityJunctions";
 import TermsAndConditions from "../Pages/Socialize/TermsAndConditions";
 import CoHelpers from "../Pages/Socialize/CoHelpers";
 import Jobs_offered from "../Pages/Serve/Jobs_offered";
+import ConnectWithUtilities from "../Pages/Socialize/ConnectWithUtilities";
 
 function SocializeRoutes() {
   const token = useSelector((state) => state.auth.userAccessToken);
@@ -115,6 +116,15 @@ function SocializeRoutes() {
           <ProtectedRoute
             shopElement={<Jobs_offered />}
             memberElement={<Jobs_offered />}
+          />
+        }
+      />
+      <Route
+        path="/city-junctions/connect-with-utilities"
+        element={
+          <ProtectedRoute
+            shopElement={<ConnectWithUtilities />}
+            memberElement={<ConnectWithUtilities />}
           />
         }
       />

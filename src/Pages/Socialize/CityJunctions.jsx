@@ -39,6 +39,8 @@ function CityJunctions() {
                     navigate('../city-junctions/co-helpers')
                 }else if(target.classList.contains('work_from_home')){
                     navigate('../city-junctions/jobs-offered')
+                }else if(target.classList.contains('connect_with_utilities')){
+                    navigate('../city-junctions/connect-with-utilities')
                 }
             }, 600)
         }else if(title){
