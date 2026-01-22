@@ -29562,7 +29562,7 @@ textarea[readonly] {
                   background-color: $white;
 
                 .table_fit_name {
-                  @include homepage-buttons("Arial", 24px !important, $black, "none");
+                  @include homepage-buttons("Arial", 20px !important, $black, "none");
                   @include hover-scale(1, 0s);
                   font-weight: bold;
 
