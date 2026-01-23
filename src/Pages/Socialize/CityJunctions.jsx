@@ -40,7 +40,7 @@ function CityJunctions() {
                 }else if(target.classList.contains('work_from_home')){
                     navigate('../city-junctions/jobs-offered')
                 }else if(target.classList.contains('connect_with_utilities')){
-                    navigate('../city-junctions/connect-with-utilities')
+                    navigate('../city-junctions/utilities-main')
                 }
             }, 600)
         }else if(title){
