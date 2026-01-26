@@ -29527,8 +29527,9 @@ textarea[readonly] {
 
           .MuiTable-root {
             background: #706556;
-            border: 1px solid #706556;
+            // border: 1px solid #706556;
             border-spacing: 1px;
+            border-collapse: separate;
             .MuiTableHead-root {
               background: $light-yellow;
 
@@ -29550,9 +29551,7 @@ textarea[readonly] {
                         white-space: nowrap;
                       }
                     }
-                    padding: 15px 10px;
-
-
+                    padding: 10px 20px;
                   }
                 }
               }
@@ -29560,23 +29559,39 @@ textarea[readonly] {
 
             .MuiTableBody-root {
               .MuiTableRow-root {
-                  background-color: $white;
+                transition: all 0.3s ease;
+                background-color: $white;
+                cursor: pointer;
 
-                .table_fit_name {
-                  @include homepage-buttons("Arial", 20px !important, $black, "none");
-                  @include hover-scale(1, 0s);
-                  font-weight: bold;
+                // Selected/Highlighted row state
+                &.highlighted_row {
+                  background-color: rgba($white, 0.94);
+                  box-shadow: 0px 2px 8px rgba(237, 169, 52, 0.4);
 
-                  text-align: center;
-                  padding: 15px;
+                  .MuiTableCell-root {
+                    // background-color: rgba($white, 0.94);
+                  }
+
+                 
                 }
 
+                .table_fit_name {
+                  @include homepage-buttons("Arial", 18px !important, $black, "none");
+                  @include hover-scale(1, 0s);
+                  font-weight: bold;
+                  
+                  text-align: center;
+                  padding: 15px;
+                  transition: all 0.3s ease;
+                }
+                
                 .MuiTableCell-root {
                   @include homepage-buttons("Arial", 14px, $black, "none");
                   @include hover-scale(1, 0s);
                   text-align: center;
-                  padding: 15px 10px;
+                  padding: 10px 20px;
                   vertical-align: top;
+                  transition: all 0.3s ease;
 
                   &:last-child {
                     border-right: none;
@@ -29585,6 +29600,7 @@ textarea[readonly] {
                   .service_item {
                     margin-bottom: 8px;
                     line-height: 1.4;
+                    font-size: 14px;
 
                     &:last-child {
                       margin-bottom: 0;
@@ -29659,12 +29675,12 @@ textarea[readonly] {
   box-sizing: border-box;
   border: 0px solid transparent;
   border-image: url(#{$utilitiesBorderImg}) 1 fill;
-  border-image-slice: 23% 28%;
-  border-image-width: 21%;
-  border-right-width: 160px;
-  border-top-width: 133px;
-  border-left-width: 167px;
-  border-bottom-width: 192px;
+  border-image-slice: 34% 24%;
+  border-image-width: 250px;
+  border-right-width: 165px;
+  border-top-width: 142px;
+  border-left-width: 175px;
+  border-bottom-width: 206px;
   border-image-repeat: stretch;
   border-image-outset: 0;
 
@@ -29674,20 +29690,28 @@ textarea[readonly] {
     width: 100%;
     max-width: 100%;
     margin: 0 auto;
-    padding: 40px;
+    padding: 30px;
     @include flex-center(column, space-between);
-    gap: 20px;
+    gap: 30px;
     place-items: normal;
     @include background-center-no-repeat($utilitiesBgImg);
     background-size: cover;
     background-position: center;
 
-
     .utilities_header {
       width: 100%;
-      display: flex;
-      justify-content: flex-end;
-      align-items: flex-start;
+      @include flex-center(row, space-between);
+
+      .icon_container {
+        width: max-content;
+        margin-left: auto;
+
+        .icon {
+          width: 80px;
+          filter: drop-shadow(2px 4px 6px $black);
+          @include hover-scale(1.1, 0.4s);
+        }
+      }
     }
 
     .utilities_cards_container {

@@ -1,15 +1,29 @@
 import React, { useState } from "react";
-import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
+import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from "@mui/material";
 import UserBadge from "../../UserBadge";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import hornSound from "../../Utils/audio/horn-sound.mp3";
 import quote from "../../Utils/images/Socialize/city_junctions/connect_with_utilities/quotes.png";
 import CheckIcon from '@mui/icons-material/Check';
+import FormField from "../../Components/Form/FormField";
 
 function ConnectWithUtilities() {
   const [audio] = useState(new Audio(hornSound));
   const [activeFit, setActiveFit] = useState("standard"); // Default to first card
+
+  const [isAgreed, setIsAgreed] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+   
+    // navigate or other logic
+    console.log("Form submitted");
+  };
+
+  const handleCheckboxChange = (e) => {
+    setIsAgreed(e.target.checked);
+  };
 
   const handleCardClick = (fitType) => {
     audio.play();
@@ -62,14 +76,16 @@ function ConnectWithUtilities() {
   const tableData = [
     {
       fit: "Standard Fit",
+      fitId: "standard",
       connect: "",
-      services: ["Table Away", "Pick-up", "Delivery", "Home Visit"],
+      services: ["Take Away", "Pick-up", "Delivery", "Home Visit"],
       enhanced: "Inventory Management",
       edge: "Connect your payable / Receivable via Bank UPI",
       spark: "Connect your invoices for daily sale & purchase"
     },
     {
       fit: "Custom Fit",
+      fitId: "custom",
       connect: "",
       services: ["Co-helpers", "Pre-Paid", "Post Paid", "MoU"],
       enhanced: "Shop (Management) Financial / HR / \nSupplier / Supply / Stock Management",
@@ -78,13 +94,19 @@ function ConnectWithUtilities() {
     },
     {
       fit: "Taylor Fit",
+      fitId: "taylor",
       connect: "",
-      services: ["Domains", "Social", "Category Specific"],
+      services: ["Domain", "Sector", "Category Specific"],
       enhanced: "Synthetic, Real, Scientific Data.",
       edge: "MoU, CRM, Sure 100 % Growth",
       spark: "4 Years ERP. Set Flag After 4 Years"
     }
   ];
+
+  // Function to check if a row should be highlighted
+  const isRowHighlighted = (fitId) => {
+    return activeFit === fitId;
+  };
 
   return (
     <Box className="connect_with_utilities_wrapper">
@@ -196,7 +218,10 @@ function ConnectWithUtilities() {
               </TableHead>
               <TableBody>
                 {tableData.map((row, index) => (
-                  <TableRow key={index}>
+                  <TableRow 
+                    key={index}
+                    className={isRowHighlighted(row.fitId) ? "highlighted_row" : ""}
+                  >
                     <TableCell className="table_fit_name">{row.fit || ""}</TableCell>
                     <TableCell>
                       {Array.isArray(row.services) ? (
@@ -245,7 +270,24 @@ function ConnectWithUtilities() {
             className="quotes end"
           />
         </Box>
-        
+        <Box component="form" autoComplete="off" onSubmit={handleSubmit}>
+          <FormField
+            label={"I have read and agree to the Terms and Conditions."}
+            name={"checkbox"}
+            type={"checkbox"}
+            onChange={(e) => {
+              handleCheckboxChange(e);
+            }}
+            className="text"
+            required={true}
+          />
+
+          <Box className="submit_button_container">
+            <Button type="submit" variant="contained" className="submit_button">
+              Submit
+            </Button>
+          </Box>
+        </Box>
       </Box>
     </Box>
   );
