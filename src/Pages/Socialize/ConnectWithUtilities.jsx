@@ -29,9 +29,9 @@ function ConnectWithUtilities() {
       subtitle: "Perfect for general business needs.",
       features: [
         "Product Listings",
-        "GST Invoices",
+        "GST Invoice",
         "Inventory Management",
-        "Order DP"
+        "SHOP QR"
       ]
     },
     {
@@ -40,9 +40,9 @@ function ConnectWithUtilities() {
       subtitle: "Tailored to your specific requirements.",
       features: [
         "Product Identifiers",
-        "MRP, Supplier Price, Warranty",
-        "ASN/GRN/SRN",
-        "Finance, Compliance, Production, Store"
+        "MoU, Selection Process, Ranking",
+        "40 % Growth SET",
+        "Finance, Co-helpers, Price-Books, Store."
       ]
     },
     {
@@ -50,11 +50,11 @@ function ConnectWithUtilities() {
       title: "Taylor Fit",
       subtitle: "Premium solution for enterprise needs.",
       features: [
-        "Dealer Base Category Specific",
-        "SYNCH, BSN, SCM/CRM",
-        "CPN, MOLD/ERP, 100% Growth, JIT",
-        "Production and Pre-Audit Selections",
-        "4 Years ERP, JIT Target Achievement >40%"
+        "Domain Sector Category Specific",
+        "Synthetic, Real, Scientific Data",
+        "CRM, MOU, ERP 100% Growth SET",
+        "Formulated and Pre-Fault Detections",
+        "4 Years ERP SET Target Achievement ~97%"
       ]
     }
   ];
