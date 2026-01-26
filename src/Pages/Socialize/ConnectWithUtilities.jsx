@@ -63,26 +63,26 @@ function ConnectWithUtilities() {
     {
       fit: "Standard Fit",
       connect: "",
-      services: ["Table Away", "Parking", "Delivery", "Home Visit"],
+      services: ["Table Away", "Pick-up", "Delivery", "Home Visit"],
       enhanced: "Inventory Management",
       edge: "Connect your payable / Receivable via Bank UPI",
-      spark: "Curated your invoices for daily sale & purchase"
+      spark: "Connect your invoices for daily sale & purchase"
     },
     {
       fit: "Custom Fit",
       connect: "",
-      services: ["Co-Workers", "For-Paid", "Post Paid", "SKU"],
-      enhanced: "Shop Management Financial / HR / \nSuppliers / Supply Stock Management",
+      services: ["Co-helpers", "Pre-Paid", "Post Paid", "MoU"],
+      enhanced: "Shop (Management) Financial / HR / \nSupplier / Supply / Stock Management",
       edge: "Analytics & Relations / CRM / Campaigns",
-      spark: "Create \"Mall\" Supply & Supplier's Chain."
+      spark: "Create \"MoU\" Supply & Suppliers Chain."
     },
     {
       fit: "Taylor Fit",
       connect: "",
       services: ["Domains", "Social", "Category Specific"],
-      enhanced: "Bond, Scientific Data.",
-      edge: "M-I, CRM, Sure 100 % Growth",
-      spark: "4 Years ERP, But Flag After 4 Years"
+      enhanced: "Synthetic, Real, Scientific Data.",
+      edge: "MoU, CRM, Sure 100 % Growth",
+      spark: "4 Years ERP. Set Flag After 4 Years"
     }
   ];
 
