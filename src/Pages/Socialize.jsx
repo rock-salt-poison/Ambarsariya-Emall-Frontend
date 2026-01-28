@@ -39,6 +39,8 @@ function Socialize() {
           }else if(target.classList.contains('junction')){
               // navigate('../../serve/emotional/eshop/jobs-offered')
               navigate('../city-junctions')
+          }else if(target.classList.contains('banners')){
+              navigate('../banners')
           }
         }, 600)
     }

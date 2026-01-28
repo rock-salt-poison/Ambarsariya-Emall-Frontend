@@ -29299,6 +29299,467 @@ textarea[readonly] {
   }
 }
 
+.banners_wrapper {
+  position: relative;
+  min-height: 100vh;
+  background-image: linear-gradient(135deg, #f4e4c1 0%, #e8d5b7 50%, #d4c4a8 100%);
+  overflow-x: hidden;
+
+  // Animated Border
+  svg.animated-border {
+    @include full-absolute(15px, 15px, 15px, 15px);
+    width: -webkit-fill-available;
+    align-self: stretch;
+    border-radius: 20px;
+    z-index: 1;
+    filter: drop-shadow(3px 6px 8px $yellow) drop-shadow(-6px -6px 8px $yellow);
+
+    .line {
+      stroke-dasharray: 1500 120;
+      stroke-width: 5px;
+      fill: transparent;
+      stroke: $yellow;
+      animation: svgAnimation 3s linear infinite;
+    }
+  }
+
+  @keyframes svgAnimation {
+    from {
+      stroke-dashoffset: 0;
+    }
+    to {
+      stroke-dashoffset: 1900;
+    }
+  }
+
+  // Decorative Clouds
+  .big_cloud {
+    @include full-absolute(100px, auto, auto, -50px);
+    width: 210px;
+    filter: drop-shadow(0px 0px 32px rgba(#99c8d3, 0.7));
+    z-index: 0;
+
+    &.cloud_2 {
+      @include full-absolute(300px, -50px, auto, auto);
+    }
+  }
+
+  .row {
+    padding: 30px;
+    position: relative;
+    z-index: 1;
+
+    .col {
+      @include flex-center(column, flex-start);
+      gap: 20px;
+
+      &.back-button-wrapper {
+        justify-content: flex-end;
+        place-items: end;
+      }
+
+      .container {
+        @include flex-center(column, flex-start);
+        gap: 30px;
+        position: relative;
+        width: 100%;
+
+        .heading_container {
+          @include flex-center(row, center);
+          margin-bottom: 20px;
+
+          .heading {
+            @include homepage-buttons("Gladiola", 45px, #6b4336, "none");
+            text-shadow: -2px -2px 0 #ffe8d8, 2px -2px 0 #ffe8d8,
+              -2px 2px 7px #ffe8d8, 2px 2px 0 #ffe8d8;
+            filter: drop-shadow(2px 4px 6px rgba($black, 0.3));
+          }
+        }
+
+        .button_container {
+          @include flex-center(row, center);
+          margin: 20px 0;
+
+          .btn {
+            position: relative;
+            padding: 15px 30px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s linear;
+            min-width: 250px;
+            @include flex-center(row, center);
+            gap: 10px;
+
+            .btn_bg {
+              @include full-absolute(0px, 0px, 0px, 0px);
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              border-radius: 15px;
+              filter: drop-shadow(2px 4px 6px rgba($black, 0.3));
+              z-index: 0;
+            }
+
+            .btn_content {
+              position: relative;
+              z-index: 1;
+              @include flex-center(row, center);
+              gap: 8px;
+
+              .MuiSvgIcon-root {
+                font-size: 24px;
+                color: $black;
+              }
+
+              .MuiTypography-root {
+                @include homepage-buttons("Bobby-Jones-Soft", 18px, $black, "none");
+                font-weight: bold;
+              }
+            }
+
+            &:hover {
+              transform: scale(1.05);
+            }
+          }
+        }
+
+        .sub_container {
+          @include flex-center(column, flex-start);
+          gap: 25px;
+          width: 100%;
+
+          .heading {
+            @include homepage-buttons("Bobby-Jones-Soft", 28px, #6b4336, "none");
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 2px rgba($black, 0.2);
+          }
+
+          .empty_state {
+            @include flex-center(column, center);
+            gap: 20px;
+            padding: 40px;
+            position: relative;
+
+            .small_cloud {
+              width: 100px;
+              filter: drop-shadow(0px 0px 20px rgba(#99c8d3, 0.5));
+              opacity: 0.7;
+            }
+
+            .MuiTypography-root {
+              @include homepage-buttons("Bobby-Jones-Soft", 18px, #6b4336, "none");
+            }
+          }
+
+          .cards_container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            width: 100%;
+
+            .card {
+              position: relative;
+              border-radius: 20px;
+              overflow: visible;
+              transition: all 0.3s ease;
+
+              .card_bg {
+                @include full-absolute(0px, 0px, 0px, 0px);
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border-radius: 20px;
+                filter: drop-shadow(2px 4px 8px rgba($black, 0.25));
+                z-index: 0;
+              }
+
+              .card_body {
+                position: relative;
+                z-index: 1;
+                background-color: rgba($white, 0.95);
+                border-radius: 20px;
+                padding: 20px;
+                @include flex-center(column, flex-start);
+                gap: 15px;
+                min-height: 200px;
+                box-shadow: inset 0px 0px 10px 2px rgba($black, 0.1);
+
+                .card_header {
+                  @include flex-center(column, flex-start);
+                  gap: 8px;
+                  width: 100%;
+
+                  .heading {
+                    @include homepage-buttons("Bobby-Jones-Soft", 22px, #6b4336, "none");
+                    font-weight: bold;
+                    line-height: 1.2;
+                  }
+
+                  .card_area {
+                    @include homepage-buttons("Bobby-Jones-Soft", 18px, #8b6f47, "none");
+                    margin-top: 5px;
+                  }
+                }
+
+                .card_content {
+                  @include flex-center(column, flex-start);
+                  gap: 12px;
+                  flex: 1;
+                  width: 100%;
+
+                  .card_info {
+                    @include homepage-buttons("Proxima", 14px, #6b4336, "none");
+                    line-height: 1.5;
+
+                    strong {
+                      color: #8b6f47;
+                    }
+                  }
+
+                  .card_message {
+                    @include homepage-buttons("Proxima", 15px, #6b4336, "none");
+                    line-height: 1.6;
+                    padding: 10px;
+                    background-color: rgba($yellow, 0.2);
+                    border-radius: 8px;
+                    border-left: 3px solid #d49832;
+                  }
+
+                  .card_meta {
+                    @include flex-center(row, space-between);
+                    gap: 15px;
+                    width: 100%;
+                    padding-top: 10px;
+                    border-top: 1px solid rgba(#6b4336, 0.2);
+
+                    .card_meta_item {
+                      @include homepage-buttons("Proxima", 12px, #6b4336, "none");
+
+                      strong {
+                        color: #8b6f47;
+                      }
+                    }
+                  }
+
+                  .card_validity {
+                    @include homepage-buttons("Proxima", 11px, #8b6f47, "none");
+                    font-style: italic;
+                  }
+                }
+
+                .card_actions {
+                  @include flex-center(row, flex-end);
+                  width: 100%;
+                  margin-top: 10px;
+
+                  .btn_delete {
+                    padding: 8px 20px;
+                    background-color: #ff5055;
+                    border-radius: 10px;
+                    @include homepage-buttons("Bobby-Jones-Soft", 14px, $white, "none");
+                    transition: all 0.3s ease;
+
+                    &:hover {
+                      background-color: #e03e42;
+                      transform: scale(1.05);
+                    }
+                  }
+                }
+              }
+
+              .small_cloud {
+                &.card_cloud {
+                  @include full-absolute(auto, -40px, 20px, auto);
+                  width: 80px;
+                  filter: drop-shadow(0px 0px 20px rgba(#99c8d3, 0.5));
+                  opacity: 0.6;
+                  z-index: -1;
+                }
+              }
+
+              &:hover {
+                transform: translateY(-5px);
+                filter: drop-shadow(4px 8px 12px rgba($black, 0.3));
+              }
+            }
+
+          }
+        }
+      }
+    }
+  }
+
+  // Dialog Styles
+  
+
+  // Responsive Styles
+  @media (max-width: 992px) {
+    .row {
+      .col {
+        .container {
+          .sub_container {
+            .cards_container {
+              grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+              gap: 20px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .row {
+      padding: 20px;
+
+      .col {
+        .container {
+          .heading_container {
+            .heading {
+              font-size: 35px;
+            }
+          }
+
+          .button_container {
+            .btn {
+              min-width: 200px;
+              padding: 12px 20px;
+
+              .btn_content {
+                .MuiTypography-root {
+                  font-size: 16px;
+                }
+              }
+            }
+          }
+
+          .sub_container {
+            .cards_container {
+              grid-template-columns: 1fr;
+            }
+          }
+        }
+      }
+    }
+
+    .banner_dialog {
+      .dialog_content {
+        padding: 20px;
+
+        .banner_form {
+          .form_row {
+            flex-direction: column;
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 560px) {
+    .row {
+      padding: 15px;
+
+      .col {
+        .container {
+          .heading_container {
+            .heading {
+              font-size: 28px;
+            }
+          }
+
+          .button_container {
+            .btn {
+              min-width: 100%;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.banner_dialog {
+    .MuiDialog-paper {
+      background-color: rgba($light-yellow, 0.98);
+      border-radius: 20px;
+      border: 5px solid $yellow;
+      box-shadow: 0px 0px 30px rgba($black, 0.3);
+    }
+
+    .dialog_content {
+      padding: 30px;
+      position: relative;
+
+      .dialog_header {
+        @include flex-center(row, space-between);
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid rgba(#6b4336, 0.2);
+
+        .heading {
+          @include homepage-buttons("Gladiola", 32px, #6b4336, "none");
+          text-shadow: 1px 1px 2px rgba($black, 0.2);
+        }
+
+        .close_button {
+          color: #6b4336;
+          transition: all 0.3s ease;
+
+          &:hover {
+            transform: rotate(90deg);
+            color: #8b6f47;
+          }
+        }
+      }
+
+      .banner_form {
+        @include flex-center(column, flex-start);
+        gap: 20px;
+
+        .form_row {
+          @include flex-center(row, space-between);
+          gap: 15px;
+          width: 100%;
+
+          > * {
+            flex: 1;
+          }
+        }
+
+        .dialog_actions {
+          @include flex-center(row, flex-end);
+          gap: 15px;
+          margin-top: 20px;
+          width: 100%;
+
+          .btn {
+            padding: 10px 25px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            @include homepage-buttons("Bobby-Jones-Soft", 16px, $white, "none");
+
+            &.btn_cancel {
+              background-color: #8b6f47;
+
+              &:hover {
+                background-color: #6b4336;
+                transform: scale(1.05);
+              }
+            }
+
+            &.btn_submit {
+              background-color: #d49832;
+
+              &:hover {
+                background-color: #b67d1c;
+                transform: scale(1.05);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 .connect_with_utilities_wrapper {
   position: relative;
   min-height: 100vh;

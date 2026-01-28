@@ -294,12 +294,21 @@ const FormField = ({
                     variant="outlined"
                     rows={rows ? rows : 3}
                     placeholder={placeholder}
-                    value={value}
+                    value={value || ''}
                     onChange={onChange}
-                    required
+                    required={required}
                     className='input_field'
                     inputProps={{ readOnly, maxLength }}
-                    name={name} />
+                    name={name}
+                    disabled={disable}
+                    sx={{
+                      '& .MuiInputBase-root': {
+                        resize: 'vertical',
+                      },
+                      '& .MuiInputBase-input': {
+                        overflow: 'auto !important',
+                      }
+                    }} />
                 ) : type === "phone_number" ?
                   <MuiPhoneNumber defaultCountry={'in'} name={name}
                     value={value}

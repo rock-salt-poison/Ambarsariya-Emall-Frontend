@@ -1678,3 +1678,62 @@ export const getLastPurchasedTotal = async (shop_no, buyer_id) => {
     throw error
   }
 };
+
+// Banner notification API functions
+export const createBannerNotification = async (bannerData) => {
+  try {
+    const response = await axios.post(`${link}/sell/banner-notification`, bannerData);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getNearbyBanners = async (latitude, longitude, userAccessToken) => {
+  try {
+    const params = new URLSearchParams({ latitude, longitude });
+    if (userAccessToken) {
+      params.append('user_access_token', userAccessToken);
+    }
+    const response = await axios.get(`${link}/sell/banner-notifications/nearby?${params.toString()}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getShopBanners = async (shopAccessToken) => {
+  try {
+    const response = await axios.get(`${link}/sell/banner-notifications/shop/${shopAccessToken}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateBannerNotification = async (bannerId, bannerData) => {
+  try {
+    const response = await axios.put(`${link}/sell/banner-notification/${bannerId}`, bannerData);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const deleteBannerNotification = async (bannerId) => {
+  try {
+    const response = await axios.delete(`${link}/sell/banner-notification/${bannerId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const sendBannerNotifications = async (bannerId) => {
+  try {
+    const response = await axios.post(`${link}/sell/banner-notification/${bannerId}/send-notifications`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
