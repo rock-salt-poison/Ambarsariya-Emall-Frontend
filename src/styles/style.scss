@@ -29714,6 +29714,7 @@ textarea[readonly] {
 
       .banner_form {
         @include flex-center(column, flex-start);
+        place-items: normal;
         gap: 20px;
 
         .form_row {
