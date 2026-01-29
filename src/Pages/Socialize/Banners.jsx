@@ -2,18 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { Box, Typography, Button, CircularProgress, Dialog, DialogContent, IconButton } from '@mui/material';
 import UserBadge from '../../UserBadge';
 import { useSelector } from 'react-redux';
-import { getNearbyBanners, getShopBanners, createBannerNotification, deleteBannerNotification, getShopUserData, getUser } from '../../API/fetchExpressAPI';
+import { getNearbyBanners, getShopBanners, createBannerNotification, deleteBannerNotification, getShopUserData, getUser, get_support_page_famous_areas } from '../../API/fetchExpressAPI';
 import CloseIcon from '@mui/icons-material/Close';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import FormField from '../../Components/Form/FormField';
 import CustomSnackbar from '../../Components/CustomSnackbar';
+import ConfirmationDialog from '../../Components/ConfirmationDialog';
 import { checkLocationPermission, handleLocationRequest } from '../../API/LocationPermission';
 import hornSound from '../../Utils/audio/horn-sound.mp3';
 import paint_stroke from '../../Utils/images/Socialize/paint_stroke.webp';
 import big_cloud from '../../Utils/images/Socialize/city_junctions/co_helpers/big_cloud.svg';
 import small_cloud from '../../Utils/images/Socialize/city_junctions/co_helpers/small_cloud.svg';
+import dayjs from 'dayjs';
 
 function Banners() {
   const token = useSelector((state) => state.auth.userAccessToken);
@@ -29,6 +31,7 @@ function Banners() {
   
   // Create banner form state
   const [bannerForm, setBannerForm] = useState({
+    location_type: 'shop', // 'shop' or 'famous_area'
     area_name: '',
     address: null,
     latitude: 31.6356659,
@@ -37,15 +40,29 @@ function Banners() {
     start_time: '',
     end_time: '',
     offer_message: '',
+    famous_area_id: null, // For famous area banners
   });
   const [shopAccessToken, setShopAccessToken] = useState(null);
   const [shopNo, setShopNo] = useState(null);
   const [userId, setUserId] = useState(null);
+  const [famousAreas, setFamousAreas] = useState([]);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [bannerToDelete, setBannerToDelete] = useState(null);
 
   useEffect(() => {
     checkUserType();
     checkLocationPermission(setLocationPermission);
+    fetchFamousAreas();
   }, [token]);
+
+  const fetchFamousAreas = async () => {
+    try {
+      const areas = await get_support_page_famous_areas();
+      setFamousAreas(areas || []);
+    } catch (error) {
+      console.error('Error fetching famous areas:', error);
+    }
+  };
 
   useEffect(() => {
     if (userLocation && locationPermission === 'on') {
@@ -191,7 +208,8 @@ function Banners() {
       return;
     }
 
-    if (!bannerForm.area_name || !bannerForm.start_time || !bannerForm.end_time) {
+    // Validate required fields
+    if (!bannerForm.start_time || !bannerForm.end_time) {
       setSnackbar({
         open: true,
         message: 'Please fill all required fields',
@@ -200,17 +218,46 @@ function Banners() {
       return;
     }
 
-    // Validate address or coordinates
-    const hasAddress = bannerForm.address && (bannerForm.address.formatted_address || bannerForm.address.description);
-    const hasCoordinates = bannerForm.latitude && bannerForm.longitude;
-    
-    if (!hasAddress && !hasCoordinates) {
-      setSnackbar({
-        open: true,
-        message: 'Please provide either an address or coordinates',
-        severity: 'error',
-      });
-      return;
+    // Validate based on location type
+    if (bannerForm.location_type === 'famous_area') {
+      if (!bannerForm.famous_area_id) {
+        setSnackbar({
+          open: true,
+          message: 'Please select a famous area',
+          severity: 'error',
+        });
+        return;
+      }
+      if (!bannerForm.radius) {
+        setSnackbar({
+          open: true,
+          message: 'Please provide a radius',
+          severity: 'error',
+        });
+        return;
+      }
+    } else {
+      // Shop location - validate address or coordinates
+      const hasAddress = bannerForm.address && (bannerForm.address.formatted_address || bannerForm.address.description);
+      const hasCoordinates = bannerForm.latitude && bannerForm.longitude;
+      
+      if (!hasAddress && !hasCoordinates) {
+        setSnackbar({
+          open: true,
+          message: 'Please provide either an address or coordinates',
+          severity: 'error',
+        });
+        return;
+      }
+
+      if (!bannerForm.radius) {
+        setSnackbar({
+          open: true,
+          message: 'Please provide a radius',
+          severity: 'error',
+        });
+        return;
+      }
     }
 
     setLoading(true);
@@ -220,14 +267,16 @@ function Banners() {
         shop_access_token: shopAccessToken,
         shop_no: shopNo,
         user_id: userId, // Pass user_id to exclude creator from notifications
-        area_name: bannerForm.area_name,
-        address: bannerForm.address || null, // Send the full address object
-        latitude: bannerForm.address?.latitude || bannerForm.latitude,
-        longitude: bannerForm.address?.longitude || bannerForm.longitude,
+        banner_type: bannerForm.location_type === 'famous_area' ? 'famous_area' : 'regular',
+        area_name: bannerForm.area_name || null,
+        address: bannerForm.location_type === 'shop' ? (bannerForm.address || null) : null,
+        latitude: bannerForm.location_type === 'shop' ? (bannerForm.address?.latitude || bannerForm.latitude) : null,
+        longitude: bannerForm.location_type === 'shop' ? (bannerForm.address?.longitude || bannerForm.longitude) : null,
         radius: parseFloat(bannerForm.radius),
-        start_time: new Date(bannerForm.start_time).toISOString(),
-        end_time: new Date(bannerForm.end_time).toISOString(),
+        start_time: dayjs(bannerForm.start_time).toISOString(),
+        end_time: dayjs(bannerForm.end_time).toISOString(),
         offer_message: bannerForm.offer_message,
+        famous_area_id: bannerForm.location_type === 'famous_area' ? parseInt(bannerForm.famous_area_id) : null,
       };
 
       await createBannerNotification(bannerData);
@@ -238,6 +287,7 @@ function Banners() {
       });
       setCreateDialogOpen(false);
       setBannerForm({
+        location_type: 'shop',
         area_name: '',
         address: null,
         latitude: 31.6356659,
@@ -246,6 +296,7 @@ function Banners() {
         start_time: '',
         end_time: '',
         offer_message: '',
+        famous_area_id: null,
       });
       fetchShopBanners();
     } catch (error) {
@@ -274,18 +325,20 @@ function Banners() {
         if (action === 'create') {
           setCreateDialogOpen(true);
         } else if (action === 'delete' && data) {
-          handleDeleteBanner(data);
+          setBannerToDelete(data);
+          setDeleteDialogOpen(true);
         }
       }, 600);
     }
   };
 
-  const handleDeleteBanner = async (bannerId) => {
-    if (!window.confirm('Are you sure you want to delete this banner?')) return;
+  const handleDeleteBanner = async () => {
+    if (!bannerToDelete) return;
 
     setLoading(true);
+    setDeleteDialogOpen(false);
     try {
-      await deleteBannerNotification(bannerId);
+      await deleteBannerNotification(bannerToDelete);
       setSnackbar({
         open: true,
         message: 'Banner deleted successfully',
@@ -304,7 +357,13 @@ function Banners() {
       });
     } finally {
       setLoading(false);
+      setBannerToDelete(null);
     }
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setDeleteDialogOpen(false);
+    setBannerToDelete(null);
   };
 
   return (
@@ -423,7 +482,7 @@ function Banners() {
                               <strong>Radius:</strong> {banner.radius} km
                             </Typography>
                             <Typography variant="body2" className="card_info">
-                              <strong>Active:</strong> {new Date(banner.start_time).toLocaleString()} - {new Date(banner.end_time).toLocaleString()}
+                              <strong>Active:</strong> {dayjs(banner.start_time).format('YYYY-MM-DD, HH:mm:ss A')} - {dayjs(banner.end_time).format('YYYY-MM-DD, HH:mm:ss A')}
                             </Typography>
                             {banner.offer_message && (
                               <Typography variant="body2" className="card_message">
@@ -513,7 +572,7 @@ function Banners() {
                               </Typography>
                             </Box>
                             <Typography variant="caption" className="card_validity">
-                              Valid until: {new Date(banner.end_time).toLocaleString()}
+                              Valid until: {dayjs(banner.end_time).format('YYYY-MM-DD, HH:mm:ss A')}
                             </Typography>
                           </Box>
                         </Box>
@@ -558,52 +617,98 @@ function Banners() {
           </Box>
 
           <form onSubmit={(e) => { e.preventDefault(); handleCreateBanner(); }} className="banner_form">
+            {/* Location Type Selector */}
             <FormField
-              label="Area Name (e.g., Novelty, Amritsar)"
-              name="area_name"
-              value={bannerForm.area_name}
+              label="Banner Location"
+              name="location_type"
+              value={bannerForm.location_type}
               onChange={handleChange}
-              type="text"
+              type="select"
               required
+              options={[
+                { value: 'shop', label: 'Shop Location' },
+                { value: 'famous_area', label: 'Famous Area' },
+              ]}
             />
 
-            <FormField
-              label="Address (Search and select location)"
-              name="address"
-              value={bannerForm.address}
-              onChange={handleAddressChange}
-              type="address"
-              required
-            />
+            {/* Famous Area Dropdown - shown only when famous_area is selected */}
+            {bannerForm.location_type === 'famous_area' && (
+              <>
+                <FormField
+                  label="Select Famous Area"
+                  name="famous_area_id"
+                  value={bannerForm.famous_area_id || ''}
+                  onChange={handleChange}
+                  type="select"
+                  required
+                  options={famousAreas.map(area => ({
+                    value: area.id,
+                    label: `${area.area_title} - ${area.area_address}`,
+                  }))}
+                />
+                <FormField
+                  label="Radius (km)"
+                  name="radius"
+                  value={bannerForm.radius}
+                  onChange={handleChange}
+                  type="number"
+                  required
+                  placeholder="0.1 to 50"
+                />
+              </>
+            )}
 
-            <Box className="form_row">
-              <FormField
-                label="Latitude"
-                name="latitude"
-                value={bannerForm.latitude}
-                onChange={handleChange}
-                type="number"
-                required
-              />
-              <FormField
-                label="Longitude"
-                name="longitude"
-                value={bannerForm.longitude}
-                onChange={handleChange}
-                type="number"
-                required
-              />
-            </Box>
+            {/* Shop Location Fields - shown only when shop location is selected */}
+            {bannerForm.location_type === 'shop' && (
+              <>
+                <FormField
+                  label="Area Name (e.g., Novelty, Amritsar)"
+                  name="area_name"
+                  value={bannerForm.area_name}
+                  onChange={handleChange}
+                  type="text"
+                  required
+                />
 
-            <FormField
-              label="Radius (km)"
-              name="radius"
-              value={bannerForm.radius}
-              onChange={handleChange}
-              type="number"
-              required
-              placeholder="0.1 to 50"
-            />
+                <FormField
+                  label="Address (Search and select location)"
+                  name="address"
+                  value={bannerForm.address}
+                  onChange={handleAddressChange}
+                  type="address"
+                  required
+                />
+
+                <Box className="form_row">
+                  <FormField
+                    label="Latitude"
+                    name="latitude"
+                    value={bannerForm.latitude}
+                    onChange={handleChange}
+                    type="number"
+                    required
+                  />
+                  <FormField
+                    label="Longitude"
+                    name="longitude"
+                    value={bannerForm.longitude}
+                    onChange={handleChange}
+                    type="number"
+                    required
+                  />
+                </Box>
+                <FormField
+                  label="Radius (km)"
+                  name="radius"
+                  value={bannerForm.radius}
+                  onChange={handleChange}
+                  type="number"
+                  required
+                  placeholder="0.1 to 50"
+                />
+
+              </>
+            )}
 
             <Box className="form_row">
               <FormField
@@ -658,6 +763,18 @@ function Banners() {
         message={snackbar.message}
         severity={snackbar.severity}
         handleClose={() => setSnackbar({ ...snackbar, open: false })}
+      />
+
+      {/* Delete Confirmation Dialog */}
+      <ConfirmationDialog
+        open={deleteDialogOpen}
+        onClose={handleCloseDeleteDialog}
+        onConfirm={handleDeleteBanner}
+        title="Delete Banner"
+        message="Are you sure you want to delete this banner? This action cannot be undone."
+        confirmBtnText="Delete"
+        closeBtnText="Cancel"
+        optionalCname="logoutDialog"
       />
     </Box>
   );

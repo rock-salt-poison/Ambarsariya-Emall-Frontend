@@ -29370,6 +29370,7 @@ textarea[readonly] {
 
           .heading {
             @include homepage-buttons("Gladiola", 45px, #6b4336, "none");
+            @include hover-scale(1, 0s);
             text-shadow: -2px -2px 0 #ffe8d8, 2px -2px 0 #ffe8d8,
               -2px 2px 7px #ffe8d8, 2px 2px 0 #ffe8d8;
             filter: drop-shadow(2px 4px 6px rgba($black, 0.3));
@@ -29413,6 +29414,7 @@ textarea[readonly] {
 
               .MuiTypography-root {
                 @include homepage-buttons("Bobby-Jones-Soft", 18px, $black, "none");
+                @include hover-scale(1, 0s);
                 font-weight: bold;
               }
             }
@@ -29430,6 +29432,7 @@ textarea[readonly] {
 
           .heading {
             @include homepage-buttons("Bobby-Jones-Soft", 28px, #6b4336, "none");
+            @include hover-scale(1, 0s);
             margin-bottom: 15px;
             text-shadow: 1px 1px 2px rgba($black, 0.2);
           }
@@ -29448,6 +29451,7 @@ textarea[readonly] {
 
             .MuiTypography-root {
               @include homepage-buttons("Bobby-Jones-Soft", 18px, #6b4336, "none");
+              @include hover-scale(1, 0s);
             }
           }
 
@@ -29491,12 +29495,14 @@ textarea[readonly] {
 
                   .heading {
                     @include homepage-buttons("Bobby-Jones-Soft", 22px, #6b4336, "none");
+                    @include hover-scale(1, 0s);
                     font-weight: bold;
                     line-height: 1.2;
                   }
 
                   .card_area {
                     @include homepage-buttons("Bobby-Jones-Soft", 18px, #8b6f47, "none");
+                    @include hover-scale(1, 0s);
                     margin-top: 5px;
                   }
                 }
@@ -29510,6 +29516,7 @@ textarea[readonly] {
                   .card_info {
                     @include homepage-buttons("Proxima", 14px, #6b4336, "none");
                     line-height: 1.5;
+                    @include hover-scale(1, 0s);
 
                     strong {
                       color: #8b6f47;
@@ -29518,6 +29525,7 @@ textarea[readonly] {
 
                   .card_message {
                     @include homepage-buttons("Proxima", 15px, #6b4336, "none");
+                    @include hover-scale(1, 0s);
                     line-height: 1.6;
                     padding: 10px;
                     background-color: rgba($yellow, 0.2);
@@ -29534,6 +29542,7 @@ textarea[readonly] {
 
                     .card_meta_item {
                       @include homepage-buttons("Proxima", 12px, #6b4336, "none");
+                      @include hover-scale(1, 0s);
 
                       strong {
                         color: #8b6f47;
@@ -29557,6 +29566,7 @@ textarea[readonly] {
                     background-color: #ff5055;
                     border-radius: 10px;
                     @include homepage-buttons("Bobby-Jones-Soft", 14px, $white, "none");
+                    @include hover-scale(1, 0s);
                     transition: all 0.3s ease;
 
                     &:hover {
