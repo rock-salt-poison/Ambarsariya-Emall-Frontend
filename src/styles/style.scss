@@ -29647,8 +29647,37 @@ textarea[readonly] {
         padding: 20px;
 
         .banner_form {
+          gap: 15px;
+
+          .form-control {
+            .form-row {
+              .field_container {
+                .MuiInputBase-root.MuiOutlinedInput-root {
+                  .MuiInputBase-input {
+                    font-size: 15px;
+                    padding: 8px 12px;
+                  }
+                }
+              }
+
+              .label {
+                font-size: 16px;
+              }
+            }
+          }
+
           .form_row {
             flex-direction: column;
+            gap: 15px;
+          }
+
+          .dialog_actions {
+            flex-direction: column;
+            width: 100%;
+
+            .btn {
+              width: 100%;
+            }
           }
         }
       }
@@ -29670,6 +29699,63 @@ textarea[readonly] {
           .button_container {
             .btn {
               min-width: 100%;
+            }
+          }
+        }
+      }
+    }
+
+    .banner_dialog {
+      .MuiDialog-paper {
+        margin: 10px;
+        border-radius: 15px;
+      }
+
+      .dialog_content {
+        padding: 15px;
+
+        .dialog_header {
+          margin-bottom: 15px;
+          padding-bottom: 10px;
+
+          .heading {
+            font-size: 24px;
+          }
+        }
+
+        .banner_form {
+          gap: 12px;
+
+          .form-control {
+            .form-row {
+              gap: 6px;
+
+              .label {
+                font-size: 15px;
+              }
+
+              .field_container {
+                .MuiInputBase-root.MuiOutlinedInput-root {
+                  .MuiInputBase-input {
+                    font-size: 14px;
+                    padding: 8px 10px;
+                  }
+                }
+              }
+            }
+          }
+
+          .form_row {
+            gap: 12px;
+          }
+
+          .dialog_actions {
+            gap: 10px;
+            margin-top: 15px;
+
+            .btn {
+              padding: 8px 20px;
+              font-size: 14px;
             }
           }
         }
@@ -29717,6 +29803,114 @@ textarea[readonly] {
         place-items: normal;
         gap: 20px;
 
+        .form-control {
+          align-self: stretch;
+          @include flex-center(column, flex-start);
+          place-items: normal;
+          gap: 8px;
+          width: 100%;
+
+          .form-row {
+            @include flex-center(column, flex-start);
+            gap: 8px;
+            place-items: normal;
+            width: 100%;
+
+            .label {
+              @include homepage-buttons("Bobby-Jones-Soft", 18px, #6b4336, "none");
+              @include hover-scale(1, 0s);
+              text-align: left;
+              font-weight: 600;
+              text-shadow: 0.5px 0.5px 1px rgba($black, 0.1);
+            }
+
+            .field_container {
+              @include flex-center(column, flex-start);
+              width: 100%;
+              gap: 6px;
+
+              .input_field,
+              .MuiTextField-root,
+              .MuiInputBase-root.MuiOutlinedInput-root {
+                width: 100%;
+                background-color: rgba($light-yellow, 0.9);
+                border-radius: 10px;
+                border: 1px solid rgba(#6b4336, 0.2);
+                transition: all 0.3s ease;
+
+                &:hover {
+                  border-color: none;
+                  background-color: rgba($light-yellow, 1);
+                }
+
+                &.Mui-focused {
+                  border-color: none;
+                  background-color: rgba($light-yellow, 1);
+                }
+              }
+
+              .MuiTextField-root {
+                margin: 0px;
+              }
+
+              .MuiInputBase-root.MuiOutlinedInput-root {
+                padding: 0px;
+
+                .MuiInputBase-input {
+                  @include homepage-buttons("Bobby-Jones-Soft", 16px, #6b4336, "none");
+                  @include hover-scale(1, 0s);
+                  padding: 10px 14px;
+                  line-height: 1.5;
+
+                  &::placeholder {
+                    color: rgba(#6b4336, 0.5);
+                    opacity: 0.8;
+                  }
+                }
+
+                .MuiInputBase-inputMultiline {
+                  padding: 10px 14px;
+                  min-height: 60px;
+                }
+
+                .MuiOutlinedInput-notchedOutline {
+                  border: 0px;
+                }
+
+                &.Mui-focused .MuiOutlinedInput-notchedOutline {
+                  border: 0px;
+                }
+              }
+
+              // Address field specific styling
+              .address {
+                .MuiInputBase-root {
+                  padding: 0px;
+                }
+              }
+
+              // Number input styling
+              input[type="number"] {
+                &::-webkit-inner-spin-button,
+                &::-webkit-outer-spin-button {
+                  opacity: 1;
+                }
+              }
+
+              // DateTime input styling
+              input[type="datetime-local"] {
+                color: #6b4336;
+              }
+            }
+
+            .error_message {
+              @include homepage-buttons("Bobby-Jones-Soft", 14px, $error, "none");
+              @include hover-scale(1, 0s);
+              margin-top: 4px;
+            }
+          }
+        }
+
         .form_row {
           @include flex-center(row, space-between);
           gap: 15px;
@@ -29724,6 +29918,10 @@ textarea[readonly] {
 
           > * {
             flex: 1;
+          }
+
+          .form-control {
+            width: 100%;
           }
         }
 
@@ -29738,6 +29936,8 @@ textarea[readonly] {
             border-radius: 10px;
             transition: all 0.3s ease;
             @include homepage-buttons("Bobby-Jones-Soft", 16px, $white, "none");
+            text-shadow: 0.5px 0.5px 1px rgba($black, 0.2);
+            box-shadow: 0px 2px 4px rgba($black, 0.2);
 
             &.btn_cancel {
               background-color: #8b6f47;
@@ -29745,6 +29945,7 @@ textarea[readonly] {
               &:hover {
                 background-color: #6b4336;
                 transform: scale(1.05);
+                box-shadow: 0px 4px 8px rgba($black, 0.3);
               }
             }
 
@@ -29754,6 +29955,7 @@ textarea[readonly] {
               &:hover {
                 background-color: #b67d1c;
                 transform: scale(1.05);
+                box-shadow: 0px 4px 8px rgba($black, 0.3);
               }
             }
           }
