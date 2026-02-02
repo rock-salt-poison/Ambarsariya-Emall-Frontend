@@ -59,7 +59,7 @@ function Delivery() {
             id: 5,
             label: 'Select location',
             name: 'location',
-            type: 'text',
+            type: 'address',
         },
         {
             id: 6,

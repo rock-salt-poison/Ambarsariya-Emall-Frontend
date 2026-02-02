@@ -38,7 +38,7 @@ function Pickup({title}) {
             id: 2,
             label: 'Pickup Location',
             name: 'location',
-            type: 'text',
+            type: 'address',
         },
         {
             id: 3,

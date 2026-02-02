@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, TextField, Select, MenuItem, Checkbox, FormControlLabel, Button, Slider, ListItemText, Switch, InputAdornment, RadioGroup, Radio, OutlinedInput, Autocomplete } from '@mui/material';
+import { Box, Typography, TextField, Select, MenuItem, Checkbox, FormControlLabel, Button, Slider, ListItemText, Switch, InputAdornment, RadioGroup, Radio, OutlinedInput, Autocomplete, FormControl } from '@mui/material';
 import MuiPhoneNumber from 'mui-phone-number';
 import Address_Google_Map_Field from './Address_Google_Map_Field';
 import { Link } from 'react-router-dom';
@@ -179,11 +179,12 @@ const FormField = ({
             </>
           ) : (
             <>
-              <Typography className={`label ${emailLabelClassname ? emailLabelClassname : ''}`}>
+            <Typography className={`label ${emailLabelClassname ? emailLabelClassname : ''}`}>
                 {icon ? <Box component="img" src={icon} alt={label} className="icon" /> : label}
               </Typography>
               <Box className="field_container">
                 {type === 'select' ? (
+                  <FormControl variant="outlined"  size="small" className={'input_field'} error={error}>
                   <Select
                     name={name}
                     value={value || ''}
@@ -211,6 +212,7 @@ const FormField = ({
                       );
                     })}
                   </Select>
+                  </FormControl>
                 ) : type === 'select-check' ? (
                   <Select
                     multiple

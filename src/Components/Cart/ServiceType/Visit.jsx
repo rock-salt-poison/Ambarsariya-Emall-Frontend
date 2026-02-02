@@ -38,7 +38,7 @@ function Visit() {
             id: 2,
             label: 'Choose Location',
             name: 'location',
-            type: 'text',
+            type: 'address',
         },
         {
             id: 3,

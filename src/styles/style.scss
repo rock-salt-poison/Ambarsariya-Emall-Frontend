@@ -23718,7 +23718,7 @@ textarea[readonly] {
                       @include flex-center(row, center);
                       overflow: hidden;
 
-                      .input_field {
+                      .MuiFormControl-root.input_field {
                         // flex: 1;
                         width: 100%;
                         background-color: #6b4336a6;
@@ -23765,7 +23765,7 @@ textarea[readonly] {
                             }
                           }
                         }
-
+                        
                         .MuiInputBase-input {
                           @include homepage-buttons(
                             "Bobby-Jones-Soft",
@@ -23785,6 +23785,10 @@ textarea[readonly] {
                             filter: invert(100%);
                           }
                         }
+                      }
+
+                      .MuiAutocomplete-root .MuiInputBase-input {
+                        padding: 0px 0px 0px 4px !important;
                       }
                     }
 
@@ -24083,7 +24087,7 @@ textarea[readonly] {
                       color: $yellow;
                     }
 
-                    .field_container .input_field {
+                    .field_container .MuiFormControl-root.input_field {
                       background-color: #f9deb1b3;
 
                       .MuiInputBase-input {
@@ -24552,7 +24556,7 @@ textarea[readonly] {
                     }
 
                     .field_container {
-                      .input_field {
+                      .MuiFormControl-root.input_field {
                         width: 100%;
 
                         .adornmentText {

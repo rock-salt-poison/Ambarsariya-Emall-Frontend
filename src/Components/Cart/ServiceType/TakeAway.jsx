@@ -32,7 +32,7 @@ function TakeAway({title}) {
             id: 1,
             label: 'Take-Away Location',
             name: 'location',
-            type: 'text',
+            type: 'address',
         },
         {
             id: 2,
