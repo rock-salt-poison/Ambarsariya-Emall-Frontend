@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, Box, CircularProgress } from "@mui/material";
 import arrow_icon from "../../Utils/images/Sell/support/arrow_icon.svg";
-import { get_memberData, get_visitorData, getMemberData, post_support_name_password } from "../../API/fetchExpressAPI";
+import { get_memberData, get_visitorData, getMemberData, post_support_name_password, send_member_phone_otp, verify_member_phone_otp } from "../../API/fetchExpressAPI";
 import FormField from "../Form/FormField";
 import CustomSnackbar from "../CustomSnackbar";
 import { setUserToken } from "../../store/authSlice";
@@ -29,7 +29,8 @@ const UserForm = ({ onValidation, visitorData, visibility }) => {
   });
 
   const [showOtpField, setShowOtpField] = useState(false);
-  const validOtp = "123456";
+  const [phoneOtpSent, setPhoneOtpSent] = useState(false);
+  const [phoneVerified, setPhoneVerified] = useState(false);
   const dispatch = useDispatch();
 
   const [snackbar, setSnackbar] = useState({
@@ -101,21 +102,38 @@ const UserForm = ({ onValidation, visitorData, visibility }) => {
   };
 
   const validateOtp = () => {
-    let valid = true;
-    const newErrors = {};
-    const newErrorMessages = {};
+    // OTP validation is now done via API calls
+    return phoneVerified;
+  };
 
-    if (formData.phone_no) {
-      if (formData.otp !== validOtp) {
-        newErrors.otp = true;
-        newErrorMessages.otp = "Invalid OTP";
-        valid = false;
+  // Resend phone OTP function
+  const handleResendPhoneOtp = async () => {
+    try {
+      setLoading(true);
+      const phoneData = { phoneNumber: formData.phone_no, user_type: 'support' };
+      const phone_otp_resp = await send_member_phone_otp(phoneData);
+      if (phone_otp_resp?.success) {
+        setSnackbar({
+          open: true,
+          message: phone_otp_resp.message || "OTP resent successfully",
+          severity: "success",
+        });
+      } else {
+        setSnackbar({
+          open: true,
+          message: phone_otp_resp.message || "Failed to resend OTP",
+          severity: "error",
+        });
       }
+    } catch (e) {
+      setSnackbar({
+        open: true,
+        message: e.response?.data?.message || "Failed to resend OTP",
+        severity: "error",
+      });
+    } finally {
+      setLoading(false);
     }
-
-    setErrors(newErrors);
-    setErrorMessages(newErrorMessages);
-    return valid;
   };
 
   // Handle form submission
@@ -125,27 +143,96 @@ const UserForm = ({ onValidation, visitorData, visibility }) => {
     if (!showOtpField) {
       // Validate initial form fields
       if (validate()) {
-        // Show OTP fields if initial validation is successful
-        setShowOtpField(true);
+        try {
+          setLoading(true);
+          // Send phone OTP
+          const phoneData = { phoneNumber: formData.phone_no, user_type: 'support' };
+          const phoneOtpResp = await send_member_phone_otp(phoneData);
+          
+          if (phoneOtpResp?.success) {
+            setPhoneOtpSent(true);
+            setShowOtpField(true);
+            setSnackbar({
+              open: true,
+              message: phoneOtpResp.message || "OTP sent successfully. Please check and verify.",
+              severity: "success",
+            });
+          } else {
+            setSnackbar({
+              open: true,
+              message: phoneOtpResp.message || "Failed to send OTP. Try again.",
+              severity: "error",
+            });
+          }
+        } catch (e) {
+          console.error("Error sending phone OTP:", e);
+          setSnackbar({
+            open: true,
+            message: e.response?.data?.message || "Failed to send OTP. Try again.",
+            severity: "error",
+          });
+        } finally {
+          setLoading(false);
+        }
       }
     } else {
-      // Validate OTP fields
-      if (validateOtp()) {
-        if (validate()) {
-          try {
-            setLoading(true);
-            const resp = await post_support_name_password(formData);
-            console.log(resp);
+      // Verify phone OTP if not yet verified
+      if (!phoneVerified && formData.otp && phoneOtpSent) {
+        try {
+          setLoading(true);
+          const verifyPhoneData = {
+            phoneNumber: formData.phone_no,
+            phone_otp: formData.otp,
+          };
+
+          const verifyPhoneResp = await verify_member_phone_otp(verifyPhoneData);
+
+          if (verifyPhoneResp?.success) {
+            setPhoneVerified(true);
+            setSnackbar({
+              open: true,
+              message: verifyPhoneResp.message || "Phone OTP verified successfully",
+              severity: "success",
+            });
+          } else {
+            setSnackbar({
+              open: true,
+              message: verifyPhoneResp.message || "Invalid or expired OTP. Please try again.",
+              severity: "error",
+            });
             setLoading(false);
+            return;
+          }
+        } catch (e) {
+          console.error("Error verifying phone OTP:", e);
+          setSnackbar({
+            open: true,
+            message: e.response?.data?.message || "OTP verification failed. Please try again.",
+            severity: "error",
+          });
+          setLoading(false);
+          return;
+        } finally {
+          setLoading(false);
+        }
+      }
+
+      // Proceed with form submission if OTP is verified
+      if (validateOtp() && validate()) {
+        try {
+          setLoading(true);
+          const resp = await post_support_name_password(formData);
+          console.log(resp);
+          setLoading(false);
+          
+          if(resp){
+            dispatch(setUserToken(resp.access_token));
             
-            if(resp){
-              dispatch(setUserToken(resp.access_token));
-              
-              localStorage.setItem('accessToken', resp.access_token);
-              
-              onValidation(true, resp.access_token);
-              setSnackbar({ open: true, message: resp.message, severity: 'success' });
-            }
+            localStorage.setItem('accessToken', resp.access_token);
+            
+            onValidation(true, resp.access_token);
+            setSnackbar({ open: true, message: resp.message, severity: 'success' });
+          }
 
         } catch (error) {
             if(error.response.data.error === 'duplicate key value violates unique constraint "support_phone_no_key"'){
@@ -157,7 +244,6 @@ const UserForm = ({ onValidation, visitorData, visibility }) => {
             console.log(error.response.data.error)
             setLoading(false);
           }
-        }
       }
     }
   };
@@ -212,6 +298,15 @@ const UserForm = ({ onValidation, visitorData, visibility }) => {
         <Button type="submit" variant="contained" className="submit_button">
           <Box component="img" src={arrow_icon} alt="arrow_icon" />
         </Button>
+        {showOtpField && !phoneVerified && (
+          <Button
+            variant="outlined"
+            onClick={handleResendPhoneOtp}
+            className="submit_button"
+          >
+            Resend OTP
+          </Button>
+        )}
       </Box>
     </Box>
       <CustomSnackbar

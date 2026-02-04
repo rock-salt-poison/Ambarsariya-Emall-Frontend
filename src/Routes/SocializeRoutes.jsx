@@ -14,6 +14,7 @@ import CoHelpers from "../Pages/Socialize/CoHelpers";
 import Jobs_offered from "../Pages/Serve/Jobs_offered";
 import ConnectWithUtilities from "../Pages/Socialize/ConnectWithUtilities";
 import UtilitiesMain from "../Pages/Socialize/UtilitiesMain";
+import StandardFit from "../Pages/Socialize/StandardFit";
 import Banners from "../Pages/Socialize/Banners";
 
 function SocializeRoutes() {
@@ -136,6 +137,15 @@ function SocializeRoutes() {
           <ProtectedRoute
             shopElement={<ConnectWithUtilities />}
             memberElement={<ConnectWithUtilities />}
+          />
+        }
+      />
+      <Route
+        path="/city-junctions/standard-fit"
+        element={
+          <ProtectedRoute
+            shopElement={<StandardFit />}
+            memberElement={<StandardFit />}
           />
         }
       />

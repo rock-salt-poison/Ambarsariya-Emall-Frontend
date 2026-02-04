@@ -33,7 +33,9 @@ function UtilitiesMain() {
       
       // Navigate after 2 seconds
       setTimeout(() => {
-        // navigate("");
+        if (fitType === "standard") {
+          navigate("../city-junctions/standard-fit");
+        }
       }, 1000);
     }
   };

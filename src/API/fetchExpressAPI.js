@@ -517,6 +517,62 @@ export const send_otp_to_email = async (data) => {
   }
 }
 
+export const send_otp_to_phone = async (data) => {
+  try {
+    if (data) {
+      const response = await axios.post(`${link}/sell/phone-otp`, data);
+      return response.data;
+    }
+  } catch (e) {
+    throw e;
+  }
+}
+
+// New database-based OTP functions for member registration
+export const send_member_email_otp = async (data) => {
+  try {
+    if (data) {
+      const response = await axios.post(`${link}/sell/member-email-otp`, data);
+      return response.data;
+    }
+  } catch (e) {
+    throw e;
+  }
+}
+
+export const verify_member_email_otp = async (data) => {
+  try {
+    if (data) {
+      const response = await axios.post(`${link}/sell/member-verify-email-otp`, data);
+      return response.data;
+    }
+  } catch (e) {
+    throw e;
+  }
+}
+
+export const send_member_phone_otp = async (data) => {
+  try {
+    if (data) {
+      const response = await axios.post(`${link}/sell/member-phone-otp`, data);
+      return response.data;
+    }
+  } catch (e) {
+    throw e;
+  }
+}
+
+export const verify_member_phone_otp = async (data) => {
+  try {
+    if (data) {
+      const response = await axios.post(`${link}/sell/member-verify-phone-otp`, data);
+      return response.data;
+    }
+  } catch (e) {
+    throw e;
+  }
+}
+
 export const get_advt = async (advt_page) => {
   try {
     if (advt_page) {

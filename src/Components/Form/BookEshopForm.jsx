@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Box, Typography, CircularProgress } from '@mui/material';
 import FormField from '../Form/FormField';
 import { useNavigate, useParams } from 'react-router-dom';
-import { postEshop, fetchDomains, fetchDomainSectors, fetchSectors, getShopUserData, getUser, send_otp_to_email, postMemberData, get_checkIfMemberExists, get_checkIfShopExists, updateShopUserToMerchant } from '../../API/fetchExpressAPI'
+import { postEshop, fetchDomains, fetchDomainSectors, fetchSectors, getShopUserData, getUser, send_otp_to_email, send_member_email_otp, verify_member_email_otp, send_member_phone_otp, verify_member_phone_otp, postMemberData, get_checkIfMemberExists, get_checkIfShopExists, updateShopUserToMerchant } from '../../API/fetchExpressAPI'
 import { useDispatch, useSelector } from 'react-redux';
 import { setShopToken, setShopTokenValid, setUserToken } from '../../store/authSlice';
 import CustomSnackbar from '../CustomSnackbar';
@@ -60,14 +60,16 @@ const BookEshopForm = () => {
 
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.userAccessToken);
-  const otp_token = useSelector((state) => state.otp.usernameOtp);
 
   const navigate = useNavigate();
 
-  // Simulated OTP for demonstration purposes
-  const validUsernameOtp = otp_token;
-  const validPhoneOtp = '123456';
-  const validMemberOtp = '123456';
+  // Phone OTP verification states
+  const [phone1OtpSent, setPhone1OtpSent] = useState(false);
+  const [phone2OtpSent, setPhone2OtpSent] = useState(false);
+  const [phone1Verified, setPhone1Verified] = useState(false);
+  const [phone2Verified, setPhone2Verified] = useState(false);
+  const [emailVerified, setEmailVerified] = useState(false);
+  const [emailCredentialsId, setEmailCredentialsId] = useState(null);
 
   const fetchUserAndShopData = async (shop_access_token) => {
     const response = await getShopUserData(shop_access_token);
@@ -307,36 +309,10 @@ const BookEshopForm = () => {
     return valid;
   };
 
+  // OTP validation is now done via API calls
   const validateOtp = () => {
-    let valid = true;
-    const newErrors = {};
-    const newErrorMessages = {};
-
-    // Validate OTP for username
-    if (formData.username_otp !== validUsernameOtp) {
-      newErrors.username_otp = true;
-      newErrorMessages.username_otp = 'Invalid OTP for username';
-      valid = false;
-    }
-
-    // Validate OTP for phone numbers
-    if (formData.phone1_otp !== validPhoneOtp) {
-      newErrors.phone1_otp = true;
-      newErrorMessages.phone1_otp = 'Invalid OTP for Phone No. 1';
-      valid = false;
-    }
-
-    if (formData.phone2) {
-      if (formData.phone2_otp !== validPhoneOtp) {
-        newErrors.phone2_otp = true;
-        newErrorMessages.phone2_otp = 'Invalid OTP for Phone No. 2';
-        valid = false;
-      }
-    }
-
-    setErrors(newErrors);
-    setErrorMessages(newErrorMessages);
-    return valid;
+    // This will be handled by API verification
+    return emailVerified && phone1Verified && (!formData.phone2 || phone2Verified);
   };
 
   console.log(formData?.address);
@@ -439,29 +415,285 @@ const handleClose = async (postData) => {
 
 console.log(errorMessages);
 
+  // Resend email OTP function
+  const handleResendEmailOtp = async () => {
+    try {
+      setLoading(true);
+      const data = { username: formData.username };
+      const otp_resp = await send_member_email_otp(data);
+      if (otp_resp?.success) {
+        setEmailCredentialsId(otp_resp.credentials_id);
+        setSnackbar({
+          open: true,
+          message: otp_resp.message || "OTP resent successfully",
+          severity: "success",
+        });
+      } else {
+        setSnackbar({
+          open: true,
+          message: otp_resp.message || "Failed to resend OTP",
+          severity: "error",
+        });
+      }
+    } catch (e) {
+      setSnackbar({
+        open: true,
+        message: e.response?.data?.message || "Failed to resend OTP",
+        severity: "error",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Resend phone1 OTP function
+  const handleResendPhone1Otp = async () => {
+    try {
+      setLoading(true);
+      const phoneData = { phoneNumber: formData.phone1, user_type: 'shop' };
+      const phone_otp_resp = await send_member_phone_otp(phoneData);
+      if (phone_otp_resp?.success) {
+        setSnackbar({
+          open: true,
+          message: phone_otp_resp.message || "OTP resent successfully",
+          severity: "success",
+        });
+      } else {
+        setSnackbar({
+          open: true,
+          message: phone_otp_resp.message || "Failed to resend OTP",
+          severity: "error",
+        });
+      }
+    } catch (e) {
+      setSnackbar({
+        open: true,
+        message: e.response?.data?.message || "Failed to resend OTP",
+        severity: "error",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Resend phone2 OTP function
+  const handleResendPhone2Otp = async () => {
+    try {
+      setLoading(true);
+      const phoneData = { phoneNumber: formData.phone2, user_type: 'shop' };
+      const phone_otp_resp = await send_member_phone_otp(phoneData);
+      if (phone_otp_resp?.success) {
+        setSnackbar({
+          open: true,
+          message: phone_otp_resp.message || "OTP resent successfully",
+          severity: "success",
+        });
+      } else {
+        setSnackbar({
+          open: true,
+          message: phone_otp_resp.message || "Failed to resend OTP",
+          severity: "error",
+        });
+      }
+    } catch (e) {
+      setSnackbar({
+        open: true,
+        message: e.response?.data?.message || "Failed to resend OTP",
+        severity: "error",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
 const proceedOtpAndPostData = async () => {
   if (!showUsernameOtp) {
     if (validateInitialForm()) {
       try {
-        const data = { username: formData.username };
-        const otp_resp = await send_otp_to_email(data);
+        setLoading(true);
+        // Send email OTP
+        const emailData = { username: formData.username };
+        const emailOtpResp = await send_member_email_otp(emailData);
 
-        dispatch(setUsernameOtp(otp_resp.otp));
-        setShowUsernameOtp(true);
-        setShowPhoneOtp(true);
-        setShowMemberOtp(true);
+        if (emailOtpResp?.success) {
+          setEmailCredentialsId(emailOtpResp.credentials_id);
+          setShowUsernameOtp(true);
+          
+          // Send phone OTPs
+          if (formData.phone1) {
+            try {
+              const phone1Data = { phoneNumber: formData.phone1, user_type: 'shop' };
+              const phone1OtpResp = await send_member_phone_otp(phone1Data);
+              if (phone1OtpResp?.success) {
+                setPhone1OtpSent(true);
+                setShowPhoneOtp(true);
+              }
+            } catch (phone1Error) {
+              console.error("Error sending phone1 OTP:", phone1Error);
+            }
+          }
 
-        if (otp_resp.message === "OTP sent successfully") {
-          setSnackbar({ open: true, message: 'OTP sent successfully. Please check and verify.', severity: 'success' });
+          if (formData.phone2) {
+            try {
+              const phone2Data = { phoneNumber: formData.phone2, user_type: 'shop' };
+              const phone2OtpResp = await send_member_phone_otp(phone2Data);
+              if (phone2OtpResp?.success) {
+                setPhone2OtpSent(true);
+                setShowPhoneOtp(true);
+              }
+            } catch (phone2Error) {
+              console.error("Error sending phone2 OTP:", phone2Error);
+            }
+          }
+
+          setSnackbar({ 
+            open: true, 
+            message: emailOtpResp.message || 'OTP sent successfully. Please check and verify.', 
+            severity: 'success' 
+          });
         } else {
-          setSnackbar({ open: true, message: 'Failed to send OTP. Try again.', severity: 'error' });
+          setSnackbar({ 
+            open: true, 
+            message: emailOtpResp.message || 'Failed to send OTP. Try again.', 
+            severity: 'error' 
+          });
         }
       } catch (e) {
         console.log(e);
-        setSnackbar({ open: true, message: 'Failed to send OTP. Try again.', severity: 'error' });
+        setSnackbar({ 
+          open: true, 
+          message: e.response?.data?.message || 'Failed to send OTP. Try again.', 
+          severity: 'error' 
+        });
+      } finally {
+        setLoading(false);
       }
     }
   } else {
+    // Verify email OTP if not yet verified
+    if (!emailVerified && formData.username_otp) {
+      try {
+        setLoading(true);
+        const verifyEmailData = {
+          username: formData.username,
+          email_otp: formData.username_otp,
+        };
+
+        const verifyEmailResp = await verify_member_email_otp(verifyEmailData);
+
+        if (verifyEmailResp?.success) {
+          setEmailVerified(true);
+          setSnackbar({
+            open: true,
+            message: verifyEmailResp.message || "Email OTP verified successfully",
+            severity: "success",
+          });
+        } else {
+          setSnackbar({
+            open: true,
+            message: verifyEmailResp.message || "Invalid or expired OTP. Please try again.",
+            severity: "error",
+          });
+          setLoading(false);
+          return;
+        }
+      } catch (e) {
+        console.error("Error verifying email OTP:", e);
+        setSnackbar({
+          open: true,
+          message: e.response?.data?.message || "OTP verification failed. Please try again.",
+          severity: "error",
+        });
+        setLoading(false);
+        return;
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    // Verify phone1 OTP if not yet verified
+    if (!phone1Verified && formData.phone1_otp && phone1OtpSent) {
+      try {
+        setLoading(true);
+        const verifyPhone1Data = {
+          phoneNumber: formData.phone1,
+          phone_otp: formData.phone1_otp,
+        };
+
+        const verifyPhone1Resp = await verify_member_phone_otp(verifyPhone1Data);
+
+        if (verifyPhone1Resp?.success) {
+          setPhone1Verified(true);
+          setSnackbar({
+            open: true,
+            message: verifyPhone1Resp.message || "Phone No. 1 OTP verified successfully",
+            severity: "success",
+          });
+        } else {
+          setSnackbar({
+            open: true,
+            message: verifyPhone1Resp.message || "Invalid or expired OTP. Please try again.",
+            severity: "error",
+          });
+          setLoading(false);
+          return;
+        }
+      } catch (e) {
+        console.error("Error verifying phone1 OTP:", e);
+        setSnackbar({
+          open: true,
+          message: e.response?.data?.message || "OTP verification failed. Please try again.",
+          severity: "error",
+        });
+        setLoading(false);
+        return;
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    // Verify phone2 OTP if not yet verified and phone2 exists
+    if (formData.phone2 && !phone2Verified && formData.phone2_otp && phone2OtpSent) {
+      try {
+        setLoading(true);
+        const verifyPhone2Data = {
+          phoneNumber: formData.phone2,
+          phone_otp: formData.phone2_otp,
+        };
+
+        const verifyPhone2Resp = await verify_member_phone_otp(verifyPhone2Data);
+
+        if (verifyPhone2Resp?.success) {
+          setPhone2Verified(true);
+          setSnackbar({
+            open: true,
+            message: verifyPhone2Resp.message || "Phone No. 2 OTP verified successfully",
+            severity: "success",
+          });
+        } else {
+          setSnackbar({
+            open: true,
+            message: verifyPhone2Resp.message || "Invalid or expired OTP. Please try again.",
+            severity: "error",
+          });
+          setLoading(false);
+          return;
+        }
+      } catch (e) {
+        console.error("Error verifying phone2 OTP:", e);
+        setSnackbar({
+          open: true,
+          message: e.response?.data?.message || "OTP verification failed. Please try again.",
+          severity: "error",
+        });
+        setLoading(false);
+        return;
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    // Proceed with form submission if all OTPs are verified
     if (validateOtp() && validateInitialForm()) {
       try {
         const selectedDomain = (await fetchDomains()).find(domain => domain.domain_name === formData.domain);
@@ -826,6 +1058,33 @@ const handleSubmit = async (e) => {
               Eshop
             </Button>
             }
+            {showUsernameOtp && !emailVerified && (
+              <Button
+                variant="outlined"
+                onClick={handleResendEmailOtp}
+                className="submit_button"
+              >
+                Resend Email OTP
+              </Button>
+            )}
+            {showPhoneOtp && !phone1Verified && (
+              <Button
+                variant="outlined"
+                onClick={handleResendPhone1Otp}
+                className="submit_button"
+              >
+                Resend Phone 1 OTP
+              </Button>
+            )}
+            {showPhoneOtp && formData.phone2 && !phone2Verified && (
+              <Button
+                variant="outlined"
+                onClick={handleResendPhone2Otp}
+                className="submit_button"
+              >
+                Resend Phone 2 OTP
+              </Button>
+            )}
           </Box>
         ) : ("")
       }
