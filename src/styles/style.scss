@@ -30551,12 +30551,13 @@ textarea[readonly] {
     @include background-center-no-repeat($standardFitBgImg);
     background-size: cover;
     background-position: center;
-    min-height: 100vh;
 
     .standard_fit_header {
       width: 100%;
-      @include flex-center(row, space-between);
-      align-items: flex-start;
+      // @include flex-center(row, space-between);
+      // align-items: flex-start;
+      display : grid;
+      grid-template-columns: 120px 1fr 120px;
       position: relative;
       z-index: 10;
 
@@ -30566,9 +30567,10 @@ textarea[readonly] {
         transition: all 0.3s ease;
         border-radius: 10px;
         overflow: hidden;
+        align-self: center;
+        justify-self: center;
         width: 170px;
         // border: 6px solid $black;
-        
         
         .card_image_wrapper {
           width: 100%;
@@ -30610,10 +30612,8 @@ textarea[readonly] {
     .standard_fit_grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      grid-template-rows: 1fr 1fr;
       gap: 30px;
-      width: 100%;
-      max-width: 1400px;
+      width: 80%;
       margin: 0 auto;
       position: relative;
       z-index: 5;
@@ -30652,10 +30652,8 @@ textarea[readonly] {
         }
 
         .panel_title {
-          font-family: "Bobby-Jones-Soft", sans-serif;
-          font-size: 36px;
-          font-weight: bold;
-          color: #ffffff;
+          @include homepage-buttons("Bobby-Jones-Soft", 36px, $white, "none");
+          @include hover-scale(1, 0s);
           text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
           margin-bottom: 10px;
           text-align: center;
@@ -30663,51 +30661,39 @@ textarea[readonly] {
         }
 
         .panel_items {
-          @include flex-center(column, flex-start);
-          gap: 25px;
+          @include flex-center(row, center);
+          flex-wrap: wrap;
+          gap: 15px;
           width: 100%;
           flex: 1;
 
           .panel_item {
-            @include flex-center(row, flex-start);
+            @include flex-center(column, center);
             gap: 20px;
-            width: 100%;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
             transition: all 0.3s ease;
+            width: 40%;
 
-            &:hover {
-              background: rgba(255, 255, 255, 0.2);
-              transform: translateX(5px);
+            &.edge_item, &.spark_item{
+              width: 70%;
             }
 
-            &.edge_item,
-            &.spark_item {
-              flex-direction: column;
-              align-items: center;
-              text-align: center;
-              gap: 15px;
+            &:hover{
+              transform: scale(1.1);
             }
 
             .panel_item_icon {
               flex-shrink: 0;
               @include flex-center(row, center);
               width: 70px;
-              height: 70px;
-              background: rgba(255, 255, 255, 0.2);
-              border-radius: 12px;
-              padding: 10px;
-              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+              filter: drop-shadow(0px 0px 5px rgba($black, 0.4));
             }
-
+            
             .panel_item_text {
-              font-family: "Bobby-Jones-Soft", sans-serif;
-              font-size: 16px;
-              font-weight: 600;
-              color: #ffffff;
+              @include homepage-buttons("Bobby-Jones-Soft", 20px, $black, "none");
+              @include hover-scale(1, 0s);
               text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
               line-height: 1.4;
+              text-align: center;
               flex: 1;
             }
           }
@@ -30724,7 +30710,6 @@ textarea[readonly] {
 
         .standard_fit_panel {
           padding: 25px 20px;
-          min-height: 350px;
 
           .panel_title {
             font-size: 32px;

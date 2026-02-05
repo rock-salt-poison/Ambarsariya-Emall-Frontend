@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Box, Typography } from "@mui/material";
 import UserBadge from "../../UserBadge";
 import hornSound from "../../Utils/audio/horn-sound.mp3";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import standardFitBg from "../../Utils/images/Socialize/city_junctions/connect_with_utilities/standard_fit_bg.webp";
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import TwoWheelerIcon from '@mui/icons-material/TwoWheeler';
@@ -15,6 +15,17 @@ import CloudSyncIcon from '@mui/icons-material/CloudSync';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import standard_fit from "../../Utils/images/Socialize/city_junctions/connect_with_utilities/mask_1.png";
+import spark_icon from "../../Utils/images/Socialize/city_junctions/connect_with_utilities/spark_icon.svg";
+import edge_icon from "../../Utils/images/Socialize/city_junctions/connect_with_utilities/edge_icon.svg";
+import low_stock from "../../Utils/images/Socialize/city_junctions/connect_with_utilities/low_stock.svg";
+import real_time_stock from "../../Utils/images/Socialize/city_junctions/connect_with_utilities/real_time_stock.svg";
+import loyalty_program from "../../Utils/images/Socialize/city_junctions/connect_with_utilities/loyalty_program.svg";
+import multiwarehouse_sync from "../../Utils/images/Socialize/city_junctions/connect_with_utilities/multiwarehouse_sync.svg";
+import pickup from "../../Utils/images/Sell/shop_details/pickup.svg";
+import delivery from "../../Utils/images/Sell/shop_details/delivery.webp";
+import visit from "../../Utils/images/Sell/shop_details/home_visit.webp";
+import takeaway from "../../Utils/images/Sell/shop_details/takeaway.webp";
+
 
 function StandardFit() {
   const [audio] = useState(new Audio(hornSound));
@@ -31,22 +42,22 @@ function StandardFit() {
     {
       id: "pickup",
       title: "PICKUP",
-      icon: <ShoppingBagIcon sx={{ fontSize: 60, color: "#4CAF50" }} />,
+      icon: pickup,
     },
     {
       id: "takeaway",
       title: "TAKE-AWAY",
-      icon: <ShoppingBagIcon sx={{ fontSize: 60, color: "#FFC107" }} />,
+      icon: takeaway,
     },
     {
       id: "homevisit",
       title: "HOME VISIT",
-      icon: <HomeIcon sx={{ fontSize: 60, color: "#FF9800" }} />,
+      icon: visit,
     },
     {
       id: "delivery",
       title: "DELIVERY",
-      icon: <TwoWheelerIcon sx={{ fontSize: 60, color: "#FFC107" }} />,
+      icon: delivery,
     },
   ];
 
@@ -54,22 +65,22 @@ function StandardFit() {
     {
       id: "realtime",
       title: "REAL TIME STOCK STATUS",
-      icon: <MonitorIcon sx={{ fontSize: 50, color: "#2196F3" }} />,
+      icon: real_time_stock,
     },
     {
       id: "lowstock",
       title: "LOW STOCK ALERTS",
-      icon: <WarningIcon sx={{ fontSize: 50, color: "#FFC107" }} />,
+      icon:low_stock,
     },
     {
       id: "batch",
       title: "BATCH & LOYALTY PROGRAM",
-      icon: <CardGiftcardIcon sx={{ fontSize: 50, color: "#9C27B0" }} />,
+      icon: loyalty_program,
     },
     {
       id: "warehouse",
       title: "MULTI-WAREHOUSE SYNC",
-      icon: <CloudSyncIcon sx={{ fontSize: 50, color: "#00BCD4" }} />,
+      icon: multiwarehouse_sync,
     },
   ];
 
@@ -77,7 +88,7 @@ function StandardFit() {
     {
       id: "bank",
       title: "CONNECT YOUR PAYABLE/ RECEIVABLE VIA BANK UPI",
-      icon: <AccountBalanceIcon sx={{ fontSize: 60, color: "#3F51B5" }} />,
+      icon: edge_icon,
     },
   ];
 
@@ -85,7 +96,7 @@ function StandardFit() {
     {
       id: "invoices",
       title: "CONNECT YOUR INVOICES FOR DAILY SALE & PURCHASE",
-      icon: <ReceiptIcon sx={{ fontSize: 60, color: "#E91E63" }} />,
+      icon: spark_icon,
     },
   ];
 
@@ -131,10 +142,10 @@ function StandardFit() {
             <Typography className="panel_title">SERVICES</Typography>
             <Box className="panel_items">
               {services.map((service) => (
-                <Box key={service.id} className="panel_item">
-                  <Box className="panel_item_icon">{service.icon}</Box>
+                <Link key={service.id} className="panel_item">
+                  <Box className="panel_item_icon" component="img" src={service.icon}/>
                   <Typography className="panel_item_text">{service.title}</Typography>
-                </Box>
+                </Link>
               ))}
             </Box>
             <Box className="board_pins">
@@ -152,10 +163,10 @@ function StandardFit() {
             <Typography className="panel_title">ENHANCED</Typography>
             <Box className="panel_items">
               {enhanced.map((item) => (
-                <Box key={item.id} className="panel_item">
-                  <Box className="panel_item_icon">{item.icon}</Box>
+                <Link key={item.id} className="panel_item">
+                  <Box className="panel_item_icon" component="img" src={item.icon}/>
                   <Typography className="panel_item_text">{item.title}</Typography>
-                </Box>
+                </Link>
               ))}
             </Box>
             <Box className="board_pins">
@@ -173,10 +184,10 @@ function StandardFit() {
             <Typography className="panel_title">EDGE</Typography>
             <Box className="panel_items">
               {edge.map((item) => (
-                <Box key={item.id} className="panel_item edge_item">
-                  <Box className="panel_item_icon">{item.icon}</Box>
+                <Link key={item.id} className="panel_item edge_item">
+                  <Box className="panel_item_icon" component="img" src={item.icon}/>
                   <Typography className="panel_item_text">{item.title}</Typography>
-                </Box>
+                </Link>
               ))}
             </Box>
             <Box className="board_pins">
@@ -194,10 +205,10 @@ function StandardFit() {
             <Typography className="panel_title">SPARK</Typography>
             <Box className="panel_items">
               {spark.map((item) => (
-                <Box key={item.id} className="panel_item spark_item">
-                  <Box className="panel_item_icon">{item.icon}</Box>
+                <Link key={item.id} className="panel_item spark_item">
+                  <Box className="panel_item_icon" component="img" src={item.icon}/>
                   <Typography className="panel_item_text">{item.title}</Typography>
-                </Box>
+                </Link>
               ))}
             </Box>
             <Box className="board_pins">
