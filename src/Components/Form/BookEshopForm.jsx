@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Box, Typography, CircularProgress } from '@mui/material';
 import FormField from '../Form/FormField';
 import { useNavigate, useParams } from 'react-router-dom';
-import { postEshop, fetchDomains, fetchDomainSectors, fetchSectors, getShopUserData, getUser, send_otp_to_email, send_member_email_otp, verify_member_email_otp, send_member_phone_otp, verify_member_phone_otp, postMemberData, get_checkIfMemberExists, get_checkIfShopExists, updateShopUserToMerchant } from '../../API/fetchExpressAPI'
+import { postEshop, fetchDomains, fetchDomainSectors, fetchSectors, getShopUserData, getUser, send_otp_to_email, send_member_email_otp, verify_member_email_otp, send_member_phone_otp, verify_member_phone_otp, postMemberData, get_checkIfMemberExists, get_checkIfShopExists, updateShopUserToMerchant, get_checkIfPhoneExists } from '../../API/fetchExpressAPI'
 import { useDispatch, useSelector } from 'react-redux';
 import { setShopToken, setShopTokenValid, setUserToken } from '../../store/authSlice';
 import CustomSnackbar from '../CustomSnackbar';
@@ -450,6 +450,20 @@ console.log(errorMessages);
   const handleResendPhone1Otp = async () => {
     try {
       setLoading(true);
+      
+      // Check if phone1 already exists
+      const phoneCheckResp = await get_checkIfPhoneExists(formData.phone1, 'shop');
+      
+      if (phoneCheckResp?.exists) {
+        setSnackbar({
+          open: true,
+          message: phoneCheckResp.message || "Phone No. 1 is already used. Try with different one.",
+          severity: "error",
+        });
+        setLoading(false);
+        return;
+      }
+
       const phoneData = { phoneNumber: formData.phone1, user_type: 'shop' };
       const phone_otp_resp = await send_member_phone_otp(phoneData);
       if (phone_otp_resp?.success) {
@@ -480,6 +494,20 @@ console.log(errorMessages);
   const handleResendPhone2Otp = async () => {
     try {
       setLoading(true);
+      
+      // Check if phone2 already exists
+      const phoneCheckResp = await get_checkIfPhoneExists(formData.phone2, 'shop');
+      
+      if (phoneCheckResp?.exists) {
+        setSnackbar({
+          open: true,
+          message: phoneCheckResp.message || "Phone No. 2 is already used. Try with different one.",
+          severity: "error",
+        });
+        setLoading(false);
+        return;
+      }
+
       const phoneData = { phoneNumber: formData.phone2, user_type: 'shop' };
       const phone_otp_resp = await send_member_phone_otp(phoneData);
       if (phone_otp_resp?.success) {
@@ -522,6 +550,19 @@ const proceedOtpAndPostData = async () => {
           // Send phone OTPs
           if (formData.phone1) {
             try {
+              // Check if phone1 already exists
+              const phone1CheckResp = await get_checkIfPhoneExists(formData.phone1, 'shop');
+              
+              if (phone1CheckResp?.exists) {
+                setSnackbar({
+                  open: true,
+                  message: phone1CheckResp.message || "Phone No. 1 is already used. Try with different one.",
+                  severity: "error",
+                });
+                setLoading(false);
+                return;
+              }
+
               const phone1Data = { phoneNumber: formData.phone1, user_type: 'shop' };
               const phone1OtpResp = await send_member_phone_otp(phone1Data);
               if (phone1OtpResp?.success) {
@@ -530,11 +571,31 @@ const proceedOtpAndPostData = async () => {
               }
             } catch (phone1Error) {
               console.error("Error sending phone1 OTP:", phone1Error);
+              setSnackbar({
+                open: true,
+                message: phone1Error.response?.data?.message || "Failed to send OTP to Phone No. 1",
+                severity: "error",
+              });
+              setLoading(false);
+              return;
             }
           }
 
           if (formData.phone2) {
             try {
+              // Check if phone2 already exists
+              const phone2CheckResp = await get_checkIfPhoneExists(formData.phone2, 'shop');
+              
+              if (phone2CheckResp?.exists) {
+                setSnackbar({
+                  open: true,
+                  message: phone2CheckResp.message || "Phone No. 2 is already used. Try with different one.",
+                  severity: "error",
+                });
+                setLoading(false);
+                return;
+              }
+
               const phone2Data = { phoneNumber: formData.phone2, user_type: 'shop' };
               const phone2OtpResp = await send_member_phone_otp(phone2Data);
               if (phone2OtpResp?.success) {
@@ -543,6 +604,13 @@ const proceedOtpAndPostData = async () => {
               }
             } catch (phone2Error) {
               console.error("Error sending phone2 OTP:", phone2Error);
+              setSnackbar({
+                open: true,
+                message: phone2Error.response?.data?.message || "Failed to send OTP to Phone No. 2",
+                severity: "error",
+              });
+              setLoading(false);
+              return;
             }
           }
 

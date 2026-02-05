@@ -17,6 +17,7 @@ import {
   send_member_phone_otp,
   verify_member_phone_otp,
   updateShopUserToMerchant,
+  get_checkIfPhoneExists,
 } from "../../API/fetchExpressAPI";
 import CustomSnackbar from "../CustomSnackbar";
 import { useDispatch, useSelector } from "react-redux";
@@ -275,35 +276,56 @@ const UserPortfolioForm = () => {
         const data = { username: formData.username.toLowerCase() };
 
         const otp_resp = await send_member_email_otp(data);
-        
+
         if (otp_resp?.success) {
           setEmailCredentialsId(otp_resp.credentials_id);
           setIsUsernameOtpSent(true);
           setShowUsernameOtp(true);
 
-          // Also send OTP to phone number if phone number is provided
-          if (formData.phoneNumber && formData.phoneNumber.length > 0) {
-            try {
-              const phoneData = { phoneNumber: formData.phoneNumber,user_type:'member' };
-              const phone_otp_resp = await send_member_phone_otp(phoneData);
-              
-              if (phone_otp_resp?.success) {
-                setPhoneCredentialsId(phone_otp_resp.credentials_id);
-                
-                // Show phone OTP field if phone number changed
-                if (shouldShowPhoneOtp) {
-                  setShowPhoneOtp(true);
-                  setIsPhoneOtpSent(true);
-                }
-              }
-            } catch (phoneError) {
-              console.error("Error sending phone OTP:", phoneError);
-              // Don't block the flow if phone OTP fails, just log it
+        // Also send OTP to phone number if phone number is provided
+        if (formData.phoneNumber && formData.phoneNumber.length > 0) {
+          try {
+            setLoading(true);
+            // Check if phone number already exists
+            const phoneCheckResp = await get_checkIfPhoneExists(formData.phoneNumber, 'member');
+            
+            if (phoneCheckResp?.exists) {
+              setSnackbar({
+                open: true,
+                message: phoneCheckResp.message || "This mobile number is already used. Try with different one.",
+                severity: "error",
+              });
+              return;
             }
-          }
 
-          setSnackbar({
-            open: true,
+            const phoneData = { phoneNumber: formData.phoneNumber, user_type: 'member' };
+            const phone_otp_resp = await send_member_phone_otp(phoneData);
+              
+            if (phone_otp_resp?.success) {
+              setPhoneCredentialsId(phone_otp_resp.credentials_id);
+            
+              // Show phone OTP field if phone number changed
+              if (shouldShowPhoneOtp) {
+                setShowPhoneOtp(true);
+                setIsPhoneOtpSent(true);
+              }
+            }
+          } catch (phoneError) {
+            console.error("Error sending phone OTP:", phoneError);
+            setSnackbar({
+              open: true,
+              message: phoneError.response?.data?.message || "Failed to send phone OTP. Try again.",
+              severity: "error",
+            });
+            
+            return;
+          }finally{
+            setLoading(false);
+          }
+        }
+
+        setSnackbar({
+          open: true,
             message: otp_resp.message || "OTP sent successfully to email. Please check and verify.",
             severity: "success",
           });
@@ -312,7 +334,7 @@ const UserPortfolioForm = () => {
             open: true,
             message: otp_resp.message || "Failed to send OTP. Try again.",
             severity: "error",
-          });
+        });
         }
       } catch (e) {
         console.error("Error sending email OTP:", e);
@@ -351,7 +373,6 @@ const UserPortfolioForm = () => {
             message: verify_resp.message || "Invalid or expired OTP. Please try again.",
             severity: "error",
           });
-          setLoading(false);
           return;
         }
       } catch (e) {
@@ -361,7 +382,6 @@ const UserPortfolioForm = () => {
           message: e.response?.data?.message || "OTP verification failed. Please try again.",
           severity: "error",
         });
-        setLoading(false);
         return;
       } finally {
         setLoading(false);
@@ -372,7 +392,20 @@ const UserPortfolioForm = () => {
     if (shouldShowPhoneOtp && !isPhoneOtpSent && !phoneVerified) {
       try {
         setLoading(true);
-        const phoneData = { phoneNumber: formData.phoneNumber, user_type:'member' };
+        
+        // Check if phone number already exists
+        const phoneCheckResp = await get_checkIfPhoneExists(formData.phoneNumber, 'member');
+        
+        if (phoneCheckResp?.exists) {
+          setSnackbar({
+            open: true,
+            message: phoneCheckResp.message || "This mobile number is already used. Try with different one.",
+            severity: "error",
+          });
+          return;
+        }
+
+        const phoneData = { phoneNumber: formData.phoneNumber, user_type: 'member' };
 
         const phone_otp_resp = await send_member_phone_otp(phoneData);
 
@@ -430,7 +463,6 @@ const UserPortfolioForm = () => {
             message: verify_resp.message || "Invalid or expired OTP. Please try again.",
             severity: "error",
           });
-          setLoading(false);
           return;
         }
       } catch (e) {
@@ -440,7 +472,6 @@ const UserPortfolioForm = () => {
           message: e.response?.data?.message || "OTP verification failed. Please try again.",
           severity: "error",
         });
-        setLoading(false);
         return;
       } finally {
         setLoading(false);
@@ -607,6 +638,20 @@ const UserPortfolioForm = () => {
   const handleResendPhoneOtp = async () => {
     try {
       setLoading(true);
+      
+      // Check if phone number already exists
+      const phoneCheckResp = await get_checkIfPhoneExists(formData.phoneNumber, 'member');
+      
+      if (phoneCheckResp?.exists) {
+        setSnackbar({
+          open: true,
+          message: phoneCheckResp.message || "This mobile number is already used. Try with different one.",
+          severity: "error",
+        });
+        setLoading(false);
+        return;
+      }
+
       const phoneData = { phoneNumber: formData.phoneNumber, user_type: 'member' };
       const phone_otp_resp = await send_member_phone_otp(phoneData);
       if (phone_otp_resp?.success) {
