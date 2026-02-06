@@ -30348,50 +30348,53 @@ textarea[readonly] {
   position: relative;
   height: max-content;
   width: 100%;
+  min-height: 100vh;
   overflow: visible;
   @include flex-center(column, center);
   place-items: normal;
   box-sizing: border-box;
   border: 0px solid transparent;
   border-image: url(#{$utilitiesBorderImg}) 1 fill;
-  border-image-slice: 34% 24%;
+  border-image-slice: 35% 24%;
   border-image-width: 250px;
   border-right-width: 165px;
-  border-top-width: 142px;
-  border-left-width: 175px;
-  border-bottom-width: 206px;
+  border-top-width: 132px;
+  border-left-width: 165px;
+  border-bottom-width: 202px;
   border-image-repeat: stretch;
   border-image-outset: 0;
+  
+  .utilities_header {
+    @include flex-center(row, space-between);
+    @include full-absolute(-120px, -120px, auto, -120px);
+    z-index: 2;
+
+    .icon_container {
+      width: max-content;
+      margin-right: auto;
+
+      .icon {
+        width: 80px;
+        filter: drop-shadow(2px 4px 6px $black);
+        @include hover-scale(1.1, 0.4s);
+      }
+    }
+  }
 
   .utilities_content {
-    position: relative;
-    z-index: 1;
+    z-index: 0;
     width: 100%;
     max-width: 100%;
     margin: 0 auto;
     padding: 30px;
-    @include flex-center(column, space-between);
+    @include flex-center(column, center);
     gap: 30px;
     place-items: normal;
     @include background-center-no-repeat($utilitiesBgImg);
     background-size: cover;
+    flex: 1;
     background-position: center;
 
-    .utilities_header {
-      width: 100%;
-      @include flex-center(row, space-between);
-
-      .icon_container {
-        width: max-content;
-        margin-left: auto;
-
-        .icon {
-          width: 80px;
-          filter: drop-shadow(2px 4px 6px $black);
-          @include hover-scale(1.1, 0.4s);
-        }
-      }
-    }
 
     .utilities_cards_container {
       display: grid;
@@ -30544,7 +30547,7 @@ textarea[readonly] {
     width: 100%;
     max-width: 100%;
     margin: 0 auto;
-    padding: 40px 30px;
+    padding: 30px;
     @include flex-center(column, flex-start);
     gap: 30px;
     place-items: normal;
@@ -30612,7 +30615,7 @@ textarea[readonly] {
     .standard_fit_grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 30px;
+      gap: 20px;
       width: 80%;
       margin: 0 auto;
       position: relative;
@@ -30628,10 +30631,10 @@ textarea[readonly] {
         );;
         
         border-radius: 20px;
-        padding: 30px 25px;
+        padding: 15px;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         @include flex-center(column, flex-start);
-        gap: 20px;
+        gap: 10px;
 
         .board_pins {
           @include flex-center(row, space-between);
@@ -30652,10 +30655,10 @@ textarea[readonly] {
         }
 
         .panel_title {
-          @include homepage-buttons("Bobby-Jones-Soft", 36px, $white, "none");
+          @include homepage-buttons("Bobby-Jones-Soft", 28px, $white, "none");
           @include hover-scale(1, 0s);
           text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-          margin-bottom: 10px;
+          margin-bottom: 8px;
           text-align: center;
           width: 100%;
         }
@@ -30669,8 +30672,9 @@ textarea[readonly] {
 
           .panel_item {
             @include flex-center(column, center);
-            gap: 20px;
+            gap: 10px;
             transition: all 0.3s ease;
+            align-self: stretch;
             width: 40%;
 
             &.edge_item, &.spark_item{
@@ -30684,7 +30688,9 @@ textarea[readonly] {
             .panel_item_icon {
               flex-shrink: 0;
               @include flex-center(row, center);
-              width: 70px;
+              width: 60px;
+              height: 60px;
+              object-fit: contain;
               filter: drop-shadow(0px 0px 5px rgba($black, 0.4));
             }
             
@@ -30706,19 +30712,18 @@ textarea[readonly] {
     @media (max-width: 1200px) {
       .standard_fit_grid {
         gap: 25px;
-        padding: 0 20px;
+        width: 100%;
 
         .standard_fit_panel {
           padding: 25px 20px;
 
           .panel_title {
-            font-size: 32px;
+            font-size: 26px;
           }
 
           .panel_items {
             .panel_item {
               .panel_item_text {
-                font-size: 14px;
               }
             }
           }
@@ -30728,27 +30733,6 @@ textarea[readonly] {
 
     @media (max-width: 768px) {
       padding: 30px 20px;
-
-      .standard_fit_header {
-        .back_merchant_logo {
-          .logo_circle {
-            width: 100px;
-            height: 100px;
-
-            .logo_crown {
-              font-size: 20px;
-            }
-
-            .logo_text_top {
-              font-size: 12px;
-            }
-
-            .logo_text_bottom {
-              font-size: 10px;
-            }
-          }
-        }
-      }
 
       .standard_fit_label_container {
         margin: 15px 0 30px;
@@ -30783,12 +30767,8 @@ textarea[readonly] {
               gap: 12px;
 
               .panel_item_icon {
-                width: 60px;
-                height: 60px;
-              }
-
-              .panel_item_text {
-                font-size: 13px;
+                width: 50px;
+                height: 50px;
               }
             }
           }
@@ -30796,8 +30776,19 @@ textarea[readonly] {
       }
     }
 
-    @media (max-width: 480px) {
+    @media (max-width: 560px) {
       padding: 20px 15px;
+
+        .standard_fit_header{
+          grid-template-columns: 1fr;
+
+          :last-child{
+            order:0;
+          }
+          .utilities_card{
+            order: 1;
+          }
+        }
 
       .standard_fit_label_container {
         .standard_fit_label {
@@ -30817,7 +30808,6 @@ textarea[readonly] {
           .panel_items {
             .panel_item {
               .panel_item_text {
-                font-size: 12px;
               }
             }
           }

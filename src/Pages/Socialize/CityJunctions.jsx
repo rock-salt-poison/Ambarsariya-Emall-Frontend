@@ -76,11 +76,10 @@ function CityJunctions() {
         <Box className="city_junctions_wrapper">
             <Box className="row">
                 <Box className="col">
-                    <UserBadge
-                        handleLogoutClick="../../"
-                        handleBadgeBgClick={-1}
-                        handleLogin="login"
-                    />
+                    <Link className='icon_container' onClick={(e)=>handleClick(e)}>
+                        <Box component="img" src={info} alt="icon" className='icon'/>
+                    </Link>
+
                     <Box className="title_container">
                         <Link onClick={(e)=>handleClick(e)} className='title_link'>
                             <Typography className="title">
@@ -89,9 +88,11 @@ function CityJunctions() {
                         </Link>
                     </Box>
 
-                    <Link className='icon_container' onClick={(e)=>handleClick(e)}>
-                        <Box component="img" src={info} alt="icon" className='icon'/>
-                    </Link>
+                    <UserBadge
+                        handleLogoutClick="../../"
+                        handleBadgeBgClick={-1}
+                        handleLogin="login"
+                    />
                 </Box>
 
                 <Box className="col">

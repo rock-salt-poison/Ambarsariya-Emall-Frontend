@@ -90,19 +90,19 @@ function UtilitiesMain() {
   return (
     <Box className="utilities_main_wrapper"> 
 
-      {/* Content Container */}
-      <Box className="utilities_content">
         <Box className="utilities_header">
+          <Link className='icon_container' onClick={handleIconClick}>
+            <Box component="img" src={info} alt="icon" className='icon'/>
+          </Link>
           <UserBadge
             handleLogoutClick="../../"
             handleBadgeBgClick={-1}
             handleLogin="../login"
           />
 
-          <Link className='icon_container' onClick={handleIconClick}>
-            <Box component="img" src={info} alt="icon" className='icon'/>
-          </Link>
         </Box>
+      {/* Content Container */}
+      <Box className="utilities_content">
 
         {/* Three Fit Cards */}
         <Box className="utilities_cards_container">

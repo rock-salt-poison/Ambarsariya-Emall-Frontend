@@ -105,11 +105,8 @@ function StandardFit() {
       <Box className="standard_fit_content">
         {/* Header */}
         <Box className="standard_fit_header">
-          <UserBadge
-            handleLogoutClick="../../"
-            handleBadgeBgClick={-1}
-            handleLogin="../login"
-          />
+          <Box></Box>
+         
           <Box
               className={`utilities_card`}
             >
@@ -128,6 +125,11 @@ function StandardFit() {
                 </Box>
             </Box>
             </Box>
+            <UserBadge
+            handleLogoutClick="../../"
+            handleBadgeBgClick={-1}
+            handleLogin="../login"
+          />
         </Box>
 
 
