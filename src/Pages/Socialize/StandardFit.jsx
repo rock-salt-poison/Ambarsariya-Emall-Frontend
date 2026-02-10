@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Typography } from "@mui/material";
 import UserBadge from "../../UserBadge";
 import hornSound from "../../Utils/audio/horn-sound.mp3";
@@ -25,11 +25,44 @@ import pickup from "../../Utils/images/Sell/shop_details/pickup.svg";
 import delivery from "../../Utils/images/Sell/shop_details/delivery.webp";
 import visit from "../../Utils/images/Sell/shop_details/home_visit.webp";
 import takeaway from "../../Utils/images/Sell/shop_details/takeaway.webp";
+import CardBoardPopup from "../../Components/CardBoardPopupComponents/CardBoardPopup";
+import ServiceType from "../../Components/Cart/ServiceType/ServiceType";
+import Delivery from "../../Components/Cart/ServiceType/Delivery";
+import Visit from "../../Components/Cart/ServiceType/Visit";
+import TakeAway from "../../Components/Cart/ServiceType/TakeAway";
+import Pickup from "../../Components/Cart/ServiceType/Pickup";
+import { getUser } from "../../API/fetchExpressAPI";
+import { useSelector } from "react-redux";
 
 
 function StandardFit() {
   const [audio] = useState(new Audio(hornSound));
   const navigate = useNavigate();
+  const token = useSelector((state) => state.auth.userAccessToken);
+  const [hasShopAccessToken, setHasShopAccessToken] = useState(false);
+  const [openServicePopup, setOpenServicePopup] = useState(null);
+
+  useEffect(() => {
+    const checkShopAccessToken = async () => {
+      if (token) {
+        try {
+          const res = await getUser(token);
+          const shopUser = res?.find((u) => u.shop_no !== null);
+          if (shopUser?.shop_access_token) {
+            setHasShopAccessToken(true);
+          } else {
+            setHasShopAccessToken(false);
+          }
+        } catch (error) {
+          console.error("Error checking shop access token:", error);
+          setHasShopAccessToken(false);
+        }
+      } else {
+        setHasShopAccessToken(false);
+      }
+    };
+    checkShopAccessToken();
+  }, [token]);
 
   const handleBackClick = () => {
     audio.play();
@@ -38,26 +71,41 @@ function StandardFit() {
     }, 300);
   };
 
+  const handleServiceClick = (e, serviceId) => {
+    if (hasShopAccessToken) {
+      e.preventDefault();
+      setOpenServicePopup((prev) => (prev === serviceId ? null : serviceId));
+    }
+  };
+
   const services = [
     {
       id: "pickup",
       title: "PICKUP",
       icon: pickup,
+      popupContent: <Pickup title="Pickup" fieldSet="standardFit" />,
+      cName: "service_type_popup pickup",
     },
     {
       id: "takeaway",
       title: "TAKE-AWAY",
       icon: takeaway,
+      popupContent: <TakeAway title="Take Away" />,
+      cName: "service_type_popup pickup",
     },
     {
       id: "homevisit",
       title: "HOME VISIT",
       icon: visit,
+      popupContent: <Visit />,
+      cName: "service_type_popup delivery visit",
     },
     {
       id: "delivery",
       title: "DELIVERY",
       icon: delivery,
+      popupContent: <Delivery />,
+      cName: "service_type_popup delivery",
     },
   ];
 
@@ -144,7 +192,11 @@ function StandardFit() {
             <Typography className="panel_title">SERVICES</Typography>
             <Box className="panel_items">
               {services.map((service) => (
-                <Link key={service.id} className="panel_item">
+                <Link 
+                  key={service.id} 
+                  className="panel_item"
+                  onClick={(e) => handleServiceClick(e, service.id)}
+                >
                   <Box className="panel_item_icon" component="img" src={service.icon}/>
                   <Typography className="panel_item_text">{service.title}</Typography>
                 </Link>
@@ -220,6 +272,13 @@ function StandardFit() {
           </Box>
         </Box>
       </Box>
+      <CardBoardPopup
+        customPopup={true}
+        open={openServicePopup !== null}
+        handleClose={() => setOpenServicePopup(null)}
+        body_content={services.find(s => s.id === openServicePopup)?.popupContent}
+        optionalCName={services.find(s => s.id === openServicePopup)?.cName}
+      />
     </Box>
   );
 }

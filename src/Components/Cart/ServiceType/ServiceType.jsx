@@ -27,7 +27,7 @@ function ServiceType() {
     }
 
     const services = [
-        {id:1, imgSrc:pickup, popupContent:<Pickup title="Pickup"/>, cName:'service_type_popup pickup',  },
+        {id:1, imgSrc:pickup, popupContent:<Pickup title="Pickup" fieldSet="cart"/>, cName:'service_type_popup pickup',  },
         {id:2, imgSrc:takeaway, popupContent:<TakeAway title="Take Away"/>, cName:'service_type_popup pickup' }
     ]
 

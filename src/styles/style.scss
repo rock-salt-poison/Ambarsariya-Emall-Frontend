@@ -6852,6 +6852,7 @@ a {
                 text-shadow: -3px 0px 2px $yellow, -6px 0px 2px $dark-yellow2;
                 transform: skew(12deg, 1deg);
                 @include hover-scale(1, 0s);
+                word-break: break-word;
 
                 &:hover {
                   transform: skew(12deg, 1deg);
@@ -10198,6 +10199,22 @@ a {
 
               .service_type {
                 background-color: #8d5e10;
+              }
+            }
+
+            &.disabled {
+              opacity: 0.6;
+              cursor: not-allowed;
+              pointer-events: auto;
+
+              .service_icon {
+                filter: grayscale(100%);
+                opacity: 0.6;
+              }
+
+              .service_type {
+                background-color: #666;
+                opacity: 0.7;
               }
             }
           }

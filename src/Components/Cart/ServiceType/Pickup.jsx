@@ -5,7 +5,7 @@ import pickup from '../../../Utils/images/Sell/shop_details/pickup.svg';
 import GeneralLedgerForm from '../../Form/GeneralLedgerForm';
 import createCustomTheme from '../../../styles/CustomSelectDropdownTheme';
 
-function Pickup({title}) {
+function Pickup({title, fieldSet = 'cart'}) {
 
     const themeProps = {
         popoverBackgroundColor: '#f8e3cc',
@@ -26,8 +26,8 @@ function Pickup({title}) {
     const [formData, setFormData] = useState(initialData);
     const [errors, setErrors] = useState({});
 
-
-    const formFields = [
+    // All available fields
+    const allFields = [
         {
             id: 1,
             label: 'Pickup Availability',
@@ -50,7 +50,7 @@ function Pickup({title}) {
             id: 4,
             label: 'Pickup Instructions',
             name: 'instructions',
-            type: 'text',
+            type: 'textarea',
         },
         {
             id: 5,
@@ -65,6 +65,23 @@ function Pickup({title}) {
             type: 'text',
         },
     ];
+
+    // Determine which fields to show based on fieldSet prop
+    const getFormFields = () => {
+        if (fieldSet === 'standardFit') {
+            // For StandardFit: availability, location, hours, confirmation
+            return allFields.filter(field => 
+                ['availability', 'location', 'hours', 'confirmation'].includes(field.name)
+            );
+        } else {
+            // For Cart: instructions, estimated_pickup_time, confirmation
+            return allFields.filter(field => 
+                ['instructions', 'estimated_pickup_time', 'confirmation'].includes(field.name)
+            );
+        }
+    };
+
+    const formFields = getFormFields();
 
     
 
