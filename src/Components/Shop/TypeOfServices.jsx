@@ -9,8 +9,9 @@ import ServiceType from '../Cart/ServiceType/ServiceType';
 import Delivery from '../Cart/ServiceType/Delivery';
 import Pickup from '../Cart/ServiceType/Pickup';
 import Visit from '../Cart/ServiceType/Visit';
-import { getUser } from '../../API/fetchExpressAPI';
+import { getUser, updateEshopServiceTypes } from '../../API/fetchExpressAPI';
 import { useSelector } from 'react-redux';
+import CustomSnackbar from '../CustomSnackbar';
 
 const services = [
     {id: 1, type:'Delivery', icon:delivery, popupContent: <Delivery />,
@@ -27,6 +28,25 @@ function TypeOfServices({services_type, data}) {
     const [openServicePopup, setOpenServicePopup] = useState(null);
     const token = useSelector((state) => state.auth.userAccessToken);
     const [openDashboard, setOpenDashboard] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [snackbar, setSnackbar] = useState({
+        open: false,
+        message: '',
+        severity: 'success',
+    });
+
+    // Initialize disabled services based on current services_type
+    useEffect(() => {
+        if (services_type && services_type.length > 0) {
+            const initialDisabled = new Set();
+            services.forEach(service => {
+                if (!services_type.includes(service.type)) {
+                    initialDisabled.add(service.id);
+                }
+            });
+            setDisabledServices(initialDisabled);
+        }
+    }, [services_type]);
 
     useEffect(() => {
         if(token){
@@ -43,10 +63,41 @@ function TypeOfServices({services_type, data}) {
         }
     }
     console.log(data);
-    
 
-    const handleServiceTypeClick = (e, service) => {
-        // If openDashboard is true, toggle disabled state instead of opening popup
+    // Calculate and update type_of_service in database
+    const updateServiceTypesInDB = async (newDisabledServices) => {
+        try {
+            setLoading(true);
+            // Get enabled service IDs (not in disabled set)
+            const enabledServiceIds = services
+                .filter(service => !newDisabledServices.has(service.id))
+                .map(service => service.id);
+            
+            const updateData = {
+                shop_access_token: data.shop_access_token,
+                type_of_service: enabledServiceIds,
+            };
+
+            const resp = await updateEshopServiceTypes(updateData);
+            setSnackbar({
+                open: true,
+                message: resp.message || 'Service types updated successfully',
+                severity: 'success',
+            });
+        } catch (error) {
+            console.error('Error updating service types:', error);
+            setSnackbar({
+                open: true,
+                message: error.response?.data?.message || 'Error updating service types',
+                severity: 'error',
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleServiceTypeClick = async (e, service) => {
+        // If openDashboard is true, toggle disabled state and update database
         if (openDashboard) {
             setDisabledServices((prevDisabledServices) => {
                 const newDisabledServices = new Set(prevDisabledServices);
@@ -56,6 +107,10 @@ function TypeOfServices({services_type, data}) {
                     newDisabledServices.add(service.id);
                 }
                 console.log('Disabled Services:', Array.from(newDisabledServices));
+                
+                // Update database with new service types
+                updateServiceTypesInDB(newDisabledServices);
+                
                 return newDisabledServices;
             });
             return;
@@ -81,8 +136,7 @@ function TypeOfServices({services_type, data}) {
     <Box className="services_wrapper">
         <Typography variant="h2">Type of services</Typography>
         <Box className="services_container">
-            {services?.filter((item) => services_type?.includes(item.type))
-    .map((item) =>  (
+            {services?.map((item) =>  (
                 <Link
                     key={item.id}
                     onClick={(e) => handleServiceTypeClick(e, item)}
@@ -105,6 +159,12 @@ function TypeOfServices({services_type, data}) {
                 optionalCName={services.find(s => s.id === openServicePopup)?.cName}
             />
         </Box>
+        <CustomSnackbar
+            open={snackbar.open}
+            handleClose={() => setSnackbar({ ...snackbar, open: false })}
+            message={snackbar.message}
+            severity={snackbar.severity}
+        />
     </Box>
   )
 }
