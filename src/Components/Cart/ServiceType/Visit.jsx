@@ -4,7 +4,7 @@ import home_visit from '../../../Utils/images/Sell/shop_details/home_visit.webp'
 import GeneralLedgerForm from '../../Form/GeneralLedgerForm';
 import createCustomTheme from '../../../styles/CustomSelectDropdownTheme';
 
-function Visit() {
+function Visit({onFormDataChange}) {
 
     const themeProps = {
         popoverBackgroundColor: '#f8e3cc',
@@ -77,10 +77,16 @@ function Visit() {
 
     const handleChange = (event) => {
         const { name, value } = event.target;
-        setFormData({ ...formData, [name]: value });
+        const updatedData = { ...formData, [name]: value };
+        setFormData(updatedData);
 
         // Clear any previous error for this field
         setErrors({ ...errors, [name]: null });
+
+        // Notify parent component
+        if (onFormDataChange) {
+            onFormDataChange(updatedData);
+        }
     };
 
     const validateForm = () => {

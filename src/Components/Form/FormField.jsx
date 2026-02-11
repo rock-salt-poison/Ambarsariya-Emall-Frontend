@@ -40,7 +40,9 @@ const FormField = ({
   adornmentPosition = "start",
   handleAddClick,
   handleRemoveClick, 
-  btn
+  btn,
+  minTime,
+  maxTime
 }) => {
 
   const marks = getSliderMarks ? getSliderMarks(name) : [];
@@ -342,11 +344,36 @@ const FormField = ({
                         name={name}
                         type={type}
                         value={value}
-                        onChange={onChange}
+                        onChange={(e) => {
+                          // Custom validation for time inputs with min/max
+                          if (type === 'time' && (minTime || maxTime)) {
+                            const selectedTime = e.target.value;
+                            if (selectedTime) {
+                              // Validate time is within range
+                              if ((minTime && selectedTime < minTime) || (maxTime && selectedTime > maxTime)) {
+                                // Prevent invalid value from being set
+                                e.target.value = value || '';
+                                e.target.setCustomValidity(`Time must be between ${minTime || '00:00'} and ${maxTime || '23:59'}`);
+                                e.target.reportValidity();
+                                return; // Don't update formData with invalid value
+                              } else {
+                                e.target.setCustomValidity('');
+                              }
+                            }
+                          }
+                          onChange(e);
+                        }}
                         required={required}
                         className={`input_field ${className}`}
                         placeholder={placeholder}
-                        inputProps={{ readOnly, maxLength, minLength }}
+                        inputProps={{ 
+                          readOnly, 
+                          maxLength, 
+                          minLength,
+                          ...(type === 'time' && minTime && { min: minTime }),
+                          ...(type === 'time' && maxTime && { max: maxTime }),
+                          ...(type === 'time' && { step: '300' }) // 5 minute steps
+                        }}
                         InputProps={{
                           ...(adornmentValue && adornmentPosition === 'start' && {
                             startAdornment: (
@@ -365,7 +392,6 @@ const FormField = ({
                         }}
                         {...(error && { error: true })}
                         onFocus={handleFocus}
-                        onBlur={handleBlur}
                         autoCorrect="off"
                         autoCapitalize="none"
                         autoComplete="false"

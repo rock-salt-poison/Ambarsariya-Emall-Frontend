@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Box, Typography } from '@mui/material'
 import pickup_truck_gif from '../../../Utils/gifs/pickup_truck.gif';
 import pickup from '../../../Utils/images/Sell/shop_details/pickup.svg';
@@ -8,10 +8,30 @@ import Pickup from './Pickup';
 import CardBoardPopup from '../../CardBoardPopupComponents/CardBoardPopup';
 import TakeAway from './TakeAway';
 
-function ServiceType() {
+function ServiceType({onPickupFormDataChange, onTakeAwayFormDataChange, shopAccessToken, shop_no}) {
     const [openPopup, setOpenPopup] = useState(null);
     const location = useLocation();
+    const [shopNo, setShopNo] = useState(shop_no);
 
+    // Get shop_no from shopAccessToken if not provided directly
+    useEffect(() => {
+        const fetchShopNo = async () => {
+            if (!shop_no && shopAccessToken) {
+                try {
+                    const { getShopUserData } = await import('../../../API/fetchExpressAPI');
+                    const resp = await getShopUserData(shopAccessToken);
+                    if (resp?.length > 0) {
+                        setShopNo(resp[0].shop_no);
+                    }
+                } catch (error) {
+                    console.error('Error fetching shop data:', error);
+                }
+            } else if (shop_no) {
+                setShopNo(shop_no);
+            }
+        };
+        fetchShopNo();
+    }, [shopAccessToken, shop_no]);
 
     const handleClose = () => {
         setOpenPopup(false);
@@ -26,10 +46,11 @@ function ServiceType() {
         }
     }
 
-    const services = [
-        {id:1, imgSrc:pickup, popupContent:<Pickup title="Pickup" fieldSet="cart"/>, cName:'service_type_popup pickup',  },
-        {id:2, imgSrc:takeaway, popupContent:<TakeAway title="Take Away"/>, cName:'service_type_popup pickup' }
-    ]
+    // Create services array with current shopNo
+    const services = React.useMemo(() => [
+        {id:1, imgSrc:pickup, popupContent:<Pickup title="Pickup" fieldSet="cart" shop_no={shopNo} onFormDataChange={onPickupFormDataChange} handleClose={handleClose}/>, cName:'service_type_popup pickup',  },
+        {id:2, imgSrc:takeaway, popupContent:<TakeAway title="Take Away" onFormDataChange={onTakeAwayFormDataChange}/>, cName:'service_type_popup pickup' }
+    ], [shopNo, onPickupFormDataChange, onTakeAwayFormDataChange, handleClose])
 
     const getCurrentUrlWithToken = () => {
         const searchParams = new URLSearchParams(location.search);

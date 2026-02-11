@@ -5,7 +5,7 @@ import takeaway from '../../../Utils/images/Sell/shop_details/takeaway.webp';
 import GeneralLedgerForm from '../../Form/GeneralLedgerForm';
 import createCustomTheme from '../../../styles/CustomSelectDropdownTheme';
 
-function TakeAway({title}) {
+function TakeAway({title, onFormDataChange}) {
 
     const themeProps = {
         popoverBackgroundColor: '#f8e3cc',
@@ -64,10 +64,16 @@ function TakeAway({title}) {
 
     const handleChange = (event) => {
         const { name, value } = event.target;
-        setFormData({ ...formData, [name]: value });
+        const updatedData = { ...formData, [name]: value };
+        setFormData(updatedData);
 
         // Clear any previous error for this field
         setErrors({ ...errors, [name]: null });
+
+        // Notify parent component
+        if (onFormDataChange) {
+            onFormDataChange(updatedData);
+        }
     };
 
     const validateForm = () => {

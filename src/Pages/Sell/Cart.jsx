@@ -140,32 +140,57 @@ function Cart() {
     { id: 5, title: "Become Member", openPopup: false },
   ];
 
+  // Service type mapping: service name -> id
+  const serviceTypeMap = {
+    "Pickup": 3,
+    "Delivery": 1,
+    "Home Visit": 2,
+    "Take Away": 4
+  };
+
+  const handleServiceFormDataChange = (serviceId, formData) => {
+    setServiceFormData(prev => ({
+      ...prev,
+      [serviceId]: formData
+    }));
+  };
+
   const service_type = [
     {
       id: 3,
       imgSrc: pickup,
       service: "Pickup",
-      popupContent: <ServiceType />,
+      popupContent: <ServiceType 
+        onPickupFormDataChange={(data) => handleServiceFormDataChange(3, data)}
+        onTakeAwayFormDataChange={(data) => handleServiceFormDataChange(4, data)}
+        shopAccessToken={owner}
+        shop_no={shopData?.shop_no}
+      />,
       cName: "service_type_popup service",
     },
     {
       id: 1,
       imgSrc: delivery,
       service: "Delivery",
-      popupContent: <Delivery />,
+      popupContent: <Delivery 
+        onFormDataChange={(data) => handleServiceFormDataChange(1, data)}
+      />,
       cName: "service_type_popup delivery",
     },
     {
       id: 2,
       imgSrc: home_visit,
       service: "Home Visit",
-      popupContent: <Visit />,
+      popupContent: <Visit 
+        onFormDataChange={(data) => handleServiceFormDataChange(2, data)}
+      />,
       cName: "service_type_popup delivery visit",
     },
   ];
 
   const [selectedServices, setSelectedServices] = useState();
   const [openServicePopup, setOpenServicePopup] = useState(null);
+  const [serviceFormData, setServiceFormData] = useState({});
 
   const handleServiceTypeClick = (e, item) => {
     const target = e.target.closest(".service");
@@ -272,6 +297,13 @@ function Cart() {
       });
 
   
+      // Get shipping method ID and shipping details
+      const selectedServiceType = service_type.find(s => s.id === selectedServices);
+      const shippingMethodId = selectedServiceType ? serviceTypeMap[selectedServiceType.service] : null;
+      const shippingDetails = selectedServices && serviceFormData[selectedServices] 
+        ? serviceFormData[selectedServices] 
+        : null;
+
       const data = {
         buyer_id: buyerDataFetched?.member_id || buyerDataFetched?.visitor_id,
         buyer_type: buyerDataFetched.user_type,
@@ -281,7 +313,8 @@ function Cart() {
         products,
         subtotal: cartData.subtotal || 0,
         shipping_address: buyerDataFetched.address,
-        shipping_method: selectedServices,
+        shipping_method: shippingMethodId,
+        shipping_details: shippingDetails,
         payment_method: 'COD',
         special_offers: submittedData,
         discount_applied: selectedCoupon,

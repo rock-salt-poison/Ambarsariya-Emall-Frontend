@@ -61,6 +61,7 @@ function GeneralLedgerForm({
                 {!field.innerField &&
                   field.type !== "quantity" &&
                   field.type !== "daterange" &&
+                  field.type !== "time-range" &&
                   field.type !== "button" &&
                   field.type !== undefined &&
                   field.type && (
@@ -92,6 +93,8 @@ function GeneralLedgerForm({
                         handleDownload={handleDownload}
                         btn_text={field.btn_text}
                         defaultChecked={field.defaultCheckedOptions}
+                        minTime={field.minTime}
+                        maxTime={field.maxTime}
                       />
                       {field.addMoreButton && (
                         <Button
@@ -199,6 +202,24 @@ function GeneralLedgerForm({
                         onChange({ target: { name: field.name, value } })
                       }
                     />
+                  </Box>
+                )}
+
+                {field.type === "time-range" && (
+                  <Box className="form-control">
+                  <Box className="form-row">
+                    <Typography className="label">{field.label}</Typography>
+                    <DateRangePicker
+                      format="hh:mm aa"
+                      showOneCalendar
+                      ranges={[]}
+                      showMeridian
+                      value={formData[field.name] || null}
+                      onChange={(value) =>
+                        onChange({ target: { name: field.name, value } })
+                      }
+                    />
+                  </Box>
                   </Box>
                 )}
 

@@ -1816,3 +1816,21 @@ export const sendBannerNotifications = async (bannerId) => {
     throw error;
   }
 };
+
+export const getShopPickupSettings = async (shop_no) => {
+  try {
+    const response = await axios.get(`${link}/sell/shop-pickup-settings/${shop_no}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const postShopPickupSettings = async (data) => {
+  try {
+    const response = await axios.post(`${link}/sell/shop-pickup-settings`, data);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

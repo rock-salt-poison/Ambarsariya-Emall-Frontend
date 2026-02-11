@@ -40,6 +40,7 @@ function StandardFit() {
   const navigate = useNavigate();
   const token = useSelector((state) => state.auth.userAccessToken);
   const [hasShopAccessToken, setHasShopAccessToken] = useState(false);
+  const [shopNo, setShopNo] = useState(null);
   const [openServicePopup, setOpenServicePopup] = useState(null);
 
   useEffect(() => {
@@ -48,17 +49,21 @@ function StandardFit() {
         try {
           const res = await getUser(token);
           const shopUser = res?.find((u) => u.shop_no !== null);
-          if (shopUser?.shop_access_token) {
+          if (shopUser?.shop_no) {
             setHasShopAccessToken(true);
+            setShopNo(shopUser.shop_no);
           } else {
             setHasShopAccessToken(false);
+            setShopNo(null);
           }
         } catch (error) {
           console.error("Error checking shop access token:", error);
           setHasShopAccessToken(false);
+          setShopNo(null);
         }
       } else {
         setHasShopAccessToken(false);
+        setShopNo(null);
       }
     };
     checkShopAccessToken();
@@ -83,7 +88,7 @@ function StandardFit() {
       id: "pickup",
       title: "PICKUP",
       icon: pickup,
-      popupContent: <Pickup title="Pickup" fieldSet="standardFit" />,
+      popupContent: <Pickup title="Pickup" fieldSet="standardFit" shop_no={shopNo} />,
       cName: "service_type_popup pickup",
     },
     {
