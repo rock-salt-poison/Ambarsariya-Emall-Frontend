@@ -21031,6 +21031,7 @@ body .MuiBackdrop-root {
 
                   &.shadow {
                     text-shadow: 3px 3px 5px $yellow;
+                    color: $brown-4;
                   }
 
                   &.total {
@@ -30724,7 +30725,7 @@ textarea[readonly] {
             gap: 10px;
             transition: all 0.3s ease;
             align-self: stretch;
-            width: 40%;
+            width: 43%;
 
             &.edge_item, &.spark_item{
               width: 70%;

@@ -132,7 +132,7 @@ function StandardFit() {
     },
     {
       id: "warehouse",
-      title: "MULTI-WAREHOUSE SYNC",
+      title: "Municipal Corporation Services",
       icon: multiwarehouse_sync,
     },
   ];

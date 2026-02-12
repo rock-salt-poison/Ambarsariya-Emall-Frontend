@@ -663,6 +663,7 @@ const calculateDiscount = () => {
     }
   };
 
+console.log('------------------', selectedOrder);
 
 
   return (
@@ -826,8 +827,13 @@ const calculateDiscount = () => {
               })}
 
               <Box className="col">
-                <Typography className="heading">Services</Typography>
-                <Typography className="text">COD</Typography>
+                <Typography className="heading">Service</Typography>
+                <Typography className="text">{selectedOrder?.[0]?.service}</Typography>
+              </Box>
+
+              <Box className="col">
+                <Typography className="heading">Service ID</Typography>
+                <Typography className="text">SR_{selectedOrder?.[0]?.service === 'Pickup' && 'P'}_1</Typography>
               </Box>
 
               <Box className="col">
