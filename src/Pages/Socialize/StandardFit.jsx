@@ -3,17 +3,6 @@ import { Box, Typography } from "@mui/material";
 import UserBadge from "../../UserBadge";
 import hornSound from "../../Utils/audio/horn-sound.mp3";
 import { Link, useNavigate } from "react-router-dom";
-import standardFitBg from "../../Utils/images/Socialize/city_junctions/connect_with_utilities/standard_fit_bg.webp";
-import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
-import TwoWheelerIcon from '@mui/icons-material/TwoWheeler';
-import HomeIcon from '@mui/icons-material/Home';
-import LocalShippingIcon from '@mui/icons-material/LocalShipping';
-import MonitorIcon from '@mui/icons-material/Monitor';
-import WarningIcon from '@mui/icons-material/Warning';
-import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
-import CloudSyncIcon from '@mui/icons-material/CloudSync';
-import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
-import ReceiptIcon from '@mui/icons-material/Receipt';
 import standard_fit from "../../Utils/images/Socialize/city_junctions/connect_with_utilities/mask_1.png";
 import spark_icon from "../../Utils/images/Socialize/city_junctions/connect_with_utilities/spark_icon.svg";
 import edge_icon from "../../Utils/images/Socialize/city_junctions/connect_with_utilities/edge_icon.svg";
@@ -76,6 +65,14 @@ function StandardFit() {
     }, 300);
   };
 
+  const handleMunicipalCorporationClick = (e) => {
+    e.preventDefault();
+    audio.play();
+    setTimeout(() => {
+      navigate("/socialize/city-junctions/municipal-corporation");
+    }, 300);
+  };
+
   const handleServiceClick = (e, serviceId) => {
     if (hasShopAccessToken) {
       e.preventDefault();
@@ -134,6 +131,7 @@ function StandardFit() {
       id: "warehouse",
       title: "Municipal Corporation Services",
       icon: multiwarehouse_sync,
+      onClick: handleMunicipalCorporationClick,
     },
   ];
 
@@ -222,7 +220,11 @@ function StandardFit() {
             <Typography className="panel_title">ENHANCED</Typography>
             <Box className="panel_items">
               {enhanced.map((item) => (
-                <Link key={item.id} className="panel_item">
+              <Link
+                key={item.id}
+                className="panel_item"
+                onClick={item.onClick}
+              >
                   <Box className="panel_item_icon" component="img" src={item.icon}/>
                   <Typography className="panel_item_text">{item.title}</Typography>
                 </Link>

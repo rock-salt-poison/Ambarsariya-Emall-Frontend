@@ -30678,7 +30678,7 @@ textarea[readonly] {
           #4c3724b3 50%,
           #7e5a39b3,
           #4c3724b3
-        );;
+        );
         
         border-radius: 20px;
         padding: 15px;
@@ -30861,6 +30861,110 @@ textarea[readonly] {
               }
             }
           }
+        }
+      }
+    }
+  }
+}
+
+.municipal_corporation_wrapper{
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  overflow: visible;
+  @include flex-center(column, center);
+  place-items: normal;
+  box-sizing: border-box;
+
+  .content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    @include flex-center(column, flex-start);
+    gap: 30px;
+    place-items: normal;
+
+    .bg_img{
+      max-width: 100%;
+    }
+    
+
+    .header {
+      display: grid;
+      grid-template-columns: 120px 1fr 120px;
+      gap: 15px;
+      @include full-absolute(0px, 0px, auto, 0px);
+      padding: 15px 30px;
+
+      .title_container {
+        @include flex-center(row, center);
+
+        .title {
+          @include homepage-buttons(
+            "Bobby-Jones-Soft",
+            40px,
+            #9b3b32,
+            "none"
+          );
+          // @include hover-scale(1, 0s);
+          text-align: center;
+          text-shadow: -1.5px -1.5px 0 $yellow, 1.5px -1.5px 0 $yellow,
+            -1.5px 1.5px 0px $yellow, 1.5px 1.5px 0 $yellow;
+          transition: all 0.4s linear;
+          line-height: 38px;
+        }
+      }
+
+      .icon_container {
+        width: max-content;
+        margin-left: auto;
+
+        .icon {
+          width: 80px;
+          filter: drop-shadow(2px 4px 6px $black);
+          @include hover-scale(1.1, 0.4s);
+        }
+      }
+    }
+
+    .body{
+      @include full-absolute(auto ,0px ,0px , 0px);
+      padding: 30px;
+      @include flex-center(row, center);
+      gap: 30px;
+
+      .trade_license_container{
+        width: 250px;
+
+        .trade_license_img{
+          width: 100%;
+        }
+      }
+      .grievance_license_container{
+        width: 250px;
+
+        .grievance_license_img{
+          width: 100%;
+        }
+      }
+      .services_by_municipal_corporation_container{
+        width: 180px;
+
+        .services_by_municipal_corporation_img{
+          width: 100%;
+          transform: skewY(17deg) rotateX(10deg) rotateY(327deg);
+          position: relative;
+          top: -89px;
+          left: 39px;
+        }
+      }
+      .vendor_commission_services_container{
+        width: 330px;
+
+        .vendor_commission_services_img{
+          width: 100%;
         }
       }
     }

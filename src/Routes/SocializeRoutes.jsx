@@ -15,6 +15,7 @@ import Jobs_offered from "../Pages/Serve/Jobs_offered";
 import ConnectWithUtilities from "../Pages/Socialize/ConnectWithUtilities";
 import UtilitiesMain from "../Pages/Socialize/UtilitiesMain";
 import StandardFit from "../Pages/Socialize/StandardFit";
+import MunicipalCorporation from "../Pages/Socialize/MunicipalCorporation";
 import Banners from "../Pages/Socialize/Banners";
 
 function SocializeRoutes() {
@@ -146,6 +147,15 @@ function SocializeRoutes() {
           <ProtectedRoute
             shopElement={<StandardFit />}
             memberElement={<StandardFit />}
+          />
+        }
+      />
+      <Route
+        path="/city-junctions/municipal-corporation"
+        element={
+          <ProtectedRoute
+            shopElement={<MunicipalCorporation />}
+            memberElement={<MunicipalCorporation />}
           />
         }
       />
