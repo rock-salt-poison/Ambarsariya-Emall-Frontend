@@ -44,18 +44,32 @@ function MunicipalCorporation() {
         </Box>
 
         <Box className="body">
-          <Box className="trade_license_container">
+          <Link className="trade_license_container">
             <Box component="img" src={trade_license} alt="trade_license" className="trade_license_img"/>
-          </Box>
-          <Box className="grievance_license_container">
+          </Link>
+          <Link className="grievance_license_container">
             <Box component="img" src={grievance_form} alt="grievance_form" className="grievance_license_img"/>
-          </Box>
-          <Box className="services_by_municipal_corporation_container">
+          </Link>
+          <Link className="services_by_municipal_corporation_container">
             <Box component="img" src={services_by_municipal_corporation} alt="services_by_municipal_corporation" className="services_by_municipal_corporation_img"/>
-          </Box>
-          <Box className="vendor_commission_services_container">
+
+            <Typography className="title_heading">Services by Municipal Corporation</Typography>
+          </Link>
+          <Link className="vendor_commission_services_container">
             <Box component="img" src={vendor_commission_services} alt="vendor_commission_services" className="vendor_commission_services_img"/>
+          
+          <Box className="vendor_commission_services_panel">
+            <Box className="board_pins">
+              <Box className="circle"></Box>
+              <Box className="circle"></Box>
+            </Box>
+            <Typography className="panel_title">Vendor Licenses & Renewal</Typography>
+            <Box className="board_pins">
+              <Box className="circle"></Box>
+              <Box className="circle"></Box>
+            </Box>
           </Box>
+          </Link>
         </Box>
 
        
