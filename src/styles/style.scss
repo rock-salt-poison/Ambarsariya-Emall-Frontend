@@ -29510,6 +29510,321 @@ textarea[readonly] {
   }
 }
 
+.banners_today_wrapper {
+  position: relative;
+  min-height: 100vh;
+  @include background-center-no-repeat($bannersTodayBgImg);
+  background-size: cover;
+  background-position: center;
+  @include flex-center(column, flex-start);
+  place-items: normal;
+  gap: 30px;
+  padding: 30px;
+  overflow: hidden;
+
+  &::before{
+    content:'';
+    @include full-absolute(0px, 0px, 0px, 0px);
+    background: $yellow;
+    z-index: -1;
+  }
+
+  .header_row {
+    @include flex-center(row, space-between);
+    place-items: normal;
+    width: 100%;
+    z-index: 10;
+
+    .col {
+      &.back_button {
+        @include flex-center(row, flex-start);
+        cursor: pointer;
+        transition: transform 0.3s ease;
+
+        &.reduceSize3 {
+          transform: scale(0.9);
+        }
+      }
+
+      &.heading_container {
+        @include flex-center(row, center);
+        flex: 1;
+
+        .heading {
+          @include homepage-buttons(
+            "Bobby-Jones-Soft",
+            35px,
+            #9b3b32,
+            "none"
+          );
+          text-align: center;
+          text-shadow: -1.5px -1.5px 0 $yellow, 1.5px -1.5px 0 $yellow,
+            -1.5px 1.5px 0px $yellow, 1.5px 1.5px 0 $yellow;
+          transition: all 0.4s linear;
+          line-height: 32px;
+        }
+      }
+    }
+  }
+
+  .banners_content_row {
+    @include flex-center(row, space-between);
+    place-items: normal;
+    width: 100%;
+    flex: 1;
+    gap: 20px;
+    position: relative;
+    z-index: 5;
+
+    .col {
+      &.left_slider_container,
+      &.right_slider_container {
+        width: 25%;
+        height: calc(100vh - 200px);
+        position: relative;
+
+        .banner_swiper {
+          width: 100%;
+          height: 100%;
+
+          .banner_slide {
+            width: 100%;
+            height: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 0;
+
+            .banner_frame {
+              position: relative;
+              width: 100%;
+              max-width: 280px;
+              aspect-ratio: 3 / 4;
+              @include background-center-no-repeat($bannersFrame);
+              background-size: contain;
+              background-repeat: no-repeat;
+              @include flex-center(column, center);
+              padding: 15px;
+              box-sizing: border-box;
+
+              .banner_image {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border-radius: 8px;
+                // box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+              }
+            }
+          }
+        }
+
+        &.left_slider_container {
+          .banner_swiper {
+            .banner_slide {
+              justify-content: flex-start;
+            }
+          }
+        }
+
+        &.right_slider_container {
+          .banner_swiper {
+            .banner_slide {
+              justify-content: flex-end;
+            }
+          }
+        }
+      }
+
+      &.center_content {
+        @include flex-center(column, center);
+        flex: 1;
+        max-width: 50%;
+        padding: 20px;
+
+        .center_title {
+          @include homepage-buttons(
+            "Bobby-Jones-Soft",
+            32px,
+            #9b3b32,
+            "none"
+          );
+          text-align: center;
+          text-shadow: -1.5px -1.5px 0 $yellow, 1.5px -1.5px 0 $yellow,
+            -1.5px 1.5px 0px $yellow, 1.5px 1.5px 0 $yellow;
+          margin-bottom: 20px;
+        }
+
+        .no_banners_message {
+          @include homepage-buttons(
+            "Bobby-Jones-Soft",
+            20px,
+            $brown-4,
+            "none"
+          );
+          text-align: center;
+          opacity: 0.8;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 992px) {
+    padding: 20px;
+    gap: 20px;
+
+    .header_row {
+      .col {
+        &.heading_container {
+          .heading {
+            font-size: 30px;
+            line-height: 30px;
+          }
+        }
+      }
+    }
+
+    .banners_content_row {
+      gap: 15px;
+
+      .col {
+        &.left_slider_container,
+        &.right_slider_container {
+          width: 30%;
+
+          .banner_swiper {
+            .banner_slide {
+              .banner_frame {
+                max-width: 200px;
+                padding: 12px;
+              }
+            }
+          }
+        }
+
+        &.center_content {
+          max-width: 40%;
+
+          .center_title {
+            font-size: 28px;
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 15px;
+    gap: 15px;
+
+    .header_row {
+      .col {
+        &.heading_container {
+          .heading {
+            font-size: 26px;
+            line-height: 26px;
+          }
+        }
+      }
+    }
+
+    .banners_content_row {
+      gap: 10px;
+
+      .col {
+        &.left_slider_container,
+        &.right_slider_container {
+          width: 35%;
+
+          .banner_swiper {
+            .banner_slide {
+              .banner_frame {
+                max-width: 150px;
+                padding: 10px;
+              }
+            }
+          }
+        }
+
+        &.center_content {
+          max-width: 30%;
+          padding: 10px;
+
+          .center_title {
+            font-size: 24px;
+          }
+
+          .no_banners_message {
+            font-size: 16px;
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 560px) {
+    padding: 10px;
+    gap: 10px;
+
+    .header_row {
+      flex-direction: column;
+      gap: 15px;
+
+      .col {
+        &.back_button {
+          width: 100%;
+          justify-content: flex-start;
+        }
+
+        &.heading_container {
+          width: 100%;
+
+          .heading {
+            font-size: 22px;
+            line-height: 22px;
+          }
+        }
+      }
+    }
+
+    .banners_content_row {
+      flex-direction: column;
+      gap: 15px;
+
+      .col {
+        &.left_slider_container,
+        &.right_slider_container {
+          width: 100%;
+          height: 300px;
+
+          .banner_swiper {
+            .banner_slide {
+              .banner_frame {
+                max-width: 200px;
+                margin: 0 auto;
+              }
+            }
+          }
+        }
+
+        &.center_content {
+          max-width: 100%;
+          order: -1;
+          padding: 10px;
+
+          .center_title {
+            font-size: 20px;
+            margin-bottom: 10px;
+          }
+
+          .no_banners_message {
+            font-size: 14px;
+          }
+        }
+      }
+    }
+  }
+}
+
 .banners_wrapper {
   position: relative;
   min-height: 100vh;

@@ -18,6 +18,7 @@ import StandardFit from "../Pages/Socialize/StandardFit";
 import MunicipalCorporation from "../Pages/Socialize/MunicipalCorporation";
 import Banners from "../Pages/Socialize/Banners";
 import BannerMain from "../Pages/Socialize/BannerMain";
+import BannersToday from "../Pages/Socialize/BannersToday";
 
 function SocializeRoutes() {
   const token = useSelector((state) => state.auth.userAccessToken);
@@ -166,6 +167,15 @@ function SocializeRoutes() {
           <ProtectedRoute
             shopElement={<BannerMain />}
             memberElement={<BannerMain />}
+          />
+        }
+      />
+      <Route
+        path="/banners/banners-today"
+        element={
+          <ProtectedRoute
+            shopElement={<BannersToday />}
+            memberElement={<BannersToday />}
           />
         }
       />

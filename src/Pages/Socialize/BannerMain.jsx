@@ -27,7 +27,7 @@ function BannersMain() {
       }, 300);
       
       setTimeout(() => {
-        navigate('../'); // Navigate to socialize main page (change this path as needed)
+        navigate('banners-today'); // Navigate to banners today page
       }, 1000);
     }
   };
