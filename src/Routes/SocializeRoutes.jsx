@@ -17,6 +17,7 @@ import UtilitiesMain from "../Pages/Socialize/UtilitiesMain";
 import StandardFit from "../Pages/Socialize/StandardFit";
 import MunicipalCorporation from "../Pages/Socialize/MunicipalCorporation";
 import Banners from "../Pages/Socialize/Banners";
+import BannerMain from "../Pages/Socialize/BannerMain";
 
 function SocializeRoutes() {
   const token = useSelector((state) => state.auth.userAccessToken);
@@ -163,8 +164,8 @@ function SocializeRoutes() {
         path="/banners"
         element={
           <ProtectedRoute
-            shopElement={<Banners />}
-            memberElement={<Banners />}
+            shopElement={<BannerMain />}
+            memberElement={<BannerMain />}
           />
         }
       />
