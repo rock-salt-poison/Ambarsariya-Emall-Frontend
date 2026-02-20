@@ -29956,13 +29956,12 @@ textarea[readonly] {
           .banner_validity {
             @include homepage-buttons(
               "Bobby-Jones-Soft",
-              16px,
+              18px,
               $brown-4,
               "none"
             );
             @include hover-scale(1.0, 0);
             text-align: center;
-            opacity: 0.8;
             line-height: 1.3;
           }
   
