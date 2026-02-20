@@ -400,6 +400,12 @@ function Banners() {
 
       <Box className="row">
         <Box className="col">
+            <Box></Box>
+            <Box className="heading_container">
+              <Typography className="heading" variant="h2">
+                Banner Notifications
+              </Typography>
+            </Box>
           <Box className="back-button-wrapper">
             <UserBadge
               handleLogoutClick="../../"
@@ -410,11 +416,6 @@ function Banners() {
         </Box>
         <Box className="col">
           <Box className="container">
-            <Box className="heading_container">
-              <Typography className="heading" variant="h2">
-                Banner Notifications
-              </Typography>
-            </Box>
 
             {/* Shop owner: Create banner button */}
             {(userType === 'shop' || userType === 'merchant') && (
@@ -470,7 +471,6 @@ function Banners() {
                   <Box className="cards_container">
                     {shopBanners.map((banner, index) => (
                       <Box key={banner.id} className="card banner_card_shop">
-                        <Box component="img" src={paint_stroke} alt="bg" className="card_bg" />
                         <Box className="card_body">
                           <Box className="card_header">
                             <Typography className="heading" variant="h4">
@@ -544,7 +544,6 @@ function Banners() {
                           transition: 'all 0.3s ease',
                         }}
                       >
-                        <Box component="img" src={paint_stroke} alt="bg" className="card_bg" />
                         <Box className="card_body">
                           <Box className="card_header">
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>

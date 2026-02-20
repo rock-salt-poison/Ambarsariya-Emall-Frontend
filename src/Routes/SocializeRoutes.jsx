@@ -171,6 +171,15 @@ function SocializeRoutes() {
         }
       />
       <Route
+        path="/banners/city-hoardings"
+        element={
+          <ProtectedRoute
+            shopElement={<Banners />}
+            memberElement={<Banners />}
+          />
+        }
+      />
+      <Route
         path="/banners/banners-today"
         element={
           <ProtectedRoute

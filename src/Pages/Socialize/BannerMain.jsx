@@ -31,6 +31,28 @@ function BannersMain() {
       }, 1000);
     }
   };
+
+  const handleCardClick = (e, card) => {
+    e.preventDefault();
+    const target = e.target.closest('.card');
+    if (target) {
+      target.classList.add('reduceSize3');
+      audio.play();
+      
+      setTimeout(() => {
+        target.classList.remove('reduceSize3');
+      }, 300);
+      
+      setTimeout(() => {
+        if (card.cName === 'card city_hoarding') {
+          navigate('city-hoardings');
+        } else if (card.cName === 'road_rage_banner') {
+          // Add navigation for road rage banner if needed
+          // navigate('road-rage-banners');
+        }
+      }, 600);
+    }
+  };
   
   return (
     <Box className="banner_main_wrapper">
@@ -49,8 +71,8 @@ function BannersMain() {
 
       <Box className="row">
         <Box className="col card_container">
-          {cards && cards?.map((card)=>(<Box key={card?.id} className={card.cName}>
-            <Link className="label_container">
+          {cards && cards?.map((card)=>(<Box key={card?.id} className={card.cName} onClick={(e) => handleCardClick(e, card)} style={{ cursor: 'pointer' }}>
+            <Link className="label_container" onClick={(e) => e.preventDefault()}>
               <Typography className="label">{card?.label}</Typography>
             </Link>
           </Box>))}

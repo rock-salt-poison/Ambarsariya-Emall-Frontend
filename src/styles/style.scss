@@ -30116,9 +30116,26 @@ textarea[readonly] {
       @include flex-center(column, flex-start);
       gap: 20px;
 
+      &:first-child{
+        display: grid;
+        grid-template-columns: 120px 1fr 120px;
+      }
+
       &.back-button-wrapper {
         justify-content: flex-end;
         place-items: end;
+      }
+      .heading_container {
+        @include flex-center(row, center);
+        margin-bottom: 20px;
+
+        .heading {
+          @include homepage-buttons("Gladiola", 45px, #6b4336, "none");
+          @include hover-scale(1, 0s);
+          text-shadow: -2px -2px 0 #ffe8d8, 2px -2px 0 #ffe8d8,
+            -2px 2px 7px #ffe8d8, 2px 2px 0 #ffe8d8;
+          filter: drop-shadow(2px 4px 6px rgba($black, 0.3));
+        }
       }
 
       .container {
@@ -30127,18 +30144,6 @@ textarea[readonly] {
         position: relative;
         width: 100%;
 
-        .heading_container {
-          @include flex-center(row, center);
-          margin-bottom: 20px;
-
-          .heading {
-            @include homepage-buttons("Gladiola", 45px, #6b4336, "none");
-            @include hover-scale(1, 0s);
-            text-shadow: -2px -2px 0 #ffe8d8, 2px -2px 0 #ffe8d8,
-              -2px 2px 7px #ffe8d8, 2px 2px 0 #ffe8d8;
-            filter: drop-shadow(2px 4px 6px rgba($black, 0.3));
-          }
-        }
 
         .button_container {
           @include flex-center(row, center);
