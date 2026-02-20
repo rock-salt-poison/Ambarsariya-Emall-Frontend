@@ -9,6 +9,8 @@ import { useSelector } from 'react-redux';
 import { getNearbyBanners } from '../../API/fetchExpressAPI';
 import { checkLocationPermission } from '../../API/LocationPermission';
 import hornSound from '../../Utils/audio/horn-sound.mp3';
+import frameBg from '../../Utils/images/Socialize/banners/banner_frame_img.webp';
+import BannerDetailPopup from '../../Components/Socialize/BannerDetailPopup';
 
 function BannersToday() {
   const navigate = useNavigate();
@@ -18,6 +20,8 @@ function BannersToday() {
   const [loading, setLoading] = useState(true);
   const [locationPermission, setLocationPermission] = useState('off');
   const [userLocation, setUserLocation] = useState(null);
+  const [popupOpen, setPopupOpen] = useState(false);
+  const [selectedBanner, setSelectedBanner] = useState(null);
 
   useEffect(() => {
     checkLocationPermission(setLocationPermission);
@@ -87,16 +91,29 @@ function BannersToday() {
     }
   };
 
+  const handleBannerClick = (banner) => {
+    audio.play();
+    setSelectedBanner(banner);
+    setPopupOpen(true);
+  };
+
+  const handleClosePopup = () => {
+    setPopupOpen(false);
+    setSelectedBanner(null);
+  };
+
   // Split banners into two arrays for left and right sliders
   const leftBanners = banners.slice(0, Math.ceil(banners.length / 2));
   const rightBanners = banners.slice(Math.ceil(banners.length / 2));
 
   // If no banners, create placeholder data for demonstration
   const placeholderBanners = [
-    { id: 1, image_src: 'https://via.placeholder.com/300x400?text=Banner+1' },
-    { id: 2, image_src: 'https://via.placeholder.com/300x400?text=Banner+2' },
-    { id: 3, image_src: 'https://via.placeholder.com/300x400?text=Banner+3' },
-    { id: 4, image_src: 'https://via.placeholder.com/300x400?text=Banner+4' },
+    { id: 1, image_src: frameBg },
+    { id: 2, image_src: frameBg },
+    { id: 2, image_src: frameBg },
+    { id: 2, image_src: frameBg },
+    { id: 3, image_src: frameBg },
+    { id: 4, image_src: frameBg },
   ];
 
   const displayBanners = banners.length > 0 ? banners : placeholderBanners;
@@ -110,28 +127,22 @@ function BannersToday() {
           <CircularProgress />
         </Box>
       )}
-      
+{/*       
       <Box className="row header_row">
-        <Box className="col back_button" onClick={handleBackClick}>
-          <UserBadge
-            handleLogoutClick="../../"
-            handleBadgeBgClick={-1}
-            handleLogin="login"
-          />
-        </Box>
+        
         <Box className="col heading_container">
           <Typography className="heading" variant="h2">
             Banners Today
           </Typography>
         </Box>
-      </Box>
+      </Box> */}
 
       <Box className="row banners_content_row">
         {/* Left Vertical Slider */}
         <Box className="col left_slider_container">
           <Swiper
             slidesPerView="auto"
-            spaceBetween={20}
+            spaceBetween={10}
             direction="vertical"
             mousewheel={true}
             loop={true}
@@ -146,7 +157,7 @@ function BannersToday() {
           >
             {leftDisplay.map((banner, index) => (
               <SwiperSlide key={banner.id || index} className="banner_slide">
-                <Box className="banner_frame">
+                <Box className="banner_frame" onClick={() => handleBannerClick(banner)} style={{ cursor: 'pointer' }}>
                   <Box
                     component="img"
                     src={banner.image_src || banner.banner_image || banner.image_url || banner.image || placeholderBanners[index % placeholderBanners.length].image_src}
@@ -176,16 +187,23 @@ function BannersToday() {
 
         {/* Right Vertical Slider */}
         <Box className="col right_slider_container">
+        <Box className="back_button" onClick={handleBackClick}>
+          <UserBadge
+            handleLogoutClick="../../"
+            handleBadgeBgClick={-1}
+            handleLogin="login"
+          />
+        </Box>
           <Swiper
             slidesPerView="auto"
-            spaceBetween={20}
+            spaceBetween={10}
             direction="vertical"
             mousewheel={true}
             loop={true}
             autoplay={{
               delay: 0,
               disableOnInteraction: false,
-              reverseDirection: true, // Reverse direction for right slider
+              reverseDirection: false, // Reverse direction for right slider
             }}
             speed={3000}
             modules={[Autoplay]}
@@ -193,7 +211,7 @@ function BannersToday() {
           >
             {rightDisplay.map((banner, index) => (
               <SwiperSlide key={banner.id || index} className="banner_slide">
-                <Box className="banner_frame">
+                <Box className="banner_frame" onClick={() => handleBannerClick(banner)} style={{ cursor: 'pointer' }}>
                   <Box
                     component="img"
                     src={banner.image_src || banner.banner_image || banner.image_url || banner.image || placeholderBanners[index % placeholderBanners.length].image_src}
@@ -209,6 +227,13 @@ function BannersToday() {
           </Swiper>
         </Box>
       </Box>
+
+      {/* Banner Detail Popup */}
+      <BannerDetailPopup
+        open={popupOpen}
+        handleClose={handleClosePopup}
+        banner={selectedBanner}
+      />
     </Box>
   );
 }
