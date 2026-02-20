@@ -46,9 +46,9 @@ function BannersMain() {
       setTimeout(() => {
         if (card.cName === 'card city_hoarding') {
           navigate('city-hoardings');
-        } else if (card.cName === 'road_rage_banner') {
-          // Add navigation for road rage banner if needed
-          // navigate('road-rage-banners');
+        } else if (card.cName === 'card road_rage_banner') {
+          // Open Google Maps in a new tab
+          window.open('https://www.google.com/maps/d/edit?mid=1nvxLA9O_YAspXVtm8t2qwTbvV2IL0uY&usp=sharing', '_blank');
         }
       }, 600);
     }
