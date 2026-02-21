@@ -29730,6 +29730,7 @@ textarea[readonly] {
 
         .header_left {
           width: 100%;
+          place-items: normal;
         }
 
         .header_right {
@@ -29741,6 +29742,9 @@ textarea[readonly] {
 
       .grievance_form_section {
         .container {
+          form{
+            width: 100%;
+          }
           .form-control {
             .form-row {
               flex-direction: column;
@@ -29786,7 +29790,7 @@ textarea[readonly] {
             }
 
             .mca_subtitle {
-              font-size: 12px;
+              font-size: 14px;
             }
           }
         }
@@ -29806,11 +29810,11 @@ textarea[readonly] {
         padding: 12px 15px;
 
         .quote_text {
-          font-size: 14px;
+          font-size: 16px;
         }
 
         .quote_author {
-          font-size: 11px;
+          font-size: 14px;
         }
       }
     }
