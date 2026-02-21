@@ -319,6 +319,7 @@ const FormField = ({
                     onChange={!readOnly ? (value) => onChange({ target: { name, value } }) : undefined}
                     variant="outlined"
                     error={error}
+                    className='input_field'
                     disabled={readOnly}
                   />
                   : type === "radio" ? (

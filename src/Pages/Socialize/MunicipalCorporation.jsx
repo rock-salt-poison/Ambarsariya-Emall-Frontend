@@ -10,6 +10,7 @@ import trade_license from "../../Utils/images/Socialize/city_junctions/connect_w
 import services_by_municipal_corporation from "../../Utils/images/Socialize/city_junctions/connect_with_utilities/municipal_corporation/services_by_municipal_corporation.webp"
 
 function MunicipalCorporation() {
+  const navigate = useNavigate();
   const [audio] = useState(new Audio(hornSound));
   const [hasShopAccessToken, setHasShopAccessToken] = useState(false);
   const [shopNo, setShopNo] = useState(null);
@@ -17,6 +18,23 @@ function MunicipalCorporation() {
   const handleServiceClick = (e, serviceId) => {
     e.preventDefault();
     
+  };
+
+  const handleGrievanceClick = (e) => {
+    e.preventDefault();
+    const target = e.target.closest(".grievance_license_container");
+    if (target) {
+      target.classList.add("reduceSize3");
+      audio.play();
+      
+      setTimeout(() => {
+        target.classList.remove("reduceSize3");
+      }, 300);
+      
+      setTimeout(() => {
+        navigate("grievance-form");
+      }, 600);
+    }
   };
 
 
@@ -47,7 +65,7 @@ function MunicipalCorporation() {
           <Link className="trade_license_container">
             <Box component="img" src={trade_license} alt="trade_license" className="trade_license_img"/>
           </Link>
-          <Link className="grievance_license_container">
+          <Link className="grievance_license_container" onClick={handleGrievanceClick} style={{ cursor: 'pointer' }}>
             <Box component="img" src={grievance_form} alt="grievance_form" className="grievance_license_img"/>
           </Link>
           <Link className="services_by_municipal_corporation_container">

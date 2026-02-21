@@ -29354,6 +29354,469 @@ textarea[readonly] {
   }
 }
 
+.grievance_form_wrapper {
+  position: relative;
+  min-height: 100vh;
+  background-color: $light-yellow;
+  @include flex-center(column, flex-start);
+  place-items: normal;
+  padding: 30px;
+  gap: 30px;
+  box-sizing: border-box;
+
+  .back_button {
+    align-self: flex-end;
+  }
+
+  .grievance_form_content {
+    width: 100%;
+    margin: 0 auto;
+    background-color: $white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba($black, 0.1);
+    padding: 30px;
+    @include flex-center(column, flex-start);
+    gap: 20px;
+
+    .grievance_form_header {
+      @include flex-center(row, space-between);
+      width: 100%;
+      padding-bottom: 20px;
+      border-bottom: 2px solid rgba($brown-4, 0.2);
+
+      .header_left {
+        @include flex-center(row, flex-start);
+        gap: 15px;
+        flex: 1;
+
+        .mca_logo {
+          width: 80px;
+          height: 80px;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+
+        .header_text {
+          @include flex-center(column, flex-start);
+          place-items: normal;
+          gap: 5px;
+
+          .mca_title {
+            @include homepage-buttons(
+              "Arial",
+              24px,
+              $dark-yellow2,
+              "none"
+            );
+            @include hover-scale(1, 0s);
+            line-height: 1.2;
+            font-weight: 700;
+          }
+
+          .mca_subtitle {
+            @include homepage-buttons(
+              "Arial",
+              16px,
+              $black,
+              "none"
+            );
+            @include hover-scale(1, 0s);
+            line-height: 1.3;
+            opacity: 0.9;
+          }
+        }
+      }
+
+      .header_right {
+        @include flex-center(column, flex-end);
+        gap: 15px;
+        align-items: flex-end;
+
+        .qr_code_container {
+          @include flex-center(column, center);
+          gap: 5px;
+
+          .qr_code {
+            width: 80px;
+            height: 80px;
+          }
+
+          .qr_text {
+            @include homepage-buttons(
+              "Arial",
+              14px,
+              $brown-4,
+              "none"
+            );
+            @include hover-scale(1, 0s);
+            text-align: center;
+            font-weight: 500;
+          }
+        }
+
+        
+      }
+    }
+
+    .quote_banner {
+      width: 100%;
+      background-color: rgba($yellow, 0.3);
+      padding: 15px 20px;
+      border-radius: 8px;
+      @include flex-center(column, center);
+      gap: 2px;
+      border-left: 3px solid $dark-yellow2;
+
+      .quote_text {
+        @include homepage-buttons(
+          "Arial",
+          18px,
+          $brown-4,
+          "none"
+        );
+        @include hover-scale(1, 0s);
+        text-align: center;
+        font-style: italic;
+        font-weight: 700;
+        line-height: 1.4;
+      }
+
+      .quote_author {
+        @include homepage-buttons(
+          "Arial",
+          14px,
+          $brown-4,
+          "none"
+        );
+        @include hover-scale(1, 0s);
+        text-align: center;
+        opacity: 0.8;
+      }
+    }
+
+    .grievance_form_section {
+      width: 100%;
+
+      .container {
+        @include flex-center(column, flex-start);
+        gap: 15px;
+        width: 100%;
+
+        form{
+          @include flex-center(column, center);
+          place-items: normal;
+          width: 80%;
+          gap: 20px;
+        }
+
+        .form-control {
+          margin: 0;
+          width: 100%;
+          @include flex-center(column, center);
+          place-items: normal;
+          gap: 5px;
+
+          .form-row {
+            @include flex-center(row, space-between);
+            align-items: flex-start;
+            gap: 15px;
+            width: 100%;
+
+            .label {
+              width: 42%;
+              text-align: right;
+              @include homepage-buttons(
+                "Arial",
+                16px,
+                $brown-4,
+                "none"
+                );
+                @include hover-scale(1, 0s);
+                flex-shrink: 0;
+                font-weight: 500;
+
+              &::after {
+                content: " *";
+                color: $red;
+              }
+            }
+
+            // For checkbox fields, FormControlLabel takes full width
+              .MuiFormControlLabel-root {
+                margin-left: 0;
+                margin-right: 0;
+                justify-content: flex-start;
+
+                .MuiFormControlLabel-label {
+                  @include homepage-buttons(
+                    "Arial",
+                    16px,
+                    $brown-4,
+                    "none"
+                  );
+                  @include hover-scale(1, 0s);
+                  margin-left: 8px;
+                }
+
+                .MuiCheckbox-root {
+                  color: $brown-4;
+                }
+              }
+
+              // Radio button group styling
+              .radio_button {
+                @include flex-center(row, flex-start);
+                gap: 20px;
+                width: 100%;
+
+                .MuiFormControlLabel-root {
+                  width: auto;
+                  margin: 0;
+
+                  .MuiFormControlLabel-label {
+                    @include homepage-buttons(
+                      "Arial",
+                      16px,
+                      $brown-4,
+                      "none"
+                    );
+                    @include hover-scale(1, 0s);
+                    font-weight: 500;
+                  }
+
+                  .MuiRadio-root {
+                    color: $brown-4;
+                  }
+                }
+              }
+
+            // When form-row only contains FormControlLabel (checkbox case)
+            &:only-child .MuiFormControlLabel-root,
+            > .MuiFormControlLabel-root:only-child {
+              // width: 100%;
+            }
+
+            .field_container {
+              width: 100%;
+              flex: 1;
+
+              .input_field {
+                width: 100%;
+                background-color: rgba($light-yellow, 0.5);
+                border-radius: 8px;
+
+                .MuiInputAdornment-root{
+                  padding-left: 12px;
+                }
+
+                .MuiInputBase-root {
+                  background-color: rgba($light-yellow, 0.5);
+                  border-radius: 8px;
+                  padding: 0px;
+
+                  .MuiInputBase-input {
+                    @include homepage-buttons(
+                      "Arial",
+                      16px,
+                      $brown-4,
+                      "none"
+                    );
+                    @include hover-scale(1, 0s);
+                    padding: 6px 12px;
+                  }
+                }
+
+                .MuiOutlinedInput-notchedOutline {
+                  border: 1px solid rgba($brown-4, 0.3);
+                }
+              }
+
+              .MuiFormControlLabel-root {
+                .MuiFormControlLabel-label {
+                  @include homepage-buttons(
+                    "Arial",
+                    15px,
+                    $brown-4,
+                    "none"
+                  );
+                  @include hover-scale(1, 0s);
+                }
+              }
+            }
+          }
+
+          .error_message {
+            @include homepage-buttons(
+              "Arial",
+              14px,
+              $red,
+              "none"
+            );
+            text-align: center;
+            @include hover-scale(1, 0s);
+          }
+        }
+
+        .submit_button_container {
+          @include flex-center(row, center);
+
+          .submit_button {
+            background-color: $dark-yellow2;
+            @include homepage-buttons(
+              "Arial",
+              18px,
+              $light-yellow,
+              "none"
+            );
+            @include hover-scale(1, 0s);
+            padding: 8px 30px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+
+            &:hover {
+              background-color: $dark-yellow;
+              transform: scale(1.05);
+            }
+          }
+        }
+      }
+    }
+
+    .footer_quote {
+      width: 100%;
+      padding-top: 20px;
+      border-top: 2px solid rgba($brown-4, 0.2);
+      @include flex-center(column, center);
+      gap: 5px;
+
+      .quote_text {
+        @include homepage-buttons(
+          "Arial",
+          18px,
+          $brown-4,
+          "none"
+        );
+        @include hover-scale(1, 0s);
+        text-align: center;
+        font-style: italic;
+        line-height: 1.4;
+        font-weight: 700;
+      }
+
+      .quote_author {
+        @include homepage-buttons(
+          "Arial",
+          14px,
+          $brown-4,
+          "none"
+        );
+        @include hover-scale(1, 0s);
+        text-align: center;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 15px;
+
+    .grievance_form_content {
+      padding: 20px;
+
+      .grievance_form_header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+
+        .header_left {
+          width: 100%;
+        }
+
+        .header_right {
+          width: 100%;
+          align-items: flex-start;
+          @include flex-center(row, space-between);
+        }
+      }
+
+      .grievance_form_section {
+        .container {
+          .form-control {
+            .form-row {
+              flex-direction: column;
+              align-items: flex-start;
+
+              .label {
+                width: 100%;
+                text-align: left;
+                padding-top: 0;
+              }
+
+              .field_container {
+                width: 100%;
+              }
+            }
+
+            .error_message {
+              text-align: left;
+              padding-right: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 560px) {
+    padding: 10px;
+
+    .grievance_form_content {
+      padding: 15px;
+
+      .grievance_form_header {
+        .header_left {
+          .mca_logo {
+            width: 60px;
+            height: 60px;
+          }
+
+          .header_text {
+            .mca_title {
+              font-size: 20px;
+            }
+
+            .mca_subtitle {
+              font-size: 12px;
+            }
+          }
+        }
+
+        .header_right {
+          .qr_code_container {
+            .qr_code {
+              width: 60px;
+              height: 60px;
+            }
+          }
+        }
+      }
+
+      .quote_banner,
+      .footer_quote {
+        padding: 12px 15px;
+
+        .quote_text {
+          font-size: 14px;
+        }
+
+        .quote_author {
+          font-size: 11px;
+        }
+      }
+    }
+  }
+}
+
 .banner_main_wrapper{
   position: relative;
   min-height: 100vh;

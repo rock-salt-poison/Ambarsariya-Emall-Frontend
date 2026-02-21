@@ -2,7 +2,7 @@ import { createTheme } from '@mui/material/styles';
 import '../styles/variables.scss';
 
 const createCustomTheme = (themeProps) => {
-  const { popoverBackgroundColor, textColor, scrollbarThumb,scrollbarThumbTabs, checkboxColor, dialogBackdropColor, selectedListItemBgColor } = themeProps;
+  const { popoverBackgroundColor, textColor, scrollbarThumb,scrollbarThumbTabs, checkboxColor, dialogBackdropColor, selectedListItemBgColor, arialFont } = themeProps;
 
   return createTheme({
     components: {
@@ -28,7 +28,7 @@ const createCustomTheme = (themeProps) => {
               padding:'2px 5px',
 
               '.members_name span':{
-                fontFamily: 'var(--Bobby-Jones-Soft) !important',
+                fontFamily: `${arialFont ? 'Arial, sans-serif' : 'var(--Bobby-Jones-Soft)'} !important`,
                 color: `${textColor ? textColor : 'var(--text-color)'}`,
               }
             },
@@ -38,7 +38,7 @@ const createCustomTheme = (themeProps) => {
       MuiMenuItem: {
         styleOverrides: {
           root: {
-            fontFamily: 'var(--Bobby-Jones-Soft) !important',
+            fontFamily: `${arialFont ? 'Arial, sans-serif' : 'var(--Bobby-Jones-Soft)'} !important`,
             color: `${textColor ? textColor : 'var(--text-color)'}`,
             whiteSpace:'normal',
             '&.Mui-selected': {
@@ -185,7 +185,7 @@ const createCustomTheme = (themeProps) => {
             borderRadius: '4px', // Rounded corners of the tooltip
             padding: '5px 10px', // Padding inside the tooltip
             boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)', 
-            fontFamily:'Bobby-Jones-Soft !important',
+            fontFamily:`${arialFont ? 'Arial, sans-serif' : 'var(--Bobby-Jones-Soft)'} !important`,
             marginTop:'0px !important',
             textAlign:'center',
           },
