@@ -18,6 +18,7 @@ function GrievanceForm() {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     complainant_name: "",
+    shop_no: "",
     vendor_business_name: "",
     mobile_number: "",
     email_id: "",
@@ -62,6 +63,7 @@ function GrievanceForm() {
               setFormData((prev) => ({
                 ...prev,
                 complainant_name: shopUserData.full_name || "",
+                shop_no: (shopUserData.shop_no)?.split('_')?.[1] || "",
                 vendor_business_name: shopUserData.business_name || "",
                 mobile_number: shopUserData.phone_no_1 || "",
                 email_id: shopUserData.username || "",
@@ -164,6 +166,7 @@ function GrievanceForm() {
       setTimeout(() => {
         setFormData({
           complainant_name: "",
+          shop_no: "",
           vendor_business_name: "",
           mobile_number: "",
           email_id: "",
@@ -206,6 +209,14 @@ function GrievanceForm() {
     },
     {
       id: 2,
+      label: "Shop No",
+      name: "shop_no",
+      type: "text",
+      placeholder: "Enter shop no",
+      required: true,
+    },
+    {
+      id: 3,
       label: "Vendor / Business Name",
       name: "vendor_business_name",
       type: "text",
@@ -213,7 +224,7 @@ function GrievanceForm() {
       required: true,
     },
     {
-      id: 3,
+      id: 4,
       label: "Mobile Number",
       name: "mobile_number",
       type: "phone_number",
@@ -222,7 +233,7 @@ function GrievanceForm() {
       required: true,
     },
     {
-      id: 4,
+      id: 5,
       label: "Email ID",
       name: "email_id",
       type: "email",
@@ -230,7 +241,7 @@ function GrievanceForm() {
       required: true,
     },
     {
-      id: 5,
+      id: 6,
       label: "MCA Registration ID",
       name: "mca_registration_id",
       type: "text",
@@ -238,7 +249,7 @@ function GrievanceForm() {
       required: true,
     },
     {
-      id: 6,
+      id: 7,
       label: "Category of Grievance",
       name: "category_of_grievance",
       type: "select",
@@ -247,7 +258,7 @@ function GrievanceForm() {
       required: true,
     },
     {
-      id: 7,
+      id: 8,
       label: "Description of Grievance",
       name: "description_of_grievance",
       type: "textarea",
@@ -256,7 +267,7 @@ function GrievanceForm() {
       required: true,
     },
     {
-      id: 8,
+      id: 9,
       label: "Supporting Documents Attached",
       name: "supporting_documents_attached",
       type: "radio",
@@ -267,7 +278,7 @@ function GrievanceForm() {
       required: true,
     },
     {
-      id: 9,
+      id: 10,
       label: "Preferred Resolution",
       name: "preferred_resolution",
       type: "textarea",
@@ -293,7 +304,7 @@ function GrievanceForm() {
       required: true,
     },
     {
-      id: 10,
+      id: 13,
       label: "Declaration: I hereby declare that the above information is true and correct.",
       name: "declaration",
       type: "checkbox",
