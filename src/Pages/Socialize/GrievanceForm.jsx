@@ -350,11 +350,10 @@ function GrievanceForm() {
           {/* Quote Banner */}
           <Box className="quote_banner">
             <Typography variant="body1" className="quote_text">
-              "The future of business belongs to enterprises that Integrate, Automate,
-              and Adapt."
+              "The basic principle of federalism is that the legislative and executive authority is partitioned between the Centre and the States."
             </Typography>
             <Typography variant="caption" className="quote_author">
-              - Ashwani Kumar, Author of E-Mall
+              - M.C.A
             </Typography>
           </Box>
 
@@ -373,11 +372,10 @@ function GrievanceForm() {
           {/* Footer Quote */}
           <Box className="footer_quote">
             <Typography variant="body1" className="quote_text">
-              "Sales creates Customers, Services creates Relationship and Deliverance
-              evoke Boosts."
+              "Constitutional morality is not a natural sentiment. It has to be cultivated. We must realize that our people have yet to learn it."
             </Typography>
             <Typography variant="caption" className="quote_author">
-              - Ashwani Kumar, Author of E-Mall
+              - M.C.A
             </Typography>
           </Box>
         </Box>
