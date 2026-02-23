@@ -8683,13 +8683,13 @@ a {
                     }
 
                     &.parking-availability-slider {
-                      .MuiSlider-markLabel:nth-child(4) {
-                        left: 7% !important;
+                      .MuiSlider-markLabel[data-index="3"] {
+                        left: 75% !important;
                       }
 
-                      .MuiSlider-markLabel:nth-child(8) {
-                        left: 90% !important;
-                      }
+                      // .MuiSlider-markLabel:nth-child(8) {
+                      //   left: 90% !important;
+                      // }
                     }
 
                     &.daily-walkin-slider {
@@ -8826,9 +8826,9 @@ a {
             }
 
             &.parking-availability-slider {
-              .MuiSlider-markLabel:last-child {
-                left: 90% !important;
-              }
+              // .MuiSlider-markLabel:last-child {
+              //   left: 90% !important;
+              // }
             }
 
             .MuiSlider-valueLabel {

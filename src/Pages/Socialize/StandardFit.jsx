@@ -92,7 +92,7 @@ function StandardFit() {
       id: "takeaway",
       title: "TAKE-AWAY",
       icon: takeaway,
-      popupContent: <TakeAway title="Take Away" />,
+      popupContent: <TakeAway title="Take Away" fieldSet="standardFit" shop_no={shopNo} />,
       cName: "service_type_popup pickup",
     },
     {
@@ -200,7 +200,7 @@ function StandardFit() {
                   className="panel_item"
                   onClick={(e) => handleServiceClick(e, service.id)}
                 >
-                  <Box className="panel_item_icon" component="img" src={service.icon}/>
+                  <Box className="panel_item_icon" component="img" src={service.icon} />
                   <Typography className="panel_item_text">{service.title}</Typography>
                 </Link>
               ))}

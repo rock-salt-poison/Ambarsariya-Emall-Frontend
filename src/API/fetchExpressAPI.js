@@ -1834,3 +1834,32 @@ export const postShopPickupSettings = async (data) => {
     throw error;
   }
 };
+
+export const getShopTakeawaySettings = async (shop_no) => {
+  try {
+    const response = await axios.get(`${link}/sell/shop-takeaway-settings/${shop_no}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const postShopTakeawaySettings = async (data) => {
+  try {
+    const response = await axios.post(`${link}/sell/shop-takeaway-settings`, data);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getShopTakeawaySlots = async (shop_no, selected_date) => {
+  try {
+    const response = await axios.get(`${link}/sell/shop-takeaway-slots`, {
+      params: { shop_no, selected_date }
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
