@@ -25,9 +25,11 @@ function Eshop() {
     const fetchUserDetails = async (token) => {
         try{
             setLoading(true);
-            const resp = await getUser(token);
-            if(resp?.[0]?.user_type === 'shop'){
-                const data = await getShopUserData(resp?.[0]?.shop_access_token);
+            const resp = (await getUser(token))?.find((u) => u.shop_no !== null);
+            console.log(resp);
+            
+            if(resp?.user_type === 'shop' || resp?.user_type === 'merchant'){
+                const data = await getShopUserData(resp?.shop_access_token);
                 if(data){
                     setUser(data?.[0]);
                 }
@@ -49,8 +51,8 @@ function Eshop() {
 
     const header = [
         { id: 1, title: `Shop No: ${user?.shop_no ? (user?.shop_no)?.split('_')?.[1] : ''}` },
-        { id: 2, title: user?.domain_name },
-        { id: 3, title: user?.sector_name },
+        { id: 2, title: `Domain: ${user?.domain_name}` },
+        { id: 3, title: `Sector: ${user?.sector_name}` },
     ];
 
     const data = [
