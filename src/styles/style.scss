@@ -24005,6 +24005,16 @@ textarea[readonly] {
                     &.active {
                       transform: scale(0.89);
                     }
+
+                    &.disabled {
+                      opacity: 0.8;
+                      cursor: not-allowed;
+                      filter: drop-shadow(0px 0px 5px rgba(255, 255, 0, 0.3));
+
+                      &:hover {
+                        transform: scale(1);
+                      }
+                    }
                   }
                 }
               }

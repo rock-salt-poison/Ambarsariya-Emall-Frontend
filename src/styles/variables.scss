@@ -248,6 +248,7 @@ $font-PTSerif-Regular : '../Utils/fonts/PTSerif-Regular.ttf';
 :root {
     --pink1: #E0B5A8;
     --pink2: #ffe8d8;
+    --error: #{$red};
     --yellow : #{$yellow};
     --lightYellow :#{$light-yellow};
     --light-yellow : #{$dark-yellow2};

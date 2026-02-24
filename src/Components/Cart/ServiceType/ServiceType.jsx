@@ -7,11 +7,13 @@ import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import Pickup from './Pickup';
 import CardBoardPopup from '../../CardBoardPopupComponents/CardBoardPopup';
 import TakeAway from './TakeAway';
+import { getShopTakeawaySettings } from '../../../API/fetchExpressAPI';
 
 function ServiceType({onPickupFormDataChange, onTakeAwayFormDataChange, shopAccessToken, shop_no}) {
     const [openPopup, setOpenPopup] = useState(null);
     const location = useLocation();
     const [shopNo, setShopNo] = useState(shop_no);
+    const [takeawayAvailable, setTakeawayAvailable] = useState(false);
 
     // Get shop_no from shopAccessToken if not provided directly
     useEffect(() => {
@@ -33,11 +35,38 @@ function ServiceType({onPickupFormDataChange, onTakeAwayFormDataChange, shopAcce
         fetchShopNo();
     }, [shopAccessToken, shop_no]);
 
+    // Fetch takeaway settings to check if takeaway is available
+    useEffect(() => {
+        const fetchTakeawaySettings = async () => {
+            if (!shopNo) return;
+            
+            try {
+                const response = await getShopTakeawaySettings(shopNo);
+                if (response?.exists && response?.data) {
+                    setTakeawayAvailable(response.data.takeaway_available === true);
+                } else {
+                    setTakeawayAvailable(false);
+                }
+            } catch (error) {
+                console.error('Error fetching takeaway settings:', error);
+                setTakeawayAvailable(false);
+            }
+        };
+        
+        fetchTakeawaySettings();
+    }, [shopNo]);
+
     const handleClose = () => {
         setOpenPopup(false);
     }
 
-    const handleClick = (e, id) => {
+    const handleClick = (e, id, disabled) => {
+        // Prevent click if service is disabled
+        if (disabled) {
+            e.preventDefault();
+            return;
+        }
+        
         const service = e.target.closest('.service');
         if(service){
             service.classList.add('active');
@@ -46,11 +75,13 @@ function ServiceType({onPickupFormDataChange, onTakeAwayFormDataChange, shopAcce
         }
     }
 
-    // Create services array with current shopNo
-    const services = React.useMemo(() => [
-        {id:1, imgSrc:pickup, popupContent:<Pickup title="Pickup" fieldSet="cart" shop_no={shopNo} onFormDataChange={onPickupFormDataChange} handleClose={handleClose}/>, cName:'service_type_popup pickup',  },
-        {id:2, imgSrc:takeaway, popupContent:<TakeAway title="Take Away" onFormDataChange={onTakeAwayFormDataChange}/>, cName:'service_type_popup pickup' }
-    ], [shopNo, onPickupFormDataChange, onTakeAwayFormDataChange, handleClose])
+    // Create services array with current shopNo, always include TakeAway but disable if not available
+    const services = React.useMemo(() => {
+        return [
+            {id:1, imgSrc:pickup, popupContent:<Pickup title="Pickup" fieldSet="cart" shop_no={shopNo} onFormDataChange={onPickupFormDataChange} handleClose={handleClose}/>, cName:'service_type_popup pickup', disabled: false },
+            {id:2, imgSrc:takeaway, popupContent:<TakeAway title="Take Away" fieldSet="cart" shop_no={shopNo} onFormDataChange={onTakeAwayFormDataChange} handleClose={handleClose}/>, cName:'service_type_popup pickup', disabled: !takeawayAvailable }
+        ];
+    }, [shopNo, onPickupFormDataChange, onTakeAwayFormDataChange, handleClose, takeawayAvailable])
 
     const getCurrentUrlWithToken = () => {
         const searchParams = new URLSearchParams(location.search);
@@ -67,10 +98,14 @@ function ServiceType({onPickupFormDataChange, onTakeAwayFormDataChange, shopAcce
                 <Box className="service_types">
                     {services.map((service)=>{
                         return <React.Fragment key={service.id}>
-                            <Link to={getCurrentUrlWithToken()} onClick={(e)=>handleClick(e, service.id)}>
-                                <Box component="img" alt="service_type" src={service.imgSrc} className='service'/>
+                            <Link 
+                                to={getCurrentUrlWithToken()} 
+                                onClick={(e)=>handleClick(e, service.id, service.disabled)}
+                                style={{ pointerEvents: service.disabled ? 'none' : 'auto', opacity: service.disabled ? 0.9 : 1, cursor: service.disabled ? 'not-allowed' : 'pointer' }}
+                            >
+                                <Box component="img" alt="service_type" src={service.imgSrc} className={`service ${service.disabled ? 'disabled' : ''}`}/>
                             </Link>
-                            <CardBoardPopup open={openPopup===service.id} handleClose={handleClose} customPopup={true} body_content={service.popupContent} optionalCName={service.cName}/> 
+                            <CardBoardPopup open={openPopup===service.id && !service.disabled} handleClose={handleClose} customPopup={true} body_content={service.popupContent} optionalCName={service.cName}/> 
                         </React.Fragment>
                     })}
                     
