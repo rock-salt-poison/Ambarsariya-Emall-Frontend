@@ -24136,7 +24136,7 @@ textarea[readonly] {
                   align-self: stretch;
 
                   .form_container {
-                    background-color: hsla(15, 33%, 32%, 0.7);
+                    background-color: rgba($brown-4, .7);
                     border: 0px;
                     border-radius: 10px;
 
@@ -24149,7 +24149,7 @@ textarea[readonly] {
                     }
 
                     .field_container .MuiFormControl-root.input_field {
-                      background-color: #f9deb1b3;
+                      background-color: rgba($yellow, .7) !important;
 
                       .MuiInputBase-input {
                         color: $brown-4;
