@@ -1853,6 +1853,15 @@ export const postShopTakeawaySettings = async (data) => {
   }
 };
 
+export const updateShopTakeawayAvailability = async (data) => {
+  try {
+    const response = await axios.put(`${link}/sell/shop-takeaway-availability`, data);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const getShopTakeawaySlots = async (shop_no, selected_date) => {
   try {
     const response = await axios.get(`${link}/sell/shop-takeaway-slots`, {
