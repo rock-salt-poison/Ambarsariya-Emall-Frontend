@@ -25,84 +25,124 @@ function Inventory_PopupContent() {
   const [products, setProducts] = useState([]);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [user, setUser] = useState(null);
+  const [fetching, setFetching] = useState(true);
+  const [shop_no, setShop_no] = useState(null);
   const token = useSelector((state) => state.auth.userAccessToken);
 
+  // Fetch shop_no and categories on mount
   useEffect(() => {
-    if (token) {
-      fetch_shop_categories(token);
-    }
+    const fetchShopData = async () => {
+      if (!token) {
+        setFetching(false);
+        return;
+      }
+
+      try {
+        setFetching(true);
+        // Get shop_no from user
+        const userResp = (await getUser(token))?.find((u) => u.shop_no !== null);
+        
+        if (userResp?.shop_no) {
+          setShop_no(userResp.shop_no);
+          
+          // Fetch categories
+          try {
+            const categoriesResp = await get_shop_categories(userResp.shop_no);
+            if (categoriesResp?.valid) {
+              setCategories(categoriesResp?.data || []);
+            }
+          } catch (error) {
+            console.error("Error fetching categories:", error);
+            setCategories([]);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching shop data:", error);
+      } finally {
+        setFetching(false);
+      }
+    };
+
+    fetchShopData();
   }, [token]);
 
-  const fetch_shop_categories = async (token) => {
-    if (token) {
-      const resp = await getUser(token);
-      if (resp?.[0]) {
-        setUser(resp?.[0]);
-        const categoriesResp = await get_shop_categories(resp?.[0]?.shop_no);
-        if (categoriesResp?.valid) {
-          setCategories(categoriesResp?.data);
-        }
+  // Fetch products when category changes
+  useEffect(() => {
+    if (formData?.category && shop_no && categories.length > 0) {
+      const selectedCategory = categories?.find((c) => c.category_name === formData?.category)?.category_id;
+      
+      if (selectedCategory) {
+        // Reset products and items when category changes
+        setProducts([]);
+        setItems([]);
+        setFormData((prev) => ({
+          ...prev,
+          products: "",
+          items: "",
+          quantity: 0,
+          price: "",
+          date_time: "",
+        }));
+
+        const fetchProducts = async () => {
+          try {
+            setLoading(true);
+            const resp = await get_shop_products(shop_no, selectedCategory);
+            if (resp?.valid) {
+              setProducts(resp?.data || []);
+            } else {
+              setProducts([]);
+            }
+          } catch (e) {
+            console.error("Error fetching products:", e);
+            setProducts([]);
+          } finally {
+            setLoading(false);
+          }
+        };
+
+        fetchProducts();
       }
     }
-  };
+  }, [formData?.category, shop_no, categories]);
 
-  const fetch_shop_products =async (category, shop_no)=>{
-    if(category && shop_no){
-        try{
-            setLoading(true);
-            const resp = await get_shop_products(shop_no, category);            
-            if(resp?.valid){
-                setProducts(resp?.data);
-            }
-        }catch(e){
-            console.error(e);
-            setProducts([]);
-        }finally{
-            setLoading(false);
-        }
-    }
-  }
+  // Fetch items when product changes
+  useEffect(() => {
+    if (formData?.products && products.length > 0) {
+      const selectedProductId = products?.find((p) => p.product_id === formData?.products)?.product_id;
+      
+      if (selectedProductId) {
+        // Reset items when product changes
+        setItems([]);
+        setFormData((prev) => ({
+          ...prev,
+          items: "",
+          quantity: 0,
+          price: "",
+          date_time: "",
+        }));
 
-  const fetch_shop_product_items = async (product_id)=>{
-    if(product_id){
-        try{
+        const fetchItems = async () => {
+          try {
             setLoading(true);
-            const resp = await get_shop_product_items(product_id);            
-            if(resp?.valid){
-                console.log(resp?.data)
-                setItems(resp?.data);
+            const resp = await get_shop_product_items(selectedProductId);
+            if (resp?.valid) {
+              setItems(resp?.data || []);
+            } else {
+              setItems([]);
             }
-        }catch(e){
-            console.error(e);
+          } catch (e) {
+            console.error("Error fetching items:", e);
             setItems([]);
-        }finally{
+          } finally {
             setLoading(false);
-        }
-    }
-  }
+          }
+        };
 
-  useEffect(()=>{
-    if(formData?.category && user?.shop_no){
-        const selectedCategory = categories?.find((c)=>c.category_name === formData?.category)?.category_id;
-        console.log(selectedCategory);
-        
-        if(selectedCategory){
-            fetch_shop_products(selectedCategory, user?.shop_no);
-        }
+        fetchItems();
+      }
     }
-  }, [user, formData]);
-
-  useEffect(()=>{
-    if(formData?.products && user?.shop_no){
-        const selectedProductId = products?.find((p)=>p.product_id === formData?.products)?.product_id;
-        console.log(selectedProductId);
-        
-        if(selectedProductId){
-            fetch_shop_product_items(selectedProductId);
-        }
-    }
-  }, [user, formData]);
+  }, [formData?.products, products]);
 
 
   const formFields = [
@@ -205,18 +245,22 @@ function Inventory_PopupContent() {
 
   return (
     <>
-    {loading && <Box className="loading"><CircularProgress/></Box> }
-    <GeneralLedgerForm
-      cName="inventory"
-      description="The value of goods available for sale."
-      formfields={formFields}
-      handleSubmit={handleSubmit}
-      formData={formData}
-      onChange={handleChange}
-      errors={errors}
-      handleIncrement={handleIncrement}
-      handleDecrement={handleDecrement}
-    />
+      {fetching && (
+        <Box className="loading">
+          <CircularProgress />
+        </Box>
+      )}
+      <GeneralLedgerForm
+        cName="inventory"
+        description="The value of goods available for sale."
+        formfields={formFields}
+        handleSubmit={handleSubmit}
+        formData={formData}
+        onChange={handleChange}
+        errors={errors}
+        handleIncrement={handleIncrement}
+        handleDecrement={handleDecrement}
+      />
     </>
   );
 }

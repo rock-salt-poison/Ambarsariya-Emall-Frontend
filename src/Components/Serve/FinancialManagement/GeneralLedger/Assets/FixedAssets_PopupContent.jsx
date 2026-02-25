@@ -19,7 +19,7 @@ function FixedAssets_PopupContent() {
     const [errors, setErrors] = useState({});
 
     const formFields = [
-        { id: 1, label: 'Enter Shop / Store / Hawker', innerField: [
+        { id: 1, label: 'Enter Shop / Store / Hawker', type:'text', innerField: [
           { id: 1, label: 'Length', name: 'length', type: 'text', behavior:'numeric' },
           { id: 2, label: 'Breadth', name: 'breadth', type: 'text', behavior:'numeric' },
           { id: 3, label: 'Height', name: 'height', type: 'text', behavior:'numeric' },
@@ -27,7 +27,7 @@ function FixedAssets_PopupContent() {
         { id: 2, label: 'SKU Rack Number', name: 'sku_rack_number', type: 'text' },
         { id: 3, label: 'SKU Shelf Number', name: 'sku_shelf_number', type: 'text' },
         {
-          id: 4, label: 'Store Fixed Assets', innerField: [
+          id: 4, label: 'Store Fixed Assets', type: 'text', innerField: [
               { id: 1, label: 'Create type', name: 'fixed_assets_type', type: 'text' },
               { id: 2, label: 'Size', name: 'fixed_assets_size', type: 'text'},
               { id: 3, label: 'Select Condition', name: 'fixed_assets_condition', type: 'select', options:['New', 'Working','Not Working', 'Change Required', 'Old', 'Create']},

@@ -40,6 +40,7 @@ function AccountsReceivable_PopupContent() {
     {
       id: 4,
       label: "Credit Limit Choose Shop No",
+      type:'text',
       innerField: [
         {
           id: 1,

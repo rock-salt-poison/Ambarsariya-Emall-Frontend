@@ -19608,11 +19608,23 @@ body .MuiBackdrop-root {
             .field_container {
               @include flex-center(row, center);
 
+              .MuiAutocomplete-root{
+                &.input_field{
+                  background-color: transparent;
+                }
+              }
+
               .input_field {
                 flex: 1;
-                background-color: #d4983040;
+                background-color: rgba($dark-yellow, 0.25);
                 border: none;
                 border-radius: 8px;
+
+                .MuiInputBase-root{
+                  padding-top: 0px !important;
+                  padding-left: 0px !important;
+                  padding-bottom: 0px !important;
+                }
 
                 .MuiOutlinedInput-notchedOutline {
                   border: 0px;

@@ -1872,3 +1872,22 @@ export const getShopTakeawaySlots = async (shop_no, selected_date) => {
     throw error;
   }
 };
+
+// General Ledger API functions
+export const getCashData = async (shop_no) => {
+  try {
+    const response = await axios.get(`${link}/serve/general-ledger/cash/${shop_no}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const postCashData = async (data) => {
+  try {
+    const response = await axios.post(`${link}/serve/general-ledger/cash`, data);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

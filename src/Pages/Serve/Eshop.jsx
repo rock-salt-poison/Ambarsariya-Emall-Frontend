@@ -50,9 +50,9 @@ function Eshop() {
 
 
     const header = [
-        { id: 1, title: `Shop No: ${user?.shop_no ? (user?.shop_no)?.split('_')?.[1] : ''}` },
-        { id: 2, title: `Domain: ${user?.domain_name}` },
-        { id: 3, title: `Sector: ${user?.sector_name}` },
+        { id: 1, title: `Shop No ${user?.shop_no ? `: ${(user?.shop_no)?.split('_')?.[1]}` : ''}` },
+        { id: 2, title: `Domain ${user?.domain_name ? `: ${user?.domain_name}` : ''}` },
+        { id: 3, title: `Sector ${user?.sector_name ? `: ${user?.sector_name}` : ''}` },
     ];
 
     const data = [

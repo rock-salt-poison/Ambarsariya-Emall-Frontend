@@ -16,9 +16,9 @@ function Header({ icon_1, icon_2, title, span_value, icon_1_link, icon_2_link, b
   const fetchUserDetails = async (token) => {
     try{
       setLoading(true);
-      const resp = await getUser(token);
-      if(resp?.[0]?.user_type === 'shop'){
-        setUser(resp?.[0]);
+      const resp = (await getUser(token))?.find(u=>u?.shop_no !== null);
+      if(resp?.user_type === 'shop' || resp?.user_type === 'merchant'){
+        setUser(resp);
       } 
 
     }catch(e){
