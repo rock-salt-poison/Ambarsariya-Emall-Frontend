@@ -1891,3 +1891,88 @@ export const postCashData = async (data) => {
     throw error;
   }
 };
+
+// Accounts Receivable API functions
+export const getAccountsReceivableData = async (shop_no, customer_id = null) => {
+  try {
+    const params = customer_id ? { shop_no, customer_id } : { shop_no };
+    const response = await axios.get(`${link}/serve/general-ledger/accounts-receivable`, { params });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getCustomersList = async (shop_no) => {
+  try {
+    const response = await axios.get(`${link}/serve/general-ledger/customers-list`, {
+      params: { shop_no }
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const postAccountsReceivableData = async (data) => {
+  try {
+    const response = await axios.post(`${link}/serve/general-ledger/accounts-receivable`, data);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// Fixed Assets API functions
+export const getFixedAssetsData = async (shop_no) => {
+  try {
+    const response = await axios.get(`${link}/serve/general-ledger/fixed-assets/${shop_no}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const postFixedAssetsData = async (data) => {
+  try {
+    const response = await axios.post(`${link}/serve/general-ledger/fixed-assets`, data);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// Accounts Payable API functions
+export const getSupplierShops = async (shop_no, domain_id = null, sector_id = null, category_ids = null) => {
+  try {
+    const params = { shop_no };
+    if (domain_id) params.domain_id = domain_id;
+    if (sector_id) params.sector_id = sector_id;
+    if (category_ids && Array.isArray(category_ids) && category_ids.length > 0) {
+      params.category_ids = JSON.stringify(category_ids);
+    }
+    
+    const response = await axios.get(`${link}/serve/general-ledger/supplier-shops`, { params });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getAccountsPayableData = async (shop_no) => {
+  try {
+    const response = await axios.get(`${link}/serve/general-ledger/accounts-payable/${shop_no}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const postAccountsPayableData = async (data) => {
+  try {
+    const response = await axios.post(`${link}/serve/general-ledger/accounts-payable`, data);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

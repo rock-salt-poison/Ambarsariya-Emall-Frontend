@@ -11,7 +11,7 @@ function Liability_PopupContent(props) {
     const tabsData=[
         {id:1, name:'Accounts Payable', content:<AccountsPayable_PopupContent/>},
         {id:2, name:'Loans Payable', content:<LoansPayable_PopupContent/>},
-        {id:3, name:'Accrued Liabilities', content:<AccruedLiabilities_PopupContent/>},
+        {id:3, name:'Acquired Liabilities', content:<AccruedLiabilities_PopupContent/>},
     ]
 
     const themeProps = {
