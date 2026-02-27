@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import Header from "../../Components/Serve/SupplyChain/Header";
 import life_icon from "../../Utils/images/Sell/esale/life/life_icon.png";
@@ -11,14 +11,35 @@ import SearchProfile_tab_content from "../../Components/Sell/Esale/Life/SearchPr
 import OrderDetails_tab_content from "../../Components/Sell/Esale/Life/OrderDetails_tab_content";
 import { useSearchParams } from "react-router-dom";
 import OrderStatus_tab_content from "../../Components/Sell/Esale/Life/OrderStatus_tab_content";
+import ESevaWallet_tab_content from "../../Components/Sell/Esale/Life/ESevaWallet_tab_content";
+import { useSelector } from "react-redux";
+import { getUser } from "../../API/fetchExpressAPI";
 
 function Life() {
 
   const [searchParams] = useSearchParams();
   const selectedTabId = searchParams.get("q");
+  const token = useSelector((state) => state.auth.userAccessToken);
+  const [user, setUser] = useState(null);
 
   console.log(selectedTabId);
-  
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const resp = (await getUser(token))?.find((u) => u.shop_no !== null);
+        if (resp) {
+          setUser(resp);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    };
+
+    if (token) {
+      fetchUserDetails();
+    }
+  }, [token]);
 
   const communityData = [
     {
@@ -118,6 +139,15 @@ function Life() {
         ''
       ),
     },
+    ...(user?.user_type === "merchant"
+      ? [
+          {
+            id: 9,
+            name: "E-Seva Wallet",
+            content: <ESevaWallet_tab_content />,
+          },
+        ]
+      : []),
   ];
   return (
     <Box className="life_wrapper">

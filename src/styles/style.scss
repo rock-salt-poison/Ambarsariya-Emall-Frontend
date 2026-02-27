@@ -26397,6 +26397,51 @@ textarea[readonly] {
   }
 }
 
+// ------------- E-Seva Wallet (Life Page) -------------
+
+.e_seva_wallet {
+  .title {
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: $brown-4;
+  }
+
+  .wallet_fields {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .wallet_field_row {
+    @include flex-center(row, space-between);
+    // padding: 8px 12px;
+    // border-radius: 6px;
+    // background-color: rgba($yellow, 0.2);
+    // border: 1px solid rgba($brown-4, 0.15);
+  }
+
+  .wallet_label {
+    @include homepage-buttons(
+      "Bobby-Jones-Soft",
+      20px,
+      $yellow,
+      "none"
+    );
+    @include hover-scale(1, 0s);
+  }
+
+  .wallet_value {
+    @include homepage-buttons(
+      "Bobby-Jones-Soft",
+      20px,
+      $brown-4,
+      "none"
+    );
+    @include hover-scale(1, 0s);
+  }
+}
+
 .preview_wrapper {
   @extend .merchant_dashboard_wrapper;
   @extend .life_wrapper;
