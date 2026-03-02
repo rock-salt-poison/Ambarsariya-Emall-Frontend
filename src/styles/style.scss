@@ -26439,6 +26439,24 @@ textarea[readonly] {
       "none"
     );
     @include hover-scale(1, 0s);
+
+    .MuiFormControlLabel-root {
+      margin: 0;
+
+      .MuiSwitch-root{
+        margin: 0px;
+      }
+      
+      .MuiFormControlLabel-label {
+        @include homepage-buttons(
+          "Bobby-Jones-Soft",
+          20px,
+          $brown-4,
+          "none"
+        );
+        // margin-left: 8px;
+      }
+    }
   }
 }
 
