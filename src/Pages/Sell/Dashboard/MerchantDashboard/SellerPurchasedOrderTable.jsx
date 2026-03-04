@@ -361,6 +361,10 @@ function SellerPurchasedOrderTable({ purchasedOrders, selectedPO, cardType }) {
     if (!coupon) return 0;
 
     const { coupon_type, conditions } = coupon;
+    // Get product_ids from coupon.product_ids (separate field) or fallback to conditions
+    const couponProductIds = Array.isArray(coupon.product_ids)
+      ? coupon.product_ids
+      : conditions.find((c) => c.type === "product_ids")?.value || [];
     const total = updatedProducts?.reduce((acc, curr) => {
       const quantity = parseFloat(curr.quantity_ordered) || 0;
       const price = parseFloat(curr.unit_price) || 0;
@@ -393,6 +397,8 @@ function SellerPurchasedOrderTable({ purchasedOrders, selectedPO, cardType }) {
     );
     const pay = Number(conditions.find((c) => c.type === "pay")?.value || 0);
     const get = Number(conditions.find((c) => c.type === "get")?.value || 0);
+    const buy = Number(conditions.find((c) => c.type === "buy")?.value || 0);
+    const productIds = couponProductIds;
 
     switch (coupon_type) {
       case "retailer_upto":
@@ -408,6 +414,48 @@ function SellerPurchasedOrderTable({ purchasedOrders, selectedPO, cardType }) {
             ? (total * percent) / 100
             : 30
           : 0;
+
+      case "retailer_freebies":
+        // Check if product_ids are specified
+        if (productIds && productIds.length > 0) {
+          // Filter products to only eligible products
+          const eligibleProducts = updatedProducts?.filter(product => {
+            const productId = product.id || product.product_id;
+            return productIds.includes(String(productId)) || productIds.includes(Number(productId));
+          }) || [];
+          
+          if (eligibleProducts.length === 0) {
+            return 0; // No eligible products
+          }
+          
+          // Calculate total quantity of eligible products
+          const eligibleQuantity = eligibleProducts.reduce((sum, product) => {
+            const quantity = parseFloat(product.quantity_ordered) || 0;
+            return sum + quantity;
+          }, 0);
+          
+          // Calculate how many sets of "buy X" we have
+          const sets = Math.floor(eligibleQuantity / buy);
+          
+          // Calculate discount: number of free items * average price of eligible items
+          if (sets > 0 && get > 0) {
+            const freeItemsCount = sets * get;
+            const eligibleTotal = eligibleProducts.reduce((sum, product) => {
+              const quantity = parseFloat(product.quantity_ordered) || 0;
+              const price = parseFloat(product.unit_price) || 0;
+              return sum + (quantity * price);
+            }, 0);
+            const avgPrice = eligibleTotal / eligibleQuantity;
+            
+            // Return discount as the value of free items
+            return freeItemsCount * avgPrice;
+          }
+          
+          return 0;
+        } else {
+          // If no product_ids specified, backward compatibility (no discount calculated)
+          return 0;
+        }
 
       case "loyalty_unlock":
         return lastPurchasedValue >= last_purchase_above

@@ -36,13 +36,14 @@ function Cart() {
   const { owner } = useParams();
   const prevServiceRef = useRef(null);
   const [cartData, setCartData] = useState([]); // Stores cart table data
-  const [selectedCoupon, setSelectedCoupon] = useState(null); // Stores selected coupon
+  const [selectedCoupon, setSelectedCoupon] = useState(null); // Local mirror of Redux selected coupon
   const [submittedData, setSubmittedData] = useState(null);
   const token = useSelector((state) => state.auth.userAccessToken);
+  const reduxSelectedCoupon = useSelector((state) => state.discounts.selectedCoupon);
   const [buyerData, setBuyerData] = useState(null);
   const [sellerData, setSellerData] = useState(null);
   const [loading, setLoading] = useState(false);
-   const [snackbar, setSnackbar] = useState({
+  const [snackbar, setSnackbar] = useState({
       open: false,
       message: "",
       severity: "success",
@@ -62,7 +63,12 @@ function Cart() {
     }
   };
 
- useEffect(() => {
+  // Keep local selectedCoupon in sync with Redux selectedCoupon
+  useEffect(() => {
+    setSelectedCoupon(reduxSelectedCoupon || null);
+  }, [reduxSelectedCoupon]);
+
+  useEffect(() => {
     const autoApplyRetailerCoupon = async () => {
       if (selectedCoupon || sampleRows?.length === 0) return;
       try {

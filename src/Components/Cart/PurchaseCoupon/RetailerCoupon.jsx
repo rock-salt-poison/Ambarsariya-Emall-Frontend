@@ -30,6 +30,7 @@ function RetailerCoupon({ selectedCoupon }) {
 
   const theme = createCustomTheme(themeProps);
   const reduxSelectedCoupon = useSelector((state) => state.discounts.selectedCoupon);
+  const cartItems = useSelector((state) => state.cart.selectedProducts);
   const [loading, setLoading] = useState(false);
   const [selectedOption, setSelectedOption] = useState(reduxSelectedCoupon?.coupon_id  || 1);
   const [filteredCoupons, setFilteredCoupons] = useState([]);
@@ -64,7 +65,41 @@ function RetailerCoupon({ selectedCoupon }) {
     customizable_coupon: "Customizable Coupons",
   };
   const selectedCouponKey = selectedCoupon?.alt; // Assuming `title` contains the type
-  
+
+  // Check if a retailer_freebies coupon is eligible based on cart items
+  const isRetailerFreebiesEligible = (coupon) => {
+    if (coupon.coupon_type !== "retailer_freebies") return true;
+
+    const buy = Number(
+      coupon.conditions.find((c) => c.type === "buy")?.value || 0
+    );
+
+    // Get product_ids from coupon.product_ids (separate field) or fallback to conditions
+    const productIds = Array.isArray(coupon.product_ids)
+      ? coupon.product_ids
+      : coupon.conditions.find((c) => c.type === "product_ids")?.value || [];
+
+    if (!buy || productIds.length === 0 || !cartItems?.length) return false;
+
+    // Filter cart items to only eligible products
+    const eligibleItems = cartItems.filter((item) => {
+      const productId = item.product_id || item.id;
+      return (
+        productIds.includes(String(productId)) ||
+        productIds.includes(Number(productId))
+      );
+    });
+
+    if (eligibleItems.length === 0) return false;
+
+    // Calculate total quantity of eligible products
+    const eligibleQuantity = eligibleItems.reduce(
+      (sum, item) => sum + (item.quantity || 0),
+      0
+    );
+
+    return eligibleQuantity >= buy;
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -99,42 +134,62 @@ function RetailerCoupon({ selectedCoupon }) {
     fetchData();
   }, [token, selectedCouponKey]);
 
+  console.log(selectedCoupon);
+  
+
   useEffect(() => {
-  if (filteredCoupons.length === 0) return;
+    if (filteredCoupons.length === 0) return;
 
-  // Find the default retailer_upto coupon
-  const retailerDefault = filteredCoupons.find(
-    (c) => c.coupon_type === "retailer_upto"
-  );
+    // Prefer an eligible retailer_freebies coupon if cart contains eligible products
+    const eligibleFreebies = filteredCoupons.find(
+      (c) => c.coupon_type === "retailer_freebies" && isRetailerFreebiesEligible(c)
+    );
 
-  if (!reduxSelectedCoupon?.coupon_id) {
-    // No coupon in Redux → set to default retailer
-    if (retailerDefault) {
-      setSelectedOption(retailerDefault.coupon_id);
-      dispatch(addCoupon(retailerDefault));
+    // Fallback default: retailer_upto
+    const retailerDefault = filteredCoupons.find(
+      (c) => c.coupon_type === "retailer_upto"
+    );
+
+    // If nothing selected in Redux yet, choose best default
+    if (!reduxSelectedCoupon?.coupon_id) {
+      const defaultCoupon = eligibleFreebies || retailerDefault || filteredCoupons[0];
+      if (defaultCoupon) {
+        setSelectedOption(defaultCoupon.coupon_id);
+        dispatch(addCoupon(defaultCoupon));
+      }
+      return;
     }
-    return;
-  }
 
-  // Check if Redux coupon is still in the list
-  const stillValid = filteredCoupons.some(
-    (c) => c.coupon_id === reduxSelectedCoupon.coupon_id
-  );
+    // Check if Redux coupon is still in the list
+    const stillValid = filteredCoupons.some(
+      (c) => c.coupon_id === reduxSelectedCoupon.coupon_id
+    );
 
-  if (!stillValid) {
-    // Redux coupon not applicable → switch to default retailer
-    if (retailerDefault) {
-      setSelectedOption(retailerDefault.coupon_id);
-      dispatch(addCoupon(retailerDefault));
+    if (!stillValid) {
+      // Redux coupon not applicable → switch to best default
+      const fallbackCoupon = eligibleFreebies || retailerDefault || filteredCoupons[0];
+      if (fallbackCoupon) {
+        setSelectedOption(fallbackCoupon.coupon_id);
+        dispatch(addCoupon(fallbackCoupon));
+      }
+      return;
     }
-    return;
-  }
 
-  // If the local state doesn't match Redux, sync it
-  if (selectedOption !== reduxSelectedCoupon.coupon_id) {
-    setSelectedOption(reduxSelectedCoupon.coupon_id);
-  }
-}, [filteredCoupons, reduxSelectedCoupon, dispatch]);
+    // If cart now qualifies for freebies and a different coupon is selected, auto-switch to freebies
+    if (
+      eligibleFreebies &&
+      reduxSelectedCoupon.coupon_type !== "retailer_freebies"
+    ) {
+      setSelectedOption(eligibleFreebies.coupon_id);
+      dispatch(addCoupon(eligibleFreebies));
+      return;
+    }
+
+    // If the local state doesn't match Redux, sync it
+    if (selectedOption !== reduxSelectedCoupon.coupon_id) {
+      setSelectedOption(reduxSelectedCoupon.coupon_id);
+    }
+  }, [filteredCoupons, reduxSelectedCoupon, dispatch, cartItems]);
 
 
   console.log(lastPurchasedValue);
@@ -192,14 +247,23 @@ function RetailerCoupon({ selectedCoupon }) {
           <Box className="body_container">
             {filteredCoupons?.map((coupon) => {
               const discount = coupon.conditions.find(
-                (condition) => condition.type === "percentage" || condition.type === "flat" || condition.type === "percent_off" || condition.type === "flat_percent" || condition.type === "save" ||condition.type === "unlock"
+                (condition) =>
+                  condition.type === "percentage" ||
+                  condition.type === "flat" ||
+                  condition.type === "percent_off" ||
+                  condition.type === "flat_percent" ||
+                  condition.type === "save" ||
+                  condition.type === "unlock"
               )?.value;
+
+              const freebiesEligible = isRetailerFreebiesEligible(coupon);
+
               return (
                 <React.Fragment key={coupon.coupon_id}>
                   <Link
                     to={getCurrentUrlWithToken()}
                     onClick={(e) =>
-                      couponTitle[selectedCouponKey] === 'Loyalty Coupons'
+                      couponTitle[selectedCouponKey] === "Loyalty Coupons"
                         ? lastPurchasedValue && handleClick(e, coupon)
                         : handleClick(e, coupon)
                     }

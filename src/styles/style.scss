@@ -19905,6 +19905,19 @@ body .MuiBackdrop-root {
             }
           }
 
+          .checkbox-group{
+            .product_field{
+              .form-row{
+                flex-direction: column;
+                place-items: normal;
+
+                .input_field{
+                  margin: 0px;
+                }
+              }
+            }
+          }
+
           .MuiFormControlLabel-root {
             width: 100%;
           }

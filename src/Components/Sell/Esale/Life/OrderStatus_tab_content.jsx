@@ -157,6 +157,10 @@ function OrderStatus_tab_content({ title }) {
   if (!coupon) return 0;
 
   const { coupon_type, conditions } = coupon;
+  // Get product_ids from coupon.product_ids (separate field) or fallback to conditions
+  const couponProductIds = Array.isArray(coupon.product_ids)
+    ? coupon.product_ids
+    : conditions.find((c) => c.type === "product_ids")?.value || [];
   const total = subTotal;
 
   const minOrder = Number(
@@ -185,6 +189,8 @@ function OrderStatus_tab_content({ title }) {
   );
   const pay = Number(conditions.find((c) => c.type === "pay")?.value || 0);
   const get = Number(conditions.find((c) => c.type === "get")?.value || 0);
+  const buy = Number(conditions.find((c) => c.type === "buy")?.value || 0);
+  const productIds = couponProductIds;
 
   switch (coupon_type) {
     case "retailer_upto":
@@ -192,6 +198,19 @@ function OrderStatus_tab_content({ title }) {
 
     case "retailer_flat":
       return total >= minOrder ? ((total * percent) / 100) > 30 ? (total * percent) / 100 : 30 : 0;
+
+    case "retailer_freebies":
+      // Check if product_ids are specified
+      if (productIds && productIds.length > 0) {
+        // Note: This calculation would need access to order products
+        // For now, return 0 as a placeholder - this would need order product data
+        // The actual implementation would filter order products by product_ids
+        // and calculate discount similar to CartTable logic
+        return 0;
+      } else {
+        // If no product_ids specified, backward compatibility
+        return 0;
+      }
 
     case "loyalty_unlock":
       return lastPurchasedValue >= last_purchase_above

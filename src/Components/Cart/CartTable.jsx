@@ -64,6 +64,7 @@ function CartTable({ rows, setCartData, setSelectedCoupon }) {
   const [data, setData] = useState(
     rows.map((row) => ({ ...row, quantity: 1 })) // Initialize quantity for each product
   );
+  console.log(data);
   const [categoryNames, setCategoryNames] = useState({}); // Map of category IDs to names
   const { selectedCoupon } = useSelector((state) => state.discounts);
   const { selectedCohelper } = useSelector((state) => state.selectedCohelper);
@@ -393,6 +394,10 @@ function CartTable({ rows, setCartData, setSelectedCoupon }) {
     const buy = Number(conditions.find((c) => c.type === "buy")?.value || 0);
     const pay = Number(conditions.find((c) => c.type === "pay")?.value || 0);
     const get = Number(conditions.find((c) => c.type === "get")?.value || 0);
+    // Get product_ids from coupon.product_ids (separate field) or fallback to conditions
+    const productIds = Array.isArray(selectedCoupon.product_ids)
+      ? selectedCoupon.product_ids
+      : conditions.find((c) => c.type === "product_ids")?.value || [];
 
     switch (coupon_type) {
       case "retailer_upto":
@@ -403,7 +408,41 @@ function CartTable({ rows, setCartData, setSelectedCoupon }) {
         return total >= minOrder ? (total * percent) / 100 : 0;
 
       case "retailer_freebies":
-        return totalQuantity >= buy ? 0 : 0;
+        // Check if product_ids are specified
+        if (productIds && productIds.length > 0) {
+          // Filter cart items to only eligible products
+          const eligibleItems = data.filter(item => {
+            const productId = item.product_id || item.id;
+            return productIds.includes(String(productId)) || productIds.includes(Number(productId));
+          });
+          
+          if (eligibleItems.length === 0) {
+            return 0; // No eligible products in cart
+          }
+          
+          // Calculate total quantity of eligible products
+          const eligibleQuantity = eligibleItems.reduce((sum, item) => sum + item.quantity, 0);
+          
+          // Calculate how many sets of "buy X" we have
+          const sets = Math.floor(eligibleQuantity / buy);
+          
+          // Calculate discount: number of free items * average price of eligible items
+          if (sets > 0 && get > 0) {
+            const freeItemsCount = sets * get;
+            const avgPrice = eligibleItems.reduce((sum, item) => {
+              const price = item.matched_price || item.selling_price || item.product_selling_price || 0;
+              return sum + (price * item.quantity);
+            }, 0) / eligibleQuantity;
+            
+            // Return discount as the value of free items
+            return freeItemsCount * avgPrice;
+          }
+          
+          return 0;
+        } else {
+          // If no product_ids specified, apply to all products (backward compatibility)
+          return totalQuantity >= buy ? 0 : 0;
+        }
 
       case "loyalty_unlock":
         return lastPurchasedValue >= last_purchase_above
