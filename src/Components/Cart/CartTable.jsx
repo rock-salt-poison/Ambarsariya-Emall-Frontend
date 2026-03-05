@@ -192,22 +192,51 @@ function CartTable({ rows, setCartData, setSelectedCoupon }) {
       ) {
         shouldRemoveCoupon = true;
       } else if (selectedCoupon.coupon_type === "retailer_freebies") {
-        if (totalQuantity < buy) {
+        // Verify that coupon is applicable to at least one product in cart
+        const productIds = Array.isArray(selectedCoupon.product_ids)
+          ? selectedCoupon.product_ids
+          : conditions.find((c) => c.type === "product_ids")?.value || [];
+
+        const eligibleItems = data.filter((item) => {
+          const productId = item.product_id || item.id;
+          return (
+            productIds.includes(String(productId)) ||
+            productIds.includes(Number(productId))
+          );
+        });
+
+        const eligibleQuantity = eligibleItems.reduce(
+          (sum, item) => sum + item.quantity,
+          0
+        );
+        const requiredQuantity = buy + get;
+
+        if (!productIds.length || eligibleItems.length === 0) {
+          // No matching products in cart for this freebies coupon
+          setSnackbar({
+            open: true,
+            message: "This coupon is not applicable to the products in your cart.",
+            severity: "error",
+          });
+          shouldRemoveCoupon = true;
+        } else if (eligibleQuantity < requiredQuantity) {
           setSnackbar({
             open: true,
             message: `Add ${
-              buy - totalQuantity
+              requiredQuantity - eligibleQuantity
             } more items to use Buy ${buy} Get ${get} coupon.`,
             severity: "error",
           });
           shouldRemoveCoupon = true;
         } else {
-          shouldRemoveCoupon = true;
-          // setSnackbar({
-          //   open: true,
-          //   message: `You qualify for the offer: Buy ${buy}, Get ${get}.`,
-          //   severity: "success",
-          // });
+          // Cart qualifies for retailer_freebies → keep coupon applied
+          // Optionally show a success message
+          setSnackbar({
+            open: true,
+            message: `You qualify for the offer: Buy ${buy}, Get ${get}.`,
+            severity: "success",
+          });
+          shouldRemoveCoupon = false;
         }
       } else if (
         lastPurchasedValue !== null &&

@@ -73,13 +73,16 @@ function RetailerCoupon({ selectedCoupon }) {
     const buy = Number(
       coupon.conditions.find((c) => c.type === "buy")?.value || 0
     );
+    const get = Number(
+      coupon.conditions.find((c) => c.type === "get")?.value || 0
+    );
 
     // Get product_ids from coupon.product_ids (separate field) or fallback to conditions
     const productIds = Array.isArray(coupon.product_ids)
       ? coupon.product_ids
       : coupon.conditions.find((c) => c.type === "product_ids")?.value || [];
 
-    if (!buy || productIds.length === 0 || !cartItems?.length) return false;
+    if (!buy || !get || productIds.length === 0 || !cartItems?.length) return false;
 
     // Filter cart items to only eligible products
     const eligibleItems = cartItems.filter((item) => {
@@ -97,8 +100,9 @@ function RetailerCoupon({ selectedCoupon }) {
       (sum, item) => sum + (item.quantity || 0),
       0
     );
+    const requiredQuantity = buy + get;
 
-    return eligibleQuantity >= buy;
+    return eligibleQuantity >= requiredQuantity;
   };
 
   useEffect(() => {
