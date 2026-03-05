@@ -182,7 +182,7 @@ console.log(products);
               </Box>
             ) : (
               <FormField
-                type="select-check"
+                type="search-select-check"
                 name="product_ids"
                 label="Select Products"
                 placeholder="Select products (Buy X Get Y applies to these products)"

@@ -262,34 +262,59 @@ const FormField = ({
                 ) : type === 'search-select-check' ? (
 
                   <Autocomplete
-                    multiple
-                    name={name}
-                    className={`search_input_field ${className}`}
-                    value={Array.isArray(value) ? value : []}
-                    options={options || []}
-                    onChange={(event, newValue) => {
-                      handleSearchSelectChange(event, newValue);  // Pass both event and newValue
-                    }}
-                    disableCloseOnSelect
-                    getOptionLabel={(option) => option}
-                    renderOption={(props, option, { selected }) => {
-                      const { key, ...optionProps } = props;
-                      return (
-                        <li key={key} {...optionProps}>
-                          <Checkbox
-                            icon={icon2}
-                            checkedIcon={checkedIcon}
-                            style={{ marginRight: 8 }}
-                            checked={value.includes(option)}
-                          />
-                          {option}
-                        </li>
-                      );
-                    }}
-                    renderInput={(params) => (
-                      <TextField {...params} placeholder={placeholder} className={`input_field ${className}`} />
-                    )}
-                  />
+  multiple
+  name={name}
+  className={`search_input_field ${className}`}
+  options={options || []}
+  disableCloseOnSelect
+  value={
+    Array.isArray(value)
+      ? options.filter(opt =>
+          typeof opt === "object"
+            ? value.includes(opt.value)
+            : value.includes(opt)
+        )
+      : []
+  }
+  getOptionLabel={(option) =>
+    typeof option === "object" ? option.label : option
+  }
+  onChange={(event, newValue) => {
+    const selectedValues = newValue.map(opt =>
+      typeof opt === "object" ? opt.value : opt
+    );
+
+    handleSearchSelectChange(event, selectedValues);
+  }}
+  renderOption={(props, option, { selected }) => {
+    const { key, ...optionProps } = props;
+
+    const optionLabel =
+      typeof option === "object" ? option.label : option;
+
+    const optionValue =
+      typeof option === "object" ? option.value : option;
+
+    return (
+      <li key={key} {...optionProps}>
+        <Checkbox
+          icon={icon2}
+          checkedIcon={checkedIcon}
+          style={{ marginRight: 8 }}
+          checked={value.includes(optionValue)}
+        />
+        {optionLabel}
+      </li>
+    );
+  }}
+  renderInput={(params) => (
+    <TextField
+      {...params}
+      placeholder={placeholder}
+      className={`input_field ${className}`}
+    />
+  )}
+/>
 
 
                 ) : type === "textarea" ? (
