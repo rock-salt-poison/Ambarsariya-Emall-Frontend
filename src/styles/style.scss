@@ -32510,6 +32510,7 @@ textarea[readonly] {
   .MuiDialog-paper {
     max-width: 500px !important;
     width: 90% !important;
+    height: 80vh !important;
   }
 
   .MuiDialogContent-root{
@@ -32519,7 +32520,6 @@ textarea[readonly] {
   .payment_popup_content {
     @include flex-center(column, flex-start);
     gap: 20px;
-    padding: 20px;
     place-items: normal;
 
     .payment_section {
