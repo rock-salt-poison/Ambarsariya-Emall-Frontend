@@ -37,6 +37,23 @@ function MunicipalCorporation() {
     }
   };
 
+  const handleTradeLicenseClick = (e) => {
+    e.preventDefault();
+    const target = e.target.closest(".trade_license_container");
+    if (target) {
+      target.classList.add("reduceSize3");
+      audio.play();
+      
+      setTimeout(() => {
+        target.classList.remove("reduceSize3");
+      }, 300);
+      
+      setTimeout(() => {
+        navigate("trade-license");
+      }, 600);
+    }
+  };
+
 
   return (
     <Box className="municipal_corporation_wrapper">
@@ -62,7 +79,7 @@ function MunicipalCorporation() {
         </Box>
 
         <Box className="body">
-          <Link className="trade_license_container">
+          <Link className="trade_license_container" onClick={handleTradeLicenseClick} style={{ cursor: 'pointer' }}>
             <Box component="img" src={trade_license} alt="trade_license" className="trade_license_img"/>
           </Link>
           <Link className="grievance_license_container" onClick={handleGrievanceClick} style={{ cursor: 'pointer' }}>

@@ -17,6 +17,7 @@ import UtilitiesMain from "../Pages/Socialize/UtilitiesMain";
 import StandardFit from "../Pages/Socialize/StandardFit";
 import MunicipalCorporation from "../Pages/Socialize/MunicipalCorporation";
 import GrievanceForm from "../Pages/Socialize/GrievanceForm";
+import TradeLicense from "../Pages/Socialize/TradeLicense";
 import Banners from "../Pages/Socialize/Banners";
 import BannerMain from "../Pages/Socialize/BannerMain";
 import BannersToday from "../Pages/Socialize/BannersToday";
@@ -168,6 +169,15 @@ function SocializeRoutes() {
           <ProtectedRoute
             shopElement={<GrievanceForm />}
             memberElement={<GrievanceForm />}
+          />
+        }
+      />
+      <Route
+        path="/city-junctions/municipal-corporation/trade-license"
+        element={
+          <ProtectedRoute
+            shopElement={<TradeLicense />}
+            memberElement={<TradeLicense />}
           />
         }
       />
