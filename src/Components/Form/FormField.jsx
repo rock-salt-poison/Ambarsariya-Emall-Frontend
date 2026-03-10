@@ -230,11 +230,17 @@ const FormField = ({
                       <Box>
                         {selected.length > 0
                           ? selected
-                            .map(sel =>
-                              typeof sel === 'string'
-                                ? (options.find(opt => (typeof opt === 'object' ? opt.value === sel : opt === sel))?.label || sel)
-                                : sel
-                            )
+                            .map(sel => {
+                              const foundOption = options.find(opt => {
+                                if (typeof opt === 'object' && opt !== null) {
+                                  return opt.value === sel || String(opt.value) === String(sel);
+                                }
+                                return opt === sel || String(opt) === String(sel);
+                              });
+                              return foundOption 
+                                ? (typeof foundOption === 'object' ? foundOption.label : foundOption)
+                                : sel;
+                            })
                             .join(', ')
                           : placeholder}
                       </Box>

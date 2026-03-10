@@ -17676,6 +17676,7 @@ a {
             padding: 20px 25px;
             border-radius: 20px;
             @include flex-center(row, center);
+            place-items: normal;
             flex: 1;
 
             .blank {
@@ -17687,6 +17688,16 @@ a {
               );
               @include hover-scale(1, 0s);
               text-align: center;
+              align-self:center;
+            }
+
+            .assets_popup{
+              width: 100%;
+
+              .tabs_container{
+                width: max-content;
+                margin: 0 auto;
+              }
             }
           }
         }
@@ -32410,7 +32421,7 @@ textarea[readonly] {
     gap: 40px;
     position: relative;
     padding: 30px;
-    height:100%;
+    max-height:100%;
     overflow: hidden;
     z-index: 2;
 
@@ -33965,4 +33976,94 @@ textarea[readonly] {
       }
     }
   }
+}
+
+.ticket {
+  // @include full-absolute(30px, 0px, 33px, 0px);
+  margin: 0 auto;
+  width: 51%;
+  height: 96px;
+  gap: 5px;
+  background: $yellow;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 17px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  --mask:
+    /* Left side cuts */ radial-gradient(
+        circle 10px at 0% 57%,
+        transparent 98%,
+        black
+      )
+      0% 14% / 80% 26px no-repeat,
+    radial-gradient(circle 10px at 0% 52%, transparent 98%, black)
+      0% 39% / 80% 23px no-repeat,
+    radial-gradient(circle 10px at 0% 52%, transparent 98%, black)
+      0% 61% / 80% 22px no-repeat,
+    radial-gradient(circle 10px at 0% 50%, transparent 96%, black)
+      0% 85% / 80% 24px no-repeat,
+    /* Right side cuts (mirroring left side) */
+      radial-gradient(
+        circle 10px at 100% 57%,
+        transparent 98%,
+        black
+      )
+      100% 14% / 80% 26px no-repeat,
+    radial-gradient(circle 10px at 100% 52%, transparent 98%, black)
+      100% 39% / 80% 23px no-repeat,
+    radial-gradient(circle 10px at 100% 52%, transparent 98%, black)
+      100% 61% / 80% 22px no-repeat,
+    radial-gradient(circle 10px at 100% 50%, transparent 96%, black)
+      100% 85% / 80% 24px no-repeat,
+    /* Top and Bottom middle cuts */
+      radial-gradient(circle 10px at 1% 0, transparent 98%, black)
+      left top / 12% 14px no-repeat,
+    radial-gradient(circle 10px at 31% 0, transparent 98%, black)
+      center top / 79% 14px no-repeat,
+    radial-gradient(circle 10px at 97% 0, transparent 98%, black)
+      right top / 23% 14px no-repeat,
+    radial-gradient(circle 10px at 1% 100%, transparent 98%, black)
+      left bottom / 12% 14px no-repeat,
+    radial-gradient(circle 10px at 35% 100%, transparent 98%, black)
+      center bottom / 79% 14px no-repeat,
+    radial-gradient(circle 10px at 97% 100%, transparent 98%, black)
+      right bottom / 23% 14px no-repeat;
+
+  -webkit-mask: var(--mask);
+  mask: var(--mask);
+}
+
+/* Left section */
+.ticket .left {
+  width: 25%;
+  align-self: stretch;
+  background: $light-yellow;
+  border-radius: 5px;
+  padding: 10px;
+  --mask: radial-gradient(8px at 26px 26px, #0000 98%, #000) -26px -26px;
+  -webkit-mask: var(--mask);
+  mask: var(--mask);
+}
+
+/* Right section */
+.ticket .right {
+  width: 70%;
+  align-self: stretch;
+  position: relative;
+  --mask: radial-gradient(8px at 26px 26px, #0000 98%, #000) -26px -26px;
+  -webkit-mask: var(--mask);
+  mask: var(--mask);
+  background-color: $light-yellow;
+}
+
+.divider {
+  border-right: 2px dashed $white;
+  height: 100%;
+}
+
+/* Inner border box */
+.inner-box {
+  padding: 10px;
 }

@@ -1,87 +1,278 @@
-import React, { useState } from 'react';
-import { Box, Button, ThemeProvider, Tooltip, Typography } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Box, Button, ThemeProvider, Tooltip, Typography, CircularProgress, Checkbox } from '@mui/material';
 import FormField from '../../Components/Form/FormField';
 import createCustomTheme from '../../styles/CustomSelectDropdownTheme';
 import ribbon from '../../Utils/images/Serve/emotional/eshop/hr_management/ribbon.svg';
 import Header from '../../Components/Serve/SupplyChain/Header';
 import GeneralLedgerForm from '../../Components/Form/GeneralLedgerForm';
+import { fetchDomains, fetchDomainSectors, getCategories, getSupplierShops, getUser } from '../../API/fetchExpressAPI';
+import ScrollableTabsButton from '../../Components/ScrollableTabsButton';
+import { useSelector } from 'react-redux';
 
 function MemberGroupCreation(props) {
   const initialData = {
-    products:'',
-    merchant:'',
-    created_vendor :'',
-    customer_details:'',
-    completed_orders:'0',
-    pending_orders:'0',
-    subscription_details:'-',
-    edit_merchant_details:'',
+    domains: [],
+    sectors: [],
+    categories: [],
+    group_name: '',
+    create_group:'',
 };
 
-const [showContactField, setShowContactField] = useState(false);
+const [loading, setLoading] = useState(false);
 const [formData, setFormData] = useState(initialData);
 const [errors, setErrors] = useState({});
+const [domainsOptions, setDomainsOptions] = useState([]);
+const [sectorsOptions, setSectorsOptions] = useState([]);
+const [categoriesOptions, setCategoriesOptions] = useState([]);
+const [shopsLoading, setShopsLoading] = useState(false);
+const [shops, setShops] = useState([]);
+const [selectedShops, setSelectedShops] = useState([]);
+const [showGroupNameField, setShowGroupNameField] = useState(false);
+const [currentShopNo, setCurrentShopNo] = useState(null);
+const token = useSelector((state) => state.auth.userAccessToken);
+
 const handleClick = () => {
   console.log("hi")
 }
 
+// Fetch current logged-in shop_no (if any)
+useEffect(() => {
+  const fetchCurrentShop = async () => {
+    if (!token) return;
+    try {
+      const resp = await getUser(token);
+      const shopUser = resp?.find((u) => u.shop_no !== null);
+      if (shopUser?.shop_no) {
+        setCurrentShopNo(shopUser.shop_no);
+      }
+    } catch (e) {
+      console.error('Error fetching current shop user:', e);
+    }
+  };
+
+  fetchCurrentShop();
+}, [token]);
+
+// Fetch initial data on component mount
+useEffect(() => {
+  const fetchInitialData = async () => {
+    setLoading(true);
+    try {
+      const domainsData = await fetchDomains();
+      setDomainsOptions(domainsData.map(domain => ({
+        value: domain.domain_id,
+        label: domain.domain_name
+      })));
+    } catch (error) {
+      console.error('Error fetching domains:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchInitialData();
+}, []);
+
+// Fetch sectors when domains are selected
+useEffect(() => {
+  const fetchSectorsForDomains = async () => {
+    if (formData.domains && formData.domains.length > 0) {
+      setLoading(true);
+      try {
+        const allSectors = [];
+        const sectorMap = new Map(); // To avoid duplicates
+
+        // Fetch sectors for each selected domain
+        for (const domainId of formData.domains) {
+          const domainSectors = await fetchDomainSectors(domainId);
+          domainSectors.forEach(sector => {
+            if (!sectorMap.has(sector.sector_id)) {
+              sectorMap.set(sector.sector_id, sector);
+              allSectors.push({
+                value: sector.sector_id,
+                label: sector.sector_name
+              });
+            }
+          });
+        }
+
+        setSectorsOptions(allSectors);
+      } catch (error) {
+        console.error('Error fetching sectors:', error);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      setSectorsOptions([]);
+      setCategoriesOptions([]);
+      setFormData(prev => ({ ...prev, sectors: [], categories: [] }));
+    }
+  };
+
+  fetchSectorsForDomains();
+}, [formData.domains]);
+
+// Fetch categories when sectors are selected
+useEffect(() => {
+  const fetchCategoriesForSectors = async () => {
+    if (formData.sectors && formData.sectors.length > 0 && formData.domains && formData.domains.length > 0) {
+      setLoading(true);
+      try {
+        const allCategories = [];
+        const categoryMap = new Map(); // To avoid duplicates
+
+        // Fetch categories for each domain-sector combination
+        for (const domainId of formData.domains) {
+          for (const sectorId of formData.sectors) {
+            try {
+              const categories = await getCategories({ domain_id: domainId, sector_id: sectorId });
+              categories.forEach(category => {
+                if (!categoryMap.has(category.category_id)) {
+                  categoryMap.set(category.category_id, category);
+                  allCategories.push({
+                    value: category.category_id,
+                    label: category.category_name
+                  });
+                }
+              });
+            } catch (error) {
+              console.error(`Error fetching categories for domain ${domainId} and sector ${sectorId}:`, error);
+            }
+          }
+        }
+
+        setCategoriesOptions(allCategories);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      setCategoriesOptions([]);
+      setFormData(prev => ({ ...prev, categories: [] }));
+    }
+  };
+
+  fetchCategoriesForSectors();
+}, [formData.sectors, formData.domains]);
+
+// Fetch shops that match any selected sector and any selected category
+useEffect(() => {
+  const fetchMatchedShops = async () => {
+    if (
+      // !currentShopNo ||
+      !Array.isArray(formData.domains) ||
+      formData.domains.length === 0 ||
+      !Array.isArray(formData.sectors) ||
+      formData.sectors.length === 0 ||
+      !Array.isArray(formData.categories) ||
+      formData.categories.length === 0
+    ) {
+      setShops([]);
+      setSelectedShops([]);
+      return;
+    }
+
+    setShopsLoading(true);
+    try {
+      const shopMap = new Map();
+      const collectedShops = [];
+
+      for (const domainId of formData.domains) {
+        for (const sectorId of formData.sectors) {
+          try {
+            const resp = await getSupplierShops(
+              currentShopNo,
+              domainId,
+              sectorId,
+              formData.categories
+            );
+
+            if (resp?.valid && Array.isArray(resp.data)) {
+              resp.data.forEach((shop) => {
+                if (!shopMap.has(shop.shop_no)) {
+                  shopMap.set(shop.shop_no, shop);
+                  collectedShops.push(shop);
+                }
+              });
+            }
+          } catch (error) {
+            console.error(
+              `Error fetching shops for domain ${domainId} and sector ${sectorId}:`,
+              error
+            );
+          }
+        }
+      }
+
+      setShops(collectedShops);
+      setSelectedShops([]);
+      setShowGroupNameField(false);
+    } finally {
+      setShopsLoading(false);
+    }
+  };
+
+  fetchMatchedShops();
+}, [currentShopNo, formData.domains, formData.sectors, formData.categories]);
+
+const handleToggleShopSelection = (shop_no) => {
+  setSelectedShops((prev) => {
+    const exists = prev.includes(shop_no);
+    return exists ? prev.filter((s) => s !== shop_no) : [...prev, shop_no];
+  });
+};
+
+const handleCreateGroupClick = () => {
+  if (selectedShops.length > 1) {
+    setShowGroupNameField(true);
+  }
+};
+
 const formFields = [
     {
         id: 1,
-        label: 'Select Products',
-        name: 'products',
+        label: 'Select Domains',
+        name: 'domains',
         type: 'select-check',
-        options:["Pain Relief",
-            "Antibiotics",
-            "Multivitamins",
-            "Omega-3",
-            "Surgical Instruments",
-            "Skin Care",
-            "Emergency Kits",],
+        options: domainsOptions,
+        placeholder: 'Select domains',
     },
     {
         id: 2,
-        label: 'Select Merchant / Create Vendor',
-        name: 'merchant',
-        type: 'select',
-        options:['Merchant 1', 'Merchant 2','Merchant 3','Merchant 4', 'Create Vendor'],
+        label: 'Select Sectors',
+        name: 'sectors',
+        type: 'select-check',
+        options: sectorsOptions,
+        placeholder: 'Select sectors',
     },
-    ...(showContactField ? [{
-      id: 3,
-      label: 'Create Vendor',
-      name: 'created_vendor',
-      type: 'text', // Adjust the type based on your requirements
-  }] : []),
-
     {
-        id: 4,
-        label: 'Completed Orders',
-        name: 'completed_orders',
-        type: 'text',   
-        readOnly:true
+        id: 3,
+        label: 'Select Category',
+        name: 'categories',
+        type: 'select-check',
+        options: categoriesOptions,
+        placeholder: 'Select categories',
     },
+    ...(showGroupNameField
+      ? [
+          {
+            id: 4,
+            label: 'Group Name',
+            name: 'group_name',
+            type: 'text',
+          },
+        ]
+      : []),
     {
         id: 5,
-        label: 'Pending Orders',
-        name: 'pending_orders',
-        type: 'text',
-        readOnly:true,
+        label: 'Create group',
+        name: 'create_group',
+        type: 'button',
+        value: 'Create group',
+        handleButtonClick: handleCreateGroupClick, 
     },
-    {
-      id: 6,
-      label: 'Subscription Details',
-      name: 'subscription_details',
-      type: 'text',
-      readOnly:true,
-    },
-    {
-      id: 7,
-      label: 'Edit Merchant or Vendor Details',
-      value: 'Click here to edit merchant/vendor details',
-      name: 'edit_merchant_details',
-      type: 'button',
-      handleButtonClick : handleClick
-    },
+    
 ];
 
 
@@ -89,10 +280,6 @@ const formFields = [
 const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
-
-    if (name === 'merchant') {
-      setShowContactField(value === 'Create Vendor'); // Show contact field if "Create Contact" is selected
-  }
 
     // Clear any previous error for this field
     setErrors({ ...errors, [name]: null });
@@ -103,9 +290,21 @@ const validateForm = () => {
 
     formFields.forEach(field => {
         const name = field.name;
-        // Validate main fields
-        if (!formData[name]) {
-            newErrors[name] = `${field.label} is required.`;
+        // Skip validation for read-only, button, and optional fields
+        if (field.readOnly || field.type === 'button' || name === 'edit_merchant_details') {
+            return;
+        }
+        
+        // Validate array fields (select-check)
+        if (field.type === 'select-check') {
+            if (!formData[name] || (Array.isArray(formData[name]) && formData[name].length === 0)) {
+                newErrors[name] = `${field.label} is required.`;
+            }
+        } else {
+            // Validate other fields
+            if (!formData[name]) {
+                newErrors[name] = `${field.label} is required.`;
+            }
         }
     });
 
@@ -133,6 +332,11 @@ const theme = createCustomTheme(themeProps);
   return (
     <ThemeProvider theme={theme}>
       <Box className="crm_sub_wrapper">
+        {loading && (
+          <Box className="loading">
+            <CircularProgress />
+          </Box>
+        )}
         <Box className="row">
         <Header back_btn_link='../emotional/crm' next_btn_link="../emotional/crm/sales-pipeline" heading_with_bg={true} title="Member Group Creation" redirectTo='../emotional/crm' />
 
@@ -146,20 +350,162 @@ const theme = createCustomTheme(themeProps);
                       formData={formData}
                       onChange={handleChange}
                       errors={errors}
-                      submitButtonText="Show purchase history"
+                      submitButtonText="Submit"
                   />
-                  
                 </Box>
 
               <Box className="sub_container">
-                { 
                 <Box className="show_message">
-                  <Typography className='blank'>
-                      Purchase history
-                  </Typography>  
+                  {shopsLoading ? (
+                    <Box className="loading">
+                      <CircularProgress />
+                    </Box>
+                  ) : shops.length === 0 ? (
+                    <Typography className="blank">
+                      Select domains, sectors and categories to see matching shops.
+                    </Typography>
+                  ) : (
+                    <Box className="assets_popup">
+                      <ScrollableTabsButton
+                        data={[
+                          {
+                            id: 1,
+                            name: 'Shops',
+                            content: () => (
+                              <Box className="shops_list">
+                                {shops
+                                  .filter(
+                                    (shop) =>
+                                      shop.user_type !== 'merchant'
+                                  )
+                                  .map((shop) => (
+                                    <Box
+                                      key={shop.shop_no}
+                                      className="ticket shop_ticket"
+                                    >
+                                      <Box className="left">
+                                        <Box className="container">
+                                          <Box className="sector">
+                                            <Typography>
+                                              {shop.sector_name || shop.sector}
+                                            </Typography>
+                                          </Box>
+                                          <Box className="domain">
+                                            <Typography>
+                                              {shop.domain_name || shop.domain}
+                                            </Typography>
+                                          </Box>
+                                        </Box>
+                                      </Box>
+                                      <Box className="divider"></Box>
+                                      <Box className="right">
+                                        <Box className="inner-box">
+                                          <Box className="shop-name">
+                                            {shop.business_name ||
+                                              shop.shop_name}
+                                          </Box>
+                                          <Box className="category">
+                                            {Array.isArray(
+                                              shop.category_name
+                                            )
+                                              ? shop.category_name[0]
+                                              : shop.category_name ||
+                                                shop.category}
+                                          </Box>
+                                          <Box className="product">
+                                            Products
+                                          </Box>
+                                        </Box>
+                                        <Box className="shop_select_checkbox">
+                                          <Checkbox
+                                            checked={selectedShops.includes(
+                                              shop.shop_no
+                                            )}
+                                            onChange={() =>
+                                              handleToggleShopSelection(
+                                                shop.shop_no
+                                              )
+                                            }
+                                          />
+                                        </Box>
+                                      </Box>
+                                    </Box>
+                                  ))}
+                              </Box>
+                            ),
+                          },
+                          {
+                            id: 2,
+                            name: 'Merchants',
+                            content: () => (
+                              <Box className="shops_list">
+                                {shops
+                                  .filter(
+                                    (shop) =>
+                                      shop.user_type === 'merchant'
+                                  )
+                                  .map((shop) => (
+                                    <Box
+                                      key={shop.shop_no}
+                                      className="ticket shop_ticket"
+                                    >
+                                      <Box className="left">
+                                        <Box className="container">
+                                          <Box className="sector">
+                                            <Typography>
+                                              {shop.sector_name || shop.sector}
+                                            </Typography>
+                                          </Box>
+                                          <Box className="domain">
+                                            <Typography>
+                                              {shop.domain_name || shop.domain}
+                                            </Typography>
+                                          </Box>
+                                        </Box>
+                                      </Box>
+                                      <Box className="divider"></Box>
+                                      <Box className="right">
+                                        <Box className="inner-box">
+                                          <Box className="shop-name">
+                                            {shop.business_name ||
+                                              shop.shop_name}
+                                          </Box>
+                                          <Box className="category">
+                                            {Array.isArray(
+                                              shop.category_name
+                                            )
+                                              ? shop.category_name[0]
+                                              : shop.category_name ||
+                                                shop.category}
+                                          </Box>
+                                          <Box className="product">
+                                            Products
+                                          </Box>
+                                        </Box>
+                                        <Box className="shop_select_checkbox">
+                                          <Checkbox
+                                            checked={selectedShops.includes(
+                                              shop.shop_no
+                                            )}
+                                            onChange={() =>
+                                              handleToggleShopSelection(
+                                                shop.shop_no
+                                              )
+                                            }
+                                          />
+                                        </Box>
+                                      </Box>
+                                    </Box>
+                                  ))}
+                              </Box>
+                            ),
+                          },
+                        ]}
+                        scrollbarThumb2="var(--brown)"
+                      />
+                    </Box>
+                  )}
                 </Box>
-                }
-                
               </Box>
             </Box>
           </Box>
