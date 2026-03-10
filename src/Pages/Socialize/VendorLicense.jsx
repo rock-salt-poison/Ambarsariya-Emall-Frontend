@@ -26,7 +26,11 @@ function VendorLicense() {
     { id: 2, icon: location_icon, text: 'Majitha road ward - 128/ASR III/W' },
     { id: 3, icon: calendar_icon, text: 'All days' },
     { id: 4, icon: calendar_icon, text: '02:00 PM To 09:00 PM' },
-    { id: 5, icon: foods_icon, text: [{ heading: 'Packaged Foods :', desc: 'Snacks (Ready-to-eat meals, Canned goods, frozen foods)' }] },
+    { id: 5, icon: foods_icon, text: [{ heading: 'Packaged Foods :', desc: 'Snacks (Ready-to-eat meals, Canned goods, frozen foods)' },
+      { heading: 'Health and Specialty Foods :', desc: 'Organic products, gluten-free, plant-based foods, nutritional supplements.' },
+      { heading: 'Dairy and Perishables :', desc: 'Milk, cheese, yogurt, fresh produce.' },
+      { heading: 'Condiments and Cooking Essentials :', desc: 'Spices, sauces, oils, and baking ingredients.' }
+    ] },
   ]
 
   const right_col_items = [
