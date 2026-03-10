@@ -7,6 +7,7 @@ import right_col from "../../Utils/images/Socialize/city_junctions/connect_with_
 import category_icon from "../../Utils/images/Socialize/city_junctions/connect_with_utilities/municipal_corporation/vendor_license/category_icon.webp";
 import location_icon from "../../Utils/images/Socialize/city_junctions/connect_with_utilities/municipal_corporation/vendor_license/location_icon.png";
 import calendar_icon from "../../Utils/images/Socialize/city_junctions/connect_with_utilities/municipal_corporation/vendor_license/calendar_icon.png";
+import clock_icon from "../../Utils/gifs/time.gif";
 import foods_icon from "../../Utils/images/Socialize/city_junctions/connect_with_utilities/municipal_corporation/vendor_license/foods_icon.webp";
 import Header from "../../Components/Serve/SupplyChain/Header";
 
@@ -25,7 +26,7 @@ function VendorLicense() {
     { id: 1, icon: category_icon, text: [{ heading: 'Category :', desc: 'Packaged foods', subtitle: 'Snacks, Ready-to-eat meals, Canned goods, frozen foods' }] },
     { id: 2, icon: location_icon, text: 'Majitha road ward - 128/ASR III/W' },
     { id: 3, icon: calendar_icon, text: 'All days' },
-    { id: 4, icon: calendar_icon, text: '02:00 PM To 09:00 PM' },
+    { id: 4, icon: clock_icon, text: '02:00 PM To 09:00 PM' },
     { id: 5, icon: foods_icon, text: [{ heading: 'Packaged Foods :', desc: 'Snacks (Ready-to-eat meals, Canned goods, frozen foods)' },
       { heading: 'Health and Specialty Foods :', desc: 'Organic products, gluten-free, plant-based foods, nutritional supplements.' },
       { heading: 'Dairy and Perishables :', desc: 'Milk, cheese, yogurt, fresh produce.' },
