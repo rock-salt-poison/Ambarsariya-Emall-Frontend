@@ -21,6 +21,7 @@ import TradeLicense from "../Pages/Socialize/TradeLicense";
 import Banners from "../Pages/Socialize/Banners";
 import BannerMain from "../Pages/Socialize/BannerMain";
 import BannersToday from "../Pages/Socialize/BannersToday";
+import VendorLicense from "../Pages/Socialize/VendorLicense";
 
 function SocializeRoutes() {
   const token = useSelector((state) => state.auth.userAccessToken);
@@ -178,6 +179,15 @@ function SocializeRoutes() {
           <ProtectedRoute
             shopElement={<TradeLicense />}
             memberElement={<TradeLicense />}
+          />
+        }
+      />
+      <Route
+        path="/city-junctions/municipal-corporation/vendor-license"
+        element={
+          <ProtectedRoute
+            shopElement={<VendorLicense />}
+            memberElement={<VendorLicense />}
           />
         }
       />

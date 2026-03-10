@@ -18900,7 +18900,7 @@ a {
       .title_container {
         .heading {
           position: relative !important;
-          background-color: #6b433699;
+          background-color: rgba($brown-4, 0.6);
           border-radius: 20px;
           padding: 0 30px;
 
@@ -32350,6 +32350,178 @@ textarea[readonly] {
       }
     }
   }
+}
+
+.vendor_license_wrapper{
+  position: relative;
+  height: 100vh;
+  @include flex-center(column, flex-start);
+  place-items: normal;
+  z-index: 0;
+  @include background-center-no-repeat($vendorLicenseBgImg);
+  background-size: cover;
+  background-position: center;
+
+  &::after {
+    content: "";
+    background: rgba($dark-yellow, 0.25);
+    @include full-absolute(0px, 0px, 0px, 0px);
+    z-index: 0;
+  }
+
+  .header_badge{
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 120px 1fr 120px;
+    align-content: center;
+    padding: 20px 30px;
+
+    .icon_link{
+      .icon{
+        width: 120px;
+      }
+    }
+
+    .title_container {
+      align-self: center;
+      justify-self: center;
+      .heading {
+        position: relative !important;
+        background-color: rgba($brown-4, 0.6);
+        border-radius: 20px;
+        padding: 0 30px;
+
+        .title {
+          @include homepage-buttons("Gladiola", 2.6em, $yellow, "none");
+          // @include hover-scale(1, 0s);
+          text-align: center;
+          text-shadow: -1px 1px 10px #6b4336, 0 0 20px #b67d1c,
+            0 0 30px #6b4336, -1px 3px 40px #b67d1c;
+        }
+      }
+    }
+    
+  }
+
+  .body{
+    @include flex-center(row, center);
+    place-items:normal;
+    gap: 40px;
+    position: relative;
+    padding: 30px;
+    height:100%;
+    overflow: hidden;
+    z-index: 2;
+
+    .col{
+      width: 42%;
+      @include flex-center(column, center);
+      place-items: normal;
+      position: relative;
+      height: 100%;
+
+      .col_bg{
+        @include full-absolute(0px, 0px, 0px, 0px);
+        width: 100%;
+        height: 100%;
+        object-fit: fill;
+        opacity: .75;
+        z-index: -1;
+
+        &.left{
+          border-radius: 20px;
+        }
+      }
+
+      .content{
+        @include flex-center(column, center);
+        gap: 20px;
+        padding: 30px;
+        height: 100%;
+
+        .heading_container{
+          padding: 6px 15px;
+          background-color: $brown-4;
+          border-radius: 10px;
+          
+          .heading{
+            @include homepage-buttons("Bobby-Jones-Soft", 22px, $light-yellow, "none");
+            @include hover-scale(1, 0s);
+          }
+        }
+
+        .list_item_container{
+          @include flex-center(column, flex-start);
+          place-items: normal;
+          gap: 15px;  
+          height: 100%;
+          overflow-y: auto;
+
+          .items{
+            @include flex-center(row, flex-start);
+            gap: 10px;
+
+            .icon{
+              width: 60px;
+              align-self: flex-start;
+            }
+
+            .text_content{
+              @include flex-center(column, flex-start);
+              place-items:normal;
+              gap: 8px;
+
+              .container{
+                @include flex-center(column, flex-start);
+              place-items:normal;
+              gap: 3px;
+              }
+              .text{
+                @include homepage-buttons("Bobby-Jones-Soft", 20px, $light-yellow, "black-shadow");
+          @include hover-scale(1, 0s);
+          line-height: 20px;
+
+                &.heading{
+                  color: $yellow;
+                }
+
+                &.small{
+                  font-size: 16px;
+                  line-height: 16px;
+                }
+              }
+            }
+          }
+        }
+
+        &.right{
+          .list_item_container{
+            place-items: center;
+            .items{
+              .text_content{
+                .container{
+                  flex-direction: row;
+                  flex-wrap: wrap;
+                  justify-content: center;
+
+                  .text{
+                    color:$black;
+
+                    &.heading{
+                      color: $brown-4;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+
+      }
+    }
+  }
+
 }
 
 .trade_license_wrapper{

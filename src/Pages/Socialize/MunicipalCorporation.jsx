@@ -37,6 +37,23 @@ function MunicipalCorporation() {
     }
   };
 
+  const handleVendorClick = (e) => {
+    e.preventDefault();
+    const target = e.target.closest(".vendor_commission_services_container");
+    if (target) {
+      target.classList.add("reduceSize3");
+      audio.play();
+      
+      setTimeout(() => {
+        target.classList.remove("reduceSize3");
+      }, 300);
+      
+      setTimeout(() => {
+        navigate("vendor-license");
+      }, 600);
+    }
+  };
+
   const handleTradeLicenseClick = (e) => {
     e.preventDefault();
     const target = e.target.closest(".trade_license_container");
@@ -90,7 +107,7 @@ function MunicipalCorporation() {
 
             <Typography className="title_heading">Services by Municipal Corporation</Typography>
           </Link>
-          <Link className="vendor_commission_services_container">
+          <Link className="vendor_commission_services_container" onClick={handleVendorClick}>
             <Box component="img" src={vendor_commission_services} alt="vendor_commission_services" className="vendor_commission_services_img"/>
           
           <Box className="vendor_commission_services_panel">
