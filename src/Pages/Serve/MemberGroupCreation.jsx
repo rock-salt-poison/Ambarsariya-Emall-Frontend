@@ -5,7 +5,7 @@ import createCustomTheme from '../../styles/CustomSelectDropdownTheme';
 import ribbon from '../../Utils/images/Serve/emotional/eshop/hr_management/ribbon.svg';
 import Header from '../../Components/Serve/SupplyChain/Header';
 import GeneralLedgerForm from '../../Components/Form/GeneralLedgerForm';
-import { fetchDomains, fetchDomainSectors, getCategories, getSupplierShops, getUser } from '../../API/fetchExpressAPI';
+import { fetchDomains, fetchDomainSectors, getCategories, getDomainSectorCategorySpecificShops, getSupplierShops, getUser } from '../../API/fetchExpressAPI';
 import ScrollableTabsButton from '../../Components/ScrollableTabsButton';
 import { useSelector } from 'react-redux';
 
@@ -15,7 +15,6 @@ function MemberGroupCreation(props) {
     sectors: [],
     categories: [],
     group_name: '',
-    create_group:'',
 };
 
 const [loading, setLoading] = useState(false);
@@ -27,7 +26,6 @@ const [categoriesOptions, setCategoriesOptions] = useState([]);
 const [shopsLoading, setShopsLoading] = useState(false);
 const [shops, setShops] = useState([]);
 const [selectedShops, setSelectedShops] = useState([]);
-const [showGroupNameField, setShowGroupNameField] = useState(false);
 const [currentShopNo, setCurrentShopNo] = useState(null);
 const token = useSelector((state) => state.auth.userAccessToken);
 
@@ -181,7 +179,7 @@ useEffect(() => {
       for (const domainId of formData.domains) {
         for (const sectorId of formData.sectors) {
           try {
-            const resp = await getSupplierShops(
+            const resp = await getDomainSectorCategorySpecificShops(
               currentShopNo,
               domainId,
               sectorId,
@@ -207,7 +205,6 @@ useEffect(() => {
 
       setShops(collectedShops);
       setSelectedShops([]);
-      setShowGroupNameField(false);
     } finally {
       setShopsLoading(false);
     }
@@ -223,11 +220,6 @@ const handleToggleShopSelection = (shop_no) => {
   });
 };
 
-const handleCreateGroupClick = () => {
-  if (selectedShops.length > 1) {
-    setShowGroupNameField(true);
-  }
-};
 
 const formFields = [
     {
@@ -254,25 +246,12 @@ const formFields = [
         options: categoriesOptions,
         placeholder: 'Select categories',
     },
-    ...(showGroupNameField
-      ? [
-          {
-            id: 4,
-            label: 'Group Name',
-            name: 'group_name',
-            type: 'text',
-          },
-        ]
-      : []),
     {
-        id: 5,
-        label: 'Create group',
-        name: 'create_group',
-        type: 'button',
-        value: 'Create group',
-        handleButtonClick: handleCreateGroupClick, 
+        id: 4,
+        label: 'Group Name',
+        name: 'group_name',
+        type: 'text',
     },
-    
 ];
 
 
@@ -287,6 +266,11 @@ const handleChange = (event) => {
 
 const validateForm = () => {
     const newErrors = {};
+
+    // Check if at least 2 shops are selected
+    if (selectedShops.length < 2) {
+        newErrors.shops = 'Please select at least 2 shops to create a group.';
+    }
 
     formFields.forEach(field => {
         const name = field.name;
@@ -314,8 +298,21 @@ const validateForm = () => {
 
 const handleSubmit = (event) => {
     event.preventDefault(); // Prevent default form submission
+    
+    // Check if at least 2 shops are selected
+    if (selectedShops.length < 2) {
+        setErrors(prev => ({
+            ...prev,
+            shops: 'Please select at least 2 shops to create a group.'
+        }));
+        return;
+    }
+    
     if (validateForm()) {
-        console.log(formData);
+        console.log({
+            ...formData,
+            selectedShops: selectedShops
+        });
         // Proceed with further submission logic, e.g., API call
     } else {
         console.log(errors);
@@ -328,6 +325,8 @@ const themeProps = {
 };
 
 const theme = createCustomTheme(themeProps);
+console.log(shops);
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -352,6 +351,11 @@ const theme = createCustomTheme(themeProps);
                       errors={errors}
                       submitButtonText="Submit"
                   />
+                  {errors.shops && (
+                    <Typography className="error_message" style={{ color: 'red', marginTop: '10px' }}>
+                      {errors.shops}
+                    </Typography>
+                  )}
                 </Box>
 
               <Box className="sub_container">
@@ -379,54 +383,56 @@ const theme = createCustomTheme(themeProps);
                                       shop.user_type !== 'merchant'
                                   )
                                   .map((shop) => (
-                                    <Box
-                                      key={shop.shop_no}
-                                      className="ticket shop_ticket"
-                                    >
-                                      <Box className="left">
-                                        <Box className="container">
-                                          <Box className="sector">
-                                            <Typography>
-                                              {shop.sector_name || shop.sector}
-                                            </Typography>
-                                          </Box>
-                                          <Box className="domain">
-                                            <Typography>
-                                              {shop.domain_name || shop.domain}
-                                            </Typography>
-                                          </Box>
-                                        </Box>
-                                      </Box>
-                                      <Box className="divider"></Box>
-                                      <Box className="right">
-                                        <Box className="inner-box">
-                                          <Box className="shop-name">
-                                            {shop.business_name ||
-                                              shop.shop_name}
-                                          </Box>
-                                          <Box className="category">
-                                            {Array.isArray(
-                                              shop.category_name
-                                            )
-                                              ? shop.category_name[0]
-                                              : shop.category_name ||
-                                                shop.category}
-                                          </Box>
-                                          <Box className="product">
-                                            Products
-                                          </Box>
-                                        </Box>
-                                        <Box className="shop_select_checkbox">
-                                          <Checkbox
-                                            checked={selectedShops.includes(
+                                    <Box key={shop.shop_no} className="shop_item_wrapper">
+                                      <Box className="shop_select_checkbox">
+                                        <Checkbox
+                                          checked={selectedShops.includes(
+                                            shop.shop_no
+                                          )}
+                                          onChange={() =>
+                                            handleToggleShopSelection(
                                               shop.shop_no
-                                            )}
-                                            onChange={() =>
-                                              handleToggleShopSelection(
-                                                shop.shop_no
+                                            )
+                                          }
+                                        />
+                                      </Box>
+                                      <Box className="ticket shop_ticket">
+                                        <Box className="left">
+                                          <Box className="container">
+                                            <Box className="sector">
+                                              <Typography>
+                                                {shop.sector_name || shop.sector}
+                                              </Typography>
+                                            </Box>
+                                            <Box className="domain">
+                                              <Typography>
+                                                {shop.domain_name || shop.domain}
+                                              </Typography>
+                                            </Box>
+                                          </Box>
+                                        </Box>
+                                        <Box className="divider"></Box>
+                                        <Box className="right">
+                                          <Box className="inner-box">
+                                            <Box className="shop-name">
+                                              {shop.business_name ||
+                                                shop.shop_name}
+                                            </Box>
+                                            <Box className="category">
+                                              Category: {Array.isArray(
+                                                shop.category_name
                                               )
-                                            }
-                                          />
+                                                ? shop.category_name.slice(0, 3).join(', ')
+                                                : shop.category_name ||
+                                                  shop.category || 'N/A'}
+                                            </Box>
+                                            <Box className="product">
+                                              Products {Array.isArray(shop.product_names) && shop.product_names.length > 0
+                                                ? shop.product_names.join(', ')
+                                                : 'No products'}
+                                            </Box>
+                                      
+                                          </Box>
                                         </Box>
                                       </Box>
                                     </Box>
@@ -445,55 +451,56 @@ const theme = createCustomTheme(themeProps);
                                       shop.user_type === 'merchant'
                                   )
                                   .map((shop) => (
-                                    <Box
-                                      key={shop.shop_no}
-                                      className="ticket shop_ticket"
-                                    >
-                                      <Box className="left">
-                                        <Box className="container">
-                                          <Box className="sector">
-                                            <Typography>
-                                              {shop.sector_name || shop.sector}
-                                            </Typography>
+                                    <Box key={shop.shop_no} className="shop_item_wrapper">
+                                      <Box className="ticket shop_ticket">
+                                        <Box className="left">
+                                          <Box className="container">
+                                            <Box className="sector">
+                                              <Typography>
+                                                {shop.sector_name || shop.sector}
+                                              </Typography>
+                                            </Box>
+                                            <Box className="domain">
+                                              <Typography>
+                                                {shop.domain_name || shop.domain}
+                                              </Typography>
+                                            </Box>
                                           </Box>
-                                          <Box className="domain">
-                                            <Typography>
-                                              {shop.domain_name || shop.domain}
-                                            </Typography>
+                                        </Box>
+                                        <Box className="divider"></Box>
+                                        <Box className="right">
+                                          <Box className="inner-box">
+                                            <Box className="shop-name">
+                                              {shop.business_name ||
+                                                shop.shop_name}
+                                            </Box>
+                                            <Box className="category">
+                                              Category: {Array.isArray(
+                                                shop.category_name
+                                              )
+                                                ? shop.category_name.slice(0, 3).join(', ')
+                                                : shop.category_name ||
+                                                  shop.category || 'N/A'}
+                                            </Box>
+                                            <Box className="product">
+                                              {Array.isArray(shop.product_names) && shop.product_names.length > 0
+                                                ? shop.product_names.join(', ')
+                                                : 'No products'}
+                                            </Box>
                                           </Box>
                                         </Box>
                                       </Box>
-                                      <Box className="divider"></Box>
-                                      <Box className="right">
-                                        <Box className="inner-box">
-                                          <Box className="shop-name">
-                                            {shop.business_name ||
-                                              shop.shop_name}
-                                          </Box>
-                                          <Box className="category">
-                                            {Array.isArray(
-                                              shop.category_name
-                                            )
-                                              ? shop.category_name[0]
-                                              : shop.category_name ||
-                                                shop.category}
-                                          </Box>
-                                          <Box className="product">
-                                            Products
-                                          </Box>
-                                        </Box>
-                                        <Box className="shop_select_checkbox">
-                                          <Checkbox
-                                            checked={selectedShops.includes(
+                                      <Box className="shop_select_checkbox">
+                                        <Checkbox
+                                          checked={selectedShops.includes(
+                                            shop.shop_no
+                                          )}
+                                          onChange={() =>
+                                            handleToggleShopSelection(
                                               shop.shop_no
-                                            )}
-                                            onChange={() =>
-                                              handleToggleShopSelection(
-                                                shop.shop_no
-                                              )
-                                            }
-                                          />
-                                        </Box>
+                                            )
+                                          }
+                                        />
                                       </Box>
                                     </Box>
                                   ))}

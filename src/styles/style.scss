@@ -18748,6 +18748,114 @@ a {
 
         .show_message {
           align-self: stretch;
+
+          .assets_popup{
+            .shops_list{
+              @include flex-center(column, center);
+              place-items: normal;
+              gap: 20px;
+              filter: drop-shadow(0px 0px 5px rgba($brown-4, .35));
+
+              .shop_item_wrapper{
+                display: flex;
+                align-items: center;
+                gap: 0px;
+                width: 100%;
+
+                .shop_select_checkbox{
+                  flex-shrink: 0;
+                  align-self: baseline;
+                }
+              }
+
+              .ticket{
+                .left{
+                  @include flex-center(row, center);
+                  .container{
+                    background-color: transparent;
+                    flex-direction: column;
+                    writing-mode: sideways-lr;
+                    justify-content: center;
+
+                    .sector{
+                      p{
+                        @include homepage-buttons(
+                          "Bobby-Jones-Soft",
+                          18px,
+                          $dark-yellow2,
+                          "none"
+                        );
+                        -webkit-text-stroke:0.4px $brown-4;
+                        @include hover-scale(1, 0s);
+                        text-align: center;
+                        line-height: 20px;
+                      }
+                    }
+
+                    .domain{
+                        p{
+                          @include homepage-buttons(
+                            "Bobby-Jones-Soft",
+                            16px,
+                            $brown-4,
+                            "none"
+                          );
+                          @include hover-scale(1, 0s);
+                          text-align: center;
+                          line-height: 16px;
+                        }
+                    }
+                  }
+                }
+                .right{
+                  @include flex-center(row, center);
+                  .inner-box{
+                    background-color: transparent;
+                    @include flex-center(column, center);
+                    gap: 8px;
+
+                    .shop-name{
+                      @include homepage-buttons(
+                        "Bobby-Jones-Soft",
+                        24px,
+                        $dark-yellow2,
+                        "none"
+                      );
+                      @include hover-scale(1, 0s);
+                      text-align: center;
+                      -webkit-text-stroke:0.4px $brown-4;
+                      text-shadow: 0 0 3px $dark-yellow;
+                      line-height: 24px;
+                    }
+
+                    .category{
+                      @include homepage-buttons(
+                        "Bobby-Jones-Soft",
+                        16px,
+                        $brown-4,
+                        "none"
+                      );
+                      @include hover-scale(1, 0s);
+                      text-align: center;
+                      line-height: 16px;
+                    }
+                    .product{
+                      @include homepage-buttons(
+                        "Bobby-Jones-Soft",
+                        16px,
+                        $black,
+                        "none"
+                      );
+                      @include hover-scale(1, 0s);
+                      text-align: center;
+                      line-height: 16px;
+                    }
+                    
+                  }
+                }
+              }
+            }
+          }
         }
 
         .campaign_result {
@@ -33981,9 +34089,9 @@ textarea[readonly] {
 .ticket {
   // @include full-absolute(30px, 0px, 33px, 0px);
   margin: 0 auto;
-  width: 51%;
-  height: 96px;
-  gap: 5px;
+  width: 100%;
+  height: 190px;
+  gap: 7px;
   background: $yellow;
   border-radius: 10px;
   display: flex;
@@ -33993,43 +34101,43 @@ textarea[readonly] {
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
   --mask:
     /* Left side cuts */ radial-gradient(
-        circle 10px at 0% 57%,
-        transparent 98%,
-        black
-      )
-      0% 14% / 80% 26px no-repeat,
-    radial-gradient(circle 10px at 0% 52%, transparent 98%, black)
-      0% 39% / 80% 23px no-repeat,
-    radial-gradient(circle 10px at 0% 52%, transparent 98%, black)
-      0% 61% / 80% 22px no-repeat,
-    radial-gradient(circle 10px at 0% 50%, transparent 96%, black)
-      0% 85% / 80% 24px no-repeat,
-    /* Right side cuts (mirroring left side) */
-      radial-gradient(
-        circle 10px at 100% 57%,
-        transparent 98%,
-        black
-      )
-      100% 14% / 80% 26px no-repeat,
-    radial-gradient(circle 10px at 100% 52%, transparent 98%, black)
-      100% 39% / 80% 23px no-repeat,
-    radial-gradient(circle 10px at 100% 52%, transparent 98%, black)
-      100% 61% / 80% 22px no-repeat,
-    radial-gradient(circle 10px at 100% 50%, transparent 96%, black)
-      100% 85% / 80% 24px no-repeat,
-    /* Top and Bottom middle cuts */
-      radial-gradient(circle 10px at 1% 0, transparent 98%, black)
-      left top / 12% 14px no-repeat,
-    radial-gradient(circle 10px at 31% 0, transparent 98%, black)
-      center top / 79% 14px no-repeat,
-    radial-gradient(circle 10px at 97% 0, transparent 98%, black)
-      right top / 23% 14px no-repeat,
-    radial-gradient(circle 10px at 1% 100%, transparent 98%, black)
-      left bottom / 12% 14px no-repeat,
-    radial-gradient(circle 10px at 35% 100%, transparent 98%, black)
-      center bottom / 79% 14px no-repeat,
-    radial-gradient(circle 10px at 97% 100%, transparent 98%, black)
-      right bottom / 23% 14px no-repeat;
+      circle 10px at 0% 57%,
+      transparent 98%,
+      black
+    )
+    0% 14% / 80% 45px no-repeat,
+  radial-gradient(circle 10px at 0% 52%, transparent 98%, black)
+    0% 39% / 80% 50px no-repeat,
+  radial-gradient(circle 10px at 0% 52%, transparent 98%, black)
+    0% 61% / 80% 40px no-repeat,
+  radial-gradient(circle 10px at 0% 50%, transparent 96%, black)
+    0% 85% / 80% 40px no-repeat,
+  /* Right side cuts (mirroring left side) */
+    radial-gradient(
+      circle 10px at 100% 57%,
+      transparent 98%,
+      black
+    )
+    100% 14% / 80% 45px no-repeat,
+  radial-gradient(circle 10px at 100% 52%, transparent 98%, black)
+    100% 39% / 80% 50px no-repeat,
+  radial-gradient(circle 10px at 100% 52%, transparent 98%, black)
+    100% 61% / 80% 40px no-repeat,
+  radial-gradient(circle 10px at 100% 50%, transparent 96%, black)
+    100% 85% / 80% 40px no-repeat,
+  /* Top and Bottom middle cuts */
+    radial-gradient(circle 10px at 1% 0, transparent 98%, black)
+    left top / 12% 25px no-repeat,
+  radial-gradient(circle 10px at 24% 0, transparent 98%, black)
+    center top / 79% 25px no-repeat,
+  radial-gradient(circle 10px at 97% 0, transparent 98%, black)
+    right top / 23% 25px no-repeat,
+  radial-gradient(circle 10px at 1% 100%, transparent 98%, black)
+    left bottom / 12% 25px no-repeat,
+  radial-gradient(circle 10px at 24% 100%, transparent 98%, black)
+    center bottom / 79% 25px no-repeat,
+  radial-gradient(circle 10px at 97% 100%, transparent 98%, black)
+    right bottom / 23% 25px no-repeat;
 
   -webkit-mask: var(--mask);
   mask: var(--mask);

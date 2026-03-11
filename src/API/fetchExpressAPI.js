@@ -1740,6 +1740,22 @@ export const getCompletedOrders = async (start_date, end_date, shop_no, buyer_id
   }
 };
 
+export const getDomainSectorCategorySpecificShops = async (shop_no, domain_id = null, sector_id = null, category_ids = null) => {
+  try {
+    const params = { shop_no };
+    if (domain_id) params.domain_id = domain_id;
+    if (sector_id) params.sector_id = sector_id;
+    if (category_ids && Array.isArray(category_ids) && category_ids.length > 0) {
+      params.category_ids = JSON.stringify(category_ids);
+    }
+    
+    const response = await axios.get(`${link}/serve/supplier-shops`, { params });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const getPendingOrders = async (start_date, end_date, shop_no, buyer_id) => {
   try {
     const response = await axios.get(`${serve_link}/pending-orders/${start_date}/${end_date}/${shop_no}/${buyer_id}`);
