@@ -419,7 +419,7 @@ console.log(shops);
                                                 shop.shop_name}
                                             </Box>
                                             <Box className="category">
-                                              Category: {Array.isArray(
+                                              Category : {Array.isArray(
                                                 shop.category_name
                                               )
                                                 ? shop.category_name.slice(0, 3).join(', ')
@@ -427,7 +427,7 @@ console.log(shops);
                                                   shop.category || 'N/A'}
                                             </Box>
                                             <Box className="product">
-                                              Products {Array.isArray(shop.product_names) && shop.product_names.length > 0
+                                              Products : {Array.isArray(shop.product_names) && shop.product_names.length > 0
                                                 ? shop.product_names.join(', ')
                                                 : 'No products'}
                                             </Box>

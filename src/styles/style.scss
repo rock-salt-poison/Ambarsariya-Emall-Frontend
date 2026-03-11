@@ -18818,12 +18818,12 @@ a {
                       @include homepage-buttons(
                         "Bobby-Jones-Soft",
                         24px,
-                        $dark-yellow2,
+                        $maroon,
                         "none"
                       );
                       @include hover-scale(1, 0s);
                       text-align: center;
-                      -webkit-text-stroke:0.4px $brown-4;
+                      -webkit-text-stroke:0.4px $dark-yellow;
                       text-shadow: 0 0 3px $dark-yellow;
                       line-height: 24px;
                     }
@@ -18831,24 +18831,24 @@ a {
                     .category{
                       @include homepage-buttons(
                         "Bobby-Jones-Soft",
-                        16px,
-                        $brown-4,
-                        "none"
-                      );
-                      @include hover-scale(1, 0s);
-                      text-align: center;
-                      line-height: 16px;
-                    }
-                    .product{
-                      @include homepage-buttons(
-                        "Bobby-Jones-Soft",
-                        16px,
+                        17px,
                         $black,
                         "none"
                       );
                       @include hover-scale(1, 0s);
                       text-align: center;
-                      line-height: 16px;
+                      line-height: 17px;
+                    }
+                    .product{
+                      @include homepage-buttons(
+                        "Bobby-Jones-Soft",
+                        15px,
+                        $brown-4,
+                        "none"
+                      );
+                      @include hover-scale(1, 0s);
+                      text-align: center;
+                      line-height: 15px;
                     }
                     
                   }
