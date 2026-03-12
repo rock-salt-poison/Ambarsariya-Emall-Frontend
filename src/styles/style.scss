@@ -34214,7 +34214,7 @@ textarea[readonly] {
       flex: 1;
       padding: 30px;
 
-      .back_button_first {
+      .back_button.back_button_first {
         display: none;
       }
     
@@ -34376,6 +34376,25 @@ textarea[readonly] {
           }
         }
       }
+    }
+  }
+}
+
+.sale_wrapper{
+  @include flex-center(column, flex-start);
+  place-items:normal;
+  min-height: 100vh;
+  @include background-center-no-repeat($salePageBgImg);
+  background-size: cover;
+  padding: 30px;
+
+  .row{
+    @include flex-center(column, flex-start);
+    place-items: normal;
+    flex: 1;
+
+    .col{
+      
     }
   }
 }

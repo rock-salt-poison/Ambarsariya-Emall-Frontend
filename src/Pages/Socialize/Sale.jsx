@@ -1,8 +1,21 @@
+import { Box } from '@mui/material'
 import React from 'react'
+import UserBadge from '../../UserBadge'
 
 function Sale() {
   return (
-    <div>Sale</div>
+    <Box className="sale_wrapper">
+        <Box className="row">
+            <Box className="col">
+                <UserBadge
+                    handleLogoutClick="../../"
+                    handleBadgeBgClick={-1}
+                    handleLogin="login"
+                />
+            </Box>
+            <Box className="col"></Box>
+        </Box>
+    </Box>
   )
 }
 

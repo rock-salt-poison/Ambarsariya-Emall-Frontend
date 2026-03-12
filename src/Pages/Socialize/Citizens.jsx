@@ -16,6 +16,7 @@ function Citizens() {
         <Box className="row">
             <Box className="col sale">
                 <Box className="empty">
+                </Box>
                   <Box className="back_button back_button_first" onClick={handleBackClick}>
                     <UserBadge
                         handleLogoutClick="../../"
@@ -23,9 +24,8 @@ function Citizens() {
                         handleLogin="login"
                     />
                   </Box>
-                </Box>
                 <Box className="content">
-                    <Link className="title_container">
+                    <Link className="title_container" to="../citizens/sale">
                     <Box component="img" className="title_bg" src={title_bg} alt="bg"/>
 
                         <Typography className="title">
