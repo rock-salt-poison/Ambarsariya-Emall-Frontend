@@ -24,6 +24,7 @@ import BannersToday from "../Pages/Socialize/BannersToday";
 import VendorLicense from "../Pages/Socialize/VendorLicense";
 import Citizens from "../Pages/Socialize/Citizens";
 import Sale from "../Pages/Socialize/Sale";
+import Promotions from "../Pages/Socialize/Promotions";
 
 function SocializeRoutes() {
   const token = useSelector((state) => state.auth.userAccessToken);
@@ -118,9 +119,9 @@ function SocializeRoutes() {
         element={<TermsAndConditions />}
       />
       <Route path="/city-junctions/co-helpers" element={<ProtectedRoute
-            shopElement={<CoHelpers />}
-            memberElement={<CoHelpers />}
-          />} />
+        shopElement={<CoHelpers />}
+        memberElement={<CoHelpers />}
+      />} />
       <Route
         path="/city-junctions/jobs-offered"
         element={
@@ -235,6 +236,16 @@ function SocializeRoutes() {
           <ProtectedRoute
             shopElement={<Sale />}
             memberElement={<Sale />}
+          />
+        }
+      />
+
+      <Route
+        path="/citizens/promotions"
+        element={
+          <ProtectedRoute
+            shopElement={<Promotions />}
+            memberElement={<Promotions />}
           />
         }
       />

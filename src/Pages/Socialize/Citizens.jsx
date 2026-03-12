@@ -11,6 +11,22 @@ function Citizens() {
     navigate('../');
   };
 
+  const handleTileClick = (e, path) => {
+    const target = e.currentTarget;
+    if (!target) return;
+
+    target.classList.add('reduceSize3');
+    setTimeout(() => {
+      target.classList.remove('reduceSize3');
+    }, 300);
+
+    setTimeout(() => {
+      if (path) {
+        navigate(path);
+      }
+    }, 600);
+  };
+
   return (
     <Box className="citizen_wrapper">
         <Box className="row">
@@ -25,7 +41,10 @@ function Citizens() {
                     />
                   </Box>
                 <Box className="content">
-                    <Link className="title_container" to="../citizens/sale">
+                    <Link
+                      className="title_container"
+                      onClick={(e) => handleTileClick(e, '../citizens/sale')}
+                    >
                     <Box component="img" className="title_bg" src={title_bg} alt="bg"/>
 
                         <Typography className="title">
@@ -37,7 +56,10 @@ function Citizens() {
             <Box className="col promotions">
                 <Box className="empty"></Box>
                 <Box className="content">
-                    <Link className="title_container">
+                    <Link
+                      className="title_container"
+                      onClick={(e) => handleTileClick(e, '../citizens/promotions')}
+                    >
                     <Box component="img" className="title_bg" src={title_bg} alt="bg"/>
 
                         <Typography className="title">
@@ -56,7 +78,10 @@ function Citizens() {
                     />
                 </Box>
                 <Box className="content">
-                    <Link className="title_container">
+                    <Link
+                      className="title_container"
+                      onClick={(e) => handleTileClick(e, null)}
+                    >
                         <Box component="img" className="title_bg" src={title_bg} alt="bg"/>
                         <Typography className="title">
                             Booths

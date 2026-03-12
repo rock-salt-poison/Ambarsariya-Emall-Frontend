@@ -1,23 +1,19 @@
 import { Box } from '@mui/material'
 import React from 'react'
 import UserBadge from '../../UserBadge'
-import daily_delivery from '../../Utils/images/Socialize/citizens/sale/daily_delivery_icon.webp';
-import location from '../../Utils/images/Socialize/citizens/sale/location_icon.webp';
-import memo from '../../Utils/images/Socialize/citizens/sale/memo_icon.webp';
-import sale from '../../Utils/images/Socialize/citizens/sale/sale_icon.webp';
+import public_places from '../../Utils/images/Socialize/citizens/promotions/public_place.webp';
+import booked_places from '../../Utils/images/Socialize/citizens/promotions/booked_place.webp';
 import { Link } from 'react-router-dom';
 
 
-function Sale() {
+function Promotion() {
 
   const data = [
-    {id:1, icon: daily_delivery},
-    {id:2, icon: memo},
-    {id:3, icon: location},
-    {id:4, icon: sale},
+    {id:1, icon: public_places},
+    {id:2, icon: booked_places},
   ]
   return (
-    <Box className="sale_wrapper">
+    <Box className="promotion_wrapper">
         <Box className="row">
             <Box className="col">
                 <UserBadge
@@ -34,17 +30,10 @@ function Sale() {
                   </Link>
                 })}
               </Box>
-              <Box className="card_container">
-                {data?.slice(2)?.map((card)=>{
-                  return <Link className="card">
-                    <Box component="img" src={card?.icon} alt="icon" className='icon'/>
-                  </Link>
-                })}
-              </Box>
             </Box>
         </Box>
     </Box>
   )
 }
 
-export default Sale
+export default Promotion
