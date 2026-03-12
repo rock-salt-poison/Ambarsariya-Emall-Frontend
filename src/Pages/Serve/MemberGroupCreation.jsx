@@ -158,7 +158,6 @@ useEffect(() => {
 useEffect(() => {
   const fetchMatchedShops = async () => {
     if (
-      // !currentShopNo ||
       !Array.isArray(formData.domains) ||
       formData.domains.length === 0 ||
       !Array.isArray(formData.sectors) ||
@@ -173,45 +172,28 @@ useEffect(() => {
 
     setShopsLoading(true);
     try {
-      const shopMap = new Map();
-      const collectedShops = [];
+      const resp = await getDomainSectorCategorySpecificShops(
+        formData.domains,
+        formData.sectors,
+        formData.categories
+      );
 
-      for (const domainId of formData.domains) {
-        for (const sectorId of formData.sectors) {
-          try {
-            const resp = await getDomainSectorCategorySpecificShops(
-              currentShopNo,
-              domainId,
-              sectorId,
-              formData.categories
-            );
-
-            if (resp?.valid && Array.isArray(resp.data)) {
-              resp.data.forEach((shop) => {
-                if (!shopMap.has(shop.shop_no)) {
-                  shopMap.set(shop.shop_no, shop);
-                  collectedShops.push(shop);
-                }
-              });
-            }
-          } catch (error) {
-            console.error(
-              `Error fetching shops for domain ${domainId} and sector ${sectorId}:`,
-              error
-            );
-          }
-        }
+      if (resp?.valid && Array.isArray(resp.data)) {
+        setShops(resp.data);
+      } else {
+        setShops([]);
       }
-
-      setShops(collectedShops);
       setSelectedShops([]);
+    } catch (error) {
+      console.error('Error fetching shops:', error);
+      setShops([]);
     } finally {
       setShopsLoading(false);
     }
   };
 
   fetchMatchedShops();
-}, [currentShopNo, formData.domains, formData.sectors, formData.categories]);
+}, [formData.domains, formData.sectors, formData.categories]);
 
 const handleToggleShopSelection = (shop_no) => {
   setSelectedShops((prev) => {
@@ -414,22 +396,27 @@ console.log(shops);
                                         <Box className="divider"></Box>
                                         <Box className="right">
                                           <Box className="inner-box">
-                                            <Box className="shop-name">
-                                              {shop.business_name ||
-                                                shop.shop_name}
+                                          <Box className="user_type">
+                                              Hawker
                                             </Box>
-                                            <Box className="category">
-                                              Category : {Array.isArray(
-                                                shop.category_name
-                                              )
-                                                ? shop.category_name.slice(0, 3).join(', ')
-                                                : shop.category_name ||
-                                                  shop.category || 'N/A'}
-                                            </Box>
-                                            <Box className="product">
-                                              Products : {Array.isArray(shop.product_names) && shop.product_names.length > 0
-                                                ? shop.product_names.join(', ')
-                                                : 'No products'}
+                                            <Box className="details">
+                                              <Box className="shop-name">
+                                                {shop.business_name ||
+                                                  shop.shop_name}
+                                              </Box>
+                                              <Box className="category">
+                                                Category : {Array.isArray(
+                                                  shop.category_name
+                                                )
+                                                  ? shop.category_name.slice(0, 3).join(', ')
+                                                  : shop.category_name ||
+                                                    shop.category || 'N/A'}
+                                              </Box>
+                                              <Box className="product">
+                                                Products : {Array.isArray(shop.product_names) && shop.product_names.length > 0
+                                                  ? shop.product_names.join(', ')
+                                                  : 'No products'}
+                                              </Box>
                                             </Box>
                                       
                                           </Box>
@@ -452,6 +439,18 @@ console.log(shops);
                                   )
                                   .map((shop) => (
                                     <Box key={shop.shop_no} className="shop_item_wrapper">
+                                      <Box className="shop_select_checkbox">
+                                        <Checkbox
+                                          checked={selectedShops.includes(
+                                            shop.shop_no
+                                          )}
+                                          onChange={() =>
+                                            handleToggleShopSelection(
+                                              shop.shop_no
+                                            )
+                                          }
+                                        />
+                                      </Box>
                                       <Box className="ticket shop_ticket">
                                         <Box className="left">
                                           <Box className="container">
@@ -470,38 +469,33 @@ console.log(shops);
                                         <Box className="divider"></Box>
                                         <Box className="right">
                                           <Box className="inner-box">
-                                            <Box className="shop-name">
-                                              {shop.business_name ||
-                                                shop.shop_name}
+                                            <Box className="user_type">
+                                              Shop
                                             </Box>
-                                            <Box className="category">
-                                              Category: {Array.isArray(
-                                                shop.category_name
-                                              )
-                                                ? shop.category_name.slice(0, 3).join(', ')
-                                                : shop.category_name ||
-                                                  shop.category || 'N/A'}
-                                            </Box>
-                                            <Box className="product">
-                                              {Array.isArray(shop.product_names) && shop.product_names.length > 0
-                                                ? shop.product_names.join(', ')
-                                                : 'No products'}
+
+                                            <Box className="details">
+                                              <Box className="shop-name">
+                                                {shop.business_name ||
+                                                  shop.shop_name}
+                                              </Box>
+                                              <Box className="category">
+                                                Category: {Array.isArray(
+                                                  shop.category_name
+                                                )
+                                                  ? shop.category_name.slice(0, 3).join(', ')
+                                                  : shop.category_name ||
+                                                    shop.category || 'N/A'}
+                                              </Box>
+                                              <Box className="product">
+                                                {Array.isArray(shop.product_names) && shop.product_names.length > 0
+                                                  ? shop.product_names.join(', ')
+                                                  : 'No products'}
+                                              </Box>
                                             </Box>
                                           </Box>
                                         </Box>
                                       </Box>
-                                      <Box className="shop_select_checkbox">
-                                        <Checkbox
-                                          checked={selectedShops.includes(
-                                            shop.shop_no
-                                          )}
-                                          onChange={() =>
-                                            handleToggleShopSelection(
-                                              shop.shop_no
-                                            )
-                                          }
-                                        />
-                                      </Box>
+                                      
                                     </Box>
                                   ))}
                               </Box>

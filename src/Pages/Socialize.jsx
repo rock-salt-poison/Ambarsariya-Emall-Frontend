@@ -41,6 +41,8 @@ function Socialize() {
               navigate('../city-junctions')
           }else if(target.classList.contains('banners')){
               navigate('../banners')
+          }else if(target.classList.contains('citizens')){
+              navigate('../citizens')
           }
         }, 600)
     }

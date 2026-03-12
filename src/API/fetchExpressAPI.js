@@ -1740,11 +1740,15 @@ export const getCompletedOrders = async (start_date, end_date, shop_no, buyer_id
   }
 };
 
-export const getDomainSectorCategorySpecificShops = async (shop_no, domain_id = null, sector_id = null, category_ids = null) => {
+export const getDomainSectorCategorySpecificShops = async (domain_ids = null, sector_ids = null, category_ids = null) => {
   try {
-    const params = { shop_no };
-    if (domain_id) params.domain_id = domain_id;
-    if (sector_id) params.sector_id = sector_id;
+    const params = {};
+    if (domain_ids && Array.isArray(domain_ids) && domain_ids.length > 0) {
+      params.domain_ids = JSON.stringify(domain_ids);
+    }
+    if (sector_ids && Array.isArray(sector_ids) && sector_ids.length > 0) {
+      params.sector_ids = JSON.stringify(sector_ids);
+    }
     if (category_ids && Array.isArray(category_ids) && category_ids.length > 0) {
       params.category_ids = JSON.stringify(category_ids);
     }

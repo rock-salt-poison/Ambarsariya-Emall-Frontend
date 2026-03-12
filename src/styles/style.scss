@@ -18768,9 +18768,77 @@ a {
                 }
               }
 
-              .ticket{
-                .left{
-                  @include flex-center(row, center);
+              .ticket {
+                // @include full-absolute(30px, 0px, 33px, 0px);
+                margin: 0 auto;
+                width: 100%;
+                height: 190px;
+                gap: 7px;
+                background: $yellow;
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 10px 17px;
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+                --mask:
+                  /* Left side cuts */ radial-gradient(
+                    circle 10px at 0% 57%,
+                    transparent 98%,
+                    black
+                  )
+                  0% 14% / 80% 45px no-repeat,
+                radial-gradient(circle 10px at 0% 52%, transparent 98%, black)
+                  0% 39% / 80% 50px no-repeat,
+                radial-gradient(circle 10px at 0% 52%, transparent 98%, black)
+                  0% 61% / 80% 40px no-repeat,
+                radial-gradient(circle 10px at 0% 50%, transparent 96%, black)
+                  0% 85% / 80% 40px no-repeat,
+              
+                /* Right side cuts (mirroring left side) */
+                  radial-gradient(
+                    circle 10px at 100% 57%,
+                    transparent 98%,
+                    black
+                  )
+                  100% 14% / 80% 45px no-repeat,
+                radial-gradient(circle 10px at 100% 52%, transparent 98%, black)
+                  100% 39% / 80% 50px no-repeat,
+                radial-gradient(circle 10px at 100% 52%, transparent 98%, black)
+                  100% 61% / 80% 40px no-repeat,
+                radial-gradient(circle 10px at 100% 50%, transparent 96%, black)
+                  100% 85% / 80% 40px no-repeat,
+              
+                /* Top and Bottom middle cuts */
+                  radial-gradient(circle 12px at 1% 0, transparent 98%, black)
+                  left top / 12% 25px no-repeat,
+                radial-gradient(circle 12px at 24% 0, transparent 98%, black)
+                  center top / 79% 25px no-repeat,
+                radial-gradient(circle 12px at 97% 0, transparent 98%, black)
+                  right top / 23% 25px no-repeat,
+                radial-gradient(circle 12px at 1% 100%, transparent 98%, black)
+                  left bottom / 12% 25px no-repeat,
+                radial-gradient(circle 12px at 24% 100%, transparent 98%, black)
+                  center bottom / 79% 25px no-repeat,
+                radial-gradient(circle 12px at 97% 100%, transparent 98%, black)
+                  right bottom / 23% 25px no-repeat;
+              
+                -webkit-mask: var(--mask);
+                mask: var(--mask);
+              
+              
+                /* Left section */
+              .left {
+                width: 25%;
+                align-self: stretch;
+                background: $light-yellow;
+                border-radius: 5px;
+                padding: 10px;
+                --mask: radial-gradient(10px at 26px 26px, #0000 98%, #000) -26px -26px;
+                -webkit-mask: var(--mask);
+                mask: var(--mask);
+
+                @include flex-center(row, center);
                   .container{
                     background-color: transparent;
                     flex-direction: column;
@@ -18806,13 +18874,46 @@ a {
                         }
                     }
                   }
-                }
-                .right{
-                  @include flex-center(row, center);
+              }
+              
+              /* Right section */
+              .right {
+                width: 70%;
+                align-self: stretch;
+                position: relative;
+                --mask: radial-gradient(10px at 26px 26px, #0000 98%, #000) -26px -26px;
+                -webkit-mask: var(--mask);
+                mask: var(--mask);
+                background-color: $light-yellow;
+
+                @include flex-center(row, center);
                   .inner-box{
                     background-color: transparent;
                     @include flex-center(column, center);
                     gap: 8px;
+                    align-self: stretch;
+
+                    .user_type{
+                      @include homepage-buttons(
+                        "Bobby-Jones-Soft",
+                        14px,
+                        $light-yellow,
+                        "none"
+                      );
+                      @include hover-scale(1, 0s);
+                      background-color: $green;
+                      border-radius: 4px;
+                      padding: 3px 8px;
+                      line-height: 14px;
+                      text-align: end;
+                      align-self: flex-end;
+                    }
+
+                    .details{
+                      flex:1;
+                      @include flex-center(column, center);
+                      gap: 8px;
+                    }
 
                     .shop-name{
                       @include homepage-buttons(
@@ -18850,8 +18951,18 @@ a {
                       text-align: center;
                       line-height: 15px;
                     }
-                    
-                  }
+              }
+              
+              .divider {
+                border-right: 2px dashed $white;
+                height: 100%;
+              }
+              
+              /* Inner border box */
+              .inner-box {
+                padding: 10px;
+              }
+              
                 }
               }
             }
@@ -34086,92 +34197,185 @@ textarea[readonly] {
   }
 }
 
-.ticket {
-  // @include full-absolute(30px, 0px, 33px, 0px);
-  margin: 0 auto;
-  width: 100%;
-  height: 190px;
-  gap: 7px;
-  background: $yellow;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 17px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-  --mask:
-    /* Left side cuts */ radial-gradient(
-      circle 10px at 0% 57%,
-      transparent 98%,
-      black
-    )
-    0% 14% / 80% 45px no-repeat,
-  radial-gradient(circle 10px at 0% 52%, transparent 98%, black)
-    0% 39% / 80% 50px no-repeat,
-  radial-gradient(circle 10px at 0% 52%, transparent 98%, black)
-    0% 61% / 80% 40px no-repeat,
-  radial-gradient(circle 10px at 0% 50%, transparent 96%, black)
-    0% 85% / 80% 40px no-repeat,
-  /* Right side cuts (mirroring left side) */
-    radial-gradient(
-      circle 10px at 100% 57%,
-      transparent 98%,
-      black
-    )
-    100% 14% / 80% 45px no-repeat,
-  radial-gradient(circle 10px at 100% 52%, transparent 98%, black)
-    100% 39% / 80% 50px no-repeat,
-  radial-gradient(circle 10px at 100% 52%, transparent 98%, black)
-    100% 61% / 80% 40px no-repeat,
-  radial-gradient(circle 10px at 100% 50%, transparent 96%, black)
-    100% 85% / 80% 40px no-repeat,
-  /* Top and Bottom middle cuts */
-    radial-gradient(circle 10px at 1% 0, transparent 98%, black)
-    left top / 12% 25px no-repeat,
-  radial-gradient(circle 10px at 24% 0, transparent 98%, black)
-    center top / 79% 25px no-repeat,
-  radial-gradient(circle 10px at 97% 0, transparent 98%, black)
-    right top / 23% 25px no-repeat,
-  radial-gradient(circle 10px at 1% 100%, transparent 98%, black)
-    left bottom / 12% 25px no-repeat,
-  radial-gradient(circle 10px at 24% 100%, transparent 98%, black)
-    center bottom / 79% 25px no-repeat,
-  radial-gradient(circle 10px at 97% 100%, transparent 98%, black)
-    right bottom / 23% 25px no-repeat;
 
-  -webkit-mask: var(--mask);
-  mask: var(--mask);
+.citizen_wrapper{
+  @include flex-center(column, flex-start);
+  place-items:normal;
+  min-height: 100vh;
+
+  .row{
+    @include flex-center(row, flex-start);
+    place-items: normal;
+    flex: 1;
+    
+    .col{
+      @include flex-center(column, flex-start);
+      gap: 20px;
+      flex: 1;
+      padding: 30px;
+
+      .back_button_first {
+        display: none;
+      }
+    
+      .back_button_third {
+        display: flex;
+      }
+
+      &:last-child .empty{
+        display: none;
+      }
+
+      .empty, .back_button{
+        width: 120px;
+        height: 110px;
+        @include flex-center(row, flex-end);
+        place-items: flex-end;
+        align-self: flex-end;
+      }
+
+      &.sale{
+        @include background-center-no-repeat($saleBg);
+        background-size: cover;
+      }
+      &.promotions{
+        @include background-center-no-repeat($promotionsBg);
+        background-size: cover;
+      }
+      &.booths{
+        @include background-center-no-repeat($boothsBg);
+        background-size: cover;
+      }
+
+      .content{
+        @include flex-center(column, center);
+        flex: 1;
+
+        .title_container{
+          padding: 30px 40px;
+          border-radius: 20px;
+          position: relative;
+          z-index: 0;
+
+          .title_bg{
+            @include full-absolute(0px, 0px, 0px, 0px);
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+            z-index: -1;
+            opacity: 0.85;
+          }
+          .title{
+            @include homepage-buttons(
+                "Bobby-Jones-Soft",
+                60px !important,
+                #653426,
+                none
+              );
+              line-height: 60px;
+              // @include hover-scale(1.1, 0s);
+              text-shadow: 1px 1px 0px $yellow, -1px -1px 0px $yellow,
+                0px 3px 6px #000000bf;
+          }
+        }
+      }
+
+      
+    }
+
+
+  }
 }
 
-/* Left section */
-.ticket .left {
-  width: 25%;
-  align-self: stretch;
-  background: $light-yellow;
-  border-radius: 5px;
-  padding: 10px;
-  --mask: radial-gradient(8px at 26px 26px, #0000 98%, #000) -26px -26px;
-  -webkit-mask: var(--mask);
-  mask: var(--mask);
+
+@media (max-width: 1024px) {
+  .citizen_wrapper {
+    .row {
+      flex-direction: column;
+
+      .col {
+        width: 100%;
+        padding: 20px;
+
+        .empty {
+          align-self: flex-start;
+          justify-content: flex-start;
+
+          .back_button_first {
+            display: flex;
+          }
+        }
+
+        .back_button_third {
+          display: none;
+        }
+
+        &:last-child .empty{
+          display: flex;
+        }
+
+        .content {
+          .title_container {
+            padding: 24px 28px;
+
+            .title {
+              font-size: 42px !important;
+              line-height: 44px;
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
-/* Right section */
-.ticket .right {
-  width: 70%;
-  align-self: stretch;
-  position: relative;
-  --mask: radial-gradient(8px at 26px 26px, #0000 98%, #000) -26px -26px;
-  -webkit-mask: var(--mask);
-  mask: var(--mask);
-  background-color: $light-yellow;
+@media (max-width: 768px) {
+  .citizen_wrapper {
+
+    .row {
+
+      .col {
+        padding: 16px;
+
+        .empty,
+        .back_button {
+          width: 90px;
+          height: 80px;
+        }
+
+        .content {
+          .title_container {
+            padding: 18px 22px;
+
+            .title {
+              font-size: 32px !important;
+              line-height: 34px;
+              text-align: center;
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
-.divider {
-  border-right: 2px dashed $white;
-  height: 100%;
-}
+@media (max-width: 480px) {
+  .citizen_wrapper {
+    .row {
+      .col {
+        padding: 12px;
 
-/* Inner border box */
-.inner-box {
-  padding: 10px;
+        .content {
+          .title_container {
+            padding: 14px 16px;
+
+            .title {
+              font-size: 26px !important;
+              line-height: 28px;
+            }
+          }
+        }
+      }
+    }
+  }
 }

@@ -22,6 +22,7 @@ import Banners from "../Pages/Socialize/Banners";
 import BannerMain from "../Pages/Socialize/BannerMain";
 import BannersToday from "../Pages/Socialize/BannersToday";
 import VendorLicense from "../Pages/Socialize/VendorLicense";
+import Citizens from "../Pages/Socialize/Citizens";
 
 function SocializeRoutes() {
   const token = useSelector((state) => state.auth.userAccessToken);
@@ -215,6 +216,15 @@ function SocializeRoutes() {
           <ProtectedRoute
             shopElement={<BannersToday />}
             memberElement={<BannersToday />}
+          />
+        }
+      />
+      <Route
+        path="/citizens"
+        element={
+          <ProtectedRoute
+            shopElement={<Citizens />}
+            memberElement={<Citizens />}
           />
         }
       />
