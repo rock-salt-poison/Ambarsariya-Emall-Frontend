@@ -24873,7 +24873,7 @@ textarea[readonly] {
                     }
 
                     .field_container {
-                      .MuiFormControl-root.input_field {
+                      .MuiFormControl-root.input_field , .input_field{
                         width: 100%;
 
                         .adornmentText {
