@@ -34449,16 +34449,17 @@ textarea[readonly] {
   @include flex-center(column, flex-start);
   place-items: normal;
   min-height: 100vh;
-  @include background-center-no-repeat($dailyDeliveryBgImg);
-  background-size: cover;
   padding: 30px;
   position: relative;
+  background: $dark-yellow2;
 
   &::after{
     content:'';
     @include full-absolute(0px, 0px, 0px, 0px);
     z-index: 0;
-    background: rgba($dark-yellow, 0.4);
+    @include background-center-no-repeat($dailyDeliveryBgImg);
+    background-size: cover;
+    opacity: 0.4;
   
   }
 
@@ -34481,7 +34482,7 @@ textarea[readonly] {
       justify-self: center;
       .heading {
         position: relative !important;
-        background-color: rgba($brown-4, 0.6);
+        background-color: rgba($brown-4, 0.9);
         border-radius: 20px;
         padding: 0 30px;
 
@@ -34506,9 +34507,28 @@ textarea[readonly] {
       @include flex-center(row, center);
       gap: 40px;
 
-      .gif{
-        max-width: 180px;
-        height: auto;
+      .gif_container{
+        @include flex-center(column, center);
+        place-items: normal;
+        gap: 10px;
+        align-self: stretch;
+
+        .gif{
+          max-width: 180px;
+          height: auto;
+          margin: auto 0px;
+        }
+
+        .text{
+          @include homepage-buttons("Bobby-Jones-Soft", 20px, $brown-4, "none");
+          @include hover-scale(1, 0s);
+          text-align: center;
+          background-color: $yellow;
+          border-radius: 8px;
+          padding: 6px 20px;
+          align-self: center;
+          margin-top: auto;
+        }
       }
     }
   }
