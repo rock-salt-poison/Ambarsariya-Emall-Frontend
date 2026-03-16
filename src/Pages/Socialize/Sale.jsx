@@ -5,13 +5,28 @@ import daily_delivery from '../../Utils/images/Socialize/citizens/sale/daily_del
 import location from '../../Utils/images/Socialize/citizens/sale/location_icon.webp';
 import memo from '../../Utils/images/Socialize/citizens/sale/memo_icon.webp';
 import sale from '../../Utils/images/Socialize/citizens/sale/sale_icon.webp';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import CardBoardPopup from '../../Components/CardBoardPopupComponents/CardBoardPopup';
 import MemoPopup from '../../Components/Socialize/MemoPopup';
 
 
 function Sale() {
+  const navigate = useNavigate();
   const [openMemoPopup, setOpenMemoPopup] = useState(false);
+
+  const handleDailyDeliveryClick = (e) => {
+    const target = e.currentTarget;
+    if (!target) return;
+
+    target.classList.add('reduceSize3');
+    setTimeout(() => {
+      target.classList.remove('reduceSize3');
+    }, 300);
+
+    setTimeout(() => {
+      navigate('daily-delivery');
+    }, 600);
+  };
 
   const handleMemoClick = (e) => {
     const target = e.currentTarget;
@@ -54,7 +69,13 @@ function Sale() {
                     <Link
                       key={card.id}
                       className="card"
-                      onClick={card.id === 2 ? handleMemoClick : undefined}
+                      onClick={
+                        card.id === 1
+                          ? handleDailyDeliveryClick
+                          : card.id === 2
+                          ? handleMemoClick
+                          : undefined
+                      }
                     >
                       <Box component="img" src={card?.icon} alt="icon" className='icon'/>
                     </Link>

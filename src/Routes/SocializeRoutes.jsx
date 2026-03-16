@@ -25,6 +25,7 @@ import VendorLicense from "../Pages/Socialize/VendorLicense";
 import Citizens from "../Pages/Socialize/Citizens";
 import Sale from "../Pages/Socialize/Sale";
 import Promotions from "../Pages/Socialize/Promotions";
+import DailyDelivery from "../Pages/Socialize/DailyDelivery";
 
 function SocializeRoutes() {
   const token = useSelector((state) => state.auth.userAccessToken);
@@ -239,7 +240,15 @@ function SocializeRoutes() {
           />
         }
       />
-
+      <Route
+        path="/citizens/sale/daily-delivery"
+        element={
+          <ProtectedRoute
+            shopElement={<DailyDelivery />}
+            memberElement={<DailyDelivery />}
+          />
+        }
+      />
       <Route
         path="/citizens/promotions"
         element={

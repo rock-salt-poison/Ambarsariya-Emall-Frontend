@@ -34444,3 +34444,72 @@ textarea[readonly] {
     }
   }
 }
+
+.daily_delivery_wrapper{
+  @include flex-center(column, flex-start);
+  place-items: normal;
+  min-height: 100vh;
+  @include background-center-no-repeat($dailyDeliveryBgImg);
+  background-size: cover;
+  padding: 30px;
+  position: relative;
+
+  &::after{
+    content:'';
+    @include full-absolute(0px, 0px, 0px, 0px);
+    z-index: 0;
+    background: rgba($dark-yellow, 0.4);
+  
+  }
+
+  .header_badge{
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 120px 1fr 120px;
+    align-content: center;
+    padding: 20px 30px;
+
+    .icon_link{
+      .icon{
+        width: 120px;
+      }
+    }
+
+    .title_container {
+      align-self: center;
+      justify-self: center;
+      .heading {
+        position: relative !important;
+        background-color: rgba($brown-4, 0.6);
+        border-radius: 20px;
+        padding: 0 30px;
+
+        .title {
+          @include homepage-buttons("Gladiola", 2.6em, $yellow, "none");
+          // @include hover-scale(1, 0s);
+          text-align: center;
+          text-shadow: -1px 1px 10px #6b4336, 0 0 20px #b67d1c,
+            0 0 30px #6b4336, -1px 3px 40px #b67d1c;
+        }
+      }
+    }
+  }
+
+  .body{
+    flex: 1;
+    position: relative;
+    z-index: 1;
+    @include flex-center(column, center);
+
+    .gif_row{
+      @include flex-center(row, center);
+      gap: 40px;
+
+      .gif{
+        max-width: 180px;
+        height: auto;
+      }
+    }
+  }
+}
