@@ -11,16 +11,16 @@ function FixedMemo() {
 
   const formFields = [
     {
-      id: 1,
-      label: 'Select category',
-      name: 'fixed_category',
-      type: 'select-check',
-      options: [],
+    id: 1,
+    label: 'Select sector',
+    name: 'fixed_sector',
+    type: 'select-check',
+    options: [],
     },
     {
       id: 2,
-      label: 'Select sector',
-      name: 'fixed_sector',
+      label: 'Select category',
+      name: 'fixed_category',
       type: 'select-check',
       options: [],
     },
