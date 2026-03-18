@@ -34533,3 +34533,384 @@ textarea[readonly] {
     }
   }
 }
+
+.citizen_main_wrapper{
+  @include flex-center(column, flex-start);
+  place-items: normal;
+  min-height: 100vh;
+  padding: 30px;
+  position: relative;
+  @include background-center-no-repeat($citizensBgImg);
+  background-size: cover;
+
+  .row{
+    @include flex-center(column, flex-start);
+    place-items: normal;
+    gap: 20px;
+    flex: 1;
+    .col{
+      @include flex-center(row, center);
+      place-items: normal;
+      gap: 20px;
+
+      &:first-child{
+        align-self: end;
+      }
+
+      &:last-child{
+        flex: 1;
+      }
+
+      .card_container{
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        justify-content: flex-start;
+        flex: 1;
+        align-self: center;
+        gap: 20px;
+
+        .card{
+          background: rgba(#4893C4, .6);
+          border-radius: 25px;
+          padding: 20px;
+          width: 280px;
+          height: 200px;
+          box-shadow: inset 0px 0px 7px 0px rgba($black, 0.6);
+          @include flex-center(column, center);
+
+          .img{
+            height: 100%;
+            max-width: 100%;
+            transition: all linear 0.2s;
+
+            &:hover{
+              transform: scale(1.1);
+            }
+          }
+
+          .text{
+            @include homepage-buttons("Bobby-Jones-Soft", 24px, $light-yellow, "none");
+            // @include hover-scale(1, 0s);
+            text-align: center;
+            line-height: 24px;
+          }
+
+          &:nth-child(even){
+            justify-self: flex-end;
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 1024px) {
+    padding: 20px;
+
+    .row {
+      gap: 15px;
+
+      .col {
+        &:first-child {
+          align-self: center;
+        }
+
+        .card_container {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 15px;
+
+          .card {
+            width: 240px;
+            height: 180px;
+            padding: 15px;
+
+            .text {
+              font-size: 20px;
+              line-height: 20px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 15px;
+
+    .row {
+      gap: 15px;
+
+      .col {
+        .card_container {
+          grid-template-columns: 1fr;
+          gap: 15px;
+          width: 100%;
+          max-width: 300px;
+
+          .card {
+            width: 100%;
+            height: 160px;
+            padding: 15px;
+
+            &:nth-child(even) {
+              justify-self: center;
+            }
+
+            .text {
+              font-size: 18px;
+              line-height: 18px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    padding: 10px;
+
+    .row {
+      gap: 10px;
+
+      .col {
+        .card_container {
+          gap: 10px;
+
+          .card {
+            height: 140px;
+            padding: 12px;
+            border-radius: 20px;
+
+            .text {
+              font-size: 16px;
+              line-height: 16px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.socialize_community_wrapper{
+  @include flex-center(column, flex-start);
+  place-items: normal;
+  min-height: 100vh;
+  padding: 30px;
+  position: relative;
+  @include background-center-no-repeat($socializeCommunityBgImg);
+  background-size: cover;
+
+  .row{
+    @include flex-center(column, flex-start);
+    place-items: normal;
+    gap: 50px;
+    flex: 1;
+
+    .col{
+      &:first-child{
+        display: grid;
+        grid-template-columns: 120px 1fr 120px;
+        justify-items: center;
+        align-items:center;
+
+        .title_container{
+          .title{
+            @include homepage-buttons(
+              "Gladiola",
+              3em,
+              $light-yellow,
+              "yellow-shadow"
+            );
+            // @include hover-scale(1, 0s);
+          }
+        }
+      }
+
+      .card_container{
+        @include flex-center(column, center);
+        gap: 20px;
+
+        .card{
+          display: grid;
+          grid-template-columns: 60px 1fr 60px;
+          gap: 30px;
+          width: 65%;
+
+          .bulb{
+            width: 100%;
+            // 0%, 25%, 50%, 75%, 100% (driven by JS: --bulb-level = rangeValue/5)
+            --bulb-level: 0;
+            transition: filter 450ms ease, opacity 450ms ease;
+            opacity: calc(0.55 + (0.45 * var(--bulb-level)));
+            filter:
+              brightness(calc(0.9 + (0.6 * var(--bulb-level))))
+              saturate(calc(0.85 + (0.75 * var(--bulb-level))))
+              drop-shadow(0px 0px 10px rgba(249, 222, 177, calc(var(--bulb-level) * 0.75)))
+              drop-shadow(0px 0px 24px rgba(249, 222, 177, calc(var(--bulb-level) * 0.55)));
+          }
+
+          .text_content{
+            @include flex-center(column, center);
+            gap: 5px;
+
+            .title{
+              @include homepage-buttons(
+              "Bobby-Jones-Soft",
+              28px,
+              $light-yellow,
+              "none"
+              );
+              @include hover-scale(1, 0s);
+              text-align: center;
+              line-height: 28px;
+            }
+            
+            .desc{
+              @include homepage-buttons(
+                "Bobby-Jones-Soft",
+                20px,
+                $yellow,
+                "none"
+                );
+                @include hover-scale(1, 0s);
+                text-align: center;
+                line-height: 22px;
+              } 
+          }
+
+          .range_slider_section{
+            @include flex-center(column, center);
+            position: relative;
+            z-index: 0;
+
+            &::after{
+              content: '';
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                right: -8px;
+                width: 6px;
+                background: $red2;
+                border: 2px solid rgba($black, .9);
+            }
+
+            .arrow_gif{
+              width: 35px;
+              height: 35px;
+              object-fit: contain;
+            }
+
+            .arrow_bottom{
+              transform: rotate(180deg);
+              @include full-absolute(auto, auto, -25px, auto);
+            }
+
+            .arrow_top{
+              @include full-absolute(-25px, auto, auto, auto);
+              z-index: 1;
+            }
+
+            .slider_shell{
+              position: relative;
+              width: 60px;
+              height: 107px;
+              background: $dark-yellow;
+              border: 2px solid rgba($black, .9);
+              border-radius: 0px;
+              box-shadow: inset 0px 0px 10px rgba($black, .18);
+              overflow: hidden;
+              @include flex-center(row, center);
+              place-items: normal;
+
+              // right red strip (as in reference)
+              &::after{
+                content:'';
+                position: absolute;
+                top: 16px;
+                right: 6px;
+                width: 10px;
+                height: calc(100% - 24px);
+                background: repeating-linear-gradient(
+                  to bottom,
+                  rgba($black, .85) 0px,
+                  rgba($black, .85) 2px,
+                  transparent 2px,
+                  transparent 18px
+                );
+                border-radius: 2px;
+                opacity: .85;
+              }
+
+              // left tick marks
+              &::before{
+                content:'';
+                position: absolute;
+                top: 16px;
+                left: 6px;
+                width: 10px;
+                height: calc(100% - 24px);
+                background: repeating-linear-gradient(
+                  to bottom,
+                  rgba($black, .85) 0px,
+                  rgba($black, .85) 2px,
+                  transparent 2px,
+                  transparent 18px
+                );
+                border-radius: 2px;
+                opacity: .85;
+              }
+
+              .mui_range_slider{
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 100%;
+                align-self: stretch;
+                margin: 10px 0px;
+                height: auto;
+
+                // black center line
+                .MuiSlider-rail{
+                  background: rgba($black, 1);
+                  width: 9px;
+                  border-radius: 10px;
+                  opacity: 1;
+                  top: -5px;
+                  bottom: -3px;
+                  height: auto;
+                }
+
+                .MuiSlider-track{
+                  background: rgba($black, 1);
+                  width: 9px;
+                  border-radius: 10px;
+                  border: none;
+                }
+
+                // small red thumb bar
+                .MuiSlider-thumb{
+                  width: 18px;
+                  height: var(--thumb-height, 9px);
+                  border-radius: 3px;
+                  background: $red2;
+                  border: 2px solid rgba($black, .9);
+                  box-shadow: none;
+                  position: absolute !important;
+                  top: 0px !important;
+                  left: 50% !important;
+                  transform: translate(-50%, 0) !important;
+
+                  &::before, &::after{
+                    display: none;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
