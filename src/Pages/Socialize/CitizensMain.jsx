@@ -8,8 +8,8 @@ function CitizensMain() {
     const navigate = useNavigate();
     
     const data = [
-        {id:1, type:'text', title: 'Socialize Community', link:'socialize-community'},
-        {id:2, type:'text', title: 'Trigger Element', link:'trigger_element'},
+        {id:1, type:'text', title: 'Raise the bar', link:'socialize-community'},
+        {id:2, type:'text', title: 'Trigger Element', link:'trigger-element'},
         {id:3, type:'img', imgSrc: exit, link:'exit'},
         {id:4, type:'text', title: 'Shopping', link:'shopping'},
     ]
@@ -41,6 +41,9 @@ function CitizensMain() {
                     handleBadgeBgClick={-1}
                     handleLogin="login"
                 />
+            </Box>
+            <Box className="title_container">
+                <Typography className="title">Citizens</Typography>
             </Box>
 
             <Box className="col">
