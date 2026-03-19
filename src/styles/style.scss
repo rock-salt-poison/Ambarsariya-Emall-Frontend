@@ -34554,12 +34554,14 @@ textarea[readonly] {
     .title_container{
       @include flex-center(row, center);
       @include full-absolute(auto, auto,auto, auto);
+      
       .title{
         z-index: 1;
-        @include homepage-buttons("Gladiola", 100px, $brown-4, "black-shadow");
+        @include homepage-buttons("Gladiola", 100px, rgba($black, .5), "black-shadow");
         @include hover-scale(1, 0s);
         text-align: center;
         line-height: 100px;
+        font-weight: 600;
       }
     }
 
