@@ -252,6 +252,16 @@ function SocializeRoutes() {
           />
         }
       />
+
+      <Route
+        path="/citizens/shopping"
+        element={
+          <ProtectedRoute
+            shopElement={<Citizens />}
+            memberElement={<Citizens />}
+          />
+        }
+      />
       <Route
         path="/citizens/sale"
         element={
