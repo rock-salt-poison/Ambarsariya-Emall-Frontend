@@ -28045,6 +28045,155 @@ textarea[readonly] {
   }
 }
 
+.city_rocks_wrapper{
+  position: relative;
+  min-height: 100vh;
+  @include flex-center(row, flex-start);
+  place-items: normal;
+  @include background-center-no-repeat($cityRocksBgImg);
+  background-size:cover;
+  padding: 30px;
+  z-index: 0;
+
+  &::after{
+    content:'';
+    @include full-absolute(0px, 0px, 0px, 0px);
+    z-index: 1;
+    background: rgba($dark-yellow, 0.25);
+  }
+  
+  .row{
+    @include flex-center(column, flex-start);
+    place-items:normal;
+    gap: 20px;
+    flex:1;
+    position: relative;
+    z-index: 2;
+
+    .col{
+      &:first-child{
+        display: grid;
+        grid-template-columns: 120px 1fr 120px;
+        justify-items: center;
+        gap: 20px;
+
+        .heading_container{
+          @include flex-center(row, center);
+
+          .heading{
+            @include homepage-buttons(
+                  "Bobby-Jones-Soft",
+                  80px,
+                  rgba($black, .6),
+                  "none"
+                );
+                line-height: 80px;
+                text-align: center;
+                @include hover-scale(1, 0s);
+          }
+        }
+      }
+
+      &:last-child{
+        @include flex-center(column, center);
+        width: 70%;
+        align-self:center;
+
+        .cards{
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 30px;
+          align-self: stretch;
+
+          .card{
+
+            &.spotlights{
+              @include background-center-no-repeat($spotlight_bg);
+              background-size: cover;
+            }
+
+            &.community, &.city_buzz{
+              @include background-center-no-repeat($cityRocksBgImg);
+            }
+
+            &.city_buzz{
+              background-size: 360%;
+              background-position: -199px -310px;
+            }
+
+            &.community{
+              background-size: 200%;
+              background-position: -139px -104px;
+            }
+            &.city_campus{
+              @include background-center-no-repeat($city_campus_bg);
+              background-size: cover;
+            }
+            &.city_future{
+              @include background-center-no-repeat($city_future_bg);
+              background-size: cover;
+            }
+            &.spotlights, &.city_buzz, &.community, &.campus, &.future{
+              height: 200px;
+              border-radius: 30px;
+              position : relative;
+              box-shadow: inset 0px 0px 1px 6px $yellow, 2px 3px 4px 3px rgba($black, .25);
+              border: 2px solid $dark-yellow;
+              z-index: 0;
+
+              &::after{
+                content:'';
+                @include full-absolute(0px, 0px, 0px, 0px);
+                z-index: 1;
+                background: rgba($dark-yellow, 0.15);
+              }
+
+            }
+            .title_container{
+              @include full-absolute(0px, 0px, 0px, 0px);
+              @include flex-center(row, center);
+              z-index: 2;
+
+              .title{
+                @include homepage-buttons(
+                  "Gladiola",
+                  40px,
+                  $yellow,
+                  "none"
+                );
+                text-shadow: 0px 4px 4px rgba($black, 0.9);
+                line-height: 42px;
+                text-align: center;
+                @include hover-scale(1, 0s);
+              }
+            }
+            &.insights, &.youth_pop, &.food_cafes{
+              height: 200px;
+              border-radius: 20px;
+              position : relative;
+              filter: drop-shadow(0px 0px 3px rgba($black, .7));
+              @include flex-center(column, center);
+
+              .card_img{
+                max-width: 100%;
+                height: stretch;
+              }
+
+              .title_container{
+                position: static;
+                @include flex-center(row, center);
+                .title{
+                  color: $dark-yellow2;
+                }
+              }
+            }
+          }
+          }
+      }
+    }
+  }
+}
+
 .updates_wrapper {
   @extend .city_feeds_wrapper;
   background: transparent;

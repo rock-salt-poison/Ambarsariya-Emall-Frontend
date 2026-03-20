@@ -29,10 +29,13 @@ function CityLights() {
             },300)
     
             setTimeout(()=>{
-                if(target.classList.contains('feeds')){
-                    navigate('../city-feeds')
+                // City Lights tiles route after animation completes (600ms)
+                if(item?.id === 1){
+                    navigate('../city-rocks');
+                }else{
+                    navigate('../city-feeds');
                 }
-            }, 600)
+            }, 600);
         }
     }
 
@@ -62,7 +65,7 @@ function CityLights() {
                 <Box className="col-auto">
                     <Box className="cards">
                         {cards?.map((card)=>{
-                            return <Link className="card" key={card.id} onClick={(e)=>handleClick(e)}>
+                            return <Link className="card" key={card.id} onClick={(e)=>handleClick(e, card)}>
                                 <Box component="img" src={card.img_src} className="card_img"/>
                                 <Box className="title_container">
                                     <Typography className="title">{card.title}</Typography>

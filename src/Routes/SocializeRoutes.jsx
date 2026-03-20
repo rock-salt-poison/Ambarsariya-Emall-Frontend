@@ -4,6 +4,7 @@ import Socialize from "../Pages/Socialize";
 import CityFeeds from "../Pages/Socialize/CityFeeds";
 import Updates from "../Pages/Socialize/Updates";
 import CityLights from "../Pages/Socialize/CityLights";
+import CityRocks from "../Pages/Socialize/CityRocks";
 import { useSelector } from "react-redux";
 import { getUser } from "../API/fetchExpressAPI";
 import { Box, CircularProgress } from "@mui/material";
@@ -106,6 +107,15 @@ function SocializeRoutes() {
           <ProtectedRoute
             shopElement={<CityLights />}
             memberElement={<CityLights />}
+          />
+        }
+      />
+      <Route
+        path="/city-rocks"
+        element={
+          <ProtectedRoute
+            shopElement={<CityRocks />}
+            memberElement={<CityRocks />}
           />
         }
       />
