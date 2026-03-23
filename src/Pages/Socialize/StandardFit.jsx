@@ -80,6 +80,44 @@ function StandardFit() {
     }
   };
 
+  const handleRealtimeStockClick = (e) => {
+    e.preventDefault();
+
+    // Keep navigation aligned with the existing 600ms UX pattern.
+    const target = e.target.closest(".panel_item");
+    if (target) {
+      target.classList.add("reduceSize3");
+      setTimeout(() => target.classList.remove("reduceSize3"), 300);
+    }
+
+    audio.play();
+
+    setTimeout(() => {
+      if (!token) return;
+      // Supplier route requires `:edit` segment; use the same string used elsewhere (`navigate('edit')`).
+      navigate(`../../sell/support/shop/${token}/dashboard/edit/supply`);
+    }, 600);
+  };
+
+  const handleLowStockClick = (e) => {
+    e.preventDefault();
+
+    // Keep navigation aligned with the existing 600ms UX pattern.
+    const target = e.target.closest(".panel_item");
+    if (target) {
+      target.classList.add("reduceSize3");
+      setTimeout(() => target.classList.remove("reduceSize3"), 300);
+    }
+
+    audio.play();
+
+    setTimeout(() => {
+      if (!token) return;
+      // Supplier route requires `:edit` segment; Supply is similarly under `/dashboard/:edit/supply`.
+      navigate(`../../sell/support/shop/${token}/dashboard/edit/supplier`);
+    }, 600);
+  };
+
   const services = [
     {
       id: "pickup",
@@ -116,11 +154,13 @@ function StandardFit() {
       id: "realtime",
       title: "REAL TIME STOCK STATUS",
       icon: real_time_stock,
+      onClick: handleRealtimeStockClick,
     },
     {
       id: "lowstock",
       title: "LOW STOCK ALERTS",
       icon:low_stock,
+      onClick: handleLowStockClick,
     },
     {
       id: "batch",

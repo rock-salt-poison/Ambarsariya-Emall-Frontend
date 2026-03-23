@@ -80,7 +80,7 @@ function Citizens() {
                 <Box className="content">
                     <Link
                       className="title_container"
-                      onClick={(e) => handleTileClick(e, null)}
+                      onClick={(e) => handleTileClick(e, '../citizens/booths')}
                     >
                         <Box component="img" className="title_bg" src={title_bg} alt="bg"/>
                         <Typography className="title">

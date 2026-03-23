@@ -35251,3 +35251,130 @@ textarea[readonly] {
     }
   }
 }
+
+.booths_wrapper {
+  width: 100%;
+  min-height: 100vh;
+  padding: 0.75rem;
+  @include background-center-no-repeat($supplierForShopBgImg);
+  background-size: cover;
+  overflow: hidden;
+  @include flex-center(column, flex-start);
+  place-items: normal;
+  gap: 30px;
+  background-attachment: fixed;
+
+  .booths_header {
+    position: relative;
+    width: 100%;
+    @include flex-center(row, center);
+    margin-bottom: 0.75rem;
+
+    .booths_title {
+      background: rgba($brown-4, .7);
+      border-radius: 10px;
+      padding: 0.25rem 1.5rem;
+      line-height: 1;
+      @include homepage-buttons(
+        "Gladiola",
+        2.6em,
+        $light-yellow,
+        "yellow-shadow"
+      );
+    }
+
+    .booths_badge {
+      position: absolute;
+      right: 0.35rem;
+      top: 0;
+    }
+  }
+
+  .booths_body {
+    width: 100%;
+    @include flex-center(row, center);
+
+    .booths_state_text {
+      margin-top: 2rem;
+      color: $white;
+      @include homepage-buttons(
+        "Bobby-Jones-Soft",
+        22px,
+        $light-yellow,
+        "black-shadow"
+      );
+    }
+
+    .booths_quilted_list {
+      width: min(100%, 1200px);
+      margin: 0 !important;
+      padding: 0px !important;
+      overflow: visible;
+      gap: 0px !important;
+
+      .booths_list_item {
+        position: relative;
+        transition: all .2s linear;
+        border: 3px solid $brown-4;
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+
+        .sector_hover_overlay {
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          min-height: 0px;
+          height: 0px;
+          padding: 0px; 
+          overflow: hidden;
+          transition: transform 220ms linear;
+          background: linear-gradient(
+            to top,
+            rgba($brown-4, 0.96) 0%,
+            rgba($brown-4, 0.82) 55%,
+            rgba($brown-4, 0.08) 100%
+          );
+          display: flex;
+          align-items: flex-end;
+
+          .sector_name_text {
+            color: $white;
+            font-family: "Bobby-Jones-Soft";
+            font-size: clamp(0.8rem, 1vw, 1rem);
+            line-height: 1.1;
+            text-shadow: 0 1px 2px rgba($black, 0.4);
+          }
+        }
+
+        &:hover {
+          transform: scale(1.12);
+          box-shadow: 0px 0px 10px 4px $yellow;
+          z-index: 2;
+          .sector_hover_overlay {
+          padding: 0.6rem 0.7rem;
+          min-height: 3rem;
+          height: max-content;
+        }
+      }
+      }
+    }
+  }
+  @media (max-width: 1024px) {
+      .booths_header {
+        .booths_title {
+          padding: 0.22rem 1.1rem;
+        }
+      }
+  
+      .booths_body {
+        .booths_quilted_list {
+          max-height: calc(100dvh - 6.7rem);
+        }
+      }
+  }
+}
