@@ -35267,12 +35267,14 @@ textarea[readonly] {
   .booths_header {
     position: relative;
     width: 100%;
-    @include flex-center(row, center);
-    margin-bottom: 0.75rem;
+    display: grid;
+    grid-template-columns: 120px 1fr 120px;
 
     .booths_title {
       background: rgba($brown-4, .7);
       border-radius: 10px;
+      align-self: center;
+      justify-self: center;
       padding: 0.25rem 1.5rem;
       line-height: 1;
       @include homepage-buttons(
@@ -35281,12 +35283,6 @@ textarea[readonly] {
         $light-yellow,
         "yellow-shadow"
       );
-    }
-
-    .booths_badge {
-      position: absolute;
-      right: 0.35rem;
-      top: 0;
     }
   }
 

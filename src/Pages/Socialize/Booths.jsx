@@ -92,6 +92,7 @@ function Booths() {
   return (
     <Box className="booths_wrapper">
       <Box className="booths_header">
+        <Box></Box>
         <Typography className="booths_title">Booths</Typography>
         <Box className="booths_badge">
           <UserBadge
