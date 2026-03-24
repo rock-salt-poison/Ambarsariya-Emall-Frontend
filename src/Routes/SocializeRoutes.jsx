@@ -32,6 +32,7 @@ import SocializeCommunity from "../Pages/Socialize/SocializeCommunity";
 import TriggerElement from "../Pages/Socialize/TriggerElement";
 import Booths from "../Pages/Socialize/Booths";
 import SalesMount from "../Pages/Socialize/SalesMount";
+import RoadRageBanners from "../Pages/Socialize/RoadRageBanners";
 
 function SocializeRoutes() {
   const token = useSelector((state) => state.auth.userAccessToken);
@@ -243,6 +244,15 @@ function SocializeRoutes() {
           <ProtectedRoute
             shopElement={<BannersToday />}
             memberElement={<BannersToday />}
+          />
+        }
+      />
+      <Route
+        path="/banners/road-rage-banners"
+        element={
+          <ProtectedRoute
+            shopElement={<RoadRageBanners />}
+            memberElement={<RoadRageBanners />}
           />
         }
       />

@@ -47,8 +47,7 @@ function BannersMain() {
         if (card.cName === 'card city_hoarding') {
           navigate('city-hoardings');
         } else if (card.cName === 'card road_rage_banner') {
-          // Open Google Maps in a new tab
-          window.open('https://www.google.com/maps/d/u/0/edit?mid=13jvjY-xAlq5TuZv-QhFApxqI70018s4&usp=sharing', '_blank');
+          navigate('road-rage-banners');
         }
       }, 600);
     }

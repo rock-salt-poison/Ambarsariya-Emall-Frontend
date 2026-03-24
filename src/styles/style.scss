@@ -30457,6 +30457,120 @@ textarea[readonly] {
   }
 }
 
+.road_rage_banners_wrapper{
+  position: relative;
+  min-height: 100vh;
+  @include background-center-no-repeat($bannersTodayBgImg);
+  background-size: cover;
+  background-position: center;
+  @include flex-center(column, flex-start);
+  place-items: normal;
+  gap: 24px;
+  padding: 24px;
+
+  .row{
+    width: 100%;
+    @include flex-center(column, center);
+    place-items: normal;
+
+    .col{
+      width: 100%;
+
+      &.back_button{
+        @include flex-center(row, flex-end);
+      }
+
+      &.heading_container{
+        @include flex-center(row, center);
+
+        .heading{
+          @include homepage-buttons(
+            "Bobby-Jones-Soft",
+            34px,
+            #9b3b32,
+            "none"
+          );
+          text-align: center;
+          text-shadow: -1.5px -1.5px 0 $yellow, 1.5px -1.5px 0 $yellow,
+            -1.5px 1.5px 0px $yellow, 1.5px 1.5px 0 $yellow;
+        }
+      }
+    }
+  }
+
+  .map_frame{
+    width: min(1080px, 100%);
+    margin: 0 auto;
+    border-radius: 22px;
+    border: 4px solid rgba($brown-4, 0.75);
+    background: linear-gradient(
+      140deg,
+      rgba($yellow, 0.35) 10%,
+      rgba($brown-4, 0.28) 50%,
+      rgba($yellow, 0.3) 90%
+    );
+    box-shadow: 0 10px 22px rgba($black, 0.25), inset 0 0 0 2px rgba($light-yellow, 0.35);
+    padding: 14px;
+
+    iframe{
+      width: 100%;
+      height: min(72vh, 720px);
+      border: 0;
+      border-radius: 14px;
+      background: rgba($white, 0.85);
+    }
+  }
+
+  @media (max-width: 992px){
+    padding: 18px;
+    gap: 18px;
+
+    .row{
+      .col{
+        &.heading_container{
+          .heading{
+            font-size: 28px;
+          }
+        }
+      }
+    }
+
+    .map_frame{
+      padding: 12px;
+      border-radius: 18px;
+
+      iframe{
+        height: 68vh;
+      }
+    }
+  }
+
+  @media (max-width: 560px){
+    padding: 14px 10px;
+
+    .row{
+      .col{
+        &.heading_container{
+          .heading{
+            font-size: 24px;
+          }
+        }
+      }
+    }
+
+    .map_frame{
+      border-width: 3px;
+      border-radius: 14px;
+      padding: 8px;
+
+      iframe{
+        height: 64vh;
+        border-radius: 10px;
+      }
+    }
+  }
+}
+
 .banners_today_wrapper {
   position: relative;
   height: 100vh;
