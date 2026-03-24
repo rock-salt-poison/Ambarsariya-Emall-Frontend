@@ -21,6 +21,8 @@ function CityRocks() {
         {id:4, title:'Insights', linkTo:'', img_src:insights_icon, cName:'insights'},
         {id:5, linkTo:'', img_src:youth_and_pop_culture, cName:'youth_pop'},
         {id:6, linkTo:'', img_src:food_cafes_and_night_life, cName:'food_cafes'},
+        {id:7, title:'City Campus', linkTo:'', cName:'city_campus'},
+        {id:7, title:'City Future', linkTo:'', cName:'city_future'},
     ]
 
     const navigate = useNavigate();

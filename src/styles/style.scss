@@ -28101,11 +28101,12 @@ textarea[readonly] {
 
         .cards{
           display: grid;
-          grid-template-columns: repeat(3, 1fr);
+          grid-template-columns: repeat(6, 1fr);
           gap: 30px;
           align-self: stretch;
 
           .card{
+            grid-column: span 2;
 
             &.spotlights{
               @include background-center-no-repeat($spotlight_bg);
@@ -28128,12 +28129,13 @@ textarea[readonly] {
             &.city_campus{
               @include background-center-no-repeat($city_campus_bg);
               background-size: cover;
+              grid-column: 2 / span 2;
             }
             &.city_future{
               @include background-center-no-repeat($city_future_bg);
               background-size: cover;
             }
-            &.spotlights, &.city_buzz, &.community, &.campus, &.future{
+            &.spotlights, &.city_buzz, &.community, &.city_campus, &.city_future{
               height: 200px;
               border-radius: 30px;
               position : relative;
