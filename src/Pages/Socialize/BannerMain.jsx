@@ -48,7 +48,7 @@ function BannersMain() {
           navigate('city-hoardings');
         } else if (card.cName === 'card road_rage_banner') {
           // Open Google Maps in a new tab
-          window.open('https://www.google.com/maps/d/edit?mid=1nvxLA9O_YAspXVtm8t2qwTbvV2IL0uY&usp=sharing', '_blank');
+          window.open('https://www.google.com/maps/d/u/0/edit?mid=13jvjY-xAlq5TuZv-QhFApxqI70018s4&usp=sharing', '_blank');
         }
       }, 600);
     }

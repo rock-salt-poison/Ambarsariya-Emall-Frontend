@@ -31,6 +31,7 @@ import CitizensMain from "../Pages/Socialize/CitizensMain";
 import SocializeCommunity from "../Pages/Socialize/SocializeCommunity";
 import TriggerElement from "../Pages/Socialize/TriggerElement";
 import Booths from "../Pages/Socialize/Booths";
+import SalesMount from "../Pages/Socialize/SalesMount";
 
 function SocializeRoutes() {
   const token = useSelector((state) => state.auth.userAccessToken);
@@ -161,6 +162,15 @@ function SocializeRoutes() {
           <ProtectedRoute
             shopElement={<ConnectWithUtilities />}
             memberElement={<ConnectWithUtilities />}
+          />
+        }
+      />
+      <Route
+        path="/city-junctions/sales-mount"
+        element={
+          <ProtectedRoute
+            shopElement={<SalesMount />}
+            memberElement={<SalesMount />}
           />
         }
       />

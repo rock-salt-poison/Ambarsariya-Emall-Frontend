@@ -41,6 +41,8 @@ function CityJunctions() {
                     navigate('../city-junctions/jobs-offered')
                 }else if(target.classList.contains('connect_with_utilities')){
                     navigate('../city-junctions/utilities-main')
+                }else if(target.classList.contains('sales_mount')){
+                    navigate('../city-junctions/sales-mount')
                 }
             }, 600)
         }else if(title){

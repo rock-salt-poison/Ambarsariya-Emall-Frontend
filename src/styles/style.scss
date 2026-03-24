@@ -35343,11 +35343,13 @@ textarea[readonly] {
           align-items: flex-end;
 
           .sector_name_text {
-            color: $white;
-            font-family: "Bobby-Jones-Soft";
-            font-size: clamp(0.8rem, 1vw, 1rem);
-            line-height: 1.1;
-            text-shadow: 0 1px 2px rgba($black, 0.4);
+            @include homepage-buttons(
+              "Bobby-Jones-Soft",
+              22px,
+              $light-yellow,
+              "black-shadow"
+            );
+            @include hover-scale(1, 0s);
           }
         }
 
@@ -35375,4 +35377,207 @@ textarea[readonly] {
         }
       }
   }
+}
+
+.sales_mount_wrapper{
+  position: relative;
+  min-height: 100vh;
+  @include background-center-no-repeat($salesMountBg);
+  background-size: cover;
+  padding: 30px;
+  @include flex-center(row, flex-start);
+  place-items: normal;
+
+  .row{
+    @include flex-center(column, flex-start);
+    place-items: normal;
+    width: 100%;
+    gap: 20px;
+
+    .col{
+      &:first-child{
+      display: grid;
+      grid-template-columns: 120px 1fr 120px;
+      gap:20px;
+      justify-items: center;
+      align-items: center;
+      
+      .heading{
+          @include homepage-buttons(
+            "Gladiola",
+            2.6em,
+            $light-yellow,
+            "yellow-shadow"
+          );
+        }
+    }
+
+    &:last-child{
+      @include flex-center(row, center);
+
+      .container{
+        width: 50%;
+        background: linear-gradient(150deg, rgba($yellow, .4) 15%, rgba($brown-4, .2) 39%, rgba($yellow, .4) 67%,  rgba($brown-4, .2) 88%);
+        border-radius: 20px;
+        padding: 20px;
+        @include flex-center(column, flex-start);
+        gap: 15px;
+        place-items: normal;
+
+        .items_container{
+          @include flex-center(column, center);
+          gap: 10px;
+          .item{
+            @include flex-center(row, center);
+            gap:20px;
+
+            .icon{
+              width: 70px;
+              filter: drop-shadow(4px 4px 5px rgba($black, .6));
+            }
+
+            .title{
+              @include homepage-buttons(
+                "Bobby-Jones-Soft",
+                24px,
+                $yellow,
+                "none"
+              );
+              text-shadow: 3px 3px 3px $brown-4;
+              @include hover-scale(1, 0s);
+            }
+          }
+        }
+      }
+    }
+  }
+
+}
+@media screen and (max-width: 1024px){
+  padding: 24px 20px;
+
+  .row{
+    .col{
+      &:first-child{
+        grid-template-columns: 1fr 80px;
+        gap: 14px;
+
+        div:first-child{
+          display:none;
+        }
+
+        .heading{
+          font-size: 2.2em !important;
+          justify-self: flex-start;
+        }
+      }
+
+      &:last-child{
+        .container{
+          width: 72%;
+          padding: 18px;
+
+          .items_container{
+            .item{
+              .icon{
+                width: 62px;
+              }
+
+              .title{
+                font-size: 22px !important;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 768px){
+  padding: 18px 14px;
+
+  .row{
+    gap: 16px;
+
+    .col{
+      &:first-child{
+        gap: 10px;
+
+        .heading{
+          font-size: 1.9em !important;
+        }
+      }
+
+      &:last-child{
+        .container{
+          width: 92%;
+          border-radius: 16px;
+          padding: 14px;
+          gap: 12px;
+
+          .items_container{
+            .item{
+              gap: 14px;
+
+              .icon{
+                width: 52px;
+              }
+
+              .title{
+                font-size: 18px !important;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 480px){
+  padding: 14px 10px;
+
+  .row{
+    .col{
+      &:first-child{
+        gap: 8px;
+
+        .heading{
+          font-size: 1.6em !important;
+        }
+      }
+
+      &:last-child{
+        .container{
+          width: 100%;
+          border-radius: 12px;
+          padding: 12px 10px;
+
+          .board_pins{
+            .circle{
+              width: 10px;
+              height: 10px;
+            }
+          }
+
+          .items_container{
+            .item{
+              gap: 10px;
+
+              .icon{
+                width: 44px;
+              }
+
+              .title{
+                font-size: 16px !important;
+                line-height: 1.2;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
 }
