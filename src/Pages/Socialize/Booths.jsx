@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Box, ImageList, ImageListItem, Typography } from '@mui/material';
+import { Box, CircularProgress, ImageList, ImageListItem, Typography } from '@mui/material';
 import UserBadge from '../../UserBadge';
 import { fetchDomains, fetchDomainSectors } from '../../API/fetchExpressAPI';
 import { getSectorImage } from '../../Utils/sector_images';
@@ -64,11 +64,11 @@ function Booths() {
       { rows: 2, cols: 1 },
       { rows: 2, cols: 1 },
       { rows: 2, cols: 1 },
+      { rows: 2, cols: 1 },
       { rows: 1, cols: 1 },
       { rows: 1, cols: 1 },
-      { rows: 1, cols: 1 },
-      { rows: 3, cols: 1 },
-      { rows: 2, cols: 2 },
+      { rows: 2, cols: 1 },
+      { rows: 2, cols: 1 },
       { rows: 2, cols: 1 },
       { rows: 2, cols: 2 },
       { rows: 1, cols: 1 },
@@ -104,7 +104,7 @@ function Booths() {
 
       <Box className="booths_body">
         {loading ? (
-          <Typography className="booths_state_text">Loading booths...</Typography>
+          <Box className="loading"><CircularProgress/></Box>
         ) : imageTiles.length === 0 ? (
           <Typography className="booths_state_text">No sectors found for booths.</Typography>
         ) : (

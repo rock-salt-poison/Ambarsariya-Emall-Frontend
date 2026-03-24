@@ -7,7 +7,21 @@ const sectorImages = images.keys().reduce((acc, path) => {
   return acc;
 }, {});
 
+const normalizeKey = (value = '') =>
+  String(value)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+
 // Helper function to get image
 export const getSectorImage = (sectorName) => {
-  return sectorImages[sectorName] || null;
+  if (!sectorName) return null;
+  if (sectorImages[sectorName]) return sectorImages[sectorName];
+
+  const targetKey = normalizeKey(sectorName);
+  const matchedName = Object.keys(sectorImages).find(
+    (name) => normalizeKey(name) === targetKey
+  );
+
+  return matchedName ? sectorImages[matchedName] : null;
 };
