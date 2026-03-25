@@ -35368,6 +35368,257 @@ textarea[readonly] {
   }
 }
 
+// Trigger Element Popup (Roadmap/Trigger UI)
+.custom.trigger_element_popup {
+  .MuiDialog-container > .MuiPaper-root {
+    width: 100%;
+    max-width: 60%;
+    min-height: 500px;
+    background-color: transparent;
+    box-shadow: none;
+    @include flex-center(row, flex-start);
+    place-items: normal;
+  }
+
+  .card_board_component {
+    padding: 0 !important;
+    overflow: visible;
+    border: none;
+    border-radius: 0px;
+    @include flex-center(row, flex-start);
+    place-items: normal;
+  }
+
+  .content {
+    padding: 0;
+    @include flex-center(row, flex-start);
+    place-items: normal;
+    flex: 1;
+
+    .content_body{
+      flex: 1;
+      @include flex-center(row, flex-start);
+      place-items: normal;
+
+      
+        .trigger_element_popup_body {
+          width: 100%;
+          @include flex-center(row, flex-start);
+            place-items: normal;
+            flex: 1;
+        }
+
+        /* HTML: <div class="plus"></div> */
+        .plus {
+          --b: 38%; /* vertical thickness */
+          --h: 38%; /* horizontal thickness */
+          --s: 0px; /* space around */
+          aspect-ratio: 4/3.3;
+          flex: 1;
+
+          box-sizing: border-box;
+          position: relative;
+          overflow: hidden;
+          filter: drop-shadow(0px 0px 10px $black);
+          --g: conic-gradient(#ffffff 0 0) no-repeat 50%/;
+        }
+
+        // Render the plus cross using a mask and fill it with the provided background image.
+        .plus::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(rgba($dark-yellow, .30), rgba($brown-4, .30)), var(--plus-bg-img) center / cover no-repeat;
+          -webkit-mask: var(--g) var(--b) calc(100% - 1*var(--s)),
+            var(--g) calc(100% - 3*var(--s)) var(--h);
+          mask: var(--g) var(--b) calc(100% - 1*var(--s)),
+            var(--g) calc(100% - 3*var(--s)) var(--h);
+          -webkit-mask-composite: source-over;
+          mask-composite: add;
+        }
+
+        .trigger_plus_center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  pointer-events: none;
+  
+  .trigger_plus_btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    .trigger_plus_gif {
+      width: 70px;
+      height: 70px;
+      object-fit: contain;
+    }
+    
+    .trigger_plus_text { 
+      @include homepage-buttons(
+        "Bobby-Jones-Soft",
+        18px,
+        $light-yellow,
+        "none"
+      );
+      @include hover-scale(1, 0s);
+      line-height: 18px;
+      line-height: 1.1;
+      text-align: center;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+    }
+  }
+}
+
+.trigger_field_top {
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.trigger_field_right {
+  top: 0px;
+  bottom: 0px;
+  margin: auto 0px;
+  right: 20px;
+}
+
+.trigger_field_left {
+  top: 0px;
+  bottom: 0px;
+  margin: auto 0px;
+  left: 20px;
+}
+
+.trigger_field_bottom {
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+
+        .trigger_field {
+          position: absolute;
+          z-index: 2;
+          width: 33%;
+          height: max-content;
+          @include flex-center(row, flex-start);
+          place-items: normal;
+
+          .form-control{
+            @include flex-center(row, flex-start);
+            place-items: normal;
+            flex: 1;
+
+            .form-row{
+              @include flex-center(column, flex-start);
+              place-items: normal;
+              flex:1;
+              gap: 10px;
+
+              .label {
+                @include homepage-buttons(
+                  "Bobby-Jones-Soft",
+                  18px,
+                  $light-yellow,
+                  "none"
+                );
+                @include hover-scale(1, 0s);
+                line-height: 18px;
+              }
+
+              .field_container {
+                @include flex-center(row, flex-start);
+                place-items: normal;
+
+                .MuiFormControl-root{
+                  &.input_field {
+                    flex: 1;
+
+                    .MuiInputBase-root{
+                      background-color: rgba($yellow, 0.85) !important;
+                      border-radius: 10px;
+
+                    .MuiInputBase-input{
+                      padding: 8px 12px;
+                      min-height: max-content;
+                      @include homepage-buttons(
+                        "Bobby-Jones-Soft",
+                        18px,
+                        $brown-4,
+                        "none"
+                      );
+                      @include hover-scale(1, 0s);
+                      line-height: 18px;
+
+                      &.MuiSelect-select, &[type='datetime-local']{
+                        padding-right: 32px;
+                      }
+                    }
+                      
+                    }
+  
+                    .MuiOutlinedInput-notchedOutline {
+                      border: 0 !important;
+                    }
+                  } 
+                }
+              }
+            }
+          }
+
+        }
+    }
+  }
+}
+
+
+
+
+
+
+
+.trigger_popup_sr_only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 560px) {
+  .trigger_element_popup_body {
+    padding: 8px;
+  }
+
+  .plus {
+    height: 200px;
+  }
+
+  .trigger_field {
+    width: 150px;
+  }
+
+  .trigger_field_right {
+    right: -10px;
+  }
+
+  .trigger_field_left {
+    left: -10px;
+  }
+}
+
 .booths_wrapper {
   width: 100%;
   min-height: 100vh;
