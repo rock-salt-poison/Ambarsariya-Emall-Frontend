@@ -12,16 +12,13 @@ import {
   get_allPurchaseOrderDetails,
   get_buyer_data,
   get_discount_coupons,
-  get_paymentDetails,
   get_purchased_products_details,
   get_purchaseOrderDetails,
   get_purchaseOrders,
   get_seller_data,
   getLastPurchasedTotal,
   getUser,
-  post_createFundAccount,
   post_invoiceOrder,
-  post_payoutToShopkeeper,
   put_purchaseOrderDiscount,
 } from "../../../../API/fetchExpressAPI";
 import { useSelector } from "react-redux";
@@ -30,7 +27,13 @@ import { Link } from "react-router-dom";
 import ConfirmationDialog from "../../../ConfirmationDialog";
 import InvoicePopup from "../../../Invoice/InvoicePopup";
 import CustomSnackbar from "../../../CustomSnackbar";
-import { HandleRazorpayPayment } from "../../../../API/HandleRazorpayPayment";
+// Razorpay integration (kept for later use)
+// import {
+//   get_paymentDetails,
+//   post_createFundAccount,
+//   post_payoutToShopkeeper,
+// } from "../../../../API/fetchExpressAPI";
+// import { HandleRazorpayPayment } from "../../../../API/HandleRazorpayPayment";
 
 function OrderStatus_tab_content({ title }) {
   const [purchasedOrders, setPurchasedOrders] = useState([]);
@@ -463,7 +466,7 @@ const calculateDiscount = () => {
         }, 0);
 
         let total_amount = 0;
-        let razorpay_payout_id;
+        // let razorpay_payout_id;
 
         // const grandTotal = (subTotal - parseFloat(selectedOrder?.[0]?.total_discount_amount) + (Number(selectedOrder?.[0]?.coupon_cost || 0) ))?.toFixed(2);
 
@@ -471,86 +474,61 @@ const calculateDiscount = () => {
 
           const totalAmount = selectedOrder?.[0].total_amount || 0;
           console.log(totalAmount);
-          try {
-            // 1. Razorpay Checkout
-            const paymentResp = await HandleRazorpayPayment({
-              amount: grandTotal,
-              buyerDetails: {
-                buyer_name: buyerData?.full_name,
-                buyer_contact_no: buyerData?.phone_no_1,
-                buyer_email: buyerData?.username,
-              },
-            });
+          // Razorpay flow (commented out for later use)
+          // try {
+          //   const paymentResp = await HandleRazorpayPayment({
+          //     amount: grandTotal,
+          //     buyerDetails: {
+          //       buyer_name: buyerData?.full_name,
+          //       buyer_contact_no: buyerData?.phone_no_1,
+          //       buyer_email: buyerData?.username,
+          //     },
+          //   });
+          //
+          //   if (paymentResp?.razorpay_payment_id) {
+          //     let fundAccountId = sellerData?.razorpay_fund_account_id;
+          //
+          //     if (!fundAccountId) {
+          //       const fundAccountResp = await post_createFundAccount({
+          //         name: sellerData?.poc_name,
+          //         contact: sellerData?.phone_no_1,
+          //         email: sellerData?.username,
+          //         upi_id: sellerData?.upi_id,
+          //         type: 'vendor',
+          //       });
+          //       fundAccountId = fundAccountResp?.fund_account_id;
+          //     }
+          //
+          //     const paymentDetails = await get_paymentDetails(paymentResp?.razorpay_payment_id);
+          //     total_amount = paymentDetails.amount;
+          //
+          //     let payout = (paymentDetails.amount - paymentDetails.fee - paymentDetails.tax);
+          //     if (
+          //       parseFloat(selectedOrder?.[0]?.total_discount_amount || 0) > 0 &&
+          //       parseFloat(selectedOrder?.[0]?.coupon_cost || 0) > 0
+          //     ) {
+          //       payout -= 30;
+          //     }
+          //     const payoutResp = await post_payoutToShopkeeper({
+          //       fund_account_id: fundAccountId,
+          //       amount: Math.round(payout * 100),
+          //     });
+          //     razorpay_payout_id = payoutResp?.id;
+          //   }
+          // } catch (error) {
+          //   console.error("Error in payment/payout:", error);
+          //   setSnackbar({
+          //     open: true,
+          //     message: "Error during transaction",
+          //     severity: "error",
+          //   });
+          //   return;
+          // }
 
-            console.log("Payment response:", paymentResp);
+          // Direct invoice creation on Accept (no Razorpay)
+          total_amount = Number(grandTotal || 0);
 
-            if (paymentResp?.razorpay_payment_id) {
-              let fundAccountId = sellerData?.razorpay_fund_account_id;
-
-              // Create Fund Account if not available
-              if (!fundAccountId) {
-                try {
-                  const fundAccountResp = await post_createFundAccount({
-                    name: sellerData?.poc_name,
-                    contact: sellerData?.phone_no_1,
-                    email: sellerData?.username,
-                    upi_id: sellerData?.upi_id,
-                    type: 'vendor',
-                  });
-                  console.log("Fund Account Response:", fundAccountResp);
-
-                  fundAccountId = fundAccountResp?.fund_account_id;
-                  console.log("New Fund Account created:", fundAccountId);
-                } catch (error) {
-                  console.error("Error creating Fund Account:", error);
-                  setSnackbar({
-                    open: true,
-                    message: "Failed to create fund account.",
-                    severity: "error",
-                  });
-                  return;
-                }
-              }
-
-          //     // Trigger Payout
-              try {
-
-                const paymentDetails = await get_paymentDetails(paymentResp?.razorpay_payment_id);
-                console.log(paymentDetails);
-                total_amount = paymentDetails.amount;
-
-                let payout = (paymentDetails.amount - paymentDetails.fee - paymentDetails.tax);
-
-                // 3. Adjust for coupon subsidy if applicable
-                if (
-                  parseFloat(selectedOrder?.[0]?.total_discount_amount || 0) > 0 &&
-                  parseFloat(selectedOrder?.[0]?.coupon_cost || 0) > 0
-                ) {
-                  payout -= 30;
-                }
-                const payoutResp = await post_payoutToShopkeeper({
-                  fund_account_id: fundAccountId,
-                  amount: Math.round(payout * 100),
-                });
-
-                console.log("Payout response:", payoutResp);
-                razorpay_payout_id = payoutResp?.id;
-                setSnackbar({
-                  open: true,
-                  message: "Payout to shopkeeper successful!",
-                  severity: "success",
-                });
-              } catch (error) {
-                console.error("Payout failed:", error);
-                setSnackbar({
-                  open: true,
-                  message: "Payout to shopkeeper failed.",
-                  severity: "error",
-                });
-                return;
-              }
-
-              // Generate Invoice
+          // Generate Invoice
               try {
 
                 const data = {
@@ -623,10 +601,10 @@ const calculateDiscount = () => {
                     qr_code: null,
                     buyer_special_note: null,
                     emall_special_note: null,
-                    razorpay_order_id: paymentResp?.razorpay_order_id, 
-                    razorpay_payment_id: paymentResp?.razorpay_payment_id, 
-                    razorpay_signature: paymentResp?.razorpay_signature,
-                    razorpay_payout_id: razorpay_payout_id
+                    razorpay_order_id: null, 
+                    razorpay_payment_id: null, 
+                    razorpay_signature: null,
+                    razorpay_payout_id: null
                   };
 
                   console.log(data);
@@ -651,26 +629,6 @@ const calculateDiscount = () => {
                   severity: "error",
                 });
               }
-            }
-            else {
-              setSnackbar({
-                open: true,
-                message: "Payment failed or cancelled",
-                severity: "error",
-              });
-            }
-          // }
-         } catch (error) {
-            console.error("Error in payment/payout:", error);
-            setSnackbar({
-              open: true,
-              message: "Error during transaction",
-              severity: "error",
-            });
-          } finally {
-            setLoading(false);
-          }
-          setLoading(false);
         }
         // }
       } catch (e) {
