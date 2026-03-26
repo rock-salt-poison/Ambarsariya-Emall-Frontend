@@ -35372,6 +35372,8 @@ textarea[readonly] {
 .custom.trigger_element_popup {
   .MuiDialog-container > .MuiPaper-root {
     width: 100%;
+    padding: 10px;
+    filter: drop-shadow(0px 0px 8px #000000);
     max-width: 60%;
     min-height: 500px;
     background-color: transparent;
@@ -35385,6 +35387,7 @@ textarea[readonly] {
     overflow: visible;
     border: none;
     border-radius: 0px;
+    box-shadow: none;
     @include flex-center(row, flex-start);
     place-items: normal;
   }
@@ -35410,16 +35413,16 @@ textarea[readonly] {
 
         /* HTML: <div class="plus"></div> */
         .plus {
-          --b: 38%; /* vertical thickness */
+          --b: 35%; /* vertical thickness */
           --h: 38%; /* horizontal thickness */
           --s: 0px; /* space around */
-          aspect-ratio: 4/3.3;
+          aspect-ratio: 1;
           flex: 1;
 
           box-sizing: border-box;
           position: relative;
           overflow: hidden;
-          filter: drop-shadow(0px 0px 10px $black);
+          filter: drop-shadow(0px 0px 8px $black);
           --g: conic-gradient(#ffffff 0 0) no-repeat 50%/;
         }
 
@@ -35428,7 +35431,7 @@ textarea[readonly] {
           content: '';
           position: absolute;
           inset: 0;
-          background: linear-gradient(rgba($dark-yellow, .30), rgba($brown-4, .30)), var(--plus-bg-img) center / cover no-repeat;
+          background: linear-gradient(rgba($dark-yellow, .48), rgba($dark-yellow, .48), rgba($brown-4, .80)), var(--plus-bg-img) center / cover no-repeat;
           -webkit-mask: var(--g) var(--b) calc(100% - 1*var(--s)),
             var(--g) calc(100% - 3*var(--s)) var(--h);
           mask: var(--g) var(--b) calc(100% - 1*var(--s)),
@@ -35507,7 +35510,7 @@ textarea[readonly] {
         .trigger_field {
           position: absolute;
           z-index: 2;
-          width: 33%;
+          width: 30%;
           height: max-content;
           @include flex-center(row, flex-start);
           place-items: normal;
@@ -35516,12 +35519,14 @@ textarea[readonly] {
             @include flex-center(row, flex-start);
             place-items: normal;
             flex: 1;
-
+            width: 100%;
+            
             .form-row{
               @include flex-center(column, flex-start);
               place-items: normal;
               flex:1;
               gap: 10px;
+              width: 100%;
 
               .label {
                 @include homepage-buttons(
@@ -35538,6 +35543,25 @@ textarea[readonly] {
                 @include flex-center(row, flex-start);
                 place-items: normal;
 
+                label{
+                  flex:1;
+                }
+
+                .MuiButtonBase-root.file_button{
+                  background-color: rgba($yellow, 0.85) !important;
+                  border-radius: 10px;
+                  width: 100%;
+                  @include homepage-buttons(
+                        "Bobby-Jones-Soft",
+                        18px,
+                        $brown-4,
+                        "none"
+                      );
+                      @include hover-scale(1, 0s);
+                      line-height: 18px;
+                      padding: 8px 12px;
+                }
+
                 .MuiFormControl-root{
                   &.input_field {
                     flex: 1;
@@ -35546,8 +35570,13 @@ textarea[readonly] {
                       background-color: rgba($yellow, 0.85) !important;
                       border-radius: 10px;
 
+                      &.MuiAutocomplete-inputRoot{
+                        padding: 0px 39px 0px 0px;
+                      }
+
                     .MuiInputBase-input{
                       padding: 8px 12px;
+                      height: max-content;
                       min-height: max-content;
                       @include homepage-buttons(
                         "Bobby-Jones-Soft",
@@ -35558,7 +35587,11 @@ textarea[readonly] {
                       @include hover-scale(1, 0s);
                       line-height: 18px;
 
-                      &.MuiSelect-select, &[type='datetime-local']{
+                      &::placeholder{
+                        opacity: 1;
+                      }
+
+                      &.MuiSelect-select{
                         padding-right: 32px;
                       }
                     }

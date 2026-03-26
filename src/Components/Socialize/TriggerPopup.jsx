@@ -3,6 +3,13 @@ import { Box, ThemeProvider, Typography } from '@mui/material';
 import CardBoardPopup from '../CardBoardPopupComponents/CardBoardPopup';
 import FormField from '../Form/FormField';
 import relationsBg from '../../Utils/images/Socialize/citizens_main/trigger_elements/relations_bg.webp';
+import vehiclesBg from '../../Utils/images/Socialize/citizens_main/trigger_elements/vehicles_bg.webp';
+import brandsBg from '../../Utils/images/Socialize/citizens_main/trigger_elements/brands_bg.webp';
+import dreamsBg from '../../Utils/images/Socialize/citizens_main/trigger_elements/dreams_bg.webp';
+import hobbiesBg from '../../Utils/images/Socialize/citizens_main/trigger_elements/hobbies_bg.webp';
+import colorsBg from '../../Utils/images/Socialize/citizens_main/trigger_elements/colors_bg.webp';
+import homeBg from '../../Utils/images/Socialize/citizens_main/trigger_elements/home_bg.webp';
+import luxuryBg from '../../Utils/images/Socialize/citizens_main/trigger_elements/luxury_bg.webp';
 import plusGif from '../../Utils/gifs/plus.gif';
 import createCustomTheme from '../../styles/CustomSelectDropdownTheme';
 
@@ -39,12 +46,25 @@ function TriggerPopup({ open, handleClose, cardTitle, fields }) {
     }));
   };
 
-  const plusBgStyle = useMemo(
-    () => ({
-      '--plus-bg-img': `url(${relationsBg})`,
-    }),
-    []
-  );
+  const plusBgStyle = useMemo(() => {
+    const bgByTitle = {
+      Relations: relationsBg,
+      Vehicles: vehiclesBg,
+      Hobbies: hobbiesBg,
+      'Dream plans': dreamsBg,
+      Colors: colorsBg,
+      Luxury: luxuryBg,
+      Home: homeBg,
+      Brands: brandsBg,
+    };
+
+    const bg = bgByTitle[cardTitle];
+    return {
+      '--plus-bg-img': bg ? `url(${bg})` : undefined,
+    };
+  }, [cardTitle]);
+
+  
 
   return (
     <ThemeProvider theme={theme}>

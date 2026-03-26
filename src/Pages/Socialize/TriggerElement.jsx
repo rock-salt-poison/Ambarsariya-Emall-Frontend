@@ -23,7 +23,7 @@ function TriggerElement() {
           { label: 'MODEL : YEAR', name: 'vehicle_model_year', type: 'text', placeholder: 'MODEL : YEAR', options: [] },
           { label: 'MAKER : COMPANY', name: 'vehicle_maker_company', type: 'text', placeholder: 'MAKER : COMPANY', options: [] },
           { label: 'VARIATION : COMPACT SUV', name: 'vehicle_variation', type: 'text', placeholder: 'VARIATION : COMPACT SUV', options: [] },
-          { label: 'UPLOAD ODOMETER : READING', name: 'vehicle_odometer_upload', type: 'file', placeholder: 'UPLOAD ODOMETER : READING', options: [] },
+          { label: 'UPLOAD ODOMETER : READING', name: 'vehicle_odometer_upload', type: 'file', placeholder: 'ODOMETER : READING', options: [] },
         ],
 
         Hobbies: [
