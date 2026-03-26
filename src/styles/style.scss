@@ -4478,6 +4478,14 @@ a {
             }
           }
 
+          &.disabled {
+            cursor: not-allowed;
+
+            a {
+              filter: grayscale(100%);
+            }
+          }
+
           &:last-child {
             position: relative;
             right: 20px;

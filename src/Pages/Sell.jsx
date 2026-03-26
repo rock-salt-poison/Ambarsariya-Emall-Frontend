@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 import { useLogout } from "../customHooks/useLogout";
 import UserBadge from '../UserBadge';
 import { getShopUserData, getUser } from "../API/fetchExpressAPI";
+import CustomSnackbar from "../Components/CustomSnackbar";
 
 function Sell() {
   const navigate = useNavigate();
@@ -25,6 +26,9 @@ function Sell() {
   const [shopToken, setShopToken] = useState("");
   const [validMember, setValidMember] = useState(false);
   const [validShop, setValidShop] = useState(false);
+  const [isShopUser, setIsShopUser] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   useEffect(() => {
     const fetchShopToken = async () => {
@@ -35,8 +39,10 @@ function Sell() {
           if (resp.length > 0) {
             console.log(resp);
 
-            const shopUser = resp?.find((u)=> u.shop_no !== null);
-            const memberUser = resp?.find((u)=> u?.member_id !== null);
+            setIsShopUser(resp?.[0]?.user_type === "shop");
+
+            const shopUser = resp?.find((u) => u?.shop_no != null);
+            const memberUser = resp?.find((u) => u?.member_id != null);
             
             if (shopUser?.shop_access_token) {
               const shopData = await getShopUserData(shopUser?.shop_access_token);
@@ -49,7 +55,7 @@ function Sell() {
                   setShopToken(shopData[0].shop_access_token);
                 }
               }
-            }  if (memberUser?.member_id !== null) {
+            }  if (memberUser?.member_id != null) {
               setValidMember(true);
             }
           }
@@ -58,6 +64,12 @@ function Sell() {
         }finally{
           setLoading(false);
         }
+      }
+      if (!token) {
+        setIsShopUser(false);
+        setValidMember(false);
+        setValidShop(false);
+        setShopToken("");
       }
     };
     fetchShopToken();
@@ -80,6 +92,11 @@ function Sell() {
 
       audio.play();
     } else if (btns) {
+      if (btns.classList.contains("disabled")) {
+        setSnackbarMessage("Access limited to members and merchants only.");
+        setSnackbarOpen(true);
+        return;
+      }
       btns.classList.add("reduceSize3");
 
       setTimeout(() => {
@@ -111,14 +128,20 @@ function Sell() {
   };
 
   const buttons = [
-    { src: growButtonBg, text: "Grow", handleClick },
-    { src: grabButtonBg, text: "Grab", handleClick },
-    { src: eshopBtnBg, text: "E-shop", handleClick },
-    { src: esaleBtnBg, text: "E-sale", handleClick },
+    { src: growButtonBg, text: "Grow", handleClick, disabled: false },
+    { src: grabButtonBg, text: "Grab", handleClick, disabled: isShopUser },
+    { src: eshopBtnBg, text: "E-shop", handleClick, disabled: false },
+    { src: esaleBtnBg, text: "E-sale", handleClick, disabled: isShopUser },
   ];
 
   return (
     <Box className="sell_wrapper">
+      <CustomSnackbar
+        open={snackbarOpen}
+        message={snackbarMessage}
+        severity="error"
+        handleClose={() => setSnackbarOpen(false)}
+      />
       {loading ? <Box className="loading"><CircularProgress/></Box> :(
       <Box className="row_wrapper">
         <Box className="header col">
@@ -160,8 +183,24 @@ function Sell() {
               {buttons
                 .slice(rowIndex * 2, rowIndex * 2 + 2)
                 .map((button, index) => (
-                  <Box className={`btn ${button.text}`} key={index}>
-                    <Link onClick={button.handleClick}>
+                  <Box
+                    className={`btn ${button.text} ${button.disabled ? "disabled" : ""}`}
+                    key={index}
+                    aria-disabled={button.disabled}
+                  >
+                    <Link
+                      onClick={(e) => {
+                        if (button.disabled) {
+                          e.preventDefault();
+                          setSnackbarMessage("Access limited to members and merchants only.");
+                          setSnackbarOpen(true);
+                          return;
+                        }
+                        button.handleClick(e);
+                      }}
+                      aria-disabled={button.disabled}
+                      tabIndex={button.disabled ? -1 : 0}
+                    >
                       <Box
                         component="img"
                         src={button.src}

@@ -3,6 +3,9 @@ import { Box, Typography } from "@mui/material";
 import UserBadge from "../../UserBadge";
 import hornSound from "../../Utils/audio/horn-sound.mp3";
 import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { getUser } from "../../API/fetchExpressAPI";
+import CustomSnackbar from "../../Components/CustomSnackbar";
 import bg_img from "../../Utils/images/Socialize/city_junctions/connect_with_utilities/municipal_corporation/municipal-corporation_bg.webp"
 import vendor_commission_services from "../../Utils/images/Socialize/city_junctions/connect_with_utilities/municipal_corporation/vendor_commission_services.webp"
 import grievance_form from "../../Utils/images/Socialize/city_junctions/connect_with_utilities/municipal_corporation/grievance_form.webp"
@@ -11,9 +14,30 @@ import services_by_municipal_corporation from "../../Utils/images/Socialize/city
 
 function MunicipalCorporation() {
   const navigate = useNavigate();
+  const token = useSelector((state) => state.auth.userAccessToken);
   const [audio] = useState(new Audio(hornSound));
-  const [hasShopAccessToken, setHasShopAccessToken] = useState(false);
-  const [shopNo, setShopNo] = useState(null);
+  const [isShopUser, setIsShopUser] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+
+  useEffect(() => {
+    const fetchUserType = async () => {
+      if (!token) {
+        setIsShopUser(false);
+        return;
+      }
+
+      try {
+        const resp = await getUser(token);
+        setIsShopUser(resp?.[0]?.user_type === "shop");
+      } catch (error) {
+        console.error("Error fetching user type:", error);
+        setIsShopUser(false);
+      }
+    };
+
+    fetchUserType();
+  }, [token]);
 
   const handleServiceClick = (e, serviceId) => {
     e.preventDefault();
@@ -66,6 +90,11 @@ function MunicipalCorporation() {
       }, 300);
       
       setTimeout(() => {
+        if (isShopUser) {
+            setSnackbarMessage("Access limited to members and merchants only.");
+            setSnackbarOpen(true);
+          return;
+        }
         navigate("trade-license");
       }, 600);
     }
@@ -74,6 +103,12 @@ function MunicipalCorporation() {
 
   return (
     <Box className="municipal_corporation_wrapper">
+      <CustomSnackbar
+        open={snackbarOpen}
+        message={snackbarMessage}
+        severity="error"
+        handleClose={() => setSnackbarOpen(false)}
+      />
       <Box className="content">
 
         <Box component="img" src={bg_img} alt="municipal_corporation_image" className="bg_img"/>

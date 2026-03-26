@@ -130,7 +130,8 @@ function BusinessHours({ data }) {
       {loading && <Box className="loading"><CircularProgress/></Box>}
 
       <UserBadge
-        handleBadgeBgClick={`../support/shop?token=${data.shop_access_token}`}
+        // handleBadgeBgClick={`../support/shop?token=${data.shop_access_token}`}
+        handleBadgeBgClick={-1}
         handleLogin="../login"
         handleLogoutClick="../../"
       />

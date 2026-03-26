@@ -49,7 +49,7 @@ function Login() {
     ? isValidShop
       ? `../../sell/support/shop/shop-detail/${accessToken}`
       : "../../sell/eshop"
-    : "../../sell/eshop";
+    : "../../sell/login";
 
   return (
     <Box className="login_wrapper">

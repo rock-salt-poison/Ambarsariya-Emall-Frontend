@@ -124,7 +124,8 @@ function Shop() {
               <Box className="col">
                 <Box className="visible_on_small_screen">
                 <UserBadge
-                    handleBadgeBgClick={`../support/shop?token=${token}`}
+                    // handleBadgeBgClick={`../support/shop?token=${token}`}
+                    handleBadgeBgClick={-1}
                     handleLogin="../login"
                     handleLogoutClick="../../"
                 />
