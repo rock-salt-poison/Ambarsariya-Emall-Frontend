@@ -35721,6 +35721,7 @@ textarea[readonly] {
         transition: all .2s linear;
         border: 3px solid $brown-4;
         overflow: hidden;
+        cursor: pointer;
         img {
           width: 100%;
           height: 100%;
@@ -35751,10 +35752,11 @@ textarea[readonly] {
           .sector_name_text {
             @include homepage-buttons(
               "Bobby-Jones-Soft",
-              22px,
+              18px,
               $light-yellow,
               "black-shadow"
             );
+            line-height: 18px;
             @include hover-scale(1, 0s);
           }
         }
@@ -35770,6 +35772,8 @@ textarea[readonly] {
       }
     }
   }
+
+  
   @media (max-width: 1024px) {
       .booths_header {
         .booths_title {
@@ -35783,6 +35787,100 @@ textarea[readonly] {
         }
       }
   }
+}
+
+.booths_popup_dialog {
+    .MuiDialog-container{
+      .MuiPaper-root{
+        width: 50%;
+        height: 85vh;
+        .card_board_component{
+          @include background-center-no-repeat($boothsPopupBg);
+          background-size:cover;
+          border: 0px;
+          @include flex-center(row, flex-start);
+          place-items: normal;
+          flex: 1;
+          .booths_popup_dialog{
+            @include flex-center(row, flex-start);
+          place-items: normal;
+          flex: 1;
+            .content_body{
+              @include flex-center(row, flex-start);
+          place-items: normal;
+          flex: 1;
+              .booths{
+                flex: 1;
+                position: relative;
+                .shop_name_container{
+                  @include flex-center(row, center);
+                  @include full-absolute(75px, 0px, auto, 0px);
+                  margin: auto;
+                  width: 50%;
+
+                  .title{
+                    @include homepage-buttons(
+                      "Gladiola",
+                      40px,
+                      $light-yellow,
+                      "yellow-shadow"
+                    );
+                    line-height: 40px;
+                    @include hover-scale(1,0s);
+                    text-align: center;
+                  }
+                }
+
+                .img{
+                  width: 144px;
+                  height: 80px;
+                  object-fit: cover;
+                  @include full-absolute(170px, 4px, auto, 0px);
+                  margin: auto;
+                }
+
+                .sector_details{
+                  @include flex-center(column, center);
+                  gap: 5px;
+                  @include full-absolute(auto, 0px, 50px, 0px);
+                  margin: auto;
+                  width: 50%;
+                  
+                  .heading{
+                    @include homepage-buttons(
+                      "Bobby-Jones-Soft",
+                      22px,
+                      $light-yellow,
+                      "black-shadow"
+                    );
+                    line-height: 22px;
+                    @include hover-scale(1,0s);
+                    text-align: center;
+                  }
+                  .desc{
+                    @include homepage-buttons(
+                      "Bobby-Jones-Soft",
+                      18px,
+                      $yellow,
+                      "black-shadow"
+                    );
+                    line-height: 18px;
+                    @include hover-scale(1,0s);
+                    text-align: center;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 4;
+                    line-clamp: 4;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
 }
 
 .sales_mount_wrapper{

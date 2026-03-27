@@ -1,8 +1,9 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Box, CircularProgress, ImageList, ImageListItem, Typography } from '@mui/material';
 import UserBadge from '../../UserBadge';
 import { fetchDomains, fetchDomainSectors } from '../../API/fetchExpressAPI';
 import { getSectorImage } from '../../Utils/sector_images';
+import BoothsPopup from '../../Components/Socialize/BoothsPopup';
 
 function srcset(image) {
   return {
@@ -14,6 +15,11 @@ function srcset(image) {
 function Booths() {
   const [sectors, setSectors] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedBooth, setSelectedBooth] = useState(null);
+  const [openPopup, setOpenPopup] = useState(false);
+  const [clickedBoothId, setClickedBoothId] = useState(null);
+  const clickAnimTimerRef = useRef(null);
+  const popupTimerRef = useRef(null);
 
   useEffect(() => {
     const fetchBoothSectors = async () => {
@@ -58,6 +64,37 @@ function Booths() {
     fetchBoothSectors();
   }, []);
 
+  useEffect(() => {
+    return () => {
+      if (clickAnimTimerRef.current) clearTimeout(clickAnimTimerRef.current);
+      if (popupTimerRef.current) clearTimeout(popupTimerRef.current);
+    };
+  }, []);
+
+  const handleBoothImageClick = (item) => {
+    if (clickAnimTimerRef.current) clearTimeout(clickAnimTimerRef.current);
+    if (popupTimerRef.current) clearTimeout(popupTimerRef.current);
+
+    setOpenPopup(false);
+    setSelectedBooth(null);
+    setClickedBoothId(item.id);
+
+    clickAnimTimerRef.current = setTimeout(() => {
+      setClickedBoothId(null);
+    }, 300);
+
+    popupTimerRef.current = setTimeout(() => {
+      setSelectedBooth(item);
+      setOpenPopup(true);
+    }, 600);
+  };
+
+  const handleClosePopup = () => {
+    if (popupTimerRef.current) clearTimeout(popupTimerRef.current);
+    setOpenPopup(false);
+    setSelectedBooth(null);
+  };
+
   const imageTiles = useMemo(() => {
     const patterns = [
       { rows: 1, cols: 1 },
@@ -81,6 +118,8 @@ function Booths() {
         if (!img) return null;
         return {
           id: sector?.sector_id || sector?.id || `${sectorName}-${index}`,
+          sectorId: sector?.sector_id || sector?.id || null,
+          domainId: sector?.domain_id || null,
           sectorName,
           img,
           ...patterns[index % patterns.length],
@@ -121,7 +160,8 @@ function Booths() {
                 key={item.id}
                 cols={item.cols}
                 rows={item.rows}
-                className="booths_list_item"
+                className={`booths_list_item ${clickedBoothId === item.id ? 'reduceSize3' : ''}`}
+                onClick={() => handleBoothImageClick(item)}
               >
                 <img
                   {...srcset(item.img)}
@@ -136,6 +176,12 @@ function Booths() {
           </ImageList>
         )}
       </Box>
+
+      <BoothsPopup
+        open={Boolean(selectedBooth && openPopup)}
+        onClose={handleClosePopup}
+        selectedBooth={selectedBooth}
+      />
     </Box>
   );
 }
