@@ -33,7 +33,7 @@ function Citizens() {
             <Box className="col sale">
                 <Box className="empty">
                 </Box>
-                  <Box className="back_button back_button_first" onClick={handleBackClick}>
+                  <Box className="back_button back_button_first" >
                     <UserBadge
                         handleLogoutClick="../../"
                         handleBadgeBgClick={-1}
@@ -70,7 +70,7 @@ function Citizens() {
             </Box>
             <Box className="col booths">
                 <Box className="empty"></Box>
-                <Box className="back_button back_button_third" onClick={handleBackClick}>
+                <Box className="back_button back_button_third">
                     <UserBadge
                         handleLogoutClick="../../"
                         handleBadgeBgClick={-1}
