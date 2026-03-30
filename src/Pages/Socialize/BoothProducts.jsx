@@ -19,7 +19,7 @@ function BoothProducts() {
     }, [category]);
 
     const backgroundImage = useMemo(() => {
-        return categoryImageUrl ? `url(${categoryImageUrl})` : undefined;
+        return categoryImageUrl ? `url('${categoryImageUrl}')` : undefined;
     }, [categoryImageUrl]);
 
     const title = useMemo(() => {
